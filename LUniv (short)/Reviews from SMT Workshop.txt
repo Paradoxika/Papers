@@ -1,0 +1,121 @@
+Dear Bruno
+
+We are pleased to inform you that your paper
+
+Compression of Propositional Resolution Proofs by Lowering Subproofs [Presentation-Only]
+
+has been accepted for presentation at SMT 2013.
+
+Please find attached the reviews for your paper.
+We strongly recommend to use them to improve the final version of the paper.
+
+The final version of your paper is due on *May 27th* (anywhere on earth).
+
+We also remind you that the early registration deadline for the SMT workshop
+is May 27th. For information about the registration, please visit
+
+   http://sat2013.cs.helsinki.fi/registration.html
+
+We look forward to seeing you in Helsinki.
+
+Best regards,
+Roberto and Alberto
+
+
+----------------------- REVIEW 1 ---------------------
+PAPER: 9
+TITLE: Compression of Propositional Resolution Proofs by Lowering Subproofs [Presentation-Only]
+AUTHORS: Bruno Woltzenlogel Paleo and Joseph Boudou
+
+OVERALL EVALUATION: 1 (weak accept)
+REVIEWER'S CONFIDENCE: 3 (medium)
+
+----------- REVIEW -----------
+since it is a presentation-only paper and presumable was (or will be) reviewed in another conference, I'm mostly going to refer to the suitability of this article to the SMT workshop.
+
+The article describes an improvement to an algorithm that compresses propositional resolution proofs, by delaying the activation of clauses to later stages in the proof. So, e.g., instead of using a clause several times in order to get rid of a literal on various branches of the proof, it is delayed, if I understand correctly, to a point after these branches are unified. It can be seen as a generalization of 'recyclepivot' [2] and recyclepivotwithintersection[7] where only unit clauses were moved this way.  
+
+The technique is dedicated to purely propositional resolution proofs, and its relevance to SMT is via the resolution refutations that some SMT solvers can emit. The rational for compressing the proof is that it may makes proof checkers faster by compressing the input proof. I would encourage the authors to be more specific here: aren't proof checkers linear in the size of the proof? if yes then why invest time in reducing the input size? why not show the effect of the reduction on the time taken by a proof checker? just showing the reduction in size is not enough. 
+It is clearer why a reduction in the *core* is important, as many tools use the core for various reasons. But then their experiments show negligible benefit in reducing the size of the core: somewhere between 0% to 0.8%, depending on which algorithm it is compared to.
+
+
+----------------------- REVIEW 2 ---------------------
+PAPER: 9
+TITLE: Compression of Propositional Resolution Proofs by Lowering Subproofs [Presentation-Only]
+AUTHORS: Bruno Woltzenlogel Paleo and Joseph Boudou
+
+OVERALL EVALUATION: 2 (accept)
+REVIEWER'S CONFIDENCE: 3 (medium)
+
+----------- REVIEW -----------
+This paper is presentation-only. It presents a new algorithm for
+reducing the size of resolution proofs. Although the authors
+present it in the context of SMT, everything in there is purely
+about propositional proofs and resolution. The new algorithm
+is an improvement other previous work by Fontaine et al.
+
+I am not an expert in this topic but I believe proof generation
+and simplification have a place in the SMT world. I did not 
+see any major issue with the paper so I'm in favor of accepting
+the presentation at the workshop.
+
+The authors should spend some time to motivate their work. What's 
+the benefit of reducing the proof size exactly? I assume the 
+goal is to make proof validation faster. So having some data on
+that would be useful.
+
+Also, the empirical results presented in Table 1 are confusing. 
+I don't understand the formula used to compute average speed. 
+It would make much more sense to give us data on the actual 
+size of the proofs (before and after reduction) rather than 
+the compression achieved, Similarly, I would like to know 
+the actual runtimes, rather than this speed in nodes/ms.
+
+Please explain your figures. In particular Figure 3c and 3d.
+
+
+----------------------- REVIEW 3 ---------------------
+PAPER: 9
+TITLE: Compression of Propositional Resolution Proofs by Lowering Subproofs [Presentation-Only]
+AUTHORS: Bruno Woltzenlogel Paleo and Joseph Boudou
+
+OVERALL EVALUATION: 2 (accept)
+REVIEWER'S CONFIDENCE: 4 (high)
+
+----------- REVIEW -----------
+This paper describes a new proof compression algorithm (a generalization of
+an existing one). Existing algorithms and the new technique are first described
+in theory and then evaluated experimentally against previous compression
+techniques. For a presentation-only paper, this is rather good (novelty, 10
+pages, theory, experiments, plus appendix).
+
+The theoretical part is perhaps a little overformalized, but sound. The basic
+principle that is being applied is fairly straightforward (pushing resolutions
+down the proof tree). While previously only applied to unit-resolvents, the new
+technique handles `univalents', which may be harder to detect, but allows for
+better compression. The experimental evaluation shows that this trade-off pays
+off quite often though.
+
+Details: 
+
+Sec 2, Def 1: I find this definition of a proof a little cumbersome, perhaps
+this could be improved. Is it really necessary to track sub-proofs, wouldn't
+resolvents be enough?
+
+Sec 2, Alg 1: delete(phi, D) is alright, but has weird properties, e.g., that
+the result is not a full proof anymore. I think it would be worth expanding a
+little bit on how these `meaningless' proofs can be fixed to obtain a full
+proof again. At the moment, it's not completely obvious that the compression
+algorithm always results in a `meaningful' proof. 
+
+Sec 5, last par before 6: `veriT does its best to produce compact proofs': This
+is a rather imprecise statement. If it did its best, they wouldn't be
+compressible. However, this leads to the general observation that compression
+pays off, and SMT solvers in general do not obtain minimal (or even `small')
+proofs. If proof compression techniques (e.g., univalent detection) would be
+integrated into the solver (e.g., at conflict resolution time), this might
+lead to much improved solver performance. Currently, proof compression is added
+on in a (comparatively) expensive post-processing stage, which may not pay off
+overall if subsequent tasks (e.g., interpolant computation) are simple. It
+would be great if these points could be discussed in this or a follow-up
+paper.
