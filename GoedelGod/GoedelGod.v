@@ -4,7 +4,7 @@
 
 Require Import Coq.Logic.Classical.
 Require Import Coq.Logic.Classical_Pred_Type.
-Require Import Setoid.
+
 
 (* Type for individuals and objects in the world *)
 Parameter i: Type.
