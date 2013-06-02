@@ -1,6 +1,6 @@
 (* Author: Bruno Woltzenlogel Paleo (bruno@logic.at) *)
 
-(* Formalization of G\u00f6del's Ontological Proof of God's Existence *)
+(* Formalization of Goedel's Ontological Proof of God's Existence *)
 
 Require Import Coq.Logic.Classical.
 Require Import Coq.Logic.Classical_Pred_Type.
