@@ -162,6 +162,33 @@ Theorem modal_iteration_S5: forall p, (diamond (box p)) -> (box p).
 Proof.
 Admitted. (* ToDo *)
 
+Lemma lemma2: forall p q: Prop, (diamond p) -> (box (p -> q)) -> (diamond q).
+Proof.
+intro.
+intro.
+intro Dp.
+intro Bpq.
+unfold diamond.
+intro Bnq.
+absurd q.
+  apply M.
+  exact Bnq.
+
+  apply M in Bpq.
+  apply Bpq.
+  apply imply_to_or in Bpq.
+  destruct Bpq as [H1|H2].
+    unfold diamond in Dp.
+    apply K in H1.
+    absurd (box (not p)).
+      exact Dp.
+      exact H1.
+
+      apply M in Bnq.
+      exfalso.
+      contradiction.
+Qed.
+(* ToDo: it might be possible to simplify the proof above *)
 
 
 (* Theorem 4: the existence of a God is necessary *)
@@ -171,42 +198,20 @@ cut (diamond (box (exists x, G x))).
   apply modal_iteration_S5.
   cut (diamond (exists x, G x)).
     intro th2.
-    unfold diamond.
-    intro h.
-    apply M in h.
-    assert (forall p, (box p) -> p). apply M.
-    assert (forall p: Prop, p -> (box p)). apply K.
-    assert ((exists z, (G z)) -> box (exists x, (G x))). apply lemma1.
-    assert (forall p, (not (box (not p)) -> (box (not (box (not p)))))). apply S5.
-    contradiction.  (* ToDo *)
-
-    elim h.
+    apply lemma2 with (p := exists z, G z).
+    exact th2.
+   
+    apply K.
     apply lemma1.
-    exfalso.
-    absurd (exists x, G x).
-    unfold diamond in th2.
-    elim th2.
-    elim h.
-    
 
-    unfold diamond in th2.
-      elim th2.
-
-    unfold diamond in th2.
-  
-
-  unfold diamond.
-  intro h.
-  apply M in h.
-  elim h. 
+  apply theorem2.
+Qed.
 
 
-  
-  
-
-        
-
-
-
-
+(* Theorem 5: There exists a god *)
+Theorem God_exists: exists x, (G x).
+Proof.
+apply M.
+apply theorem4.
+Qed.
 
