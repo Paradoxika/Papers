@@ -19,7 +19,8 @@ Parameter box: Prop -> Prop.
 Definition diamond (p: Prop) := ~ (box (~ p)).
 
 (* Modal logic axioms *)
-Axiom K: forall p: Prop, p -> (box p).
+(* ToDo: Necessitation cannot be naively encoded as an axiom *)
+Axiom Necessitation: forall p: Prop, p -> (box p).
 Axiom T: forall p: Prop, (box p) -> p.
 
 (* Axiom 1: properties necessarily entailed by positive properties are also positive *)
@@ -41,7 +42,7 @@ absurd (Positive p).
   split.
     exact H1.
   
-    apply K.
+    apply Necessitation.
     intro.
     intro H3.
     apply T in H2.
@@ -84,7 +85,7 @@ split.
   intro H2.
   cut (box (Positive q)).
     intro H3.
-    apply K.
+    apply Necessitation.
     cut (Positive q).
       intro H4.
       intro.
@@ -128,12 +129,12 @@ Qed.
 (* Definition of necessary existence *)
 Definition NecExists(x: i) := forall p, (Essential p x) -> box (exists y, (p y)).
 
-(* Axiom 5: necessry existence is a positive property *)
+(* Axiom 5: necessary existence is a positive property *)
 Axiom axiom5: (Positive NecExists).
 
 
-(* The following lemma could be proved trivially (with intro and apply K). *)
-(* The more complex proof below shows, however, that axiom K is not necessary if we use the definition of God *)
+(* The following lemma could be proved trivially (with intro and apply Necessitation). *)
+(* The more complex proof below shows, however, that axiom Necessitation is not necessary if we use the definition of God *)
 Lemma lemma: (exists z, (G z)) -> box (exists x, (G x)).
 Proof.
 intro H1.
@@ -174,7 +175,7 @@ absurd q.
   apply imply_to_or in H2.
   destruct H2 as [H4|H5].
     unfold diamond in H1.
-    apply K in H4.
+    apply Necessitation in H4.
 
     absurd (box (~ p)).
       exact H1.
