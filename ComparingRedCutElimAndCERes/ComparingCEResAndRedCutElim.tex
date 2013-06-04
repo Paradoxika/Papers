@@ -1,0 +1,95 @@
+%\documentclass[envcountsame]{llncs}
+\documentclass{llncs}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{pdflscape}
+%\usepackage{algorithm2e}
+\usepackage{multicol}
+\usepackage{subfig}
+
+\usepackage{bussproofs}
+\usepackage{proof}
+\usepackage{url}
+
+\usepackage{fancybox}
+\usepackage{fancyvrb}
+
+% Sequent Calculus Proof Settings
+\EnableBpAbbreviations
+\def\fCenter{\mbox{\ $\vdash$\ }}
+\newcommand{\rl}[1]{\RightLabel{#1}}
+
+\usepackage{commands}
+
+\newif\ifcomments
+\commentstrue
+%\commentsfalse   % gobble comments, set for final version
+
+\ifcomments
+  \newcommand{\BW}[1]{\marginpar{\footnotesize{\sf BW: #1}}}
+\else
+  \newcommand{\bw}[1]{}
+\fi
+
+
+\title{
+  Comparing Reductive Cut-Elimination and Cut-Elimination by Resolution
+  \thanks{Supported by the Austrian Science Foundation (FWF) project P ToDo.}
+}
+
+\author{
+  %David Deharbe\inst{2}
+  %\and Pascal Fontaine\inst{1}
+  %\and Stephan Merz\inst{1}
+  %\and \\
+  %Bruno Woltzenlogel Paleo\inst{1,2}
+}
+
+\authorrunning{%D.\~Deharbe \and P.\~Fontaine \and S.\~Merz \and 
+%B.\~Woltzenlogel Paleo
+}
+
+\institute{
+  Theory and Logic Group, Vienna University of Technology, Vienna, Austria \\
+%  \email{bruno@logic.at}
+}
+
+% ===========================================================================
+
+
+\newenvironment{calculus}{\begin{center}\begin{Sbox}\begin{minipage}{0.9\textwidth}}{\end{minipage}\end{Sbox}\fbox{\TheSbox}\end{center}}
+
+
+
+% ===========================================================================
+
+\begin{document}
+
+\maketitle
+
+
+
+\begin{abstract}
+
+\end{abstract}
+
+\section{Introduction}
+
+
+\section{Conclusion}
+
+
+
+%\begin{small}
+%\vspace{-10pt}
+\bibliographystyle{plain}
+\bibliography{Bibliography}
+%\bibliography{../../../PaperDatabase/Bibliography}
+%\end{small}
+
+
+\end{document}
