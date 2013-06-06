@@ -1,0 +1,129 @@
+\section{Redundancy}
+\label{sec:Redundancy}
+
+A closer inspection of the projections in example \ref{example:OProjections} reveals that they are quite redundant. Inference $\wedge_l^6$, for example, repeatedly appears in four of the six projections; $\wedge_r^2$ appears in two projections; and $\vee_l^5$ appears in all six projections. Furthermore, all six projections derive the formula $(A \wedge B) \vee C$ in the their end-sequents, and then all occurrences of this formula must be contracted in the bottom of $\CEResNF{\varphi}{\delta}$ shown in example \ref{example:CEResSONormalForm}. 
+
+The redundancy is mainly a consequence of the simple transformation to conjunctive normal form used by $\CERes$. When disjunction is distributed over conjunction, it is often the case that literals must be duplicated. Hence, each projection w.r.t. a clause that contains a copy of a duplicated literal will have to contain a copy of every inference that operates on descendants of this literal.
+
+In the worst case, as shown in Theorem \ref{theorem:SizeOfCEResNormalForms}, this redundancy can make $\CERes$ normal forms exponentially larger than normal forms produced by reductive cut-elimination methods. This theorem is a corollary of Theorem \ref{theorem:SizeOfClauseSets}, which shows that exponential blow-up already occurs in the size of the characteristic clause set.
+
+
+\begin{theorem}[Size of Characteristic Clause Set]
+\label{theorem:SizeOfClauseSets}
+There exist positive rational constants $k$ and $k'$ and a sequence of proofs $\varphi_1, \varphi_2, \ldots, \varphi_n, \ldots$ such that $\proofsizeSymbol{\varphi_n} \leq k 4^n$ and $|\clausesetStandard{\varphi_n}| \geq k' 2^{2^n}$.
+\end{theorem}
+\begin{proof}
+Let $\psi_1(s)$ be the following proof:
+\begin{prooftree}
+\AXC{$A_1(s) \seq A_1(s)$}
+		\AXC{$B_1(s) \seq B_1(s)$} \RightLabel{$\wedge_r$}
+	\BIC{$A_1(s), B_1(s) \seq A_1(s) \wedge B_1(s)$} \RightLabel{$\wedge_l$}
+	\UIC{$A_1(s)\wedge B_1(s) \seq A_1(s) \wedge B_1(s)$} 
+				\AXC{$C_1(s) \seq C_1(s)$}
+						\AXC{$D_1(s) \seq D_1(s)$} \RightLabel{$\wedge_r$}
+					\BIC{$C_1(s), D_1(s) \seq C_1(s) \wedge D_1(s)$} \RightLabel{$\wedge_l$}
+					\UIC{$C_1(s)\wedge D_1(s) \seq C_1(s) \wedge D_1(s)$} \RightLabel{$\vee_l$}
+			\BIC{$(A_1(s)\wedge B_1(s)) \vee (C_1(s)\wedge D_1(s)) \seq A_1(s) \wedge B_1(s), C_1(s) \wedge D_1(s)$} \RightLabel{$\vee_r$}
+			\UIC{$(A_1(s)\wedge B_1(s)) \vee (C_1(s)\wedge D_1(s)) \seq (A_1(s) \wedge B_1(s)) \vee (C_1(s) \wedge D_1(s))$}
+\end{prooftree}
+
+\noindent
+And let $\psi_n(s)$ ($n>1$) be:
+\begin{prooftree}
+\AXC{$\psi_{n-1}(a.s)$} \noLine
+\UIC{$A_n(s) \seq A_n(s)$}
+		\AXC{$\psi_{n-1}(b.s)$} \noLine
+		\UIC{$B_n(s) \seq B_n(s)$} \RightLabel{$\wedge_r$}
+	\BIC{$A_n(s), B_n(s) \seq A_n(s) \wedge B_n(s)$} \RightLabel{$\wedge_l$}
+	\UIC{$A_n(s)\wedge B_n(s) \seq A_n(s) \wedge B_n(s)$} 
+				\AXC{$\psi_{n-1}(c.s)$} \noLine
+				\UIC{$C_n(s) \seq C_n(s)$}
+						\AXC{$\psi_{n-1}(d.s)$} \noLine
+						\UIC{$D_n(s) \seq D_n(s)$} \RightLabel{$\wedge_r$}
+					\BIC{$C_n(s), D_n(s) \seq C_n(s) \wedge D_n(s)$} \RightLabel{$\wedge_l$}
+					\UIC{$C_n(s)\wedge D_n(s) \seq C_n(s) \wedge D_n(s)$} \RightLabel{$\vee_l$}
+			\BIC{$(A_n(s)\wedge B_n(s)) \vee (C_n(s)\wedge D_n(s)) \seq A_n(s) \wedge B_n(s), C_n(s) \wedge D_n(s)$} \RightLabel{$\vee_r$}
+			\UIC{$(A_n(s)\wedge B_n(s)) \vee (C_n(s)\wedge D_n(s)) \seq (A_n(s) \wedge B_n(s)) \vee (C_n(s) \wedge D_n(s))$}
+\end{prooftree}
+where (for $n>1$):
+$$
+\begin{array}{rcl}
+A_n(s) 	& \defEq & (A_{n-1}(a.s)\wedge B_{n-1}(a.s)) \vee (C_{n-1}(a.s)\wedge D_{n-1}(a.s)) \\
+B_n(s) 	& \defEq & (A_{n-1}(b.s)\wedge B_{n-1}(b.s)) \vee (C_{n-1}(b.s)\wedge D_{n-1}(b.s)) \\
+C_n(s) 	& \defEq & (A_{n-1}(c.s)\wedge B_{n-1}(c.s)) \vee (C_{n-1}(c.s)\wedge D_{n-1}(c.s)) \\
+D_n(s) 	& \defEq & (A_{n-1}(d.s)\wedge B_{n-1}(d.s)) \vee (C_{n-1}(d.s)\wedge D_{n-1}(d.s)) \\
+\end{array}
+$$
+and $x.l$ denotes the result of appending the character $x$ in the beginning of the list of characters $l$.
+
+Let $\varphi_n$ be the proof below:
+\begin{prooftree}
+\AXC{$\psi_n([])$}
+		\AXC{$\psi_n([])$} \RightLabel{$cut$}
+	\BIC{$(A_n([])\wedge B_n([])) \vee (C_n([])\wedge D_n([])) \seq (A_n([]) \wedge B_n([])) \vee (C_n([]) \wedge D_n([]))$}
+\end{prooftree}
+
+Let $S_{\psi_k(s)}^l$ be the subformula of $\struct{\varphi_n}$ corresponding to the root inference of the subproof $\psi_k(s)$ in the left side of $\varphi_n$. Analogously, let $S_{\psi_k(s)}^r$ be the subformula of $\struct{\varphi_n}$ at the root inference of the subproof $\psi_k(s)$ in the right side of $\varphi_n$. Then:
+$$
+\struct{\varphi_n} = S_{\psi_n([])}^l \structplus S_{\psi_n([])}^r
+$$
+%
+where:
+$$
+S_{\psi_j(s)}^l = \left\{ \begin{array}{ll}
+(A_1(s) \structplus B_1(s)) \structtimes (C_1(s) \structplus D_1(s) & \textrm{, if } j=1 \\
+(S_{\psi_{j-1}(a.s)}^l \structplus S_{\psi_{j-1}(b.s)}^l) \structtimes (S_{\psi_{j-1}(c.s)}^l \structplus S_{\psi_{j-1}(d.s)}^l) & \textrm{, otherwise }
+\end{array}\right.
+$$
+$$
+S_{\psi_j(s)}^r = \left\{ \begin{array}{ll}
+  (\neg A_1(s) \structtimes \neg B_1(s)) 
+  \structplus
+  (\neg C_1(s) \structtimes \neg D_1(s))  & \textrm{, if } j=1 \\
+  (S_{\psi_{j-1}(a.s)}^r \structtimes S_{\psi_{j-1}(b.s)}^r) 
+  \structplus
+  (S_{\psi_{j-1}(c.s)}^r \structtimes S_{\psi_{j-1}(d.s)}^r) & \textrm{, otherwise }
+\end{array}\right.
+$$
+
+\noindent
+Let $f_l(n)$ be the number of clauses in $\clausesetStandard{\varphi_n}$ whose stemming from the left branch of the cut. Analogously, let $f_r(n)$ be the number of clauses stemming from the right branch of the cut. Clearly, $|\clausesetStandard{\varphi_n}| = f_l(n) + f_r(n)$. By analyzing the structure of the subformulas of $\struct{\varphi_n}$, it is possible to see that:
+$$
+f_l(n) = \left\{ \begin{array}{ll}
+4 & \textrm{, if } n=1 \\
+4 (f_l(n-1))^2 & \textrm{, otherwise }
+\end{array}\right.
+$$
+$$
+f_r(n) = \left\{ \begin{array}{ll}
+2 & \textrm{, if } n=1 \\
+2 (f_r(n-1))^2 & \textrm{, otherwise }
+\end{array}\right.
+$$
+%
+It can be easily proved by induction that $f_l(n) = 4^{(2^n - 1)}$ and $f_r(n) = 2^{(2^n - 1)}$. Therefore:
+$$
+|\clausesetStandard{\varphi_n}| = 4^{(2^n - 1)} + 2^{(2^n - 1)} \geq 2^{(2^n)} 
+$$
+\hfill\QED
+\end{proof}
+
+
+
+\begin{theorem}[Size of $\CERes$-Normal-Forms]
+\label{theorem:SizeOfCEResNormalForms}
+There exist positive rational constants $k$ and $k''$ and a sequence of proofs $\varphi_1, \varphi_2, \ldots, \varphi_n, \ldots$ such that:
+\begin{itemize}
+\item $\proofsizeSymbol{\varphi_n} \leq k 4^n$.
+\item $\proofsizeSymbol{\CEResNF{\varphi_n}{\delta_n}} \geq k'' 2^{2^n}$, for any refutation $\delta_n$.
+\item $\proofsizeSymbol{\varphi_n^*} \leq k 4^n$, for any $\varphi_n^*$ obtained from $\varphi_n$ by reductive cut-elimination.
+\end{itemize}
+\end{theorem}
+\begin{proof}
+Consider the proofs $\varphi_n$ defined in the proof of the Theorem \ref{theorem:SizesOfDefinitionalAndNonDefinitionalClauseSets}. As proved there, 
+$|\clausesetStandard{\varphi_n}| \geq k' 2^{2^n}$, for some positive rational constant $k'$. Moreover, in any refutation $\delta_n$ of $\clausesetStandard{\varphi_n}$, every clause of $\clausesetStandard{\varphi_n}$ has to be used at least once. Therefore, $\proofsizeSymbol{\delta_n} \geq k'' 2^{2^n}$, for some $k'' > k'$. Since $\proofsizeSymbol{\CEResNF{\varphi_n}{\delta_n}} \geq \proofsizeSymbol{\delta_n}$, $\proofsizeSymbol{\CEResNF{\varphi_n}{\delta_n}} \geq k'' 2^{2^n}$ as well. As $\varphi_n$ contains neither implicit nor explicit contractions, the size strictly decreases with every reductive cut-elimination step. Hence, for any proof $\varphi_n^*$ obtained from $\varphi_n$ by reductive cut-elimination, $\proofsizeSymbol{\varphi_n^*} < \proofsizeSymbol{\varphi_n} < k 4^n$.
+\hfill\QED
+\end{proof}
+
+\noindent
+While the sequence of proofs used to prove Theorems \ref{theorem:SizeOfCEResNormalForms} and \ref{theorem:SizeOfClauseSets} is rather artificial, it is important to note that redundancy can be expected to occur often in practice as well. Whenever the input proof has a structure with alternations of inferences operating on cut-ancestors and end-sequent-ancestors, the characteristic formula has alternations of disjunctions and conjunctions, and its literals are duplicated during the clause form transformation of the characteristic formula. Therefore, this is an issue that must be addressed for $\CERes$ to be efficiently applicable to proofs with complex structure.

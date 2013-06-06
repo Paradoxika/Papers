@@ -1,0 +1,371 @@
+\section{Taking Inference Permutability into Account}
+\label{sec:InferencePermutability}
+
+Redundancy originates in the distribution of disjunction over conjunction during the clause form transformation of the characteristic formula. As conjunctions and disjunctions in the characteristic formula correspond to binary inferences operating, respectively, on cut-ancestors and end-sequent-ancestors in the proof, the amount of distributions can be reduced by first pre-processing the proof and permuting inferences operating on cut-ancestors downward. The rules for inference permutation are shown in Appendix \ref{appendix:InferencePermutation} and in \cite{ToDo}.
+
+\begin{example}[Inference Permutation]
+\label{example:InferencePermutation}
+With downward permutation of inferences operating on cut-ancestors, the proof $\varphi$ from Example \ref{example:CutPertinentStruct} is tranformed into the proof $\psi$ below:
+\begin{tiny}
+\begin{prooftree}
+\AXC{$\hA{A} \seq \hA{A} $} \RightLabel{$w_l$}
+\UIC{$\hA{A}, \hA{B} \seq \hA{A}$} \RightLabel{$\wedge_l$}
+\UIC{$\hA{A} \wedge \hA{B} \seq \hA{A}$} 
+		\AXC{$\hA{C} \seq \hA{C}$} \RightLabel{$\hA{\vee_l}$}  		
+	\BIC{$(\hA{A} \wedge \hA{B}) \vee \hA{C}, \seq \hA{A}, \hA{C}$}
+				\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$w_l$}
+				\UIC{$\hB{A}, \hB{B} \seq \hB{B}$} \RightLabel{$\wedge_l$}
+				\UIC{$\hB{A} \wedge \hB{B} \seq \hB{B}$}
+						\AXC{$\hB{C} \seq \hB{C}$} \RightLabel{$\hB{\vee_l}$}  		
+					\BIC{$(\hB{A} \wedge \hB{B}) \vee \hB{C} \seq \hB{B}, \hB{C}$}\RightLabel{$\wedge_r$}
+			\BIC{$(\hA{A} \wedge \hA{B}) \vee \hA{C}, (\hB{A} \wedge \hB{B}) \vee \hB{C} \seq \hA{A} \wedge \hB{B},\hA{C},\hB{C}$} \RightLabel{$c_l$} 		
+			\UIC{$(\hF{A} \wedge \hF{B}) \vee \hF{C} \seq \hA{A} \wedge \hB{B}, \hA{C}, \hB{C}$}
+\RightLabel{$c_r$} 		
+			\UIC{$(\hF{A} \wedge \hF{B}) \vee \hF{C} \seq \hA{A} \wedge \hB{B}, \hF{C}$}
+						\AXC{$C \seq C$} \RightLabel{$cut_2$}
+			\BIC{$(\hF{A} \wedge \hF{B}) \vee \hF{C} \seq \hA{A} \wedge \hB{B}, C$}
+					\AXC{$\hC{B} \seq \hC{B} $}
+							\AXC{$\hC{A} \seq \hC{A}$} \RightLabel{$\wedge_r$}
+						\BIC{$\hC{A}, \hC{B} \seq \hC{B} \wedge \hC{A}$} \RightLabel{$\wedge_l$}
+						\UIC{$\hC{A} \wedge \hC{B} \seq \hC{B} \wedge \hC{A}$}  \RightLabel{$cut_1$}
+				\BIC{$(\hF{A} \wedge \hF{B}) \vee \hF{C} \seq B \wedge A, C $}
+\end{prooftree}
+\end{tiny}
+
+\noindent
+Its characteristic formula is:
+$$
+\struct{\psi} 
+\equiv 
+(((A\structtimes C) \structplus (B\structtimes C)) \structplus \structdual{C}) \structplus (\structdual{B} \structtimes \structdual{A})
+%\equiv 
+%(A\structtimes C) \structplus (B\structtimes C) \structplus \structdual{C} \structplus (\structdual{B} \structtimes \structdual{A})
+$$
+
+\noindent
+And its characteristic clause set is: 
+$$
+\clauseset{\psi} \equiv \{ \seq A,C \ \ ; \ \ \seq B,C \ \ ; \ \ C \seq \ \ ; \ \ B, A \seq \ \  \}
+$$
+
+\noindent 
+Thanks to inference swapping, fewer duplications occur in $\clauseset{\psi}$ than in $\clauseset{\varphi}$.
+\hfill\QED
+\end{example}
+
+
+\noindent
+However, local proof rewriting such as inference permutation is a source of inefficiency typical of reductive cut-elimination methods that cut-elimination by resolution strives to avoid. Therefore, a method for transforming the characteristic formula into clause form that takes the possibility of inference permutation into account without actually having to perform inference permutations is desirable. Such a method ($\normalizePlusTimesS$) is defined in this section, and it is shown in Lemma \ref{lemma:SwapNormalizeCorrespondence} that every rewriting of the characteristic formula according to $\normalizePlusTimesS$ corresponds to a sequence of inference permutation steps according to the rules in Appendix \ref{appendix:InferencePermutation}. Thus, while $\normalizePlusTimes$ does full distribution of disjunction over conjunction, as if inferences operating on cut-ancestors were always indirectly dependent on the inferences operating on end-sequent ancestors above them, $\normalizePlusTimesS$ does partial distribution when the corresponding inferences are independent and permutable without the need for duplications. For the partial distribution to be possible, the characteristic formula must contain extra information to allow the retrieval of the dependencies between the branching inferences.
+
+
+
+\begin{definition}
+\label{definition:InferenceOccurrences}
+Let $\rho$ be an inference in a proof $\varphi$. Then
+$
+\occInference{\varphi}{\rho}
+$
+denotes the set of descendents of formulas that occur in axiom sequents containing ancestors of auxiliary formulas of $\rho$.
+\end{definition}
+
+
+\newcommand{\marked}[1]{#1^*}
+
+\begin{example}
+In the proof $\varphi$ below, the formulas belonging to $\occInference{\varphi}{\vee_l}$ have been highlighted in blue:
+\begin{prooftree}
+\AXC{$\hB{A} \seq \hB{A} $}
+		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r$}
+	\BIC{$\hB{A}, \hB{B} \seq \hB{A} \wedge \hB{B}$} \RightLabel{$\wedge_l$}
+	\UIC{$\hB{A} \wedge \hB{B} \seq \hB{A} \wedge \hB{B}$}
+				\AXC{$B \seq B $}
+						\AXC{$A \seq A$} \RightLabel{$\wedge_r$}
+					\BIC{$A, B \seq B \wedge A$} \RightLabel{$\wedge_l$}
+					\UIC{$A \wedge B \seq B \wedge A$} \RightLabel{$cut_1$}
+			\BIC{$\hB{A} \wedge \hB{B} \seq B \wedge A$}
+							\AXC{$\hB{C} \seq \hB{C}$} 
+									\AXC{$C \seq C$} \RightLabel{$cut_2$}
+								\BIC{$\hB{C} \seq C$} \RightLabel{$\vee_l$}
+					\BIC{$(\hB{A} \wedge \hB{B}) \vee \hB{C} \seq B \wedge A, C $} 
+\end{prooftree}
+
+\noindent
+And below, the formulas belonging to $\occInference{\varphi}{cut_1}$ have been highlighted in blue:
+\begin{prooftree}
+\AXC{$\hB{A} \seq \hB{A} $}
+		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r$}
+	\BIC{$\hB{A}, \hB{B} \seq \hB{A} \wedge \hB{B}$} \RightLabel{$\wedge_l$}
+	\UIC{$\hB{A} \wedge \hB{B} \seq \hB{A} \wedge \hB{B}$}
+				\AXC{$\hB{B} \seq \hB{B} $}
+						\AXC{$\hB{A} \seq \hB{A}$} \RightLabel{$\wedge_r$}
+					\BIC{$\hB{A}, \hB{B} \seq \hB{B} \wedge \hB{A}$} \RightLabel{$\wedge_l$}
+					\UIC{$\hB{A} \wedge \hB{B} \seq \hB{B} \wedge \hB{A}$} \RightLabel{$cut_1$}
+			\BIC{$\hB{A} \wedge \hB{B} \seq \hB{B} \wedge \hB{A}$}
+							\AXC{$C \seq C$} 
+									\AXC{$C \seq C$} \RightLabel{$cut_2$}
+								\BIC{$C \seq C$} \RightLabel{$\vee_l$}
+					\BIC{$(\hB{A} \wedge \hB{B}) \vee C \seq \hB{B} \wedge \hB{A}, C $} 
+\end{prooftree}
+\hfill\QED
+\end{example}
+
+
+
+
+
+
+\begin{definition}[$\normalizePlusTimesS$]
+\label{definition:NormalizationPlusTimesSwap}
+\index{Struct Normalization!Swapped}
+%\newcommand{\hF}[1]{{\color{brickred} #1}}
+In the rewriting rules below, let $\rho$ be the inference in $\varphi$ corresponding to $\hF{\structtimes_{\rho}}$. For the rewriting rules to be applicable
+%\footnote{
+%
+%Note that $m$ can be equal to zero, in which case the first rewriting rule simply degenerates to:
+%$$
+%\hF{S} \hF{\structtimes_{\rho}} (S_1 \structplus \ldots \structplus S_n) \normalizePlusTimesS  S_1 \structplus \ldots \structplus S_n 
+%$$
+%
+%}
+, $\hF{S_{n+1}}, \ldots, \hF{S_{n+m}}$ and $\hF{S}$ must contain at least one formula from $\occInference{\varphi}{\rho}$ each (i.e. there must be an atomic subformula $\hF{A}$ of $\hF{S_{n+k}}$ such that $\hF{A} \in \occInference{\varphi}{\rho}$), and $S_1, \ldots, S_n$ and $S'$ and $S''$ should not contain any formula from $\occInference{\varphi}{\rho}$. Moreover, an innermost rewriting strategy is enforced.
+$$
+\hF{S} \hF{\structtimes_{\rho}} (S_1 \structplus \ldots \structplus S_n \structplus \hF{S_{n+1}} \structplus \ldots \structplus \hF{S_{n+m}}) \normalizePlusTimesS  S_1 \structplus \ldots \structplus S_n \structplus (\hF{S} \hF{\structtimes_{\rho}} \hF{S_{n+1}}) \structplus \ldots \structplus (\hF{S} \hF{\structtimes_{\rho}} \hF{S_{n+m}}) 
+$$
+\begin{multicols}{3}{
+$$
+\hF{S} \hF{\structplus_{\rho}} S' \normalizePlusTimesS  S'
+$$
+
+$$
+S' \hF{\structtimes_{\rho}} S'' \normalizePlusTimesS  S'
+$$
+
+$$
+S' \hF{\structplus_{\rho}} S'' \normalizePlusTimesS  S'
+$$
+}\end{multicols}
+
+\end{definition}
+
+\begin{remark}
+The last three rules handle connectives that correspond to (partially) \emph{degenerate inferences}, whose auxiliary formulas are introduced by weakening. These rules are related to downward permutation of weakening inferences, as shown in Lemma \ref{lemma:SwapNormalizeCorrespondence}. Because of the last two rules, $\normalizePlusTimesS$ is not confluent.
+\end{remark}
+
+
+\begin{definition}[Swapped Clause Set]
+\label{definition:CutPertinentClauseSetSwap}
+\index{Clause Set!Swapped}
+A \emph{swapped clause set} $\clausesetSwap{\varphi}{S}$ of a proof $\varphi$ is the $\normalizePlusTimesS$-normal-form $S$ of $\struct{\varphi}$ written in sequent notation. In cases where $\struct{\varphi}$ has only one $\normalizePlusTimesS$-normal-form, the swapped clause set can be denoted simply as $\clausesetSwapUnique{\varphi}$.
+\end{definition}
+
+\begin{remark}
+Swapped clause sets are very similar to \emph{profiles}, which have been defined in \cite{Hetzl2007CharacteristicClauseSetsandProofTransformations}. In fact, the concept of swapped clause set evolved from attempts to find an intuitively simpler explanation for the fact that profiles work. They differ only on proofs that contain  degenerate inferences. In such cases, swapped clause sets are always smaller than profiles \ref{ToDo}.
+\end{remark}
+
+
+
+\begin{example}
+\label{example:PlusTimesSwapNormalization}
+Let $\varphi$ be the proof below:
+\begin{prooftree}
+\AXC{$\hA{A} \seq \hA{A} $}
+		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r^1$}
+	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$\wedge_l$}
+	\UIC{$\hA{A} \wedge \hB{B} \seq \hA{A} \wedge \hB{B}$}
+				\AXC{$\hC{B} \seq \hC{B} $}
+						\AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$\wedge_r^2$}
+					\BIC{$\hD{A}, \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$\wedge_l$}
+					\UIC{$\hD{A} \wedge \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$cut^3$}
+			\BIC{$\hA{A} \wedge \hB{B} \seq \hC{B} \wedge \hD{A}$}
+							\AXC{$\hE{C} \seq \hE{C}$} 
+									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut^4$}
+								\BIC{$\hE{C} \seq \hF{C}$} \RightLabel{$\vee_l^5$}
+					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C} $} 
+\end{prooftree}
+
+\noindent
+Its characteristic formula is:
+$$
+\struct{\varphi} 
+\equiv 
+((\hA{A} \structplus^1 \hB{B}) \structplus^3 (\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}}))
+\structtimes^5
+(\hE{C} \structplus^4 \hF{\structdual{C}})
+$$
+
+\noindent
+Considering that $\{ \hA{A}, \hB{B}, \hE{C}\} \subset \occInference{\varphi}{\vee_l^5}$ and $\{ \hD{A}, \hC{B}, \hF{C} \} \cap \occInference{\varphi}{\vee_l^5} = \emptyset$, the characteristic formula $\struct{\varphi}$ can be normalized in the two ways shown below:
+$$
+\begin{array}{rcl}
+\struct{\varphi} 
+& \equiv &
+((\hA{A} \structplus^1 \hB{B}) \structplus^3 (\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}}))
+\structtimes^5
+(\hE{C} \structplus^4 \hF{\structdual{C}}) \\
+%
+& \normalizePlusTimesS &
+	((\hA{A} \structplus^1 \hB{B})\structtimes^5 (\hE{C} \structplus^4 \hF{\structdual{C}}))
+\structplus^3 
+	(\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}}) \\
+%
+& \normalizePlusTimesS &
+((\hA{A} \structtimes^5
+(\hE{C} \structplus^4 \hF{\structdual{C}})) \structplus^1 (\hB{B}\structtimes^5
+(\hE{C} \structplus^4 \hF{\structdual{C}}))) \structplus^3 (\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}}) \\
+%
+& \normalizePlusTimesS &
+(
+		(
+			(
+				\hA{A} 
+			\structtimes^5 
+				\hE{C}
+			) 
+		\structplus^4 
+			\hF{\structdual{C}}
+		) 
+	\structplus^1 
+		(
+			(
+				\hB{B}
+			\structtimes^5 
+				\hE{C}
+			) 
+		\structplus^4 
+			\hF{\structdual{C}}
+		)
+) 
+\structplus^3 
+(
+	\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}}
+) \\
+& \equiv &	
+	(
+		\hA{A} 
+	\structtimes^5 
+		\hE{C}
+	) 
+\structplus 
+	\hF{\structdual{C}}	 
+\structplus 	
+	(
+		\hB{B}
+	\structtimes^5 
+		\hE{C}
+	) 
+\structplus 
+	\hF{\structdual{C}}
+\structplus 
+(
+	\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}}
+) \\
+& \equiv & S_1
+\end{array}
+$$
+
+$$
+\begin{array}{rcl}
+\struct{\varphi} 
+& \equiv &
+((\hA{A} \structplus^1 \hB{B}) \structplus^3 (\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}}))
+\structtimes^5
+(\hE{C} \structplus^4 \hF{\structdual{C}}) \\
+%
+& \normalizePlusTimesS &
+	((\hA{A} \structplus^1 \hB{B})\structtimes^5 (\hE{C} \structplus^4 \hF{\structdual{C}}))
+\structplus^3 
+	(\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}}) \\
+%
+& \normalizePlusTimesS &
+	((((\hA{A} \structplus^1 \hB{B})\structtimes^5 \hE{C}) \structplus^4 \hF{\structdual{C}}))
+\structplus^3 
+	(\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}}) \\
+%
+%
+& \normalizePlusTimesS &
+	((((\hA{A}\structtimes^5 \hE{C}) \structplus^1 (\hB{B}\structtimes^5 \hE{C})) \structplus^4 \hF{\structdual{C}}))
+\structplus^3 
+	(\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}}) \\
+%
+& \equiv &
+	(\hA{A}\structtimes^5 \hE{C}) \structplus (\hB{B}\structtimes^5 \hE{C}) \structplus \hF{\structdual{C}}
+\structplus 
+	(\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}}) \\
+%
+& \equiv &
+	S_2 \\
+\end{array}
+$$
+
+\noindent
+The swapped clause sets are:
+$$
+\clausesetSwap{\varphi}{S_1} = \{\ \ \seq \hA{A}, \hE{C} \ \ ; \ \ \seq \hB{B}, \hE{C} \ \ ;
+								\ \ \hF{C} \seq \ \ ; \ \ \hF{C} \seq \ \ ; \ \ \hC{B}, \hD{A} \seq \ \ \}
+$$
+$$
+\clausesetSwap{\varphi}{S_2} = \{\ \ \seq \hA{A}, \hE{C} \ \ ; \ \ \seq \hB{B}, \hE{C} \ \ ;
+							 \ \ \hF{C} \seq \ \ ; \ \ \hC{B}, \hD{A} \seq \ \ \}
+$$
+
+\noindent
+It is interesting to note that $\clausesetSwap{\varphi}{S_1} = \clausesetSwap{\varphi}{S_2}$ (since they are sets). This is not a coincidence. It always occurs when the non-confluence is due to non-degenerated applications of the first rewriting rule.
+
+A refutation $\delta$ of $\clausesetSwapUnique{\varphi}$ is shown below:
+\begin{prooftree}
+\AXC{$\seq \hA{A}, \hE{C}$}
+			\AXC{$\seq \hB{B}, \hE{C}$}
+					\AXC{$\hC{B}, \hD{A} \seq$} \RightLabel{$r$}
+				\BIC{$\hD{A} \seq \hE{C}$} \RightLabel{$r$}
+	\BIC{$\seq \hE{C}, \hE{C}$} \RightLabel{$f_r$}
+	\UIC{$\seq \hE{C}$} 
+			\AXC{$\hF{C} \seq$} \RightLabel{$r$}
+		\BIC{$\seq$}
+\end{prooftree}
+
+\noindent
+$\CEResNFSwapO{\varphi}{\delta}$ is the $\CERes$-normal-form obtained with the swapped clause set:
+\begin{scriptsize}
+\begin{prooftree}
+\AXC{$\hA{A} \seq \hA{A}$} \RightLabel{$w_l$}
+\UIC{$\hA{A}, \hG{B} \seq \hA{A}$} \RightLabel{$\wedge_l$}
+\UIC{$\hA{A} \wedge \hG{B} \seq \hA{A}$}
+		\AXC{$\hE{C} \seq \hE{C}$} \RightLabel{$\vee_l$}
+	\BIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C} \seq \hA{A}, \hE{C}$} 
+				\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$w_l$}
+				\UIC{$\hG{A}, \hB{B} \seq \hB{B}$} \RightLabel{$\wedge_l$}
+				\UIC{$\hG{A} \wedge \hB{B} \seq \hB{B}$}
+						\AXC{$\hE{C} \seq \hE{C}$} \RightLabel{$\vee_l$}
+					\BIC{$(\hG{A} \wedge \hB{B}) \vee \hE{C} \seq \hB{B}, \hE{C}$} 
+							\AXC{$\hC{B} \seq \hC{B} $}
+									\AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$\wedge_r$}
+								\BIC{$\hD{A}, \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$cut$}
+						\BIC{$(\hG{A} \wedge \hB{B}) \vee \hE{C}, \hD{A} \seq \hC{B} \wedge \hD{A}, \hE{C}$} \RightLabel{$cut$}
+		\BIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C}, (\hG{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hE{C}, \hE{C}$} \RightLabel{$c_r$}
+		\UIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C}, (\hG{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hE{C}$} 
+				\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut$}
+			\BIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C}, (\hG{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C}$} \RightLabel{$c_l$}
+			\UIC{$(A \wedge B) \vee C \seq \hC{B} \wedge \hD{A}, \hF{C}$}
+\end{prooftree}
+\end{scriptsize}
+
+\noindent
+As expected, the use of less redundant clause sets and projections results in smaller proofs. $\CEResNFSwapO{\varphi}{\delta}$ shown above is significantly smaller than $\CEResNF{\varphi}{\delta}$ shown in Example \ref{example:CEResSONormalForm}. 
+\hfill\QED
+\end{example}
+
+
+
+
+\begin{theorem}[Unsatisfiability of the Cut-Pertinent Swapped Clause Set]
+\label{theorem:UnsatisfiabilityOfClauseSetSwap}
+For any skolemized proof $\varphi$ and any $\normalizePlusTimesS$-normal-form $S$ of $\struct{\varphi}$, $\clausesetSwap{\varphi}{S}$ is unsatisfiable.
+\end{theorem}
+\begin{proof}
+By Lemma \ref{lemma:SwapNormalizeCorrespondence} in Appendix \ref{sec:Correspondence}, there exists a proof $\psi$ such that $\struct{\psi} = S$. Clearly, $\clausesetSwap{\varphi}{S} = \clausesetSwapUnique{\psi}$. But $\clausesetSwapUnique{\psi} = \clausesetStandard{\psi}$, since $S$ is also a $\normalizePlusTimes$-normal-form. Therefore, $\clausesetSwap{\varphi}{S} = \clauseset{\psi}$ and, by Theorem \ref{theorem:Unsatisfiability} and the fact that $\clauseset{\psi}$ is equisatisfiable with $\struct{\psi}$, they are unsatisfiable.
+\end{proof}
+
+
+\begin{remark}
+It is not possible to prove Theorem \ref{theorem:UnsatisfiabilityOfClauseSetSwap} analogously to the proof of the unsatisfiability of the profile shown in \cite{Hetzl2007CharacteristicClauseSetsandProofTransformations,Hetzl2008ProofProfiles.CharacteristicClauseSetsandProofTransformations}, which is essentially based on the fact that the profile of $\varphi$ subsumes $\clauseset{\varphi}$. Unfortunately, $\clausesetSwap{\varphi}{S}$ does not subsume $\clauseset{\varphi}$ in general. In particular, the subsumption fails when $\varphi$ contains degenerate inferences, in which case $\normalizePlusTimesS$ prunes too much of the characteristic formula and hence some clauses of $\clauseset{\varphi}$ are not subsumed by any clause of $\clausesetSwap{\varphi}{S}$.
+\end{remark}
