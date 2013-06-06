@@ -30,3 +30,7 @@
 *.vrb
 *.xdy
 *.tdo
+*.d
+*.fls
+*.temp
+*.make
