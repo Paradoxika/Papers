@@ -363,34 +363,6 @@ A detailed proof is available in \cite{ToDo}. Here only a sketch is provided. Le
 \label{example:CEResSONormalForm}
 Let $\varphi$ be the proof shown in Example \ref{example:CutPertinentStruct} and $\delta$ be the refutation of its characteristic clause set, as shown in Example \ref{example:CutPertinentStandardClauseSet}. Then, $\CEResNF{\varphi}{\delta}$, obtained by replacing the leaves of $\delta$ by the respective projections shown in Example \ref{example:OProjections}, converting resolution and factoring inferences respectively to cuts and contractions and adding contractions at the bottom, is:
 
-%\begin{scriptsize}
-%\begin{prooftree}
-%\AXC{$\projectionO{\varphi}{\seq A, C}$} \noLine
-%\UIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C} \seq \hA{A}, \hE{C}$}
-%		\AXC{$\projectionO{\varphi}{C \seq A}$} \noLine
-%		\UIC{$(\hA{A} \wedge \hG{B}) \vee \hG{C}, \hF{C} \seq \hA{A}, \hF{C} $} \RightLabel{$cut$}
-%	\BIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C}, (\hA{A} \wedge \hG{B}) \vee \hG{C} \seq \hA{A},\hA{A}, \hF{C}$} \RightLabel{$c_r$}
-%	\UIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C}, (\hA{A} \wedge \hG{B}) \vee \hG{C} \seq \hA{A}, \hF{C}$}
-%			\AXC{$\projectionO{\varphi}{\seq B, C}$} \noLine
-%			\UIC{$(\hG{A} \wedge \hB{B}) \vee \hE{C} \seq \hB{B}, \hE{C}$}
-%					\AXC{$\projectionO{\varphi}{C \seq B}$} \noLine
-%					\UIC{$(\hG{A} \wedge \hB{B}) \vee \hG{C}, \hF{C} \seq \hB{B}, \hF{C} $} \RightLabel{$cut$}
-%				\BIC{$ (\hG{A} \wedge \hB{B}) \vee \hE{C},(\hG{A} \wedge \hB{B}) \vee \hG{C} \seq \hB{B},\hB{B},\hF{C}$} \RightLabel{$c_r$}
-%				\UIC{$ (\hG{A} \wedge \hB{B}) \vee \hE{C},(\hG{A} \wedge \hB{B}) \vee \hG{C} \seq \hB{B},\hF{C}$}
-%							\AXC{$\projectionO{\varphi}{B, A \seq C}$} \noLine
-%							\UIC{$(\hG{A} \wedge \hG{B}) \vee \hE{C}, \hD{A}, \hC{B} \seq \hC{B} \wedge \hD{A}, \hE{C} $}
-%									\AXC{$\projectionO{\varphi}{B, A, C \seq }$} \noLine
-%									\UIC{$\hF{C}, (\hG{A} \wedge \hG{B}) \vee \hG{C}, \hD{A}, \hC{B} \seq \hC{B} \wedge \hD{A}, \hF{C} $} \RightLabel{$cut$}
-%								\BIC{$\hD{A}, \hC{B}, \hD{A}, \hC{B}, (\hG{A} \wedge \hG{B}) \vee \hE{C}, (\hG{A} \wedge \hG{B}) \vee \hG{C} \seq \hC{B} \wedge \hD{A}, \hC{B} \wedge \hD{A}, \hF{C}$} \RightLabel{$c_r$}
-%								\UIC{$\hD{A}, \hC{B}, \hC{B}, (\hG{A} \wedge \hG{B}) \vee \hE{C}, (\hG{A} \wedge \hG{B}) \vee \hG{C} \seq \hC{B} \wedge \hD{A}, \hC{B} \wedge \hD{A}, \hF{C} $} \RightLabel{$c_r$}
-%								\UIC{$\hD{A}, \hC{B}, (\hG{A} \wedge \hG{B}) \vee \hE{C}, (\hG{A} \wedge \hG{B}) \vee \hG{C} \seq \hC{B} \wedge \hD{A}, \hC{B} \wedge \hD{A}, \hF{C}$} \RightLabel{$cut$}
-%						\BIC{$\hD{A}, (\hG{A} \wedge \hB{B}) \vee \hE{C},(\hG{A} \wedge \hB{B}) \vee \hG{C}, (\hG{A} \wedge \hG{B}) \vee \hE{C}, (\hG{A} \wedge \hG{B}) \vee \hG{C} \seq \hC{B} \wedge \hD{A}, \hC{B} \wedge \hD{A}, \hF{C}$} \RightLabel{$cut$}
-%		\BIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C}, (\hA{A} \wedge \hG{B}) \vee \hG{C}, (\hG{A} \wedge \hB{B}) \vee \hE{C},(\hG{A} \wedge \hB{B}) \vee \hG{C}, (\hG{A} \wedge \hG{B}) \vee \hE{C}, (\hG{A} \wedge \hG{B}) \vee \hG{C} \seq \hC{B} \wedge \hD{A}, \hC{B} \wedge \hD{A}, \hF{C}, \hF{C}$} \doubleLine \RightLabel{$c^*$}
-%		\UIC{$(A \wedge B) \vee C \seq B \wedge A, C$}
-%\end{prooftree}
-%\end{scriptsize}
-
-
 \begin{scriptsize}
 \begin{prooftree}
 \AXC{$\projectionO{\varphi}{\seq A, C}$} \noLine
@@ -574,18 +546,12 @@ While the sequence of proofs used to prove Theorems \ref{theorem:SizeOfCEResNorm
 \section{Taking Inference Permutability into Account}
 \label{sec:InferencePermutability}
 
-The construction of a clause set from the cut-pertinent struct requires that the struct be transformed to a $\structplus\structtimes$-normal-form. In the case of standard clause sets, this transformation is done via $\normalizePlusTimes$, which basically distributes $\structtimes$ over $\structplus$, causing many duplications. Remembering that cut-impertinent inferences correspond to $\structtimes$ and cut-pertinent inferences correspond to $\structplus$, a preprocessing that swapped cut-impertinent inferences upward above cut-pertinent inferences would lead to proofs having cut-pertinent structs where $\structtimes$ (corresponding to the cut-impertinent inferences that are swapped upward) connectives occur above $\structplus$ connectives (corresponding to cut-pertinent inferences over which cut-impertinent inferences are swapped). Therefore, fewer distributions and duplications would be necessary, and thus simpler clause sets would result.
+Redundancy originates in the distribution of disjunction over conjunction during the clause form transformation of the characteristic formula. As conjunctions and disjunctions in the characteristic formula correspond to binary inferences operating, respectively, on cut-ancestors and end-sequent-ancestors in the proof, the amount of distributions can be reduced by first pre-processing the proof and permuting inferences operating on cut-ancestors downward. The rules for inference permutation are shown in Appendix \ref{appendix:InferencePermutation} and in \cite{ToDo}.
 
-\begin{example}[Swapping]
-%\newcommand{\hA}[1]{{\color{brickred} #1}}
-%%\newcommand{\hA}[1]{#1}
-%\newcommand{\hB}[1]{{\color{olivegreen} #1}}
-%%\newcommand{\hC}[1]{{\color{royalblue} #1}}
-%\newcommand{\hC}[1]{#1}
-
-
-Now that $\vee_l$ has been duplicated, $\hA{\vee_l}$ and $\hB{\vee_l}$ can be swapped above $\wedge_r$, since each copy is now independent of $\wedge_r$. The resulting proof $\psi^*$ is:
-\begin{scriptsize}
+\begin{example}[Inference Permutation]
+\label{example:InferencePermutation}
+With downward permutation of inferences operating on cut-ancestors, the proof $\varphi$ from Example \ref{example:CutPertinentStruct} is tranformed into the proof $\psi$ below:
+\begin{tiny}
 \begin{prooftree}
 \AXC{$\hA{A} \seq \hA{A} $} \RightLabel{$w_l$}
 \UIC{$\hA{A}, \hA{B} \seq \hA{A}$} \RightLabel{$\wedge_l$}
@@ -609,99 +575,83 @@ Now that $\vee_l$ has been duplicated, $\hA{\vee_l}$ and $\hB{\vee_l}$ can be sw
 						\UIC{$\hC{A} \wedge \hC{B} \seq \hC{B} \wedge \hC{A}$}  \RightLabel{$cut_1$}
 				\BIC{$(\hF{A} \wedge \hF{B}) \vee \hF{C} \seq B \wedge A, C $}
 \end{prooftree}
-\end{scriptsize}
-Its cut-pertinent struct is:
+\end{tiny}
+
+\noindent
+Its characteristic formula is:
 $$
-\cutpertstruct{\psi^*} 
+\cutpertstruct{\psi} 
 \equiv 
 (((A\structtimes C) \structplus (B\structtimes C)) \structplus \structdual{C}) \structplus (\structdual{B} \structtimes \structdual{A})
-\equiv 
-(A\structtimes C) \structplus (B\structtimes C) \structplus \structdual{C} \structplus (\structdual{B} \structtimes \structdual{A})
+%\equiv 
+%(A\structtimes C) \structplus (B\structtimes C) \structplus \structdual{C} \structplus (\structdual{B} \structtimes \structdual{A})
 $$
 
-Note that, due to all the swapping $
-\cutpertstruct{\psi^*}$ is already in $\structplus\structtimes$-normal-form, and hence the cut-pertinent clause set of $\psi^*$ can be obtained simply by clausification of the struct: 
+\noindent
+And its characteristic clause set is: 
 $$
-\clauseset{\psi^*} \equiv \{ \seq A,C \ \ ; \ \ \seq B,C \ \ ; \ \ C \seq \ \ ; \ \ B, A \seq \ \  \}
+\clauseset{\psi} \equiv \{ \seq A,C \ \ ; \ \ \seq B,C \ \ ; \ \ C \seq \ \ ; \ \ B, A \seq \ \  \}
 $$
 
-It is interesting to note that $\clauseset{\psi^*} = \clauseset{\psi'}$ ($\psi'$ is shown in Example \ref{example:DistributionalSwappingOfIndirectlyDependentInferences}), even though $\cutpertstruct{\psi^*} \neq \cutpertstruct{\psi'}$. This is because the $\structplus\structtimes$-normalization of $\cutpertstruct{\psi'}$ has the same effect of distributional duplications as the distributional swapping over contractions.
+\noindent 
+Thanks to inference swapping, fewer duplications occur in $\clauseset{\psi}$ than in $\clauseset{\varphi}$.
+\hfill\QED
 \end{example}
 
 
-
-Moreover, it is sometimes also the case that, by swapping weakening inferences downward, whole subproofs could be deleted, resulting in proofs with even simpler cut-pertinent structs and clause sets.
-
-However, performing local proof rewritings like inference swapping goes against the philosophy of cut-elimination by resolution, that strives to abstract away from the proof and work only with compact representations (e.g. structs and clause sets) of the information relevant for cut-elimination. With this philosophy in mind, it turns out that it is possible to employ an improved struct rewriting system ($\normalizePlusTimesS$) that transforms structs into $\structplus\structtimes$-normal-forms taking the possibility of inference swapping into account, without actually performing the swapping in the proof. Indeed, it can be shown that $\normalizePlusTimesS$ actually corresponds to inference swapping, in a sense that is made precise in Lemma \ref{lemma:SwapNormalizeCorrespondenceIterated}. The improved cut-pertinent clause set that results from using $\normalizePlusTimesS$ instead of $\normalizePlusTimes$ is known as the \emph{cut-pertinent swapped clause set}.
+\noindent
+However, local proof rewriting such as inference permutation is a source of inefficiency typical of reductive cut-elimination methods that cut-elimination by resolution strives to avoid. Therefore, a method for transforming the characteristic formula into clause form that takes the possibility of inference permutation into account without actually having to perform inference permutations is desirable. Such a method ($\normalizePlusTimesS$) is defined in this section, and it is shown in Lemma \ref{lemma:SwapNormalizeCorrespondence} that every rewriting of the characteristic formula according to $\normalizePlusTimesS$ corresponds to a sequence of inference permutation steps according to the rules in Appendix \ref{appendix:InferencePermutation}. Thus, while $\normalizePlusTimes$ does full distribution of disjunction over conjunction, as if inferences operating on cut-ancestors were always indirectly dependent on the inferences operating on end-sequent ancestors above them, $\normalizePlusTimesS$ does partial distribution when the corresponding inferences are independent and permutable without the need for duplications. In order for the partial distribution to be possible, the characteristic formula must contain extra information to allow the retrieval of the dependencies between the branching inferences.
 
 
 
-In this section another struct rewriting system ($\normalizePlusTimesS$) to transform structs into $\structplus\structtimes$-normal-forms is described. It takes the possibility of inference swapping into account and distributes $\structtimes$ not among all $\structplus$-juncts, but only among some of them. Indeed, it is shown in Lemma \ref{lemma:SwapNormalizeCorrespondence} that every rewriting of the struct according to $\normalizePlusTimesS$ corresponds to an inference swapping sequence in the corresponding proof according to $\swap$. In summary, while $\normalizePlusTimes$ does full distribution of $\structtimes$ over $\structplus$, as if cut-impertinent inferences were always indirectly dependent on the cut-pertinent inferences above them, $\normalizePlusTimesS$ does partial distribution when the corresponding inferences are independent. Moreover, $\normalizePlusTimesS$ is capable of exploiting the presence of weakening in the proof.
-
-In order for the partial distribution and the correspondence to inference swapping to be possible, the struct must encode not only the branching structure of the proof, in the form of $\structplus$ and $\structtimes$ connectives, but also enough extra information to allow the retrieval of the dependencies between the branching inferences. Although there could be various ways to extend structs to encode dependency information directly, an indirect and quite minimalistic extension is given here. In the proof of Lemma \ref{lemma:SwapNormalizeCorrespondence} it becomes clear that it is possible to retrieve dependency information from structs containing additional information regarding the pertinence of its formula occurrences in the sets as described in Definition \ref{definition:InferenceOccurrences}.
-
-\emph{Cut-pertinent swapped clause sets} (Definition \ref{definition:CutPertinentClauseSetSwap}) of proofs are simply defined as the clausification of $\normalizePlusTimesS$-normal-forms of the cut-pertinent structs of the proofs. While swapped clause sets are always smaller than or of equal size to standard clause sets, they have the disadvantage of being non-unique, because $\normalizePlusTimesS$ is non-confluent. Therefore, in general more than one swapped clause set of a proof is necessary to fully characterize the set of all possible $\CEResSwap$-normal-forms for the proof. Nevertheless, it is important to note that each swapped clause set is unsatisfiable (Theorem \ref{theorem:UnsatisfiabilityOfClauseSetSwap}).
-
-Swapped clause sets are very similar to profile clause sets, which have been defined in \cite{Hetzl2007CharacteristicClauseSetsandProofTransformations}. In fact, the concept of swapped clause set evolved from attempts to find an intuitively simpler definition for profile clause sets. In Subsection \ref{sec:CutEliminationByResolution:CEResProfile}, profile clause sets are defined and the slight difference with respect to swapped clause sets is discussed.
-
-
-\begin{definition}[Inference Occurrences]
+\begin{definition}
 \label{definition:InferenceOccurrences}
-Let $\omega_1, \ldots , \omega_n$ be all the occurrences of atomic subformulas of auxiliary occurrences of an inference $\rho$ in a proof $\varphi$. Then:
-
-$$
-\occInference{\varphi}{\rho} \defEq \bigcup_{1 \leq i \leq n} \occAxLinked{\varphi}{\omega_i}
-$$
+Let $\rho$ be an inference in a proof $\varphi$. Then
+$
+\occInference{\varphi}{\rho}
+$
+denotes the set of descendents of formulas that occur in axiom sequents containing ancetors of auxiliary formulas of $\rho$.
 \end{definition}
 
 
-\begin{example}[Inference Occurrences]
-%\newcommand{\hB}[1]{{\color{brickred} #1}}
-%%\newcommand{\hB}[1]{{\color{olivegreen} #1}}
-%\newcommand{\hC}[1]{#1}
-%%\newcommand{\hC}[1]{{\color{royalblue} #1}}
+\newcommand{\marked}[1]{#1^*}
 
-
-In the proof $\varphi$ below, the occurrences belonging to $\occInference{\varphi}{\vee_l}$ have been highlighted in red:
+\begin{example}
+In the proof $\varphi$ below, the formulas belonging to $\occInference{\varphi}{\vee_l}$ have been highlighted in blue:
 \begin{prooftree}
 \AXC{$\hB{A} \seq \hB{A} $}
 		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r$}
 	\BIC{$\hB{A}, \hB{B} \seq \hB{A} \wedge \hB{B}$} \RightLabel{$\wedge_l$}
 	\UIC{$\hB{A} \wedge \hB{B} \seq \hB{A} \wedge \hB{B}$}
-				\AXC{$\hC{B} \seq \hC{B} $}
-						\AXC{$\hC{A} \seq \hC{A}$} \RightLabel{$\wedge_r$}
-					\BIC{$\hC{A}, \hC{B} \seq \hC{B} \wedge \hC{A}$} \RightLabel{$\wedge_l$}
-					\UIC{$\hC{A} \wedge \hC{B} \seq \hC{B} \wedge \hC{A}$} \RightLabel{$cut_1$}
+				\AXC{$B \seq B $}
+						\AXC{$A \seq A$} \RightLabel{$\wedge_r$}
+					\BIC{$A, B \seq B \wedge A$} \RightLabel{$\wedge_l$}
+					\UIC{$A \wedge B \seq B \wedge A$} \RightLabel{$cut_1$}
 			\BIC{$\hB{A} \wedge \hB{B} \seq B \wedge A$}
-							\AXC{$\hA{C} \seq \hA{C}$} 
+							\AXC{$\hB{C} \seq \hB{C}$} 
 									\AXC{$C \seq C$} \RightLabel{$cut_2$}
-								\BIC{$\hA{C} \seq C$} \RightLabel{$\vee_l$}
-					\BIC{$(\hB{A} \wedge \hB{B}) \vee \hA{C} \seq B \wedge A, C $} 
+								\BIC{$\hB{C} \seq C$} \RightLabel{$\vee_l$}
+					\BIC{$(\hB{A} \wedge \hB{B}) \vee \hB{C} \seq B \wedge A, C $} 
 \end{prooftree}
 
-\renewcommand{\hA}[1]{ #1}
-\renewcommand{\hB}[1]{{\color{royalblue} #1}}
-%\newcommand{\hB}[1]{{\color{olivegreen} #1}}
-\renewcommand{\hC}[1]{{\color{royalblue} #1}}
-
-
-And below, the occurrences belonging to $\occInference{\varphi}{cut_1}$ have been highlighted in blue:
+\noindent
+And below, the formulas belonging to $\occInference{\varphi}{cut_1}$ have been highlighted in blue:
 \begin{prooftree}
 \AXC{$\hB{A} \seq \hB{A} $}
 		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r$}
 	\BIC{$\hB{A}, \hB{B} \seq \hB{A} \wedge \hB{B}$} \RightLabel{$\wedge_l$}
 	\UIC{$\hB{A} \wedge \hB{B} \seq \hB{A} \wedge \hB{B}$}
-				\AXC{$\hC{B} \seq \hC{B} $}
-						\AXC{$\hC{A} \seq \hC{A}$} \RightLabel{$\wedge_r$}
-					\BIC{$\hC{A}, \hC{B} \seq \hC{B} \wedge \hC{A}$} \RightLabel{$\wedge_l$}
-					\UIC{$\hC{A} \wedge \hC{B} \seq \hC{B} \wedge \hC{A}$} \RightLabel{$cut_1$}
-			\BIC{$\hB{A} \wedge \hB{B} \seq \hC{B} \wedge \hC{A}$}
-							\AXC{$\hA{C} \seq \hA{C}$} 
+				\AXC{$\hB{B} \seq \hB{B} $}
+						\AXC{$\hB{A} \seq \hB{A}$} \RightLabel{$\wedge_r$}
+					\BIC{$\hB{A}, \hB{B} \seq \hB{B} \wedge \hB{A}$} \RightLabel{$\wedge_l$}
+					\UIC{$\hB{A} \wedge \hB{B} \seq \hB{B} \wedge \hB{A}$} \RightLabel{$cut_1$}
+			\BIC{$\hB{A} \wedge \hB{B} \seq \hB{B} \wedge \hB{A}$}
+							\AXC{$C \seq C$} 
 									\AXC{$C \seq C$} \RightLabel{$cut_2$}
-								\BIC{$\hA{C} \seq C$} \RightLabel{$\vee_l$}
-					\BIC{$(\hB{A} \wedge \hB{B}) \vee \hA{C} \seq \hC{B} \wedge \hC{A}, C $} 
+								\BIC{$C \seq C$} \RightLabel{$\vee_l$}
+					\BIC{$(\hB{A} \wedge \hB{B}) \vee C \seq \hB{B} \wedge \hB{A}, C $} 
 \end{prooftree}
-
+\hfill\QED
 \end{example}
 
 
@@ -713,57 +663,43 @@ And below, the occurrences belonging to $\occInference{\varphi}{cut_1}$ have bee
 \label{definition:NormalizationPlusTimesSwap}
 \index{Struct Normalization!Swapped}
 %\newcommand{\hF}[1]{{\color{brickred} #1}}
-
-In the struct rewriting rules below, let $\rho$ be the inference in $\varphi$ corresponding to $\hF{\structtimes_{\rho}}$. For the rewriting rules to be applicable\footnote{
+In the rewriting rules below, let $\rho$ be the inference in $\varphi$ corresponding to $\hF{\structtimes_{\rho}}$. For the rewriting rules to be applicable
+%\footnote{
 %
-Note that $m$ can be equal to zero, in which case the first two rewriting rules simply degenerate to:
-$$
-\hF{S} \hF{\structtimes_{\rho}} (S_1 \structplus \ldots \structplus S_n) \normalizePlusTimesS  S_1 \structplus \ldots \structplus S_n 
-$$
-$$
-(S_1 \structplus \ldots \structplus S_n) \hF{\structtimes_{\rho}} \hF{S} \normalizePlusTimesS  S_1 \structplus \ldots \structplus S_n 
-$$
+%Note that $m$ can be equal to zero, in which case the first rewriting rule simply degenerates to:
+%$$
+%\hF{S} \hF{\structtimes_{\rho}} (S_1 \structplus \ldots \structplus S_n) \normalizePlusTimesS  S_1 \structplus \ldots \structplus S_n 
+%$$
 %
-}, $\hF{S_{n+1}}, \ldots, \hF{S_{n+m}}$ and $\hF{S}$ must contain at least one occurrence from $\occInference{\varphi}{\rho}$ each (i.e. there is an atomic substruct $\hF{S'_{n+k}}$ of $\hF{S_{n+k}}$ such that $\hF{S'_{n+k}} \in \occInference{\varphi}{\rho}$), and $S_1, \ldots, S_n$ and $S_l$ and $S_r$ should not contain any occurrence from $\occInference{\varphi}{\rho}$. Moreover, an innermost rewriting strategy is enforced: only minimal reducible substructs (i.e. structs having no reducible proper substruct) can be rewritten.
+%}
+, $\hF{S_{n+1}}, \ldots, \hF{S_{n+m}}$ and $\hF{S}$ must contain at least one formula from $\occInference{\varphi}{\rho}$ each (i.e. there must be an atomic subformula $\hF{A}$ of $\hF{S_{n+k}}$ such that $\hF{A} \in \occInference{\varphi}{\rho}$), and $S_1, \ldots, S_n$ and $S'$ and $S''$ should not contain any formula from $\occInference{\varphi}{\rho}$. Moreover, an innermost rewriting strategy is enforced.
 $$
 \hF{S} \hF{\structtimes_{\rho}} (S_1 \structplus \ldots \structplus S_n \structplus \hF{S_{n+1}} \structplus \ldots \structplus \hF{S_{n+m}}) \normalizePlusTimesS  S_1 \structplus \ldots \structplus S_n \structplus (\hF{S} \hF{\structtimes_{\rho}} \hF{S_{n+1}}) \structplus \ldots \structplus (\hF{S} \hF{\structtimes_{\rho}} \hF{S_{n+m}}) 
 $$
+\begin{multicols}{3}{
 $$
-(S_1 \structplus \ldots \structplus S_n \structplus \hF{S_{n+1}} \structplus \ldots \structplus \hF{S_{n+m}}) \hF{\structtimes_{\rho}} \hF{S} \normalizePlusTimesS  S_1 \structplus \ldots \structplus S_n \structplus ( \hF{S_{n+1}} \hF{\structtimes_{\rho}} \hF{S}) \structplus \ldots \structplus (\hF{S_{n+m}} \hF{\structtimes_{\rho}} \hF{S}) 
-$$
-\begin{multicols}{4}{
-$$
-S_l \hF{\structtimes_{\rho}} S_r \normalizePlusTimesS  S_l
+\hF{S} \hF{\structplus_{\rho}} S' \normalizePlusTimesS  S'
 $$
 
 $$
-S_l \hF{\structtimes_{\rho}} S_r \normalizePlusTimesS  S_r
+S' \hF{\structtimes_{\rho}} S'' \normalizePlusTimesS  S'
 $$
 
 $$
-S_l \hF{\structplus_{\rho}} S_r \normalizePlusTimesS  S_l
-$$
-
-$$
-S_l \hF{\structplus_{\rho}} S_r \normalizePlusTimesS  S_r
+S' \hF{\structplus_{\rho}} S'' \normalizePlusTimesS  S'
 $$
 }\end{multicols}
-\begin{multicols}{2}{
-$$
-\hF{S} \hF{\structplus_{\rho}} S_r \normalizePlusTimesS  S_r
-$$
 
-$$
-S_l \hF{\structplus_{\rho}} \hF{S} \normalizePlusTimesS  S_l
-$$
-}\end{multicols}
 \end{definition}
 
 \begin{remark}
-The struct rewriting rules of $\normalizePlusTimesS$ include not only rules to distribute $\structtimes$ over $\structplus$ in a more clever way, but also rules to handle struct connectives that correspond to degenerate and partially degenerate inferences. These rules are related to downward swapping of weakening inferences, as shown in Lemma \ref{lemma:SwapNormalizeCorrespondence}.
+The last three rules handle connectives that correspond to (partially) degenerate inferences, whose auxiliary formulas are eventually introduced by weakening. These rules are related to downward permutation of weakening inferences, as shown in Lemma \ref{lemma:SwapNormalizeCorrespondence}. Because of the last two rules, $\normalizePlusTimesS$ is not confluent.
 \end{remark}
 
 
+Swapped clause sets are very similar to profile clause sets, which have been defined in \cite{Hetzl2007CharacteristicClauseSetsandProofTransformations}. In fact, the concept of swapped clause set evolved from attempts to find an intuitively simpler definition for profile clause sets. In Subsection \ref{sec:CutEliminationByResolution:CEResProfile}, profile clause sets are defined and the slight difference with respect to swapped clause sets is discussed.
+
+\emph{Cut-pertinent swapped clause sets} (Definition \ref{definition:CutPertinentClauseSetSwap}) of proofs are simply defined as the clausification of $\normalizePlusTimesS$-normal-forms of the cut-pertinent structs of the proofs. While swapped clause sets are always smaller than or of equal size to standard clause sets, they have the disadvantage of being non-unique, because $\normalizePlusTimesS$ is non-confluent. Therefore, in general more than one swapped clause set of a proof is necessary to fully characterize the set of all possible $\CEResSwap$-normal-forms for the proof. Nevertheless, it is important to note that each swapped clause set is unsatisfiable (Theorem \ref{theorem:UnsatisfiabilityOfClauseSetSwap}).
 
 
 \begin{example}[$\structplus\structtimes_{W}$-Normalization]
@@ -2770,11 +2706,10 @@ The \emph{$\CERes$-normal-form ignoring quantifier-free cuts} $\CEResNFQuant{\va
 
 \appendix
 
-\section{Inference Swapping}
+\section{Inference Permutation}
+\label{appendix:InferencePermutation}
 
-
-In this Subsection, a proof rewriting system (Definition \ref{definition:Swapping}) for inference swapping\footnote{The study of inference swapping in Gentzen's sequent calculi goes back to \cite{Klenne1952TwoPapersonthePredicateCalculus}. Another modern and more abstract study of inference swapping can be found in \cite{Guenot2009ConcurrencyandPermutabilityintheSequentCalculus}.
-}
+In this section, a proof rewriting system (Definition \ref{definition:Swapping}) for inference swapping
 is described. It is subdivided according to the kind of dependence (Definition \ref{definition:InferenceDependence}) between the inferences that are being swapped. If the lower inference is independent of the upper inference, then they can easily be swapped (Definition \ref{definition:SwappingOfIndependentInferences}), with no increase of proof size. However, if the lower inference is indirectly dependent on the upper inference, then swapping requires a duplication of the lower inference, as well as the introduction of weakening and contraction inferences (Definition \ref{definition:SwappingOfIndirectlyDependentInferences}). The case of eigen-variable dependence can be avoided by considering skolemized proofs only. Even though two inferences cannot generally be swapped if there is direct dependence between them, swapping is possible in the particular case when the upper inference is a contraction (Definition \ref{definition:SwappingContraction}) or a weakening (downward swapping of weakening inferences, Definition \ref{definition:SwappingContraction}). 
 
 
