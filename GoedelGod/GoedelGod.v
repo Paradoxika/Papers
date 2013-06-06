@@ -158,7 +158,7 @@ cut (Essential G g).
 Qed.
 
 
-
+(* This lemma is not true. It should be (diamond p) -> (box (p -> q)) -> (diamond q) *)
 Lemma modus_ponens_inside_diamond: forall p q: Prop, (diamond p) -> (p -> q) -> (diamond q).
 (* ToDo: it might be possible to simplify the following proof *)
 Proof.
