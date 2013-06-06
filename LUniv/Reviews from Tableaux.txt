@@ -1,0 +1,133 @@
+Dear author(s),
+
+On behalf of the Tableaux 2013 program committee, we are
+pleased to inform you that your paper entitled
+
+   "Compression of Propositional Resolution Proofs by Lowering Subproofs"
+
+has been accepted for inclusion in the programme and the
+conference proceedings. 
+
+We enclose the reviews on your submission and we are confident
+that you will take the remarks of the reviewers into account 
+in your update of your paper. 
+
+We remind you that the *firm deadline* for the final version
+of your paper is fixed on 
+
+    Tuesday 18, June 2013. 
+
+We will send you an independent email including a summary of
+the instructions to send your final version.
+
+Thank you again for your contribution to Tableaux 2013 and
+We are looking forward to see you at the conference in 
+Nancy (France) next September.
+
+Best regards,
+
+Didier Galmiche and Dominique Larchey-Wendling
+PC chairs of Tableaux 2013
+
+
+----------------------- REVIEW 1 ---------------------
+PAPER: 21
+TITLE: Compression of Propositional Resolution Proofs by Lowering Subproofs
+AUTHORS: Bruno Woltzenlogel Paleo and Joseph Boudou
+
+OVERALL EVALUATION: -1 (weak reject)
+REVIEWER'S CONFIDENCE: 3 (medium)
+
+----------- REVIEW -----------
+This paper extends a compression technique for propositional
+resolution refutations from an earlier paper (co-authored by the
+second author of this paper).  The presentation is clear and
+experimental evidence of the efficacy is nice to see.  Interest in
+improving resolution refutations after being generated is an
+interesting problem that needs some attention.
+
+However, I rate this paper as a weak reject since it seems both
+incremental (a small increment in fact) and out-of-range for Tableaux.
+The logical / proof-theoretic significance of the material in this
+paper is minor.  It seems that this might have been much better sent
+to a workshop or conference that focuses on SAT solving.
+
+
+----------------------- REVIEW 2 ---------------------
+PAPER: 21
+TITLE: Compression of Propositional Resolution Proofs by Lowering Subproofs
+AUTHORS: Bruno Woltzenlogel Paleo and Joseph Boudou
+
+OVERALL EVALUATION: 1 (weak accept)
+REVIEWER'S CONFIDENCE: 2 (low)
+
+----------- REVIEW -----------
+This paper presents an improvement on the authors' previous work on
+compressing resolution proofs.  In particular, they present a new
+algorithm (LowerUnivalents) that improves on an algorithm from [8]
+(LowerUnits), and they combine it with another well-known algorithm
+(RPI) for even better results.  A theoretical result showing that
+LowerUnivalents always produces a proof with the same number or fewer
+nodes than LowerUnits is presented.  Finally, a fairly extensive set
+of experiments showing the improvements on a variety of benchmarks are
+described.
+
+The paper is well-written overall.  I am not an expert in the area,
+and was sometimes confused about the source of some of the results
+discussed.  For example, Section 2 presents "some theoretical results
+used in the paper".  Are these yours or someone else's?  In either
+case, citations are needed.  For example, where does the deletion
+algorithm (Algorithm 1) come from?
+
+Minor comment: In Section 6, "algorithms have been experimented on..."
+is not correct English.
+
+
+----------------------- REVIEW 3 ---------------------
+PAPER: 21
+TITLE: Compression of Propositional Resolution Proofs by Lowering Subproofs
+AUTHORS: Bruno Woltzenlogel Paleo and Joseph Boudou
+
+OVERALL EVALUATION: 1 (weak accept)
+REVIEWER'S CONFIDENCE: 3 (medium)
+
+----------- REVIEW -----------
+The authors present a new method for decreasing the size
+of a resolution proof by "lowering" subproofs. Lowering
+means deferring the use of a particular clause until the
+final stage of the proof. A method of lowering unit clauses,
+called LowerUnits is recalled from a previous paper, and a
+generalization called LowerUnivalents is presented that allows
+further reduction of proof size.
+
+A complementary method of proof size reduction called
+RecyclePivotsWithItersection (RPI) is recalled from a
+previous paper, and then in the experimental section,
+many combinations of the presented proof-shrinking
+methods are described and compared.
+
+
+The notation that the authors present for manipulating resolution
+proofs is very compact and has some nice intuitive properties.
+One such property is that the proof subtraction operator, $\setminus$;
+roughly an inverse of the resolution operator, which expressed
+in a multiplicative notation using $\odot$. 
+Ultimately, the notation of resolution and proof subtraction
+contributes to the paper,
+and so is an overall plus.
+
+The use of dual of $\ell$" for $\bar{\ell}$ is nonstandard terminology in boolean
+logic, as the dual of a constant-free formula
+F is F with all instances of $\wedge$ and $\vee$
+interchanged. Thus in typical terminology,
+the dual of $\ell$ is $\ell$. The standard term
+is "complement" to refer to $\bar{\ell}$.
+
+
+I believe that
+the operation of LowerUnivalents is novel within the literature.
+The paper is well-written and the experiments are extensive
+and well-presented. The paper appears to show some progress towards
+a goal that is important not just in theoretical circles,
+but also to those working in industry on model checking verification system.
+I recommend (weak) acceptance.
