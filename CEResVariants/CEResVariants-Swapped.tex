@@ -3,10 +3,24 @@
 
 Redundancy originates in the distribution of disjunction over conjunction during the clause form transformation of the characteristic formula. As conjunctions and disjunctions in the characteristic formula correspond to binary inferences operating, respectively, on cut-ancestors and end-sequent-ancestors in the proof, the amount of distributions can be reduced by first pre-processing the proof and permuting inferences operating on cut-ancestors downward. The rules for inference permutation are shown in Appendix \ref{appendix:InferencePermutation} and in \cite{ToDo}.
 
-\begin{example}[Inference Permutation]
+\begin{example}
 \label{example:InferencePermutation}
-With downward permutation of inferences operating on cut-ancestors, the proof $\varphi$ from Example \ref{example:CutPertinentStruct} is tranformed into the proof $\psi$ below:
-\begin{tiny}
+With downward permutation of inferences operating on cut-ancestors, proof $\varphi$ from Example \ref{example:CutPertinentStruct} is tranformed into the proof $\psi$ shown below:
+\begin{small}
+\begin{prooftree}
+			\AXC{$\psi'$} \noLine
+			\UIC{$(\hF{A} \wedge \hF{B}) \vee \hF{C} \seq \hA{A} \wedge \hB{B}, \hF{C}$}
+						\AXC{$C \seq C$} \RightLabel{$cut_2$}
+			\BIC{$(\hF{A} \wedge \hF{B}) \vee \hF{C} \seq \hA{A} \wedge \hB{B}, C$}
+					\AXC{$\hC{B} \seq \hC{B} $}
+							\AXC{$\hC{A} \seq \hC{A}$} \RightLabel{$\wedge_r$}
+						\BIC{$\hC{A}, \hC{B} \seq \hC{B} \wedge \hC{A}$} \RightLabel{$\wedge_l$}
+						\UIC{$\hC{A} \wedge \hC{B} \seq \hC{B} \wedge \hC{A}$}  \RightLabel{$cut_1$}
+				\BIC{$(\hF{A} \wedge \hF{B}) \vee \hF{C} \seq B \wedge A, C $}
+\end{prooftree}
+\end{small}
+where $\psi'$ is:
+\begin{small}
 \begin{prooftree}
 \AXC{$\hA{A} \seq \hA{A} $} \RightLabel{$w_l$}
 \UIC{$\hA{A}, \hA{B} \seq \hA{A}$} \RightLabel{$\wedge_l$}
@@ -22,15 +36,8 @@ With downward permutation of inferences operating on cut-ancestors, the proof $\
 			\UIC{$(\hF{A} \wedge \hF{B}) \vee \hF{C} \seq \hA{A} \wedge \hB{B}, \hA{C}, \hB{C}$}
 \RightLabel{$c_r$} 		
 			\UIC{$(\hF{A} \wedge \hF{B}) \vee \hF{C} \seq \hA{A} \wedge \hB{B}, \hF{C}$}
-						\AXC{$C \seq C$} \RightLabel{$cut_2$}
-			\BIC{$(\hF{A} \wedge \hF{B}) \vee \hF{C} \seq \hA{A} \wedge \hB{B}, C$}
-					\AXC{$\hC{B} \seq \hC{B} $}
-							\AXC{$\hC{A} \seq \hC{A}$} \RightLabel{$\wedge_r$}
-						\BIC{$\hC{A}, \hC{B} \seq \hC{B} \wedge \hC{A}$} \RightLabel{$\wedge_l$}
-						\UIC{$\hC{A} \wedge \hC{B} \seq \hC{B} \wedge \hC{A}$}  \RightLabel{$cut_1$}
-				\BIC{$(\hF{A} \wedge \hF{B}) \vee \hF{C} \seq B \wedge A, C $}
 \end{prooftree}
-\end{tiny}
+\end{small}
 
 \noindent
 Its characteristic formula is:
@@ -49,13 +56,13 @@ $$
 $$
 
 \noindent 
-Thanks to inference swapping, fewer duplications occur in $\clauseset{\psi}$ than in $\clauseset{\varphi}$.
+Thanks to inference permutations, fewer duplications occur in $\clauseset{\psi}$ than in $\clauseset{\varphi}$.
 \hfill\QED
 \end{example}
 
 
 \noindent
-However, local proof rewriting such as inference permutation is a source of inefficiency typical of reductive cut-elimination methods that cut-elimination by resolution strives to avoid. Therefore, a method for transforming the characteristic formula into clause form that takes the possibility of inference permutation into account without actually having to perform inference permutations is desirable. Such a method ($\normalizePlusTimesS$) is defined in this section, and it is shown in Lemma \ref{lemma:SwapNormalizeCorrespondence} that every rewriting of the characteristic formula according to $\normalizePlusTimesS$ corresponds to a sequence of inference permutation steps according to the rules in Appendix \ref{appendix:InferencePermutation}. Thus, while $\normalizePlusTimes$ does full distribution of disjunction over conjunction, as if inferences operating on cut-ancestors were always indirectly dependent on the inferences operating on end-sequent ancestors above them, $\normalizePlusTimesS$ does partial distribution when the corresponding inferences are independent and permutable without the need for duplications. For the partial distribution to be possible, the characteristic formula must contain extra information to allow the retrieval of the dependencies between the branching inferences.
+However, local proof rewriting such as inference permutation inefficient. It is typical of reductive cut-elimination methods and it is something that cut-elimination by resolution strives to avoid and improve. Therefore, a method for transforming the characteristic formula into clause form that takes the possibility of inference permutation into account without actually having to perform inference permutations is desirable. Such a method ($\normalizePlusTimesS$) is defined in this section, and it is shown in Lemma \ref{lemma:SwapNormalizeCorrespondence} that every rewriting of the characteristic formula according to $\normalizePlusTimesS$ corresponds to a sequence of inference permutation steps according to the rules in Appendix \ref{appendix:InferencePermutation}. Thus, while $\normalizePlusTimes$ does full distribution of disjunction over conjunction, as if inferences operating on cut-ancestors were always indirectly dependent on the inferences operating on end-sequent ancestors above them, $\normalizePlusTimesS$ does partial distribution when the corresponding inferences are independent and permutable without the need for duplications. For the partial distribution to be possible, the characteristic formula must contain extra information to allow the retrieval of the dependencies between the branching inferences.
 
 
 
@@ -155,11 +162,16 @@ The last three rules handle connectives that correspond to (partially) \emph{deg
 \begin{definition}[Swapped Clause Set]
 \label{definition:CutPertinentClauseSetSwap}
 \index{Clause Set!Swapped}
-A \emph{swapped clause set} $\clausesetSwap{\varphi}{S}$ of a proof $\varphi$ is the $\normalizePlusTimesS$-normal-form $S$ of $\struct{\varphi}$ written in sequent notation. In cases where $\struct{\varphi}$ has only one $\normalizePlusTimesS$-normal-form, the swapped clause set can be denoted simply as $\clausesetSwapUnique{\varphi}$.
+A \emph{swapped clause set} $\clausesetSwap{\varphi}{S}$ of a proof $\varphi$ is the $\normalizePlusTimesS$-normal-form $S$ of $\struct{\varphi}$ written in sequent notation.
 \end{definition}
 
 \begin{remark}
-Swapped clause sets are very similar to \emph{profiles}, which have been defined in \cite{Hetzl2007CharacteristicClauseSetsandProofTransformations}. In fact, the concept of swapped clause set evolved from attempts to find an intuitively simpler explanation for the fact that profiles work. They differ only on proofs that contain  degenerate inferences. In such cases, swapped clause sets are always smaller than profiles \ref{ToDo}.
+In cases where $\clausesetSwap{\varphi}{S_1} = \clausesetSwap{\varphi}{S_1}$ for any $\normalizePlusTimesS$-normal-forms $S_1$ and $S_2$ of $\struct{\varphi}$, the unique swapped clause set is denoted simply as $\clausesetSwapUnique{\varphi}$.
+\end{remark}
+
+
+\begin{remark}
+Swapped clause sets are very similar to \emph{profiles}, which have been defined in \cite{Hetzl2007CharacteristicClauseSetsandProofTransformations}. In fact, the concept of swapped clause set evolved from attempts to find a simpler explanation for profiles. They differ only on proofs that contain  degenerate inferences. In such cases, swapped clause sets are always smaller \ref{ToDo}.
 \end{remark}
 
 
@@ -309,9 +321,7 @@ $$
 $$
 
 \noindent
-It is interesting to note that $\clausesetSwap{\varphi}{S_1} = \clausesetSwap{\varphi}{S_2}$ (since they are sets). This is not a coincidence. It always occurs when the non-confluence is due to non-degenerated applications of the first rewriting rule.
-
-A refutation $\delta$ of $\clausesetSwapUnique{\varphi}$ is shown below:
+It is interesting to note that $\clausesetSwap{\varphi}{S_1} = \clausesetSwap{\varphi}{S_2}$ (because they are sets). This is not a coincidence. It always occurs when the non-confluence is due to non-degenerated applications of the first rewriting rule. A refutation $\delta$ of $\clausesetSwapUnique{\varphi}$ is shown below:
 \begin{prooftree}
 \AXC{$\seq \hA{A}, \hE{C}$}
 			\AXC{$\seq \hB{B}, \hE{C}$}
@@ -325,6 +335,16 @@ A refutation $\delta$ of $\clausesetSwapUnique{\varphi}$ is shown below:
 
 \noindent
 $\CEResNFSwapO{\varphi}{\delta}$ is the $\CERes$-normal-form obtained with the swapped clause set:
+\begin{scriptsize}
+\begin{prooftree}
+		\AXC{$ \varphi_0 $} \noLine
+		\UIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C}, (\hG{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hE{C}$} 
+				\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut$}
+			\BIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C}, (\hG{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C}$} \RightLabel{$c_l$}
+			\UIC{$(A \wedge B) \vee C \seq \hC{B} \wedge \hD{A}, \hF{C}$}
+\end{prooftree}
+\end{scriptsize}
+where $\varphi_0$ is:
 \begin{scriptsize}
 \begin{prooftree}
 \AXC{$\hA{A} \seq \hA{A}$} \RightLabel{$w_l$}
@@ -342,10 +362,7 @@ $\CEResNFSwapO{\varphi}{\delta}$ is the $\CERes$-normal-form obtained with the s
 								\BIC{$\hD{A}, \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$cut$}
 						\BIC{$(\hG{A} \wedge \hB{B}) \vee \hE{C}, \hD{A} \seq \hC{B} \wedge \hD{A}, \hE{C}$} \RightLabel{$cut$}
 		\BIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C}, (\hG{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hE{C}, \hE{C}$} \RightLabel{$c_r$}
-		\UIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C}, (\hG{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hE{C}$} 
-				\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut$}
-			\BIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C}, (\hG{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C}$} \RightLabel{$c_l$}
-			\UIC{$(A \wedge B) \vee C \seq \hC{B} \wedge \hD{A}, \hF{C}$}
+		\UIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C}, (\hG{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hE{C}$}
 \end{prooftree}
 \end{scriptsize}
 
@@ -362,10 +379,18 @@ As expected, the use of less redundant clause sets and projections results in sm
 For any skolemized proof $\varphi$ and any $\normalizePlusTimesS$-normal-form $S$ of $\struct{\varphi}$, $\clausesetSwap{\varphi}{S}$ is unsatisfiable.
 \end{theorem}
 \begin{proof}
-By Lemma \ref{lemma:SwapNormalizeCorrespondence} in Appendix \ref{sec:Correspondence}, there exists a proof $\psi$ such that $\struct{\psi} = S$. Clearly, $\clausesetSwap{\varphi}{S} = \clausesetSwapUnique{\psi}$. But $\clausesetSwapUnique{\psi} = \clausesetStandard{\psi}$, since $S$ is also a $\normalizePlusTimes$-normal-form. Therefore, $\clausesetSwap{\varphi}{S} = \clauseset{\psi}$ and, by Theorem \ref{theorem:Unsatisfiability} and the fact that $\clauseset{\psi}$ is equisatisfiable with $\struct{\psi}$, they are unsatisfiable.
+By Lemma \ref{lemma:SwapNormalizeCorrespondence} in Appendix \ref{sec:Correspondence},
+there exists a proof $\psi$ such that $\struct{\psi} = S$. Clearly, 
+$\clausesetSwap{\varphi}{S} = \clausesetSwapUnique{\psi}$. 
+But $\clausesetSwapUnique{\psi} = \clausesetStandard{\psi}$, 
+since $S$ is also a $\normalizePlusTimes$-normal-form. 
+Therefore, $\clausesetSwap{\varphi}{S} = \clauseset{\psi}$ and, 
+by Theorem \ref{theorem:Unsatisfiability} and the fact that 
+$\clauseset{\psi}$ is equisatisfiable with $\struct{\psi}$, 
+$\clausesetSwap{\varphi}{S}$ is unsatisfiable.
 \end{proof}
 
 
 \begin{remark}
-It is not possible to prove Theorem \ref{theorem:UnsatisfiabilityOfClauseSetSwap} analogously to the proof of the unsatisfiability of the profile shown in \cite{Hetzl2007CharacteristicClauseSetsandProofTransformations,Hetzl2008ProofProfiles.CharacteristicClauseSetsandProofTransformations}, which is essentially based on the fact that the profile of $\varphi$ subsumes $\clauseset{\varphi}$. Unfortunately, $\clausesetSwap{\varphi}{S}$ does not subsume $\clauseset{\varphi}$ in general. In particular, the subsumption fails when $\varphi$ contains degenerate inferences, in which case $\normalizePlusTimesS$ prunes too much of the characteristic formula and hence some clauses of $\clauseset{\varphi}$ are not subsumed by any clause of $\clausesetSwap{\varphi}{S}$.
+It is not possible to prove Theorem \ref{theorem:UnsatisfiabilityOfClauseSetSwap} analogously to the proof of the unsatisfiability of the profile shown in \cite{Hetzl2007CharacteristicClauseSetsandProofTransformations,Hetzl2008ProofProfiles.CharacteristicClauseSetsandProofTransformations}, which is essentially based on the fact that the profile of $\varphi$ subsumes $\clauseset{\varphi}$. Unfortunately, $\clausesetSwap{\varphi}{S}$ does not subsume $\clauseset{\varphi}$ in general. In particular, the subsumption fails when $\varphi$ contains degenerate inferences, in which case $\normalizePlusTimesS$ prunes too much of the characteristic formula and then some clauses of $\clauseset{\varphi}$ are not subsumed by any clause of $\clausesetSwap{\varphi}{S}$.
 \end{remark}

@@ -1,11 +1,11 @@
 \section{Redundancy}
 \label{sec:Redundancy}
 
-A closer inspection of the projections in example \ref{example:OProjections} reveals that they are quite redundant. Inference $\wedge_l^6$, for example, repeatedly appears in four of the six projections; $\wedge_r^2$ appears in two projections; and $\vee_l^5$ appears in all six projections. Furthermore, all six projections derive the formula $(A \wedge B) \vee C$ in the their end-sequents, and then all occurrences of this formula must be contracted in the bottom of $\CEResNF{\varphi}{\delta}$ shown in example \ref{example:CEResSONormalForm}. 
+A closer inspection of the projections in example \ref{example:OProjections} reveals that they are quite redundant. Inference $\wedge_l^6$, for example, repeatedly appears in four of the six projections; $\wedge_r^2$ appears in two projections; and $\vee_l^5$ appears in all six projections. Furthermore, all six projections derive the formula $(A \wedge B) \vee C$ in their end-sequents, and then all occurrences of this formula must be contracted in the bottom of $\CEResNF{\varphi}{\delta}$ shown in example \ref{example:CEResSONormalForm}. 
 
 The redundancy is mainly a consequence of the simple transformation to conjunctive normal form used by $\CERes$. When disjunction is distributed over conjunction, it is often the case that literals must be duplicated. Hence, each projection w.r.t. a clause that contains a copy of a duplicated literal will have to contain a copy of every inference that operates on descendants of this literal.
 
-In the worst case, as shown in Theorem \ref{theorem:SizeOfCEResNormalForms}, this redundancy can make $\CERes$ normal forms exponentially larger than normal forms produced by reductive cut-elimination methods. This theorem is a corollary of Theorem \ref{theorem:SizeOfClauseSets}, which shows that exponential blow-up already occurs in the size of the characteristic clause set.
+In the worst case, by Theorem \ref{theorem:SizeOfCEResNormalForms}, this redundancy can make $\CERes$ normal forms exponentially larger than normal forms produced by reductive cut-elimination methods. Theorem \ref{theorem:SizeOfCEResNormalForms} is a corollary of Theorem \ref{theorem:SizeOfClauseSets}, which shows that exponential blow-up already occurs in the size of the characteristic clause set.
 
 
 \begin{theorem}[Size of Characteristic Clause Set]
@@ -14,6 +14,7 @@ There exist positive rational constants $k$ and $k'$ and a sequence of proofs $\
 \end{theorem}
 \begin{proof}
 Let $\psi_1(s)$ be the following proof:
+\begin{small}
 \begin{prooftree}
 \AXC{$A_1(s) \seq A_1(s)$}
 		\AXC{$B_1(s) \seq B_1(s)$} \RightLabel{$\wedge_r$}
@@ -26,9 +27,11 @@ Let $\psi_1(s)$ be the following proof:
 			\BIC{$(A_1(s)\wedge B_1(s)) \vee (C_1(s)\wedge D_1(s)) \seq A_1(s) \wedge B_1(s), C_1(s) \wedge D_1(s)$} \RightLabel{$\vee_r$}
 			\UIC{$(A_1(s)\wedge B_1(s)) \vee (C_1(s)\wedge D_1(s)) \seq (A_1(s) \wedge B_1(s)) \vee (C_1(s) \wedge D_1(s))$}
 \end{prooftree}
+\end{small}
 
 \noindent
 And let $\psi_n(s)$ ($n>1$) be:
+\begin{small}
 \begin{prooftree}
 \AXC{$\psi_{n-1}(a.s)$} \noLine
 \UIC{$A_n(s) \seq A_n(s)$}
@@ -45,7 +48,8 @@ And let $\psi_n(s)$ ($n>1$) be:
 			\BIC{$(A_n(s)\wedge B_n(s)) \vee (C_n(s)\wedge D_n(s)) \seq A_n(s) \wedge B_n(s), C_n(s) \wedge D_n(s)$} \RightLabel{$\vee_r$}
 			\UIC{$(A_n(s)\wedge B_n(s)) \vee (C_n(s)\wedge D_n(s)) \seq (A_n(s) \wedge B_n(s)) \vee (C_n(s) \wedge D_n(s))$}
 \end{prooftree}
-where (for $n>1$):
+\end{small}
+where $x.s$ denotes the the result of prepending $x$ in the list $s$ and (for $n>1$):
 $$
 \begin{array}{rcl}
 A_n(s) 	& \defEq & (A_{n-1}(a.s)\wedge B_{n-1}(a.s)) \vee (C_{n-1}(a.s)\wedge D_{n-1}(a.s)) \\
@@ -54,15 +58,18 @@ C_n(s) 	& \defEq & (A_{n-1}(c.s)\wedge B_{n-1}(c.s)) \vee (C_{n-1}(c.s)\wedge D_
 D_n(s) 	& \defEq & (A_{n-1}(d.s)\wedge B_{n-1}(d.s)) \vee (C_{n-1}(d.s)\wedge D_{n-1}(d.s)) \\
 \end{array}
 $$
-and $x.l$ denotes the result of appending the character $x$ in the beginning of the list of characters $l$.
 
+\noindent
 Let $\varphi_n$ be the proof below:
+\begin{small}
 \begin{prooftree}
 \AXC{$\psi_n([])$}
 		\AXC{$\psi_n([])$} \RightLabel{$cut$}
 	\BIC{$(A_n([])\wedge B_n([])) \vee (C_n([])\wedge D_n([])) \seq (A_n([]) \wedge B_n([])) \vee (C_n([]) \wedge D_n([]))$}
 \end{prooftree}
+\end{small}
 
+\noindent
 Let $S_{\psi_k(s)}^l$ be the subformula of $\struct{\varphi_n}$ corresponding to the root inference of the subproof $\psi_k(s)$ in the left side of $\varphi_n$. Analogously, let $S_{\psi_k(s)}^r$ be the subformula of $\struct{\varphi_n}$ at the root inference of the subproof $\psi_k(s)$ in the right side of $\varphi_n$. Then:
 $$
 \struct{\varphi_n} = S_{\psi_n([])}^l \structplus S_{\psi_n([])}^r
@@ -120,10 +127,10 @@ There exist positive rational constants $k$ and $k''$ and a sequence of proofs $
 \end{itemize}
 \end{theorem}
 \begin{proof}
-Consider the proofs $\varphi_n$ defined in the proof of the Theorem \ref{theorem:SizesOfDefinitionalAndNonDefinitionalClauseSets}. As proved there, 
+Consider the proofs $\varphi_n$ defined in the proof of the Theorem \ref{theorem:SizeOfClauseSets}. As proved there, 
 $|\clausesetStandard{\varphi_n}| \geq k' 2^{2^n}$, for some positive rational constant $k'$. Moreover, in any refutation $\delta_n$ of $\clausesetStandard{\varphi_n}$, every clause of $\clausesetStandard{\varphi_n}$ has to be used at least once. Therefore, $\proofsizeSymbol{\delta_n} \geq k'' 2^{2^n}$, for some $k'' > k'$. Since $\proofsizeSymbol{\CEResNF{\varphi_n}{\delta_n}} \geq \proofsizeSymbol{\delta_n}$, $\proofsizeSymbol{\CEResNF{\varphi_n}{\delta_n}} \geq k'' 2^{2^n}$ as well. As $\varphi_n$ contains neither implicit nor explicit contractions, the size strictly decreases with every reductive cut-elimination step. Hence, for any proof $\varphi_n^*$ obtained from $\varphi_n$ by reductive cut-elimination, $\proofsizeSymbol{\varphi_n^*} < \proofsizeSymbol{\varphi_n} < k 4^n$.
 \hfill\QED
 \end{proof}
 
 \noindent
-While the sequence of proofs used to prove Theorems \ref{theorem:SizeOfCEResNormalForms} and \ref{theorem:SizeOfClauseSets} is rather artificial, it is important to note that redundancy can be expected to occur often in practice as well. Whenever the input proof has a structure with alternations of inferences operating on cut-ancestors and end-sequent-ancestors, the characteristic formula has alternations of disjunctions and conjunctions, and its literals are duplicated during the clause form transformation of the characteristic formula. Therefore, this is an issue that must be addressed for $\CERes$ to be efficiently applicable to proofs with complex structure.
+While the sequence of proofs used to prove Theorems \ref{theorem:SizeOfClauseSets} and \ref{theorem:SizeOfCEResNormalForms} is rather artificial, it is important to note that redundancy can be expected to occur often in practice as well. Whenever the input proof has a structure with alternations of inferences operating on cut-ancestors and end-sequent-ancestors, the characteristic formula has alternations of disjunctions and conjunctions, and its literals are duplicated during the clause form transformation of the characteristic formula. Therefore, this is an issue that must be addressed for $\CERes$ to be efficiently applicable to proofs with complex structure.

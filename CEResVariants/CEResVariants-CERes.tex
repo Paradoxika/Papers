@@ -2,7 +2,7 @@
 \label{sec:CERes}
 
 
-The $\CERes$ method consists of four steps. Firstly, the proof with cuts $\psi$ is skolemized into a proof $\psi'$. Secondly, a \emph{characteristic formula} $\struct{\psi}$ is extracted from $\psi'$. Thirdly, as this formula is always unsatisfiable, it can be converted to a \emph{characteristic clause set} and refuted by resolution. The resulting resolution refutation $\delta$ (whose existence is guaranteed by the completeness of the resolution calculus \cite{ToDo}) is essentially made of atomic cuts and contractions. It can be transformed, in the last step, into a sequent calculus proof $\CEResNF{\psi,\delta}$, having only atomic cuts and having the same end-sequent as $\psi'$, by combining the refutation $\delta$ with cut-free parts of $\psi'$ known as \emph{projections}.
+The $\CERes$ method consists of four steps. Firstly, the proof with cuts $\psi$ is skolemized into a proof $\psi'$. Secondly, a \emph{characteristic formula} $\struct{\psi}$ is extracted from $\psi'$. Thirdly, as this formula is always unsatisfiable, it can be converted to a \emph{characteristic clause set} and refuted by resolution. The resulting resolution refutation $\delta$ (whose existence is guaranteed by the completeness of the resolution calculus \cite{ToDo}) is made of resolution and factoring inferences. In the last step, a sequent calculus proof $\CEResNF{\psi,\delta}$ having the same end-sequent as $\psi'$ and whose cuts are atomic can be obtained by converting resolution and factoring inferences from $\delta$ to, respectively, atomic cuts and contractions and replacing the leaves from $\delta$ by cut-free parts of $\psi'$ known as \emph{projections}.
 
 
 
@@ -66,12 +66,13 @@ $$
 \structtimes^5
 (\hE{C} \structplus^4 \structdual{\hF{C}})
 $$
-
+\hfill\QED
 \end{example}
 
 \begin{theorem}
-\ref{theorem:Unsatisfiability}
-For any proof $\varphi$, $\all \overline{\alpha_{\varphi}}. \struct{\varphi}$, where $\overline{\alpha_{\varphi}}$ are the eigenvariables of $\varphi$, is unsatisfiable. \BWP{ToDo: check this}
+\label{theorem:Unsatisfiability}
+%For any proof $\varphi$, 
+$\all \overline{\alpha_{\varphi}}. \struct{\varphi}$, where $\overline{\alpha_{\varphi}}$ are the eigenvariables of $\varphi$, is unsatisfiable. \BWP{ToDo: check this}
 \end{theorem}
 \begin{proof}
 Recursively transform each subproof $\psi$ of $\varphi$ having end-sequent $\Gamma, \Gamma^* \seq \Delta, \Delta^*$, where $\Gamma^* \seq \Delta^*$ are cut-ancestors, into a proof $\psi'$ of $\all \overline{\alpha_{\psi}}. \struct{\rho}, \Gamma^* \seq \Delta^*$. By doing so, $\varphi$ itself is transformed into a proof $\varphi'$ with end-sequent $\all \overline{\alpha_{\varphi}}. \struct{\varphi} \seq$.
@@ -85,7 +86,7 @@ Recursively transform each subproof $\psi$ of $\varphi$ having end-sequent $\Gam
 \begin{definition}[Simple Transformation to Conjunctive Normal Form]
 \label{definition:NormalizationPlusTimes}
 \index{Struct Normalization!Standard}
-A formula in negative normal form can be transformed into conjunctive normal form by using the following rewrite rule:
+A formula in negative normal form can be transformed into conjunctive normal form by rewriting it according to the following rule:
 $$
 S \structtimes (S_1 \structplus \ldots \structplus S_n)   \normalizePlusTimes  (S \structtimes S_1) \structplus \ldots \structplus (S \structtimes S_n) 
 $$
@@ -141,12 +142,13 @@ $$
 \end{footnotesize}
 
 \noindent
-And hence the clause set of $\varphi$ is:
+Hence, the clause set of $\varphi$ is:
 %
 $$
 \clauseset{\varphi} \equiv \{ \seq A,C \ \ ; \ \ C \seq A \ \ ;\ \ \seq B,C \ \ ; \ \ C \seq B \ \ ; \ \ B, A \seq C \ \ ; \ \ B, A, C \seq  \}
 $$
 and it can be refuted by the following resolution refutation $\delta$:
+\begin{small}
 \begin{prooftree}
 \AXC{$\seq A,C$}
 		\AXC{$C \seq A$} \RightLabel{$r$}
@@ -164,12 +166,13 @@ and it can be refuted by the following resolution refutation $\delta$:
 						\BIC{$A \seq $} \RightLabel{$r$}
 		\BIC{$ \seq $}
 \end{prooftree}
+\end{small}
 \hfill\QED
 \end{example}
 
 
 \noindent
-Resolution and factoring inferences are essentially atomic cuts and contractions with unification, respectively. Therefore, to obtain the $\CERes$-normal-form (an $\LK$-proof, with only atomic cuts, of the skolemized end-sequent of the original proof with cuts), one can replace each leaf of the refutation by a \emph{projection} with an appropriate end-sequent, apply all the unifiers and convert resolution and factoring inferences to atomic cuts and contractions.
+Resolution and factoring inferences are essentially atomic cuts and contractions with unification. Therefore, to obtain the $\CERes$-normal-form (an $\LK$-proof, with only atomic cuts, of the skolemized end-sequent of the original proof with cuts), one can replace each leaf of the refutation by a \emph{projection} with an appropriate end-sequent, apply all the unifiers and convert resolution and factoring inferences to atomic cuts and contractions.
 Since a projection's purpose is to replace a leaf in a refutation of a clause set, its end-sequent must contain the leaf's clause as a subsequent. Moreover, if its end-sequent contains any other formula, then this formula must appear in the end-sequent of the original proof with cuts, because this formula is propagated downward after the replacement and thus necessarily appears in the end-sequent of the $\CERes$-normal-form. Otherwise, if the formula were not in the end-sequent of the original proof, the $\CERes$-normal-form's end-sequent would be necessarily different from that of the skolemized proof with cuts. Finally, a projection must, of course, be cut-free, otherwise the $\CERes$-normal-form would contain more cuts in addition to the inessential atomic cuts originating from the refutation. These three conditions are formally expressed in Definition \ref{definition:Projection}.
 
 \begin{definition}[Projection]
@@ -272,7 +275,7 @@ The projections $\projectionO{\varphi}{\hC{B}, \hD{A} \seq \hE{C}}$ and $\projec
 Let $\psi$ be a proof and $\Gamma_c \seq \Delta_c$ be a clause in its characteristic clause set. Then $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$ is a projection of $\psi$ with respect to the clause $\Gamma_c \seq \Delta_c$.
 \end{theorem}
 \begin{proof}
-A detailed proof is available in \cite{ToDo}. Here only a sketch is provided. Let $A$ be a set of axioms from $\psi$ that contain literals that contribute to $\Gamma_c \seq \Delta_c$. Note that, since the literals from $\Gamma_c \seq \Delta_c$ occur as cut-ancestors in the axioms in $A$, and inferences operating on cut-ancestors are not performed in the construction of $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$, these literals are simply propagated down to the end-sequent of $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$. Therefore, the end-sequent of $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$ is a supersequent of $\Gamma_c \seq \Delta_c$. Among the formulas in the end-sequent of $\psi$, let $\Gamma' \seq \Delta'$ be the sequent containing all and only those formulas that contain descendents of axioms in $A$. Since $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$ contains all the inferences that operate on formulas that are both end-sequent ancestors and descendents from axioms in $A$. The end-sequent of $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$ is a supersequent of $\Gamma' \seq \Delta'$. And finally, $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$ is cut-free, because it contains no inference operating on cut ancestors and thus, in particular, it contains no cut.
+A detailed proof is available in \cite{ToDo}. Here only a sketch is provided. Let $A$ be a set of axioms from $\psi$ that contain literals that contribute to $\Gamma_c \seq \Delta_c$. Note that, since the literals from $\Gamma_c \seq \Delta_c$ occur as cut-ancestors in the axioms in $A$, and inferences operating on cut-ancestors are not performed in the construction of $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$, these literals are simply propagated down to the end-sequent of $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$. Therefore, the end-sequent of $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$ is a supersequent of $\Gamma_c \seq \Delta_c$. Among the formulas in the end-sequent of $\psi$, let $\Gamma' \seq \Delta'$ be the sequent containing all and only those formulas that contain descendents of axioms in $A$. Since $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$ contains all the inferences that operate on formulas that are both end-sequent ancestors and descendents from axioms in $A$. The end-sequent of $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$ is a supersequent of $\Gamma' \seq \Delta'$. And finally, $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$ is cut-free, because it contains no inference operating on cut ancestors and, therefore, contains no cut.
 \end{proof}
 
 
