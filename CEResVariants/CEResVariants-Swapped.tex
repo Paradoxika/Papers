@@ -5,7 +5,7 @@ Redundancy originates in the distribution of disjunction over conjunction during
 
 \begin{example}
 \label{example:InferencePermutation}
-With downward permutation of inferences operating on cut-ancestors, proof $\varphi$ from Example \ref{example:CutPertinentStruct} is tranformed into the proof $\psi$ shown below:
+Permutation inferences operating on cut-ancestors downward transforms proof $\varphi$ from Example \ref{example:CutPertinentStruct} into the proof $\psi$ shown below:
 \begin{small}
 \begin{prooftree}
 			\AXC{$\psi'$} \noLine
@@ -367,16 +367,16 @@ where $\varphi_0$ is:
 \end{scriptsize}
 
 \noindent
-As expected, the use of less redundant clause sets and projections results in smaller proofs. $\CEResNFSwapO{\varphi}{\delta}$ shown above is significantly smaller than $\CEResNF{\varphi}{\delta}$ shown in Example \ref{example:CEResSONormalForm}. 
+As expected, less redundant clause sets and projections result in smaller proofs. $\CEResNFSwapO{\varphi}{\delta}$ shown above is significantly smaller than $\CEResNF{\varphi}{\delta}$ shown in Example \ref{example:CEResSONormalForm}. 
 \hfill\QED
 \end{example}
 
 
 
 
-\begin{theorem}[Unsatisfiability of the Cut-Pertinent Swapped Clause Set]
+\begin{theorem}[Unsatisfiability of the Swapped Clause Set]\\
 \label{theorem:UnsatisfiabilityOfClauseSetSwap}
-For any skolemized proof $\varphi$ and any $\normalizePlusTimesS$-normal-form $S$ of $\struct{\varphi}$, $\clausesetSwap{\varphi}{S}$ is unsatisfiable.
+For any skolemized proof $\varphi$ and $\normalizePlusTimesS$-normal-form $S$ of $\struct{\varphi}$, $\clausesetSwap{\varphi}{S}$ is unsatisfiable.
 \end{theorem}
 \begin{proof}
 By Lemma \ref{lemma:SwapNormalizeCorrespondence} in Appendix \ref{sec:Correspondence},
