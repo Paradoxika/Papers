@@ -141,10 +141,12 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
 \newcommand{\Conclusion}[1]{\clause_{#1}}
 
 \noindent
-If $\psi = \varphi_L \odot_{\ell} \varphi_R$, then $\varphi_L$ and $\varphi_R$ are \emph{direct subproofs}
-of $\psi$ and $\psi$ is a \emph{child} of both $\varphi_L$ and $\varphi_R$. The transitive closure of
-the direct subproof relation is the \emph{subproof} relation. A subproof which has no direct
-subproof is an \emph{axiom} of the proof. Contrary to the usual graph and proof theoretic conventions but following the actual implementation of the data structures used by \LowerUnivalents, edges are directed from children (resolvents) to their parents (premises).
+If $\psi = \varphi_L \odot_{\ell} \varphi_R$, then $\varphi_L$ and $\varphi_R$ are \emph{direct
+subproofs} of $\psi$ and $\psi$ is a \emph{child} of both $\varphi_L$ and $\varphi_R$. The
+transitive closure of the direct subproof relation is the \emph{subproof} relation. A subproof which
+has no direct subproof is an \emph{axiom} of the proof. Contrary to the usual graph and proof
+theoretic conventions but following the actual implementation of the data structures used by
+\LowerUnivalents, edges are directed from children (resolvents) to their parents (premises).
 %
 $\Vertices{\psi}$, $\Edges{\psi}$ and $\Conclusion{\psi}$
 denote, respectively, the nodes, edges and proved clause (conclusion) of $\psi$.
@@ -210,7 +212,9 @@ $\dn{\psi}{\varphi_1 \ldots \varphi_n}$ being the result of \Rec{$\psi$,$\{\varp
   \label{algo:del}
 \end{algorithm}
 
-The basic idea of the deletion algorithm is to traverse the proof in a top-down manner, replacing
+The deletion algorithm is a minor variant of the \textsc{Reconstruct-Proof} algorithm presented in
+\cite{RP11}.
+The basic idea is to traverse the proof in a top-down manner, replacing
 each subproof having one of its premises marked for deletion (i.e. in $D$) by its other direct
 subproof. The special case when both $\varphi'_L$ and $\varphi'_R$ belong to $D$ is treated rather
 implicitly and deserves an explanation: in such a case, one might intuitively expect the result
@@ -639,7 +643,7 @@ language Scala\footnote{\url{http://www.scala-lang.org/}} as part of the \skepti
 library\footnote{\url{https://github.com/Paradoxika/Skeptik}}. {\LowerUnivalents} has been implemented as a
 recursive \FuncSty{delete} improvement.
 
-The algorithms have been experimented on 5\,059 proofs produced by the SMT-solver
+The algorithms have been applied to 5\,059 proofs produced by the SMT-solver
 {\veriT}\footnote{\url{http://www.verit-solver.org/}} on unsatisfiable benchmarks from the
 SMT-Lib\footnote{\url{http://www.smtlib.org/}}.  The details on the number of proofs per SMT category
 are shown in Table \ref{tab:benchmarks}.  The proofs were translated into pure resolution proofs by
