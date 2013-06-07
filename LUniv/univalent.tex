@@ -2,7 +2,7 @@
 
 \usepackage{xcolor}
 \usepackage{enumitem,amsmath,amssymb}
-\usepackage{url}    % used for \url
+\usepackage{breakurl}    % used for \url and \burl
 \usepackage[linesnumbered,boxed,noline,noend]{algorithm2e}
 \def\defaultHypSeparation{\hskip.1in}
 
@@ -684,7 +684,7 @@ The experiment compared the following algorithms:
 \end{description}
 
 For each of these algorithms, the time needed to compress the proof along with the number of nodes
-and the number of axioms (i.e. \emph{unsat core} size) have been measured. Raw data of the experiment can be downloaded from {\skeptik}'s repository\footnote{\url{https://raw.github.com/Paradoxika/Skeptik/master/doc/papers/LUniv/all-final.csv}}.
+and the number of axioms (i.e. \emph{unsat core} size) have been measured. Raw data of the experiment can be downloaded from {\skeptik}'s repository\footnote{\burl{https://github.com/Paradoxika/Papers/blob/\\4223ab402418e6cc49b2197ed975cf04fb2ceba9/LUniv/all-final.csv?raw=true}}.
 
 The experiments were executed on the Vienna Scientific Cluster\footnote{\url{http://vsc.ac.at/}}
 VSC\nobreakdash-2. Each algorithm was executed in a single core and had up to 16 GB of memory available. This amount of memory has been useful to compress the biggest proofs (with more than $10^6$ nodes).
@@ -777,6 +777,8 @@ set of subproofs it lowers is always a superset of the set of subproofs lowered 
 be possible to lower even more subproofs by finding a characterization of (efficiently) lowerable subproofs
 broader than that of univalent subproofs considered here. This direction for future work promises to be challenging, though, as evidenced by the non-triviality of the optimizations discussed in Section \ref{sec:LUniv} for obtaining a linear-time implementation of {\LowerUnivalents}.
 
+
+
 As discussed in Section \ref{sec:LUnivRPI}, the proposed algorithm can be embedded in the deletion traversal of other algorithms.  As
 an example, it has been shown that the combination of {\LowerUnivalents} with {\RPI}, compared to
 the sequential composition of {\LowerUnits} after {\RPI}, results in a better compression ratio with
@@ -784,13 +786,12 @@ only a small processing time overhead (Figure \ref{fig:LUnivRPI}). Other compres
 deletion or reconstruction phase (e.g. \ReduceReconstruct) could probably benefit from being
 combined with {\LowerUnivalents} as well.
 
-
-
+\vspace{-10pt}
 \paragraph{Acknowledgments:}
-
 The authors would like to thank Pascal Fontaine for providing {\veriT}'s proofs for the experiments,
 for co-organizing our joint workshops on proof
-compression\footnote{\url{http://www.logic.at/people/bruno/MediaWiki/index.php/Amadeus_Vienna-Nancy_Joint_Project_on_Proof_Compression}},
+compression,
+%\footnote{\url{http://www.logic.at/people/bruno/MediaWiki/index.php/Amadeus\_Vienna-Nancy\_Joint\_Project\_on\_Proof\_Compression}}
 and for several interesting and useful discussions on this topic.
 
 
