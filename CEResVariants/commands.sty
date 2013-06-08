@@ -20,13 +20,14 @@
 \newcommand{\LK}{\mathbf{LK}}
 
 % Proof Sizes
-\newcommand{\prooflength}[1]{\mathit{length}(#1)}
+%\newcommand{\prooflength}[1]{\mathit{length}(#1)}
 \newcommand{\proofsizeSymbol}[1]{|#1|}
 
 
 % CERes Methods
 \newcommand{\CERes}{\mathrm{CERes}}
-\newcommand{\CEResSwapO}{{\mathrm{CERes}^{\circ}}}
+\newcommand{\CEResSwap}{\mathrm{SCERes}}
+
 \newcommand{\CEResP}{\mathrm{CERes}_P}
 \newcommand{\CEResPS}{\mathrm{CERes}^S_P}
 \newcommand{\CEResPO}{\mathrm{CERes}^O_P}
@@ -37,11 +38,11 @@
 
 % CERes Normalization
 \newcommand{\CEResNF}[2]{\mathit{CERes}(#1,#2)}
-\newcommand{\CEResNFSwapO}[2]{\mathit{OCERes}(#1,#2)}
+\newcommand{\CEResNFSwap}[2]{\mathit{SCERes}(#1,#2)}
 
 \newcommand{\CEResNFDD}[2]{\mathrm{CERes}^D_D(#1,#2)}
 \newcommand{\CEResNFDSwapDSwap}[2]{\mathrm{CERes}^{DW}_{DW}(#1,#2)}
-\newcommand{\CEResNFComplex}[2]{\mathrm{CCERes}(#1,#2)}
+\newcommand{\CEResNFComplex}[2]{\mathrm{DCERes}(#1,#2)}
 \newcommand{\CEResNFComplexSwapO}[2]{\mathrm{CCERes}^O_W(#1,#2)}
 \newcommand{\CEResQuant}{\mathrm{QCERes}}
 \newcommand{\CEResNFQuant}[2]{\mathrm{QCERes}(#1,#2)}
@@ -77,22 +78,24 @@
 \newcommand{\pertstruct}[2]{\mathcal{S}_{#1}^{#2}} % Pertinent Structure of a proof with respect to a set of occurrences. Argument: proof; set of occurrences.
 \newcommand{\struct}[1]{\mathcal{S}_{#1}} % Cut Pertinent Structure of a proof. Argument: proof; set of occurrences.
 
+\usepackage{relsize}
 
 \newcommand{\normalizePlusTimes}{\leadsto}
-\newcommand{\normalizePlusTimesProfile}{\leadsto_{P}}
-\newcommand{\normalizePlusTimesS}{\stackrel{\circ}{\leadsto}}
+\newcommand{\normalizePlusTimesS}{\stackrel{\star}{\leadsto}}
+\newcommand{\normalizePlusTimesD}{\stackrel{\mathsmaller{D}}{\leadsto}}
+
 \newcommand{\clausify}[1]{\textrm{cl}(#1)}
 \newcommand{\clauseset}[1]{\mathcal{C}_{#1}}
 \newcommand{\clausesetStandard}[1]{\mathcal{C}^S_{#1}}
-\newcommand{\clausesetSwap}[2]{\mathcal{C}^{\circ}_{#1|#2}}
-\newcommand{\clausesetSwapUnique}[1]{\mathcal{C}^{\circ}_{#1}}
+\newcommand{\clausesetSwap}[2]{\mathcal{C}^{\star}_{#1|#2}}
+\newcommand{\clausesetSwapUnique}[1]{\mathcal{C}^{\star}_{#1}}
 \newcommand{\clausesetProfile}[1]{\mathcal{C}^{P}_{#1}}
 \newcommand{\clausesetDefinitional}[1]{\mathcal{C}^{D}_{#1}}
 \newcommand{\clausesetSwappedDefinitional}[2]{\mathcal{C}^{D}_{#1|#2}}
 \newcommand{\clausesetSwappedDefinitionalUnique}[1]{\mathcal{C}^{D}_{#1}}
 
-\newcommand{\projectionS}[2]{\lfloor #1 \rfloor^S_{#2}}
-\newcommand{\projectionO}[2]{\lfloor #1 \rfloor_{#2} }
+
+\newcommand{\projection}[2]{\lfloor #1 \rfloor_{#2} }
 \newcommand{\projectionDDefinitional}[2]{\lfloor #1 \rfloor_{#2}^{D_D} }
 \newcommand{\projectionDProper}[2]{\lfloor #1 \rfloor_{#2}^{D_P} }
 \newcommand{\projectionDWDefinitional}[2]{\lfloor #1 \rfloor_{#2}^{DW_D}}
@@ -105,9 +108,7 @@
 \newcommand{\axlink}{\multimapdotboth} % Axiom-linkage Relation
 
 \newcommand{\partialProof}[2]{\llparenthesis#1\rrparenthesis_{#2}}
-%\newcommand{\slice}[2]{\lbag#1\rbag_{\{#2\}}}
 \newcommand{\WFix}[1]{W_{\mathrm{fix}}(#1)}
-%\newcommand{\EliminateY}[1]{\llbracket #1 \rrbracket}
 
 
 % CERes System
