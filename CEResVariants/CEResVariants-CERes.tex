@@ -5,7 +5,6 @@
 The $\CERes$ method consists of four steps. Firstly, the proof with cuts $\psi$ is skolemized into a proof $\psi'$. Secondly, a \emph{characteristic formula} $\struct{\psi}$ is extracted from $\psi'$. Thirdly, as this formula is always unsatisfiable, it can be converted to a \emph{characteristic clause set} and refuted by resolution. The resulting resolution refutation $\delta$ (whose existence is guaranteed by the completeness of the resolution calculus \cite{ToDo}) is made of resolution and factoring inferences. In the last step, a sequent calculus proof $\CEResNF{\psi,\delta}$ having the same end-sequent as $\psi'$ and whose cuts are atomic can be obtained by converting resolution and factoring inferences from $\delta$ to, respectively, atomic cuts and contractions and replacing the leaves from $\delta$ by cut-free parts of $\psi'$ known as \emph{projections}.
 
 
-
 \begin{definition}[Characteristic Formula]
 \label{definition:PertinentStruct}
 The \emph{characteristic formula} $\struct{\varphi}$ of a proof $\varphi$ is the characteristic formula $\struct{\rho^*}$ where $\rho^*$ is its lowermost inference and $\struct{\rho}$ is defined for each inference $\rho$ as follows:
@@ -190,12 +189,12 @@ The original method \cite{BaazLeitsch2009MethodsofCut-Elimination,BaazHetzlLeits
 
 \begin{definition}[Algorithm for Constructing Projections] %\hspace*{\fill} \\
 \label{definition:OProjection}
-Let $\varphi$ be a proof and $c$ be clause from $\clauseset{\varphi}$. Let $A$ be the set of axioms of $\varphi$ that contain formulas that contribute to $c$. Then, $\projectionO{\varphi}{c}$ is constructed by taking from $\varphi$ only the inferences that operate on formulas that are both descendents of axioms in $A$ and end-sequent ancestors, and adding weakening inferences when necessary.
+Let $\varphi$ be a proof and $c$ be clause from $\clauseset{\varphi}$. Let $A$ be the set of axioms of $\varphi$ that contain formulas that contribute to $c$. Then, $\projection{\varphi}{c}$ is constructed by taking from $\varphi$ only the inferences that operate on formulas that are both descendents of axioms in $A$ and end-sequent ancestors, and adding weakening inferences when necessary.
 \end{definition}
 
 \begin{example}
 \label{example:OProjections}
-For $\varphi$ of Example \ref{example:CutPertinentStruct}, the projections $\projectionO{\varphi}{\seq \hA{A}, \hE{C}}$ and $\projectionO{\varphi}{\seq \hB{B}, \hE{C}}$ are:
+For $\varphi$ of Example \ref{example:CutPertinentStruct}, the projections $\projection{\varphi}{\seq \hA{A}, \hE{C}}$ and $\projection{\varphi}{\seq \hB{B}, \hE{C}}$ are:
 \begin{small}
 \begin{multicols}{2}{
 \begin{prooftree}
@@ -218,7 +217,7 @@ For $\varphi$ of Example \ref{example:CutPertinentStruct}, the projections $\pro
 \end{small}
 
 \noindent
-The projections $\projectionO{\varphi}{\hF{C} \seq \hA{A}}$ and $\projectionO{\varphi}{\hF{C} \seq \hB{B}}$ are:
+The projections $\projection{\varphi}{\hF{C} \seq \hA{A}}$ and $\projection{\varphi}{\hF{C} \seq \hB{B}}$ are:
 \begin{small}
 \begin{multicols}{2}{
 \begin{prooftree}
@@ -243,7 +242,7 @@ The projections $\projectionO{\varphi}{\hF{C} \seq \hA{A}}$ and $\projectionO{\v
 \end{small}
 
 \noindent
-The projections $\projectionO{\varphi}{\hC{B}, \hD{A} \seq \hE{C}}$ and $\projectionO{\varphi}{\hC{B}, \hD{A}, \hF{C} \seq}$ are:
+The projections $\projection{\varphi}{\hC{B}, \hD{A} \seq \hE{C}}$ and $\projection{\varphi}{\hC{B}, \hD{A}, \hF{C} \seq}$ are:
 \begin{multicols}{2}{
 \begin{scriptsize}
 \begin{prooftree}
@@ -273,11 +272,21 @@ The projections $\projectionO{\varphi}{\hC{B}, \hD{A} \seq \hE{C}}$ and $\projec
 \end{example}
 
 \begin{theorem}
-Let $\psi$ be a proof and $\Gamma_c \seq \Delta_c$ be a clause in its characteristic clause set. Then $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$ is a projection of $\psi$ with respect to the clause $\Gamma_c \seq \Delta_c$.
+Let $\psi$ be a proof and $\Gamma_c \seq \Delta_c$ be a clause in its characteristic clause set. Then $\projection{\psi}{\Gamma_c \seq \Delta_c}$ is a projection of $\psi$ with respect to the clause $\Gamma_c \seq \Delta_c$.
 \end{theorem}
 \begin{proof}
-A detailed proof is available in \cite{ToDo}. Here only a sketch is provided. Let $A$ be a set of axioms from $\psi$ that contain literals that contribute to $\Gamma_c \seq \Delta_c$. Note that, since the literals from $\Gamma_c \seq \Delta_c$ occur as cut-ancestors in the axioms in $A$, and inferences operating on cut-ancestors are not performed in the construction of $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$, these literals are simply propagated down to the end-sequent of $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$. Therefore, the end-sequent of $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$ is a supersequent of $\Gamma_c \seq \Delta_c$. Among the formulas in the end-sequent of $\psi$, let $\Gamma' \seq \Delta'$ be the sequent containing all and only those formulas that contain descendents of axioms in $A$. Since $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$ contains all the inferences that operate on formulas that are both end-sequent ancestors and descendents from axioms in $A$. The end-sequent of $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$ is a supersequent of $\Gamma' \seq \Delta'$. And finally, $\projectionO{\psi}{\Gamma_c \seq \Delta_c}$ is cut-free, because it contains no inference operating on cut ancestors and, therefore, contains no cut.
+A detailed proof is available in \cite{ToDo}. Here only a sketch is provided. Let $A$ be a set of axioms from $\psi$ that contain literals that contribute to $\Gamma_c \seq \Delta_c$. Note that, since the literals from $\Gamma_c \seq \Delta_c$ occur as cut-ancestors in the axioms in $A$, and inferences operating on cut-ancestors are not performed in the construction of $\projection{\psi}{\Gamma_c \seq \Delta_c}$, these literals are simply propagated down to the end-sequent of $\projection{\psi}{\Gamma_c \seq \Delta_c}$. Therefore, the end-sequent of $\projection{\psi}{\Gamma_c \seq \Delta_c}$ is a supersequent of $\Gamma_c \seq \Delta_c$. Among the formulas in the end-sequent of $\psi$, let $\Gamma' \seq \Delta'$ be the sequent containing all and only those formulas that contain descendents of axioms in $A$. Since $\projection{\psi}{\Gamma_c \seq \Delta_c}$ contains all the inferences that operate on formulas that are both end-sequent ancestors and descendents from axioms in $A$. The end-sequent of $\projection{\psi}{\Gamma_c \seq \Delta_c}$ is a supersequent of $\Gamma' \seq \Delta'$. And finally, $\projection{\psi}{\Gamma_c \seq \Delta_c}$ is cut-free, because it contains no inference operating on cut ancestors and, therefore, contains no cut.
 \end{proof}
+
+
+\begin{definition}[$\CERes$-normal-form]
+$\CEResNF{\varphi}{\delta}$ denotes the\emph{$\CERes$-normal-form} of the proof $\varphi$ w.r.t. the resolution refutation $\delta$ of its clause set $\clauseset{\varphi}$. It is obtained by:
+\begin{enumerate}
+\item converting resolution and factoring inferences from $\delta$ to, respectively, atomic cuts and contractions (with a substitution $\sigma$ that is the composition of all unifiers)
+\item replacing each axiom clause $c$ in $\delta$ by its corresponding projection $\projection{\psi}{c} \sigma$.
+\item adding contractions in the bottom of the proof, if necessary.
+\end{enumerate} 
+\end{definition}
 
 
 
@@ -288,9 +297,9 @@ Let $\varphi$ be the proof shown in Example \ref{example:CutPertinentStruct} and
 
 \begin{scriptsize}
 \begin{prooftree}
-\AXC{$\projectionO{\varphi}{\seq A, C}$} \noLine
+\AXC{$\projection{\varphi}{\seq A, C}$} \noLine
 \UIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C} \seq \hA{A}, \hE{C}$}
-		\AXC{$\projectionO{\varphi}{C \seq A}$} \noLine
+		\AXC{$\projection{\varphi}{C \seq A}$} \noLine
 		\UIC{$(\hA{A} \wedge \hG{B}) \vee \hG{C}, \hF{C} \seq \hA{A}, \hF{C} $} \RightLabel{$cut$}
 	\BIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C}, (\hA{A} \wedge \hG{B}) \vee \hG{C} \seq \hA{A},\hA{A}, \hF{C}$} \RightLabel{$c_r$}
 	\UIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C}, (\hA{A} \wedge \hG{B}) \vee \hG{C} \seq \hA{A}, \hF{C}$}
@@ -306,15 +315,15 @@ Where $\psi$ is:
 
 \begin{scriptsize}
 \begin{prooftree}
-			\AXC{$\projectionO{\varphi}{\seq B, C}$} \noLine
+			\AXC{$\projection{\varphi}{\seq B, C}$} \noLine
 			\UIC{$(\hG{A} \wedge \hB{B}) \vee \hE{C} \seq \hB{B}, \hE{C}$}
-					\AXC{$\projectionO{\varphi}{C \seq B}$} \noLine
+					\AXC{$\projection{\varphi}{C \seq B}$} \noLine
 					\UIC{$(\hG{A} \wedge \hB{B}) \vee \hG{C}, \hF{C} \seq \hB{B}, \hF{C} $} \RightLabel{$cut$}
 				\BIC{$ (\hG{A} \wedge \hB{B}) \vee \hE{C},(\hG{A} \wedge \hB{B}) \vee \hG{C} \seq \hB{B},\hB{B},\hF{C}$} \RightLabel{$c_r$}
 				\UIC{$ (\hG{A} \wedge \hB{B}) \vee \hE{C},(\hG{A} \wedge \hB{B}) \vee \hG{C} \seq \hB{B},\hF{C}$}
-							\AXC{$\projectionO{\varphi}{B, A \seq C}$} \noLine
+							\AXC{$\projection{\varphi}{B, A \seq C}$} \noLine
 							\UIC{$(\hG{A} \wedge \hG{B}) \vee \hE{C}, \hD{A}, \hC{B} \seq \hC{B} \wedge \hD{A}, \hE{C} $}
-									\AXC{$\projectionO{\varphi}{B, A, C \seq }$} \noLine
+									\AXC{$\projection{\varphi}{B, A, C \seq }$} \noLine
 									\UIC{$\hF{C}, (\hG{A} \wedge \hG{B}) \vee \hG{C}, \hD{A}, \hC{B} \seq \hC{B} \wedge \hD{A}, \hF{C} $} \RightLabel{$cut$}
 								\BIC{$\hD{A}, \hC{B}, \hD{A}, \hC{B}, (\hG{A} \wedge \hG{B}) \vee \hE{C}, (\hG{A} \wedge \hG{B}) \vee \hG{C} \seq \hC{B} \wedge \hD{A}, \hC{B} \wedge \hD{A}, \hF{C}$} \RightLabel{$c_r$}
 								\UIC{$\hD{A}, \hC{B}, \hC{B}, (\hG{A} \wedge \hG{B}) \vee \hE{C}, (\hG{A} \wedge \hG{B}) \vee \hG{C} \seq \hC{B} \wedge \hD{A}, \hC{B} \wedge \hD{A}, \hF{C} $} \RightLabel{$c_r$}

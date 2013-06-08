@@ -175,6 +175,10 @@ Swapped clause sets are very similar to \emph{profiles}, which have been defined
 \end{remark}
 
 
+\begin{definition}[$\CEResSwap$-normal-form]
+$\CEResNFSwap{\varphi}{\delta}$ denotes the \emph{$\CEResSwap$-normal-form} of the proof $\varphi$ w.r.t. the resolution refutation $\delta$ of any swapped clause set $\clausesetSwap{\varphi}{S}$. It is obtained in the same way as a $\CERes$-normal-form, but using a swapped clause set $\clausesetSwap{\varphi}{S}$ instead of the clause set $\clauseset{\varphi}$.
+\end{definition}
+
 
 \begin{example}
 \label{example:PlusTimesSwapNormalization}
@@ -334,7 +338,7 @@ It is interesting to note that $\clausesetSwap{\varphi}{S_1} = \clausesetSwap{\v
 \end{prooftree}
 
 \noindent
-$\CEResNFSwapO{\varphi}{\delta}$ is the $\CERes$-normal-form obtained with the swapped clause set:
+$\CEResNFSwap{\varphi}{\delta}$ is the $\CERes$-normal-form obtained with the swapped clause set:
 \begin{scriptsize}
 \begin{prooftree}
 		\AXC{$ \varphi_0 $} \noLine
@@ -367,15 +371,15 @@ where $\varphi_0$ is:
 \end{scriptsize}
 
 \noindent
-As expected, less redundant clause sets and projections result in smaller proofs. $\CEResNFSwapO{\varphi}{\delta}$ shown above is significantly smaller than $\CEResNF{\varphi}{\delta}$ shown in Example \ref{example:CEResSONormalForm}. 
+As expected, less redundant clause sets and projections result in smaller proofs. $\CEResNFSwap{\varphi}{\delta}$ shown above is significantly smaller than $\CEResNF{\varphi}{\delta}$ shown in Example \ref{example:CEResSONormalForm}. 
 \hfill\QED
 \end{example}
 
 
 
 
-\begin{theorem}[Unsatisfiability of the Swapped Clause Set]\\
-\label{theorem:UnsatisfiabilityOfClauseSetSwap}
+\begin{theorem}[Unsatisfiability of the Swapped Clause Set]
+\label{theorem:UnsatisfiabilityOfClauseSetSwap}\\
 For any skolemized proof $\varphi$ and $\normalizePlusTimesS$-normal-form $S$ of $\struct{\varphi}$, $\clausesetSwap{\varphi}{S}$ is unsatisfiable.
 \end{theorem}
 \begin{proof}
@@ -394,3 +398,26 @@ $\clausesetSwap{\varphi}{S}$ is unsatisfiable.
 \begin{remark}
 It is not possible to prove Theorem \ref{theorem:UnsatisfiabilityOfClauseSetSwap} analogously to the proof of the unsatisfiability of the profile shown in \cite{Hetzl2007CharacteristicClauseSetsandProofTransformations,Hetzl2008ProofProfiles.CharacteristicClauseSetsandProofTransformations}, which is essentially based on the fact that the profile of $\varphi$ subsumes $\clauseset{\varphi}$. Unfortunately, $\clausesetSwap{\varphi}{S}$ does not subsume $\clauseset{\varphi}$ in general. In particular, the subsumption fails when $\varphi$ contains degenerate inferences, in which case $\normalizePlusTimesS$ prunes too much of the characteristic formula and then some clauses of $\clauseset{\varphi}$ are not subsumed by any clause of $\clausesetSwap{\varphi}{S}$.
 \end{remark}
+
+
+\noindent
+Although $\CEResSwap$-normal-forms are usually much less redundant than $\CERes$-normal-forms. In the worst case, there is still an exponential blow-up when the characteristic formula is converted to a swapped clause set.
+
+\begin{theorem}[Size of Swapped Clause Set]
+\label{theorem:SizeOfSwappedClauseSets}
+There exist positive rational constants $k$ and $k'$ and a sequence of proofs $\varphi_1, \varphi_2, \ldots, \varphi_n, \ldots$ such that $\proofsizeSymbol{\varphi_n} \leq k 4^n$ and $|\clausesetSwapUnique{\varphi_n}| \geq k' 2^{2^n}$.
+\end{theorem}
+
+\begin{theorem}[Size of $\CEResSwap$-Normal-Form]
+\label{theorem:SizeOfCEResSwapNormalForms}
+There exist positive rational constants $k$ and $k''$ and a sequence of proofs $\varphi_1, \varphi_2, \ldots, \varphi_n, \ldots$ such that:
+\begin{itemize}
+\item $\proofsizeSymbol{\varphi_n} \leq k 4^n$.
+\item $\proofsizeSymbol{\CEResNFSwap{\varphi_n}{\delta_n}} \geq k'' 2^{2^n}$, for any refutation $\delta_n$.
+\end{itemize}
+\end{theorem}
+\begin{proof}
+For both theorems above, the same sequence of proofs used in the proof of 
+Theorem \ref{theorem:SizeOfClauseSets} can be used, 
+because $\clauseset{\varphi_k} = \clausesetSwapUnique{\varphi_k}$ for any proof $\varphi_k$ in that sequence.
+\end{proof}
