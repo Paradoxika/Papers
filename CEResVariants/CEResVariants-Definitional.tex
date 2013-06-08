@@ -11,18 +11,16 @@ For every conjunctive or disjunctive formula $S$ with free variables $x_1,\ldots
 %
 \begin{small}
 $$
-D_{S} \ \ \defEq \ \  
-N_{S_1 \structtimes \ldots \structtimes S_n}(x_1,\ldots, x_m) 
-%\biimp N_{n(S'_1) \structtimes \ldots \structtimes n(S'_n)}(x_1,\ldots, x_m) 
-\biimp n(S_1) \structtimes \ldots \structtimes n(S_n)
-$$
-%
-%
-$$
 D_{S} \ \ \defEq \ \
 N_{S_1 \structplus \ldots \structplus S_n}(x_1,\ldots, x_m) 
 %\biimp N_{n(S'_1) \structplus \ldots \structplus n(S'_n)}(x_1,\ldots, x_m) 
 \biimp n(S_1) \structplus \ldots \structplus n(S_n)
+$$
+$$
+D_{S} \ \ \defEq \ \  
+N_{S_1 \structtimes \ldots \structtimes S_n}(x_1,\ldots, x_m) 
+%\biimp N_{n(S'_1) \structtimes \ldots \structtimes n(S'_n)}(x_1,\ldots, x_m) 
+\biimp n(S_1) \structtimes \ldots \structtimes n(S_n)
 $$
 \end{small}
 where:
@@ -45,11 +43,6 @@ $$
 where $sub(S)$ is the set of non-literal subformulas of $S$.
 \end{definition}
 
-\noindent
-When a 
-Each defining formula $\mathit{D}_{S'}$ originates \emph{definitional clauses}, while $n(S)$) originates \emph{proper clauses}.
-
-
 \begin{remark}
 The connective $\biimp$ is considered to be just an abbreviation:
 \begin{small}
@@ -70,30 +63,31 @@ where $\overline{C}$ is $\structdual D$, if $C = D$, and $D$, if $C = \structdua
 \end{remark}
 
 
-\begin{example}[$\structplus\structtimes_{D}$-Normalization]
+\begin{definition}[Definitional Clause Set]
+\label{definition:ClauseSetDefinitional}
+The \emph{definitional clause set} $\clausesetDefinitional{\varphi}$ of a 
+proof $\varphi$ is the $\normalizePlusTimesD$-normal-form of $\struct{\varphi}$ 
+written in sequent notation. Clauses in $\clausesetDefinitional{\varphi}$ are either the \emph{proper clause} $\seq n(\struct{\varphi})$ or \emph{definitional clauses} originating from the defining formulas $D_{S'}$ for each subformula $S'$ of $\struct{\varphi}$.
+\end{definition}
+
+\begin{example}
 \label{example:PlusTimesDefinitionalNormalization}
-
-
-Let $\varphi$ be the proof below:
-
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hA{A} $}
-		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r^1$}
-	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$\wedge_l$}
-	\UIC{$\hA{A} \wedge \hB{B} \seq \hA{A} \wedge \hB{B}$}
-				\AXC{$\hC{B} \seq \hC{B} $}
-						\AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$\wedge_r^2$}
-					\BIC{$\hD{A}, \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$\wedge_l$}
-					\UIC{$\hD{A} \wedge \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$cut^3$}
-			\BIC{$\hA{A} \wedge \hB{B} \seq \hC{B} \wedge \hD{A}$}
-							\AXC{$\hE{C} \seq \hE{C}$} 
-									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut^4$}
-								\BIC{$\hE{C} \seq \hF{C}$} \RightLabel{$\vee_l^5$}
-					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C} $} 
-\end{prooftree}
-
-Its cut-pertinent struct is:
-
+Let $\varphi$ be the proof shown in Example \ref{example:CutPertinentStruct}, whose characteristic formulas is:
+% \begin{prooftree}
+% \AXC{$\hA{A} \seq \hA{A} $}
+% 		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r^1$}
+% 	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$\wedge_l$}
+% 	\UIC{$\hA{A} \wedge \hB{B} \seq \hA{A} \wedge \hB{B}$}
+% 				\AXC{$\hC{B} \seq \hC{B} $}
+% 						\AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$\wedge_r^2$}
+% 					\BIC{$\hD{A}, \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$\wedge_l$}
+% 					\UIC{$\hD{A} \wedge \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$cut^3$}
+% 			\BIC{$\hA{A} \wedge \hB{B} \seq \hC{B} \wedge \hD{A}$}
+% 							\AXC{$\hE{C} \seq \hE{C}$} 
+% 									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut^4$}
+% 								\BIC{$\hE{C} \seq \hF{C}$} \RightLabel{$\vee_l^5$}
+% 					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C} $} 
+% \end{prooftree}
 $$
 \struct{\varphi} 
 \equiv 
@@ -102,8 +96,8 @@ $$
 (\hE{C} \structplus \hF{\structdual{C}})
 $$
 
+\noindent
 New predicate symbols can be created and defined by the following formulas: 
-
 \begin{itemize}
 \item $D \biimp \hE{C} \structplus \hF{\structdual{C}}$
 
@@ -116,8 +110,8 @@ New predicate symbols can be created and defined by the following formulas:
 \item $H \biimp G \structtimes D$
 \end{itemize}
 
-Finally, the $\normalizePlusTimesD$-normal-form of $\struct{\varphi}$ is:
-
+\noindent
+The $\normalizePlusTimesD$-normal-form of $\struct{\varphi}$ is:
 $$
 \begin{array}{rcl}
 S^*	
@@ -155,10 +149,13 @@ S^*
 \end{array}
 $$
 
-Then, its definitional clause set $\clausesetDefinitional{\varphi}$ consists of the following clauses. The proper clause is $\seq H$. All other clauses are definitional clauses.
+\noindent
+The definitional clause set $\clausesetDefinitional{\varphi}$ consists of the following clauses. The proper clause is $\seq H$. All other clauses are definitional clauses.
 
 \begin{multicols}{3}{
 {
+$\seq H$
+
 $D \seq \hE{C}$
 
 $E, \hC{B}, \hD{A} \seq $
@@ -168,11 +165,11 @@ $F \seq \hA{A}$
 $G \seq F$
 
 $H \seq G, D$
-
-$\seq H$
 }
 
 {
+$\phantom{\seq H}$
+
 $D, \hF{C} \seq $
 
 $\seq E, \hC{B}$
@@ -182,11 +179,11 @@ $F \seq \hB{B}$
 $G \seq E$
 
 $G \seq H$
-
-$\phantom{\seq H}$
 }
 
 {
+$\phantom{\seq H}$
+
 $ \hE{C} \seq D, \hF{C}$
 
 $\seq E, \hD{A}$
@@ -196,126 +193,82 @@ $\hA{A}, \hB{B} \seq F$
 $E, F \seq G$
 
 $D \seq H$
-
-$\phantom{\seq H}$
 }
 }\end{multicols}
-
+\hfill\QED
 \end{example}
 
-\subsection{Projections}
+The construction of projections requires special care when definitional clause sets are used. The reason is that the clauses now contain many new predicate symbols which do not occur in the input proof. Fortunately, for all definitional clauses of a definitional clause set, projections can be constructed easily and independently of the input proof, by using definition inference rules in the sequent calculus.
 
-The construction of projections requires special care when definitional clause sets are used. The reason is that the clauses now contain many new predicate symbols which do not occur in the proof. Since S-projections and O-projections contain only symbols that occur in the proof, it is clear that they cannot be used with definitional clause sets. New kinds of projections, called \emph{D-projections} have to be developed.
-
-
-\subsubsection{D-Projections}
-
-For all definitional clauses of a definitional clause set, projections can be constructed very easily by using definition rules, even without any dependence on the proof. These projections are the \emph{definitional D-projections} explained in Definition \ref{definition:DProjectionDefinitional}. However, in every definitional clause set there is exactly one clause, namely the proper clause, for which definitional D-projections do not work. Then a \emph{proper D-projection} (Definition \ref{definition:DProjectionProper}) is necessary. It is called proper, because it actually depends on the proof.
-
-
-
-\begin{definition}[Definitional D-Projection]
+\begin{definition}[Definitional Projection]
 \label{definition:DProjectionDefinitional}
-\index{Projection!Definitional D-Projection}
-Let $\varphi$ be a proof and $c$ a definitional clause in $\clausesetDefinitional{\varphi}$. The \emph{Definitional D-projection} $\projectionDDefinitional{\varphi}{c}$ with respect to the clause $c$ can be easily constructed by using definition rules, as exemplified below:
+The \emph{definitional projection} $\projectionDefinitional{\varphi}{c}$ of 
+a proof $\varphi$ w.r.t. a definitional clause $c$ from 
+$\clausesetDefinitional{\varphi}$ can be constructed according 
+to one of the following templates:
 
-Assume $c$ is one of the definitional clauses originating from the following defining formula:
-
-$$
-\mathit{Def}_{S'} \ \ \defEq \ \  N_{n(S'_1) \structtimes \ldots \structtimes n(S'_n)}(x_1,\ldots, x_m) \biimp n(S'_1) \structtimes \ldots \structtimes n(S'_n)
-$$
-
-Then $c$ is one of the following clauses:
-\begin{itemize}
-\item $N_{n(S'_1) \structtimes \ldots \structtimes n(S'_n)}(x_1,\ldots, x_m) \seq  n(S'_1), \ldots , n(S'_n)$
-\item $n(S'_1) \seq N_{n(S'_1) \structtimes \ldots \structtimes n(S'_n)}(x_1,\ldots, x_m)$
-\item \ldots
-\item $n(S'_n) \seq N_{n(S'_1) \structtimes \ldots \structtimes n(S'_n)}(x_1,\ldots, x_m)$
-\end{itemize}
-
-And the definitional D-projections are:
-
-\begin{small}
+\begin{tiny}
 \begin{multicols}{2}{
-$\projectionDDefinitional{\varphi}{N_{S'_1 \structtimes \ldots \structtimes S'_n}(x_1,\ldots, x_m) \seq  n(S'_1), \ldots , n(S'_n)}$:
 \begin{prooftree}
-\AXC{$n(S'_1) \seq n(S'_1)$}
+\AXC{$n(S_1) \seq n(S_1)$}
 	\AXC{$\ldots$}
-		\AXC{$n(S'_n) \seq n(S'_n)$} \doubleLine \RightLabel{$\vee^*_l$}
-	\TIC{$n(S'_1) \vee \ldots \vee n(S'_n) \seq n(S'_1), \ldots , n(S'_n)$} \RightLabel{$d_l$}
-	\UIC{$N_{n(S'_1) \structtimes \ldots \structtimes n(S'_n)}(x_1,\ldots, x_m) \seq  n(S'_1), \ldots , n(S'_n)$} 
+		\AXC{$n(S_n) \seq n(S_n)$} \doubleLine \RightLabel{$\vee^*_l$}
+	\TIC{$n(S_1) \vee \ldots \vee n(S_n) \seq n(S_1), \ldots , n(S_n)$} \RightLabel{$d_l$}
+	\UIC{$N_{S_1 \structtimes \ldots \structtimes S_n}(x_1,\ldots, x_m) \seq  n(S_1), \ldots , n(S_n)$} 
 \end{prooftree}
 
 
-$\projectionDDefinitional{\varphi}{n(S'_k) \seq N_{S'_1 \structtimes \ldots \structtimes S'_n}(x_1,\ldots, x_m)}$:
 \begin{prooftree}
-\AXC{$n(S'_k) \seq n(S'_k)$} \doubleLine \RightLabel{$w^*_r$}
-\UIC{$n(S'_k) \seq n(S'_1), \ldots, n(S'_n)$} \doubleLine \RightLabel{$\vee^*_r$}
-\UIC{$n(S'_k) \seq n(S'_1) \vee \ldots \vee n(S'_n)$} \RightLabel{$d_r$}
-\UIC{$n(S'_k) \seq N_{n(S'_1) \structtimes \ldots \structtimes n(S'_n)}(x_1,\ldots, x_m)$} 
+\AXC{$n(S_k) \seq n(S_k)$} \doubleLine \RightLabel{$w^*_r$}
+\UIC{$n(S_k) \seq n(S_1), \ldots, n(S_n)$} \doubleLine \RightLabel{$\vee^*_r$}
+\UIC{$n(S_k) \seq n(S_1) \vee \ldots \vee n(S_n)$} \RightLabel{$d_r$}
+\UIC{$n(S_k) \seq N_{S_1 \structtimes \ldots \structtimes S_n}(x_1,\ldots, x_m)$}
 \end{prooftree}
 }\end{multicols}
-\end{small}
+\end{tiny}
 
 
-If $c$, on the other hand is one of the definitional clauses originating from the following defining formula:
-
-$$
-\mathit{Def}_{S'} \ \ \defEq \ \ N_{n(S'_1) \structplus \ldots \structplus n(S'_n)}(x_1,\ldots, x_m) \biimp n(S'_1) \structplus \ldots \structplus n(S'_n)
-$$
-
-Then $c$ is one of the following clauses:
-\begin{itemize}
-\item $n(S'_1), \ldots , n(S'_n) \seq N_{n(S'_1) \structplus \ldots \structplus n(S'_n)}(x_1,\ldots, x_m)$
-\item $N_{n(S'_1) \structplus \ldots \structplus n(S'_n)}(x_1,\ldots, x_m) \seq n(S'_1)$
-\item \ldots
-\item $N_{n(S'_1) \structplus \ldots \structplus n(S'_n)}(x_1,\ldots, x_m) \seq n(S'_n)$
-\end{itemize}
-
-And the definitional D-projections are:
-
-\begin{small}
+\begin{tiny}
 \begin{multicols}{2}{
-$\projectionDDefinitional{\varphi}{N_{S'_1 \structtimes \ldots \structtimes S'_n}(x_1,\ldots, x_m) \seq  n(S'_1), \ldots , n(S'_n)}$:
 \begin{prooftree}
-\AXC{$n(S'_1) \seq n(S'_1)$}
+\AXC{$n(S_1) \seq n(S_1)$}
 	\AXC{$\ldots$}
-		\AXC{$n(S'_n) \seq n(S'_n)$} \doubleLine \RightLabel{$\wedge^*_r$}
-	\TIC{$n(S'_1), \ldots , n(S'_n) \seq n(S'_1) \wedge \ldots \wedge n(S'_n)$} \RightLabel{$d_r$}
-	\UIC{$n(S'_1), \ldots , n(S'_n) \seq  N_{n(S'_1) \structplus \ldots \structplus n(S'_n)}(x_1,\ldots, x_m)$} 
+		\AXC{$n(S_n) \seq n(S_n)$} \doubleLine \RightLabel{$\wedge^*_r$}
+	\TIC{$n(S_1), \ldots , n(S_n) \seq n(S_1) \wedge \ldots \wedge n(S_n)$} \RightLabel{$d_r$}
+	\UIC{$n(S_1), \ldots , n(S_n) \seq  N_{S_1 \structplus \ldots \structplus S_n}(x_1,\ldots, x_m)$} 
 \end{prooftree}
 
 
-$\projectionDDefinitional{\varphi}{n(S'_k) \seq N_{S'_1 \structtimes \ldots \structtimes S'_n}(x_1,\ldots, x_m)}$:
 \begin{prooftree}
-\AXC{$n(S'_k) \seq n(S'_k)$} \doubleLine \RightLabel{$w^*_l$}
-\UIC{$n(S'_1), \ldots, n(S'_n)\seq n(S'_k)$} \doubleLine \RightLabel{$\wedge^*_l$}
-\UIC{$n(S'_1) \wedge \ldots \wedge n(S'_n) \seq n(S'_k)$} \RightLabel{$d_l$}
-\UIC{$N_{n(S'_1) \structplus \ldots \structplus n(S'_n)}(x_1,\ldots, x_m) \seq n(S'_k)$} 
+\AXC{$n(S_k) \seq n(S_k)$} \doubleLine \RightLabel{$w^*_l$}
+\UIC{$n(S_1), \ldots, n(S_n)\seq n(S_k)$} \doubleLine \RightLabel{$\wedge^*_l$}
+\UIC{$n(S_1) \wedge \ldots \wedge n(S_n) \seq n(S_k)$} \RightLabel{$d_l$}
+\UIC{$N_{S_1 \structplus \ldots \structplus S_n}(x_1,\ldots, x_m) \seq n(S_k)$} 
 \end{prooftree}
 }\end{multicols}
-\end{small}
+\end{tiny}
 
-If $S'_k$ is a negative literal, it is necessary to add negation inferences to the definitional D-projections above.
+\noindent
+If $S_k$ is a negative literal, it is necessary to add negation inferences to the definitional projections above.
 \end{definition}
 
-\begin{example}[Definitional D-Projection]
+
+\begin{example}
 \label{example:DProjectionDefinitional}
-
-
-The simple D-projections are:
-
+Definitional projections w.r.t. the clauses shown in Example \ref{example:PlusTimesDefinitionalNormalization} are:
 
 \begin{multicols}{3}{
-$\projectionDDefinitional{\varphi}{D \seq \hE{C}}$:
+$\projectionDefinitional{\varphi}{D \seq \hE{C}}$:
 \begin{prooftree}
 \AXC{$\hE{C} \seq \hE{C}$} \RightLabel{$w_l$}
 \UIC{$\hE{C}, \neg \hF{C} \seq \hE{C}$} \RightLabel{$\wedge_l$}
 \UIC{$\hE{C} \wedge \neg \hF{C} \seq \hE{C}$} \RightLabel{$d_l$}
 \UIC{$D \seq \hE{C}$} 
 \end{prooftree}
+\vfill\columnbreak
 
-$\projectionDDefinitional{\varphi}{D, \hF{C} \seq }$:
+
+$\projectionDefinitional{\varphi}{D, \hF{C} \seq }$:
 \begin{prooftree}
 \AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$w_l$}
 \UIC{$\hE{C}, \hF{C} \seq \hF{C}$} \RightLabel{$\neg_l$}
@@ -324,7 +277,7 @@ $\projectionDDefinitional{\varphi}{D, \hF{C} \seq }$:
 \UIC{$D, \hF{C} \seq $} 
 \end{prooftree}
 
-$\projectionDDefinitional{\varphi}{\hE{C} \seq D, \hF{C}}$:
+$\projectionDefinitional{\varphi}{\hE{C} \seq D, \hF{C}}$:
 \begin{prooftree}
 \AXC{$\hE{C} \seq \hE{C}$}
 		\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$\neg_r$}
@@ -337,7 +290,7 @@ $\projectionDDefinitional{\varphi}{\hE{C} \seq D, \hF{C}}$:
 
 
 \begin{multicols}{3}{
-$\projectionDDefinitional{\varphi}{\seq E, \hD{A}}$:
+$\projectionDefinitional{\varphi}{\seq E, \hD{A}}$:
 \begin{prooftree}
 \AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$\neg_r$}
 \UIC{$\seq \neg \hD{A}, \hD{A}$} \RightLabel{$w_r$}
@@ -346,7 +299,7 @@ $\projectionDDefinitional{\varphi}{\seq E, \hD{A}}$:
 \UIC{$\seq E, \hD{A}$} 
 \end{prooftree}
 
-$\projectionDDefinitional{\varphi}{\seq E, \hC{B}}$:
+$\projectionDefinitional{\varphi}{\seq E, \hC{B}}$:
 \begin{prooftree}
 \AXC{$\hC{B} \seq \hC{B}$} \RightLabel{$\neg_r$}
 \UIC{$\seq \neg \hC{B}, \hC{B}$} \RightLabel{$w_r$}
@@ -355,7 +308,7 @@ $\projectionDDefinitional{\varphi}{\seq E, \hC{B}}$:
 \UIC{$\seq E, \hC{B}$} 
 \end{prooftree}
 
-$\projectionDDefinitional{\varphi}{E, \hD{A}, \hC{B} \seq }$:
+$\projectionDefinitional{\varphi}{E, \hD{A}, \hC{B} \seq }$:
 \begin{small}
 \begin{prooftree}
 \AXC{$\hC{B} \seq \hC{B}$} \RightLabel{$\neg_l$}
@@ -373,7 +326,7 @@ $\projectionDDefinitional{\varphi}{E, \hD{A}, \hC{B} \seq }$:
 
 
 \begin{multicols}{3}{
-$\projectionDDefinitional{\varphi}{F \seq \hA{A}}$:
+$\projectionDefinitional{\varphi}{F \seq \hA{A}}$:
 \begin{prooftree}
 \AXC{$\hA{A} \seq \hA{A}$} \RightLabel{$w_l$}
 \UIC{$\hA{A}, \hB{B} \seq \hA{A}$} \RightLabel{$\wedge_l$}
@@ -381,7 +334,7 @@ $\projectionDDefinitional{\varphi}{F \seq \hA{A}}$:
 \UIC{$F \seq \hA{A}$} 
 \end{prooftree}
 
-$\projectionDDefinitional{\varphi}{F \seq \hB{B}}$:
+$\projectionDefinitional{\varphi}{F \seq \hB{B}}$:
 \begin{prooftree}
 \AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$w_l$}
 \UIC{$\hA{A}, \hB{B} \seq \hB{B}$} \RightLabel{$\wedge_l$}
@@ -389,7 +342,7 @@ $\projectionDDefinitional{\varphi}{F \seq \hB{B}}$:
 \UIC{$F \seq \hB{B}$} 
 \end{prooftree}
 
-$\projectionDDefinitional{\varphi}{\hA{A}, \hB{B} \seq F}$:
+$\projectionDefinitional{\varphi}{\hA{A}, \hB{B} \seq F}$:
 \begin{prooftree}
 \AXC{$\hA{A} \seq \hA{A}$}
 		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r$}
@@ -404,7 +357,7 @@ $\projectionDDefinitional{\varphi}{\hA{A}, \hB{B} \seq F}$:
 
 
 \begin{multicols}{3}{
-$\projectionDDefinitional{\varphi}{G \seq F}$:
+$\projectionDefinitional{\varphi}{G \seq F}$:
 \begin{prooftree}
 \AXC{$F \seq F$} \RightLabel{$w_l$}
 \UIC{$F, E \seq F$} \RightLabel{$\wedge_l$}
@@ -412,7 +365,7 @@ $\projectionDDefinitional{\varphi}{G \seq F}$:
 \UIC{$G \seq F$} 
 \end{prooftree}
 
-$\projectionDDefinitional{\varphi}{G \seq E}$:
+$\projectionDefinitional{\varphi}{G \seq E}$:
 \begin{prooftree}
 \AXC{$E \seq E$} \RightLabel{$w_l$}
 \UIC{$F, E \seq E$} \RightLabel{$\wedge_l$}
@@ -420,7 +373,7 @@ $\projectionDDefinitional{\varphi}{G \seq E}$:
 \UIC{$G \seq E$} 
 \end{prooftree}
 
-$\projectionDDefinitional{\varphi}{F, E \seq G}$:
+$\projectionDefinitional{\varphi}{F, E \seq G}$:
 \begin{prooftree}
 \AXC{$F \seq F$}
 		\AXC{$E \seq E$} \RightLabel{$\wedge_r$}
@@ -432,7 +385,7 @@ $\projectionDDefinitional{\varphi}{F, E \seq G}$:
 
 
 \begin{multicols}{3}{
-$\projectionDDefinitional{\varphi}{D \seq H}$:
+$\projectionDefinitional{\varphi}{D \seq H}$:
 \begin{prooftree}
 \AXC{$D \seq D$} \RightLabel{$w_r$}
 \UIC{$D \seq G, D$} \RightLabel{$\vee_r$}
@@ -440,7 +393,7 @@ $\projectionDDefinitional{\varphi}{D \seq H}$:
 \UIC{$D \seq H$} 
 \end{prooftree}
 
-$\projectionDDefinitional{\varphi}{G \seq H}$:
+$\projectionDefinitional{\varphi}{G \seq H}$:
 \begin{prooftree}
 \AXC{$G \seq G$} \RightLabel{$w_r$}
 \UIC{$G \seq G, D$} \RightLabel{$\vee_r$}
@@ -448,7 +401,7 @@ $\projectionDDefinitional{\varphi}{G \seq H}$:
 \UIC{$G \seq H$} 
 \end{prooftree}
 
-$\projectionDDefinitional{\varphi}{H \seq G, D}$:
+$\projectionDefinitional{\varphi}{H \seq G, D}$:
 \begin{prooftree}
 \AXC{$G \seq G$}
 		\AXC{$D \seq D$} \RightLabel{$\vee_l$}
@@ -457,1055 +410,6 @@ $\projectionDDefinitional{\varphi}{H \seq G, D}$:
 \end{prooftree}
 }
 \end{multicols}
-
+\hfill\QED
 \end{example}
-
-
-
-\begin{definition}[Proper D-Projection]
-\label{definition:DProjectionProper}
-\index{Projection!Proper D-Projection}
-
-Let $\varphi$ be a proof and $\struct{\varphi}$ its cut-pertinent struct. Then, the \emph{proper D-projection} $\projectionDProper{\varphi}{\seq n(\struct{\varphi})}$ can be constructed inductively. Let $\varphi'$ be a subproof of $\varphi$ having $\rho$ as its last inference and let $S'$ be the corresponding substruct of $\struct{\varphi}$. The following cases can be distinguished:
-
-\begin{itemize}
-\item $\rho$ is an axiom inference: Then $\varphi'$ is of the form:
-
-\begin{prooftree}
-\AXC{$ $} \RightLabel{$\rho$}
-\UIC{$A \seq A$}
-\end{prooftree}
-
-	\begin{itemize}
-	\item If both occurrences of $A$ are in $\occCutPert{\varphi}$ (i.e. they are ancestors of  cut-formulas), then $\varphi''$ is defined as:
-
-	\begin{prooftree}
-	\AXC{$ $} \RightLabel{$\rho$}
-	\UIC{$A \seq A$} \RightLabel{$\neg_r$}
-	\UIC{$\seq \neg A, A$} \RightLabel{$\vee_r$}
-	\UIC{$\seq \neg A \vee A$} \RightLabel{$d_r$}
-	\UIC{$\seq n(S')$}
-	\end{prooftree}
-
-	\item If only the occurrence of $A$ in the antecedent is in $\occCutPert{\varphi}$ (i.e. an ancestor of a cut-formula), then $\varphi''$ is defined as:
-
-	\begin{prooftree}
-	\AXC{$ $} \RightLabel{$\rho$}
-	\UIC{$A \seq A$} \RightLabel{$\neg_r$}
-	\UIC{$\seq \neg A, A$}
-	\end{prooftree}
-
- 
-	\item Otherwise, $\varphi'' \defEq \varphi'$
-	\end{itemize}
-
-\item $\rho$ is a n-ary inference (with $n \geq 2$): Then $\varphi'$ is of the form:
-
-\begin{prooftree}
-\AXC{$\psi'_1 $} \noLine
-\UIC{$\Gamma'_1 \seq \Delta'_1$}
-	\AXC{$\ldots$}
-		\AXC{$\psi'_n $} \noLine
-		\UIC{$\Gamma'_n \seq \Delta'_n$}		\RightLabel{$\rho$}
-	\TIC{$\Gamma' \seq \Delta'$}
-\end{prooftree}
-
-By induction, $\psi''_k$ is of the form:
-
-\begin{prooftree}
-\AXC{$\psi''_k $} \noLine
-\UIC{$\Gamma''_1 \seq \Delta''_1, n(S'_{\psi'_k})$}
-\end{prooftree}
-
-where $S'_{\psi'_k}$ is the substruct of $S'$ corresponding to $\psi'_k$.
-
-	\begin{itemize}
-	\item $\rho$ is cut-impertinent: Then $\varphi''$ is defined as:
-
-\begin{prooftree}
-\AXC{$\psi''_1 $} \noLine
-\UIC{$\Gamma''_1 \seq \Delta''_1, n(S'_{\psi'_1})$}
-	\AXC{$\ldots$}
-		\AXC{$\psi''_n $} \noLine
-		\UIC{$\Gamma''_n \seq \Delta''_n, n(S'_{\psi'_n})$}		\RightLabel{$\rho$}
-	\TIC{$\Gamma'' \seq \Delta'', n(S'_{\psi'_1}), \ldots, n(S'_{\psi'_n})$} \RightLabel{$\vee_r$}
-	\UIC{$\Gamma'' \seq \Delta'', n(S'_{\psi'_1}) \vee \ldots \vee n(S'_{\psi'_n})$}\RightLabel{$d_r$}
-	\UIC{$\Gamma'' \seq \Delta'', n(S')$}
-\end{prooftree}
-
-	More informally, after the cut-impertinent inference $\rho$, the defining components of $n(S')$ are available to be combined disjunctively. By the defining formula of $n(S')$, a $d_r$ inference can be used to encapsulate the disjunction in the single defined predicate symbol $n(S')$. 
-
-	\item $\rho$ is cut-pertinent: Then $\varphi''$ is defined as:
-
-\begin{prooftree}
-\AXC{$\psi''_1 $} \noLine
-\UIC{$\Gamma''_1 \seq \Delta''_1, n(S'_{\psi'_1})$}
-	\AXC{$\ldots$}
-		\AXC{$\psi''_n $} \noLine
-		\UIC{$\Gamma''_n \seq \Delta''_n, n(S'_{\psi'_n})$}		\RightLabel{$\wedge_r$}
-	\TIC{$\Gamma'' \seq \Delta'', n(S'_{\psi'_1}) \wedge \ldots \wedge n(S'_{\psi'_n})$} \RightLabel{$d_r$}
-	\UIC{$\Gamma'' \seq \Delta'', n(S')$}
-\end{prooftree}
-
-	More informally, the cut-pertinent inference $\rho$ can be replaced by a $\wedge_r$ inference, which combines the defining components of $n(S')$ conjunctively. By the defining formula of $n(S')$, a $d_r$ inference can be used to encapsulate the conjunction in the single defined predicate symbol $n(S')$. 
-
-
-	\end{itemize}
-
-
-\item $\rho$ is a unary inference: Then $\varphi'$ is of the form:
-
-\begin{prooftree}
-\AXC{$\psi' $} \RightLabel{$\rho$}
-\UIC{$\Gamma' \seq \Delta'$}
-\end{prooftree}
-
-	\begin{itemize}
-
-	\item $\rho$ is cut-pertinent: then $\varphi''$ is defined as:
-
-\begin{prooftree}
-\AXC{$\psi'' $} 
-\end{prooftree}
-
-	More informally, $\rho$ is simply skipped.
-
-	\item $\rho$ is cut-impertinent: then $\varphi''$ is defined as:
-
-\begin{prooftree}
-\AXC{$\psi'' $} \RightLabel{$\rho$}
-\UIC{$\Gamma'' \seq \Delta''$}
-\end{prooftree}
-
-	More informally, $\rho$ is simply kept and nothing changes, except for the downward propagation of changes that occurred in transforming the proof $\psi'$ above to $\psi''$.
-
-	\end{itemize}
-	
-
-
-
-\end{itemize}
-
-The \emph{proper D-projection} $\projectionDProper{\varphi}{\seq n(\struct{\varphi})}$ is the final result of this inductive construction, i.e. it is $\varphi''$ when the subproof $\varphi'$ coincides with the whole proof $\varphi$.
-\end{definition}
-
-
-
-\begin{example}[Proper D-Projection]
-\label{example:DProjectionProper}
-
-
-Consider again the proof $\varphi$ from previous examples:
-
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hA{A} $}
-		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r^1$}
-	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$\wedge_l$}
-	\UIC{$\hA{A} \wedge \hB{B} \seq \hA{A} \wedge \hB{B}$}
-				\AXC{$\hC{B} \seq \hC{B} $}
-						\AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$\wedge_r^2$}
-					\BIC{$\hD{A}, \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$\wedge_l$}
-					\UIC{$\hD{A} \wedge \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$cut^3$}
-			\BIC{$\hA{A} \wedge \hB{B} \seq \hC{B} \wedge \hD{A}$}
-							\AXC{$\hE{C} \seq \hE{C}$} 
-									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut^4$}
-								\BIC{$\hE{C} \seq \hF{C}$} \RightLabel{$\vee_l^5$}
-					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C} $} 
-\end{prooftree}
-
-Below the inductive construction of the proper D-projection $\projectionDDefinitional{\varphi}{ \seq H}$ is shown step-by-step. An informal skeleton of the original proof is shown in every step, just to emphasize that the construction follows the structure of the original proof.
-
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hA{A} $}
-		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r^1$}
-	\BIC{$\phantom{\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}}$} \RightLabel{$\wedge_l$}
-	\UIC{$\phantom{\hA{A} \wedge \hB{B} \seq \hA{A} \wedge \hB{B}}$}
-				\AXC{$\hC{B} \seq \hC{B} $}
-						\AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$\wedge_r^2$}
-					\BIC{$\phantom{\hD{A}, \hC{B} \seq \hC{B} \wedge \hD{A}}$} \RightLabel{$\wedge_l$}
-					\UIC{$\phantom{\hD{A} \wedge \hC{B} \seq \hC{B} \wedge \hD{A}}$} \RightLabel{$cut^3$}
-			\BIC{$\phantom{\hA{A} \wedge \hB{B} \seq \hC{B} \wedge \hD{A}}$}
-							\AXC{$\hE{C} \seq \hE{C}$} 
-									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut^4$}
-								\BIC{$\phantom{\hE{C} \seq \hF{C}}$} \RightLabel{$\vee_l^5$}
-					\BIC{$\phantom{(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C} }$} 
-\end{prooftree}
-
-Some of the axiom sequents contain cut-pertinent formula occurrences in the antecedents. It is necessary, therefore, to add $\neg_r$ inferences to move these formula occurrences to the consequents:
-
-\begin{small}
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hA{A} $}
-		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r^1$}
-	\BIC{$\phantom{\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}}$} \RightLabel{$\wedge_l$}
-	\UIC{$\phantom{\hA{A} \wedge \hB{B} \seq \hA{A} \wedge \hB{B}}$}
-				\AXC{$\hC{B} \seq \hC{B} $}\RightLabel{$\hG{\neg_r}$}
-				\UIC{$ \seq \neg \hG{\hC{B}}, \hC{B} $}
-						\AXC{$\hD{A} \seq \hD{A}$}\RightLabel{$\hG{\neg_r}$}
-						\UIC{$ \seq \neg \hG{\hD{A}}, \hD{A}$}  \RightLabel{$\wedge_r^2$}
-					\BIC{$\phantom{\hD{A}, \hC{B} \seq \hC{B} \wedge \hD{A}}$} \RightLabel{$\wedge_l$}
-					\UIC{$\phantom{\hD{A} \wedge \hC{B} \seq \hC{B} \wedge \hD{A}}$} \RightLabel{$cut^3$}
-			\BIC{$\phantom{\hA{A} \wedge \hB{B} \seq \hC{B} \wedge \hD{A}}$}
-							\AXC{$\hE{C} \seq \hE{C}$} 
-									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$\hG{\neg_r}$}
-									\UIC{$\seq \neg \hG{\hF{C}}, \hF{C}$}\RightLabel{$cut^4$}
-								\BIC{$\phantom{\hE{C} \seq \hF{C}}$} \RightLabel{$\vee_l^5$}
-					\BIC{$\phantom{(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C} }$} 
-\end{prooftree}
-\end{small}
-
-$\wedge_r^1$ and $cut^4$ are cut-pertinent inferences, and hence they must be replaced by $\wedge_r$ inferences followed by appropriate $d_r$ inferences. $\wedge_r^2$, on the other hand, is a cut-impertinent inference. Therefore, a $\vee_r$ inference and a $d_r$ inference must be added after $\wedge_r^2$:
-
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hA{A} $}
-		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge$}
-	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$\hG{d_r}$}
-	\UIC{$\hA{A}, \hB{B} \seq \hG{F}$} \RightLabel{$\wedge_l$}
-	\UIC{$\phantom{\hA{A} \wedge \hB{B} \seq \hA{A} \wedge \hB{B}}$}
-				\AXC{$\hC{B} \seq \hC{B} $}\RightLabel{$\hG{\neg_r}$}
-				\UIC{$ \seq \neg \hG{\hC{B}}, \hC{B} $}
-						\AXC{$\hD{A} \seq \hD{A}$}\RightLabel{$\hG{\neg_r}$}
-						\UIC{$ \seq \neg \hG{\hD{A}}, \hD{A}$}  \RightLabel{$\wedge_r^2$}
-					\BIC{$ \seq \neg \hG{\hC{B}}, \neg \hG{\hD{A}}, \hC{B} \wedge \hD{A}$}\RightLabel{$\hG{\vee_r}$}
-					\UIC{$ \seq \neg \hG{\hC{B}} \vee \neg \hG{\hD{A}}, \hC{B} \wedge \hD{A}$} \RightLabel{$\hG{d_r}$}
-					\UIC{$ \seq \hG{E}, \hC{B} \wedge \hD{A}$} \RightLabel{$\wedge_l$}
-					\UIC{$\phantom{\hD{A} \wedge \hC{B} \seq \hC{B} \wedge \hD{A}}$} \RightLabel{$cut^3$}
-			\BIC{$\phantom{\hA{A} \wedge \hB{B} \seq \hC{B} \wedge \hD{A}}$}
-							\AXC{$\hE{C} \seq \hE{C}$} 
-									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$\hG{\neg_r}$}
-									\UIC{$\seq \neg \hG{\hF{C}}, \hF{C}$}\RightLabel{$\hG{\wedge_r}$}
-								\BIC{$\hE{C} \seq \hE{C} \wedge \neg \hG{\hF{C}}, \hF{C}$} \RightLabel{$\hG{d_r}$} 
-								\UIC{$\hE{C} \seq \hG{D}, \hF{C}$} \RightLabel{$\vee_l^5$}
-					\BIC{$\phantom{(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C} }$} 
-\end{prooftree}
-
-The leftmost $\wedge_l$ unary inference is cut-impertinent, and hence must be kept. The rightmost $\wedge_l$ unary inference, on the other hand, is cut-impertinent, and hence must be skipped.
-
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hA{A} $}
-		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge$}
-	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$\hG{d_r}$}
-	\UIC{$\hA{A}, \hB{B} \seq \hG{F}$} \RightLabel{$\wedge_l$}
-	\UIC{$\hA{A} \wedge \hB{B} \seq \hG{F}$}
-				\AXC{$\hC{B} \seq \hC{B} $}\RightLabel{$\hG{\neg_r}$}
-				\UIC{$ \seq \neg \hG{\hC{B}}, \hC{B} $}
-						\AXC{$\hD{A} \seq \hD{A}$}\RightLabel{$\hG{\neg_r}$}
-						\UIC{$ \seq \neg \hG{\hD{A}}, \hD{A}$}  \RightLabel{$\wedge_r^2$}
-					\BIC{$ \seq \neg \hG{\hC{B}}, \neg \hG{\hD{A}}, \hC{B} \wedge \hD{A}$}\RightLabel{$\hG{\vee_r}$}
-					\UIC{$ \seq \neg \hG{\hC{B}} \vee \neg \hG{\hD{A}}, \hC{B} \wedge \hD{A}$} \RightLabel{$\hG{d_r}$}
-					\UIC{$ \seq \hG{E}, \hC{B} \wedge \hD{A}$} \RightLabel{$cut^3$}
-			\BIC{$\phantom{\hA{A} \wedge \hB{B} \seq \hC{B} \wedge \hD{A}}$}
-							\AXC{$\hE{C} \seq \hE{C}$} 
-									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$\hG{\neg_r}$}
-									\UIC{$\seq \neg \hG{\hF{C}}, \hF{C}$}\RightLabel{$\hG{\wedge_r}$}
-								\BIC{$\hE{C} \seq \hE{C} \wedge \neg \hG{\hF{C}}, \hF{C}$} \RightLabel{$\hG{d_r}$} 
-								\UIC{$\hE{C} \seq \hG{D}, \hF{C}$} \RightLabel{$\vee_l^5$}
-					\BIC{$\phantom{(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C} }$} 
-\end{prooftree}
-
-The procedure for $cut^3$ is analogous. It must be replaced by $\wedge^r$ and $d^r$:
-
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hA{A} $}
-		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge$}
-	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$\hG{d_r}$}
-	\UIC{$\hA{A}, \hB{B} \seq \hG{F}$} \RightLabel{$\wedge_l$}
-	\UIC{$\hA{A} \wedge \hB{B} \seq \hG{F}$}
-				\AXC{$\hC{B} \seq \hC{B} $}\RightLabel{$\hG{\neg_r}$}
-				\UIC{$ \seq \neg \hG{\hC{B}}, \hC{B} $}
-						\AXC{$\hD{A} \seq \hD{A}$}\RightLabel{$\hG{\neg_r}$}
-						\UIC{$ \seq \neg \hG{\hD{A}}, \hD{A}$}  \RightLabel{$\wedge_r^2$}
-					\BIC{$ \seq \neg \hG{\hC{B}}, \neg \hG{\hD{A}}, \hC{B} \wedge \hD{A}$}\RightLabel{$\hG{\vee_r}$}
-					\UIC{$ \seq \neg \hG{\hC{B}} \vee \neg \hG{\hD{A}}, \hC{B} \wedge \hD{A}$} \RightLabel{$\hG{d_r}$}
-					\UIC{$ \seq \hG{E}, \hC{B} \wedge \hD{A}$} \RightLabel{$\hG{\wedge_r}$}
-			\BIC{$\hA{A} \wedge \hB{B} \seq \hG{F} \wedge \hG{E}, \hC{B} \wedge \hD{A}$} \RightLabel{$\hG{d_r}$}
-			\UIC{$\hA{A} \wedge \hB{B} \seq \hG{G}, \hC{B} \wedge \hD{A}$}
-							\AXC{$\hE{C} \seq \hE{C}$} 
-									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$\hG{\neg_r}$}
-									\UIC{$\seq \neg \hG{\hF{C}}, \hF{C}$}\RightLabel{$\hG{\wedge_r}$}
-								\BIC{$\hE{C} \seq \hE{C} \wedge \neg \hG{\hF{C}}, \hF{C}$} \RightLabel{$\hG{d_r}$} 
-								\UIC{$\hE{C} \seq \hG{D}, \hF{C}$} \RightLabel{$\vee_l^5$}
-					\BIC{$\phantom{(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C} }$} 
-\end{prooftree}
-
-Finally, $\vee_r$ and $d_r$ are added after the cut-impertinent $\vee_l^5$ inference, thus resulting in the following proper D-projection:
-
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hG{\hA{A}} $}
-		\AXC{$\hB{B} \seq \hG{\hB{B}}$} \RightLabel{$\hG{\wedge_r}$}
-	\BIC{$\hA{A}, \hB{B} \seq \hG{\hA{A}} \wedge \hG{\hB{B}}$} \RightLabel{$\hG{d_r}$}
-	\UIC{$\hA{A}, \hB{B} \seq \hG{F}$} \RightLabel{$\wedge_l$}
-	\UIC{$\hA{A} \wedge \hB{B} \seq \hG{F}$}
-				\AXC{$\hG{\hC{B}} \seq \hC{B} $} \RightLabel{$\hG{\neg_r}$}
-				\UIC{$ \seq \neg \hG{\hC{B}}, \hC{B} $}
-						\AXC{$\hG{\hD{A}} \seq \hD{A}$} \RightLabel{$\hG{\neg_r}$}
-						\UIC{$ \seq \neg \hG{\hD{A}}, \hD{A}$} \RightLabel{$\wedge_r$}
-					\BIC{$ \seq \neg \hG{\hC{B}}, \neg \hG{\hD{A}}, \hC{B} \wedge \hD{A}$} \RightLabel{$\hG{\vee_r}$}
-					\UIC{$ \seq \neg \hG{\hC{B}} \vee \neg \hG{\hD{A}}, \hC{B} \wedge \hD{A}$} \RightLabel{$\hG{d_r}$}
-					\UIC{$ \seq \hG{E}, \hC{B} \wedge \hD{A}$} \RightLabel{$\hG{\wedge_r}$}
-			\BIC{$\hA{A} \wedge \hB{B} \seq \hG{F} \wedge \hG{E}, \hC{B} \wedge \hD{A}$} \RightLabel{$\hG{d_r}$}
-			\UIC{$\hA{A} \wedge \hB{B} \seq \hG{G}, \hC{B} \wedge \hD{A}$}
-							\AXC{$\hE{C} \seq \hG{\hE{C}}$} 
-									\AXC{$\hG{\hF{C}} \seq \hF{C}$} \RightLabel{$\hG{\neg_r}$}
-									\UIC{$\seq \neg \hG{\hF{C}}, \hF{C}$}	 \RightLabel{$\hG{\wedge_r}$}
-								\BIC{$\hE{C} \seq \hE{C} \wedge \neg \hG{\hF{C}}, \hF{C}$} \RightLabel{$\hG{d_r}$} 
-								\UIC{$\hE{C} \seq \hG{D}, \hF{C}$} \RightLabel{$\vee_l$}
-					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hG{G}, \hG{D}, \hC{B} \wedge \hD{A}, \hF{C}$} \RightLabel{$\hG{\vee_r}$} 
-					\UIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hG{G} \vee \hG{D}, \hC{B} \wedge \hD{A}, \hF{C}$} \RightLabel{$\hG{d_r}$}
-					\UIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hG{H}, \hC{B} \wedge \hD{A}, \hF{C}$}
-\end{prooftree}
-
-\end{example}
-
-
-\begin{example}[$\CEResDD$-Normal-Form]
-
-
-Consider the definitional clause set $\clausesetDefinitional{\varphi}$ of the proof $\varphi$ shown in Example \ref{example:DefinitionalClauseSet}:
-
-\begin{multicols}{3}{
-{
-$D \seq \hE{C}$
-
-$E, \hC{B}, \hD{A} \seq $
-
-$F \seq \hA{A}$
-
-$G \seq F$
-
-$H \seq G, D$
-
-$\seq H$
-}
-
-{
-$D, \hF{C} \seq $
-
-$\seq E, \hC{B}$
-
-$F \seq \hB{B}$
-
-$G \seq E$
-
-$G \seq H$
-
-$\phantom{\seq H}$
-}
-
-{
-$ \hE{C} \seq D, \hF{C}$
-
-$\seq E, \hD{A}$
-
-$\hA{A}, \hB{B} \seq F$
-
-$E, F \seq G$
-
-$D \seq H$
-
-$\phantom{\seq H}$
-}
-}\end{multicols}
-
-The shortest refutation $\delta$ of $\clausesetDefinitional{\varphi}$ is shown below:
-
-\begin{footnotesize}
-\begin{prooftree}
-\AXC{$\seq H$}
-		\AXC{$H \seq G, D$}
-				\AXC{$G\seq F$}
-						\AXC{$G\seq E$}
-								\AXC{$F \seq \hA{A}$}
-										\AXC{$F \seq \hB{B}$}
-												\AXC{$E, \hC{B}, \hD{A} \seq $} \RightLabel{$r$}
-											\BIC{$F, E, \hD{A} \seq $} \RightLabel{$r$}
-									\BIC{$F, F, E \seq $} \RightLabel{$f_l$}
-									\UIC{$F, E \seq$} \RightLabel{$r$}
-							\BIC{$G, F \seq$} \RightLabel{$r$}
-					\BIC{$G, G \seq$} \RightLabel{$f_l$}
-					\UIC{$G \seq$} \RightLabel{$r$}
-			\BIC{$H \seq D$}
-												\AXC{$D \seq \hE{C}$}
-														\AXC{$D, \hF{C} \seq$} \RightLabel{$r$}
-													\BIC{$D, D \seq$} \RightLabel{$f_l$}
-													\UIC{$D \seq$} \RightLabel{$r$}
-								\BIC{$H \seq$} \RightLabel{$r$}
-	\BIC{$\seq$}
-\end{prooftree}
-\end{footnotesize}
-
-By using the proper D-projection shown in Example \ref{example:DProjectionProper} and definitional D-projections shown in Example \ref{example:DProjectionDefinitional}, $\CEResNFDD{\varphi}{\delta}$ is:
-
-\begin{tiny}
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hG{\hA{A}} $}
-		\AXC{$\hB{B} \seq \hG{\hB{B}}$} \RightLabel{$\hG{\wedge_r}$}
-	\BIC{$\hA{A}, \hB{B} \seq \hG{\hA{A}} \wedge \hG{\hB{B}}$} \RightLabel{$\hG{d_r}$}
-	\UIC{$\hA{A}, \hB{B} \seq \hG{F}$} \RightLabel{$\wedge_l$}
-	\UIC{$\hA{A} \wedge \hB{B} \seq \hG{F}$}
-				\AXC{$\hG{\hC{B}} \seq \hC{B} $} \RightLabel{$\hG{\neg_r}$}
-				\UIC{$ \seq \neg \hG{\hC{B}}, \hC{B} $}
-						\AXC{$\hG{\hD{A}} \seq \hD{A}$} \RightLabel{$\hG{\neg_r}$}
-						\UIC{$ \seq \neg \hG{\hD{A}}, \hD{A}$} \RightLabel{$\wedge_r$}
-					\BIC{$ \seq \neg \hG{\hC{B}}, \neg \hG{\hD{A}}, \hC{B} \wedge \hD{A}$} \RightLabel{$\hG{\vee_r}$}
-					\UIC{$ \seq \neg \hG{\hC{B}} \vee \neg \hG{\hD{A}}, \hC{B} \wedge \hD{A}$} \RightLabel{$\hG{d_r}$}
-					\UIC{$ \seq \hG{E}, \hC{B} \wedge \hD{A}$} \RightLabel{$\hG{\wedge_r}$}
-			\BIC{$\hA{A} \wedge \hB{B} \seq \hG{F} \wedge \hG{E}, \hC{B} \wedge \hD{A}$} \RightLabel{$\hG{d_r}$}
-			\UIC{$\hA{A} \wedge \hB{B} \seq \hG{G}, \hC{B} \wedge \hD{A}$}
-							\AXC{$\hE{C} \seq \hG{\hE{C}}$} 
-									\AXC{$\hG{\hF{C}} \seq \hF{C}$} \RightLabel{$\hG{\neg_r}$}
-									\UIC{$\seq \neg \hG{\hF{C}}, \hF{C}$}	 \RightLabel{$\hG{\wedge_r}$}
-								\BIC{$\hE{C} \seq \hE{C} \wedge \neg \hG{\hF{C}}, \hF{C}$} \RightLabel{$\hG{d_r}$} 
-								\UIC{$\hE{C} \seq \hG{D}, \hF{C}$} \RightLabel{$\vee_l$}
-					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hG{G}, \hG{D}, \hC{B} \wedge \hD{A}, \hF{C}$} \RightLabel{$\hG{\vee_r}$} 
-					\UIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hG{G} \vee \hG{D}, \hC{B} \wedge \hD{A}, \hF{C}$} \RightLabel{$\hG{d_r}$}
-					\UIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hG{H}, \hC{B} \wedge \hD{A}, \hF{C}$}
-		\AXC{$\projectionDDefinitional{\varphi}{H \seq G, D}$}
-				\AXC{$\projectionDDefinitional{\varphi}{G\seq F}$}
-						\AXC{$\projectionDDefinitional{\varphi}{G\seq E}$}
-								\AXC{$\projectionDDefinitional{\varphi}{F \seq \hA{A}}$}
-										\AXC{$\projectionDDefinitional{\varphi}{F \seq \hB{B}}$}
-												\AXC{$\projectionDDefinitional{\varphi}{E, \hC{B}, \hD{A} \seq }$} \RightLabel{$cut$}
-											\BIC{$F, E, \hD{A} \seq $} \RightLabel{$cut$}
-									\BIC{$F, F, E \seq $} \RightLabel{$c_l$}
-									\UIC{$F, E \seq$} \RightLabel{$cut$}
-							\BIC{$G, F \seq$} \RightLabel{$cut$}
-					\BIC{$G, G \seq$} \RightLabel{$c_l$}
-					\UIC{$G \seq$} \RightLabel{$cut$}
-			\BIC{$H \seq D$}
-												\AXC{$\projectionDDefinitional{\varphi}{D \seq \hE{C}}$}
-														\AXC{$\projectionDDefinitional{\varphi}{D, \hF{C} \seq}$} \RightLabel{$cut$}
-													\BIC{$D, D \seq$} \RightLabel{$c_l$}
-													\UIC{$D \seq$} \RightLabel{$cut$}
-								\BIC{$H \seq$} \RightLabel{$cut$}
-	\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C}$}
-\end{prooftree}
-\end{tiny}
-
-\end{example}
-
-
-\section{A Combined Approach}
-\label{sec:Combination}
-
-Although the number of defined symbols introduced by the construction of definitional clause sets is only linearly bounded with respect to the size of the structs, it is still far from optimal. A technique that combines ideas from swapped clause sets and from definitional clause sets can be used to significantly reduce this number. Once again, the difficulty lies in the projections. As in the case of definitional clause sets, a new notion of projection has to be developed.
-
-
-
-
-\subsection{Cut-Pertinent Swapped Definitional Clause Set}
-
-\newcommand{\normalizePlusTimesDW}{\leadsto_{\structplus\structtimes_{DW}}}
-\newcommand{\normalizePlusTimesDWw}{\leadsto_{\structplus\structtimes_{DW_W}}}
-\newcommand{\normalizePlusTimesDWd}{\leadsto_{\structplus\structtimes_{DW_D}}}
-
-Swapped definitional clause sets are obtained by a straightforward combination of the normalizations used for swapped clause sets and for definitional clause sets. Initially, a restricted form of $\normalizePlusTimesS$-normalization (namely $\normalizePlusTimesDWw$) can be applied as long as no duplications of substructs occur. Subsequently, a limited form of $\normalizePlusTimesD$ (namely $\normalizePlusTimesDWd$) can be applied with the restriction that only substructs that are $\structplus$-junctions nested within $\structtimes$-junctions are replaced by new defined predicates.
-
-
-\begin{definition}[$\normalizePlusTimesDW$]
-\label{definition:NormalizationPlusTimesDefinitionalSwap}
-
-In the struct rewriting rules below, let $\rho$ be the inference in $\varphi$ corresponding to $\hF{\structtimes_{\rho}}$. For the rewriting rules to be applicable, $\hF{S_k}$ and $\hF{S}$ must contain at least one occurrence from $\occInference{\varphi}{\rho}$ each (i.e. there is an atomic substruct $\hF{S'_{k}}$ of $\hF{S_{k}}$ such that $\hF{S'_{k}} \in \occInference{\varphi}{\rho}$)\footnote{
-An atomic substruct is a formula occurrence. Therefore it makes sense to talk about pertinence of atomic substructs in $\occInference{\varphi}{\rho}$, even though it might look strange at first.}, and $S_1, \ldots, S_n$ and $S_l$ and $S_r$ should not contain any occurrence from $\occInference{\varphi}{\rho}$. Moreover, an innermost rewriting strategy is enforced: only minimal reducible substructs (i.e. structs having no reducible proper substruct) can be rewritten.
-
-$$
-\hF{S} \hF{\structtimes} (S_1 \structplus \ldots \structplus \hF{S_k} \structplus \ldots \structplus S_n) \normalizePlusTimesDWw  S_1 \structplus \ldots \structplus (\hF{S} \hF{\structtimes} \hF{S_{k}}) \structplus \ldots \structplus S_n
-$$
-
-$$
-(S_1 \structplus \ldots \structplus \hF{S_k} \structplus \ldots \structplus S_n) \hF{\structtimes} \hF{S} \normalizePlusTimesDWw  S_1 \structplus \ldots \structplus S_n \structplus ( \hF{S_k} \hF{\structtimes} \hF{S}) \structplus \ldots \structplus S_n  
-$$
-
-\begin{multicols}{4}{
-
-$$
-\hF{S} \hF{\structtimes} S_r \normalizePlusTimesDWw  S_r
-$$
-
-$$
-S_l \hF{\structtimes} \hF{S} \normalizePlusTimesDWw  S_l
-$$
-
-$$
-\hF{S} \hF{\structplus} S_r \normalizePlusTimesDWw  S_r
-$$
-
-$$
-S_l \hF{\structplus} \hF{S} \normalizePlusTimesDWw  S_l
-$$
-
-}\end{multicols}
-
-
-\begin{multicols}{4}{
-
-$$
-S_l \hF{\structtimes} S_r \normalizePlusTimesDWw  S_l
-$$
-
-$$
-S_l \hF{\structtimes} S_r \normalizePlusTimesDWw  S_r
-$$
-
-$$
-S_l \hF{\structplus} S_r \normalizePlusTimesDWw  S_l
-$$
-
-$$
-S_l \hF{\structplus} S_r \normalizePlusTimesDWw  S_r
-$$
-
-}\end{multicols}
-
-In the struct rewriting rule below, $C[\phantom{S}]$ is a struct context (i.e. $C[S]$ indicates that the struct $S$ is a substruct of a struct $C[S]$). For the rewriting rule to be applicable, $S \equiv S_1 \structplus \ldots \structplus S_n$ must be a $\structtimes$-junct in $C[S]$. Moreover, an innermost rewriting strategy is enforced: $S \equiv S_1 \structplus \ldots \structplus S_n$ can be replaced by $N_{S}(x_1,\ldots, x_m)$ only if $S$ has no substruct $S'$ that is a $\structtimes$-junction of $\structplus$-junctions (if this were the case, then $S'$ must be replaced before).
-
-
-$$
-\begin{array}{rcl}
-C[S]  & \equiv & C[S_1 \structplus \ldots \structplus S_n] \\ 
-		& \normalizePlusTimesDWd & 
-C[N_{S}(x_1,\ldots, x_m)] \structplus (N_{S}(x_1,\ldots, x_m) \biimp S'_1 \structplus \ldots \structplus S'_n)
-\end{array}
-$$
-
-\medskip
-
-The relation $\normalizePlusTimesDW$ is the composition of $\normalizePlusTimesDWw^*$ and $\normalizePlusTimesDWd^*$ (i.e. $S \normalizePlusTimesDW S^*$ if and only if there exists $S'$ such that $S \normalizePlusTimesDWw^* S'$ and $S' \normalizePlusTimesDWd^* S^*$).
-
-The $\structtimes$-junctions of a struct in $\normalizePlusTimesDW$ can be classified in the following way:
-\begin{itemize}
-	\item If the $\structtimes$-junction originates from a defining equation, it is called a \emph{definitional $\structtimes$-junction}.
-
-	\item Otherwise:
-		\begin{itemize}
-			\item If the $\structtimes$-junction does not contain new defined predicate symbols, it is called \emph{pure}.
-
-			\item Otherwise, it is called \emph{mixed}.
-		\end{itemize}
-
-\end{itemize}
-
-\end{definition}
-
-
-\begin{example}[$\structplus\structtimes_{DW}$-Normalization]
-\label{example:PlusTimesSwappedDefinitionalNormalization}
-Let $\varphi$ be the proof below:
-
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hA{A} $}
-		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r^1$}
-	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$\wedge_l$}
-	\UIC{$\hA{A} \wedge \hB{B} \seq \hA{A} \wedge \hB{B}$}
-				\AXC{$\hC{B} \seq \hC{B} $}
-						\AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$\wedge_r^2$}
-					\BIC{$\hD{A}, \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$\wedge_l$}
-					\UIC{$\hD{A} \wedge \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$cut^3$}
-			\BIC{$\hA{A} \wedge \hB{B} \seq \hC{B} \wedge \hD{A}$}
-							\AXC{$\hE{C} \seq \hE{C}$} 
-									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut^4$}
-								\BIC{$\hE{C} \seq \hF{C}$} \RightLabel{$\vee_l^5$}
-					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C} $} 
-\end{prooftree}
-
-Its cut-pertinent struct is:
-
-$$
-\struct{\varphi} 
-\equiv 
-((\hA{A} \structplus^1 \hB{B}) \structplus^3 (\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}}))
-\structtimes^5
-(\hE{C} \structplus^4 \hF{\structdual{C}})
-$$
-
-Considering that $\{ \hA{A}, \hB{B}, \hE{C}\} \subset \occInference{\varphi}{\vee_l^5}$ and $\{ \hD{A}, \hC{B}, \hF{C} \} \cap \occInference{\varphi}{\vee_l^5} = \emptyset$, the struct can be normalized in the way shown below:
-
-$$
-\begin{array}{rcl}
-\struct{\varphi} 
-& \equiv &
-((\hA{A} \structplus^1 \hB{B}) \structplus^3 (\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}}))
-\structtimes^5
-(\hE{C} \structplus^4 \hF{\structdual{C}}) \\
-%
-& \normalizePlusTimesDWw &
-	((\hA{A} \structplus^1 \hB{B})\structtimes^5 (\hE{C} \structplus^4 \hF{\structdual{C}}))
-\structplus^3 
-	(\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}}) \\
-%
-& \normalizePlusTimesDWw &
-	((((\hA{A} \structplus^1 \hB{B})\structtimes^5 \hE{C}) \structplus^4 \hF{\structdual{C}}))
-\structplus^3 
-	(\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}}) \\
-%
-& \normalizePlusTimesDWd &
-	(((D_{\hA{A} \structplus \hB{B}} \structtimes^5 \hE{C}) \structplus^4 \hF{\structdual{C}}))
-\structplus^3 
-	(\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}}) 
-\structplus
-(D_{\hA{A} \structplus \hB{B}} \biimp (\hA{A} \structplus^1 \hB{B})) \\
-%
-& \equiv &
-	(D_{\hA{A} \structplus \hB{B}} \structtimes^5 \hE{C}) 
-\structplus^4 
-	\hF{\structdual{C}}
-\structplus^3 
-	(\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}}) 
-\structplus \\
-&		   &	
-	(\neg D_{\hA{A} \structplus \hB{B}} \structtimes \hA{A} ) 
-\structplus
-	(\neg D_{\hA{A} \structplus \hB{B}} \structtimes \hB{B} )
-\structplus
-	(D_{\hA{A} \structplus \hB{B}} \structtimes (\neg \hA{A} \structtimes \neg \hB{B})) \\
-\end{array}
-$$
-
-$(\neg D_{\hA{A} \structplus \hB{B}} \structtimes \hA{A} )$, $(\neg D_{\hA{A} \structplus \hB{B}} \structtimes \hB{B} )$ and $(D_{\hA{A} \structplus \hB{B}} \structtimes (\neg \hA{A} \structtimes \neg \hB{B}))$ are definitional $\structtimes$-junctions. $\hF{\structdual{C}}$ and $(\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}})$ are pure $\structtimes$-junctions. And, finally, $(D_{\hA{A} \structplus \hB{B}} \structtimes^5 \hE{C})$ is a mixed $\structtimes$-junction.
-\end{example}
-
-
-
-\begin{definition}[Cut-pertinent Swapped Definitional Clause Set]
-\label{definition:CutPertinentClauseSetSwappedDefinitional}
-A \emph{cut-pertinent definitional clause set} of a proof $\varphi$ is:
-
-$$
-\clausesetSwappedDefinitional{\varphi}{S'} \defEq \clausify{S}
-$$
-where $S'$ is a $\normalizePlusTimesDWw$-normal-form of $\struct{\varphi}$ and $S' \normalizePlusTimesDWd^* S$.
-
-
-The clauses corresponding to definitional $\structtimes$-junctions are called \emph{definitional clauses}. The clauses corresponding to pure $\structtimes$-junctions are called \emph{pure clauses}. The clauses corresponding to mixed $\structtimes$-junctions are called \emph{mixed clauses}.
-
-If the $\normalizePlusTimesDWw$-normal-form $S'$ is unique or clear from the context, then it can be omitted. The swapped definitional clause set is then denoted simply as $\clausesetSwappedDefinitionalUnique{\varphi}$.
-\end{definition}
-
-\begin{example}[Swapped Definitional Clause Set]
-\label{example:SwappedDefinitionalClauseSet}
-
-
-Let $\varphi$ be the proof in Example \ref{example:PlusTimesSwapNormalization}. Then one of its swapped definitional clause sets is:
-
-$$
-\clausesetSwappedDefinitionalUnique{\varphi} \equiv  \left\{ \begin{array}{l}
-	\seq D_{\hA{A} \structplus \hB{B}} , \hE{C} 
-\ \ \ ; \\
-	\hF{C} \seq 
-\ \ \ ; \\
-	\hC{B} , \hD{A} \seq
-\ \ \ ; \\
-	D_{\hA{A} \structplus \hB{B}} \seq \hA{A}  
-\ \ \ ; \\
-	D_{\hA{A} \structplus \hB{B}} \seq \hB{B} 
-\ \ \ ; \\
-	\hA{A}, \hB{B} \seq D_{\hA{A} \structplus \hB{B}} 
-\end{array} \right\}
-$$
-
-The clauses $D_{\hA{A} \structplus \hB{B}} \seq \hA{A}$, $D_{\hA{A} \structplus \hB{B}} \seq \hB{B}$ and 
-$\hA{A}, \hB{B} \seq D_{\hA{A} \structplus \hB{B}}$ are definitional clauses. $\hF{C} \seq $ and 
-$\hC{B} , \hD{\structdual{A}} \seq$ are pure clauses. And $\seq D_{\hA{A} \structplus \hB{B}} , \hE{C}$ is a mixed clause.
-\end{example}
-
-
-\subsection{Projections}
-
-While construction of swapped clause sets is reasonably straightforward, the construction of projections for some of the clauses presents some difficulties. As in the case of definitional clause sets, some clauses of swapped definitional clause sets are merely definitional, and hence corresponding definitional D-projections can be easily constructed. Other clauses are pure in the sense that they do not contain any defined predicate symbol, and hence O-Projections can be constructed for such clauses. However, there are mixed clauses for which none of the previously defined notions of projection work, because these clauses contain a mix of defined and undefined predicate symbols. 
-
-\subsubsection{DW-Projections}
-
-The new notion of projection required by mixed clauses is called mixed DW-Projection (Definition \ref{definition:DWProjectionMixed}) and it is essentially a combination of O-projection and proper D-projection. It requires the auxiliary concepts of encapsulated formula occurrences (Definition \ref{definition:EncapsulatedFormulaOccurrences}) and encapsulated inferences (Definition \ref{definition:EncapsulatedInferences}). Roughly, constructing a mixed DW-projection is initially similar to constructing an O-projection, taking care to include encapsulated formula occurrences in the slice. Later cut-pertinent inferences are replaced by $\wedge_r$ and $d_r$ inferences, similarly to what is done during the construction of proper D-projections, in order to re-encapsulate the encapsulated formula occurrences into the defined predicate symbol.
-
-\begin{definition}[Encapsulated Formula Occurrences]
-\label{definition:EncapsulatedFormulaOccurrences}
-Let $S$ be a struct and $S'$ be a substruct of $S$. Let $N_{S'}$ be the defined predicate for $S'$. Then, the \emph{encapsulated occurrences} of $N_{S'}$ are all the atomic occurrences of $S'$.
-\end{definition}
-
-\begin{example}[Encapsulated Formula Occurrences]
-\label{example:EncapsulatedFormulaOccurrences}
-
-
-The encapsulated formula occurrences of the defined predicate $D_{\hA{A} \structplus \hB{B}}$ of the $\normalizePlusTimesDW$-normal-form of the struct $\struct{\varphi}$ shown in Example \ref{example:PlusTimesSwappedDefinitionalNormalization} are: $\hA{A}$ and $\hB{B}$.
-\end{example}
-
-
-\begin{definition}[Encapsulated Inferences]
-\label{definition:EncapsulatedInferences}
-Let $S$ be a cut-pertinent struct of a proof $\varphi$ and $S'$ be a substruct of $S$. Let $N_{S'}$ be the defined predicate for $S'$. Then, every inference $\rho$ of $\varphi$ which corresponds to a connective $\structplus_{\rho}$ or $\structtimes_{\rho}$ in $S'$ or that is an axiom inference having a formula occurrence of $S'$ in its conclusion sequent is an \emph{encapsulated inference} of $N_{S'}$.
-\end{definition}
-
-\begin{example}[Encapsulated Inferences]
-\label{example:EncapsulatedInferences}
-
-
-The encapsulated inferences of the defined predicate $D_{\hA{A} \structplus \hB{B}}$ of the $\normalizePlusTimesDW$-normal-form of the struct $\struct{\varphi}$ shown in Example \ref{example:PlusTimesSwappedDefinitionalNormalization} are: $\wedge^1_r$ and the axiom inferences having $\hA{A} \seq \hA{A}$ and $\hB{B} \seq \hB{B}$ as conclusion sequents.
-\end{example}
-
-
-\begin{definition}[Definitional DW-Projection]
-\label{definition:DWProjectionDefinitional}
-\index{Projection!Definitional DW-Projection}
-Let $\varphi$ be a proof and $c$ a definitional clause in $\clausesetSwappedDefinitional{\varphi}{S}$. Then the \emph{definitional DW-projection} of $\varphi$ with respect to $c$ is constructed in the same way as a definitional D-projection and thus simply defined as:
-
-$$
-\projectionDWDefinitional{\varphi}{c} \defEq \projectionDDefinitional{\varphi}{c}
-$$
-\end{definition}
-
-
-\begin{definition}[Pure DW-Projection]
-\label{definition:DWProjectionPure}
-\index{Projection!Pure DW-Projection}
-Let $\varphi$ be a proof and $c$ a pure clause in $\clausesetSwappedDefinitional{\varphi}{S}$. Then the \emph{pure DW-projection} of $\varphi$ with respect to $c$ is constructed in the same way as a O-projection and thus simply defined as:
-
-$$
-\projectionDWDefinitional{\varphi}{c} \defEq \projection{\varphi}{c}
-$$
-\end{definition}
-
-
-\begin{definition}[Mixed DW-Projection]
-\label{definition:DWProjectionMixed}
-\index{Projection!Mixed DW-Projection}
-Let $\varphi$ be a proof and $c$ a mixed clause in $\clausesetSwappedDefinitional{\varphi}{S}$. Let $\Omega_E$ and $\Upsilon_E$ be the sets of, respectively, encapsulated formula occurrences and encapsulated inferences of defined predicates occurring in $c$. Let $\Omega_c$ be the set of undefined formula occurrences in $c$. Then the \emph{mixed DW-projection} of $\varphi$ with respect to $c$ can be computed according to the following steps:
-
-\begin{enumerate}
-%\item Construct $\varphi^1 \defEq \slice{\varphi}{\Omega_E \cup \Omega_c}$.
-\item Replace the inferences of $\Upsilon_E$ in $\varphi^1$ by $\neg_r$, $\wedge_r$, $\vee_r$ and $d_r$ (analogously to what is done in the construction of proper D-projections). Let $\varphi^2$ be the resulting proofoid.
-\item Construct $\varphi^3 \defEq \replacePert{\varphi^2}{\occCutPert{\varphi^2}}$ by replacing the cut-pertinent inferences of $\varphi^2$ by $Y$-inferences.
-\item Construct $\varphi^4 \defEq \WFix{\varphi^3}$ by fixing broken inferences with weakening.
-%\item Finally, construct the mixed DW-projection $\projectionDWMixed{\varphi}{c} \defEq \EliminateY{\varphi^4}$ by eliminating the $Y$-inferences from $\varphi^4$.
-\end{enumerate}
-\end{definition}
-
-
-\begin{example}[Mixed DW-Projection]
-\label{example:DWProjectionMixed}
-
-
-
-Let ${\varphi}$ be the proof shown in Example \ref{example:PlusTimesSwappedDefinitionalNormalization}, which is displayed again for convenience below:
-
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hA{A} $}
-		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r^1$}
-	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$\wedge_l$}
-	\UIC{$\hA{A} \wedge \hB{B} \seq \hA{A} \wedge \hB{B}$}
-				\AXC{$\hC{B} \seq \hC{B} $}
-						\AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$\wedge_r^2$}
-					\BIC{$\hD{A}, \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$\wedge_l$}
-					\UIC{$\hD{A} \wedge \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$cut^3$}
-			\BIC{$\hA{A} \wedge \hB{B} \seq \hC{B} \wedge \hD{A}$}
-							\AXC{$\hE{C} \seq \hE{C}$} 
-									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut^4$}
-								\BIC{$\hE{C} \seq \hF{C}$} \RightLabel{$\vee_l^5$}
-					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C} $} 
-\end{prooftree}
-
-The first step in the construction of the mixed DW-projection $\projectionDWMixed{\varphi}{\seq D_{\hA{A} \structplus \hB{B}} , \hE{C}}$ is the slicing with respect to $\Omega_E \cup \Omega_c$ where $\Omega_E = \{\hA{A}, \hB{B}\}$ and $\Omega_c = \{\hE{C}\}$:
-
-\renewcommand{\hC}[1]{\phantom{#1}}
-\renewcommand{\hD}[1]{\phantom{#1}}
-\renewcommand{\hF}[1]{\phantom{#1}}
-
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hA{A} $}
-		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r^1$}
-	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$\wedge_l$}
-	\UIC{$\hA{A} \wedge \hB{B} \seq \hA{A} \wedge \hB{B}$}
-				\AXC{$\hC{B} \seq \hC{B} $}
-						\AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$Y$}
-					\BIC{$\hD{A}\phantom{,} \hC{B} \seq \hC{B} \phantom{\wedge} \hD{A}$} \RightLabel{$Y$}
-					\UIC{$\hD{A} \phantom{\wedge} \hC{B} \seq \hC{B} \phantom{\wedge} \hD{A}$} \RightLabel{$Y$}
-			\BIC{$\hA{A} \wedge \hB{B} \seq \hA{A} \wedge \hB{B}$}
-							\AXC{$\hE{C} \seq \hE{C}$} 
-									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$Y$}
-								\BIC{$\hE{C} \seq \hE{C}$} \RightLabel{$\vee_l^5$}
-					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hA{A} \wedge \hB{B}, \hC{B} \phantom{\wedge} \hD{A}\phantom{,} \hE{C} $} 
-\end{prooftree}
-
-
-The second step is the introduction of definition inferences, resulting in the proofoid $\varphi^2$ below:
-
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hA{A} $}
-		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r$}
-	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$d_r$}
-	\UIC{$\hA{A}, \hB{B} \seq D_{\hA{A} \structplus \hB{B}}$} \RightLabel{$\wedge_l$}
-	\UIC{$\hA{A} \wedge \hB{B} \seq D_{\hA{A} \structplus \hB{B}}$}
-				\AXC{$\hC{B} \seq \hC{B} $}
-						\AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$Y$}
-					\BIC{$\hD{A}\phantom{,} \hC{B} \seq \hC{B} \phantom{\wedge} \hD{A}$} \RightLabel{$Y$}
-					\UIC{$\hD{A} \phantom{\wedge} \hC{B} \seq \hC{B} \phantom{\wedge} \hD{A}$} \RightLabel{$Y$}
-			\BIC{$\hA{A} \wedge \hB{B} \seq D_{\hA{A} \structplus \hB{B}}$}
-							\AXC{$\hE{C} \seq \hE{C}$} 
-									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$Y$}
-								\BIC{$\hE{C} \seq \hE{C}$} \RightLabel{$\vee_l^5$}
-					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq D_{\hA{A} \structplus \hB{B}},  \hC{B} \phantom{\wedge} \hD{A}\phantom{,} \hE{C} $} 
-\end{prooftree}
-
-Subsequently, cut-pertinent inferences of $\varphi^2$ should be replaced by $Y$-inferences. However, since $\varphi^2$ has no cuts, there is nothing to be replaced, and hence $\varphi^3 = \varphi^2$. Subsequently, broken inferences of $\varphi^3$ should be W-fixed. However, there are no broken inferences in $\varphi^3$. Therefore, only the last step of eliminating $Y$-inferences remains and its result is the mixed DW-projection $\projectionDWMixed{\varphi}{\seq D_{\hA{A} \structplus \hB{B}} , \hE{C}}$ shown below:
-
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hA{A} $}
-		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r$}
-	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$d_r$}
-	\UIC{$\hA{A}, \hB{B} \seq D_{\hA{A} \structplus \hB{B}}$} \RightLabel{$\wedge_l$}
-	\UIC{$\hA{A} \wedge \hB{B} \seq D_{\hA{A} \structplus \hB{B}}$}
-							\AXC{$\hE{C} \seq \hE{C}$} \RightLabel{$\vee_l^5$}
-					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq D_{\hA{A} \structplus \hB{B}}, \hE{C} $} 
-\end{prooftree}
-
-\end{example}
-
-
-\begin{example}[$\CEResDSwapDSwap$-Normal-Form]
-
-Consider again the swapped definitional clause set of the proof $\varphi$ shown in Example \ref{example:SwappedDefinitionalClauseSet}:
-
-$$
-\clausesetSwappedDefinitionalUnique{\varphi} \equiv  \left\{
-	\seq D_{\hA{A} \structplus \hB{B}} , \hE{C} 
-\ \ \ ; \ \
-	\hF{C} \seq 
-\ \ \ ; \ \
-	\hC{B} , \hD{A} \seq
-\ \ \ ; \ \
-	D_{\hA{A} \structplus \hB{B}} \seq \hA{A}  
-\ \ \ ; \ \
-	D_{\hA{A} \structplus \hB{B}} \seq \hB{B} 
-\ \ \ ; \ \
-	\hA{A}, \hB{B} \seq D_{\hA{A} \structplus \hB{B}} 
-\right\}
-$$
-
-The shortest refutation $\delta$ of $\clausesetSwappedDefinitionalUnique{\varphi}$ is shown below:
-
-\begin{prooftree}
-\AXC{$\seq D_{\hA{A} \structplus \hB{B}} , \hE{C}$}
-		\AXC{$\hF{C} \seq$} \RightLabel{$r$}
-	\BIC{$\seq D_{\hA{A} \structplus \hB{B}}$}
-				\AXC{$D_{\hA{A} \structplus \hB{B}} \seq \hA{A}$}
-						\AXC{$D_{\hA{A} \structplus \hB{B}} \seq \hB{B}$}
-								\AXC{$\hC{B} , \hD{A} \seq$} \RightLabel{$r$}
-							\BIC{$D_{\hA{A} \structplus \hB{B}}, \hD{A} \seq $} \RightLabel{$r$}
-					\BIC{$D_{\hA{A} \structplus \hB{B}}, D_{\hA{A} \structplus \hB{B}} \seq $} \RightLabel{$f_l$}
-					\UIC{$D_{\hA{A} \structplus \hB{B}} \seq $} \RightLabel{$r$}
-			\BIC{$ \seq $}
-\end{prooftree}
-
-By using the mixed DW-projection shown in Example \ref{example:DWProjectionMixed}, pure DW-projections shown in Example \ref{example:OProjections} and definitional DW-projections shown in Example \ref{example:DProjectionDefinitional}, $\CEResNFDSwapDSwap{\varphi}{\delta}$ is:
-
-
-%\begin{small}
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hA{A} $}
-		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r$}
-	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$d_r$}
-	\UIC{$\hA{A}, \hB{B} \seq D_{\hA{A} \structplus \hB{B}}$} \RightLabel{$\wedge_l$}
-	\UIC{$\hA{A} \wedge \hB{B} \seq D_{\hA{A} \structplus \hB{B}}$}
-							\AXC{$\hE{C} \seq \hE{C}$} \RightLabel{$\vee_l^5$}
-					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq D_{\hA{A} \structplus \hB{B}}, \hE{C} $} 
-               		\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut$}
-               	\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq D_{\hA{A} \structplus \hB{B}}, \hF{C}$}
-	            				\AXC{$\hA{A} \seq \hA{A}$} \RightLabel{$w_l$}
-               				\UIC{$\hA{A}, \hB{B} \seq \hA{A}$} \RightLabel{$\wedge_l$}
-               				\UIC{$\hA{A} \wedge \hB{B} \seq \hA{A}$} \RightLabel{$d_l$}
-               				\UIC{$D_{\hA{A} \structplus \hB{B}} \seq \hA{A}$}
-               						\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$w_l$}
-               						\UIC{$\hA{A}, \hB{B} \seq \hB{B}$} \RightLabel{$\wedge_l$}
-               						\UIC{$\hA{A} \wedge \hB{B} \seq \hB{B}$} \RightLabel{$d_l$}
-               						\UIC{$D_{\hA{A} \structplus \hB{B}} \seq \hB{B}$}
-               								\AXC{$\hC{B} \seq \hC{B} $}
-															\AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$\wedge_r$}
-														\BIC{$ \hC{B}, \hD{A} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$cut$}
-               							\BIC{$D_{\hA{A} \structplus \hB{B}}, \hD{A} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$cut$}
-               					\BIC{$D_{\hA{A} \structplus \hB{B}}, D_{\hA{A} \structplus \hB{B}} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$c_l$}
-               					\UIC{$D_{\hA{A} \structplus \hB{B}} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$cut$}
-               			\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C}$}
-\end{prooftree}
-%\end{small}
-
-
-\end{example}
-
-
-\section{Ignoring Atomic and Quantifier-Free Cuts}
-\label{sec:CutEliminationByResolution:CEResIgnoringAtomicCuts}
-
-If $\CERes$ is applied to a proof containing only atomic cuts, $\CERes$ still transforms the proof into a new proof containing only atomic cuts, but with additional structural inferences and with the atomic cuts located in the bottom of the proof. This is clearly non-ideal, because the proof could be simply left unchanged. More generally, if $\CERes$ is applied to a proof containing complex cuts and atomic cuts, $\CERes$ unnecessarily includes the atomic cuts in the process of reduction, even though atomic cuts cannot be reduced further. The inclusion of atomic cuts results in larger clause sets that are more costly to refute, and in normal forms with possibly additional structural inferences. This indicates that there is a very simple and evident improvement of the $\CERes$ method that has been thoroughly overlooked so far: instead of distinguishing between cut-pertinent and cut-impertinent formula occurrences (i.e. between ancestors and non-ancestors of \emph{all} cut formula occurrences) and cut-pertinent and cut-impertinent inferences (i.e inferences that operate on the ancestors and on the non-ancestors of cut formula occurrences), it suffices to distinguish between ancestors of \emph{complex} cut formula occurrences and ancestors of either occurrences in the end-sequent or of atomic cut-formula occurrences.
-
-
-\newcommand{\occCutPertComplex}[1]{\Omega_{CCP}(#1)}   % Cut-pertinent occurrences of a proof. Argument: proof.
-\newcommand{\occCutImpertComplex}[1]{\Omega_{CCI}(#1)}   % Cut-impertinent occurrences of a proof. Argument: proof.
-\begin{definition}[Complex-Cut-Pertinent and Complex-Cut-Impertinent Occurrences]
-\label{definition:ComplexCutPertinenceOccurrences}
-A formula occurrence is \emph{complex-cut-pertinent} if and only if it is an ancestor of a non-atomic cut formula occurrence. The \emph{set of complex-cut-pertinent formula occurrences} of a proof $\varphi$ is denoted $\occCutPertComplex{\varphi}$.
-
-A formula occurrence is \emph{complex-cut-impertinent} if and only if it is not complex-cut-pertinent. The \emph{set of complex-cut-impertinent formula occurrences} of a proof $\varphi$ is denoted $\occCutImpertComplex{\varphi}$.
-\end{definition}
-
-\begin{definition}[Complex-Cut-Pertinence]
-\label{definition:CutPertinenceInferences}
-An inference $\rho$ is \emph{complex-cut-pertinent} if and only if $\rho$ is $\occCutPertComplex{\varphi}$-pertinent.
-
-An inference $\rho$ is \emph{complex-cut-impertinent} if and only if $\rho$ is $\occCutImpertComplex{\varphi}$-pertinent.
-\end{definition}
-
-\begin{definition}[$\CERes$-Normal-Form Ignoring Atomic Cuts]
-\label{definition:CEResNormalFormIgnoringAtomicCuts} \hspace*{\fill} \\
-The \emph{$\CERes$-normal-form ignoring atomic cuts} $\CEResNFComplex{\varphi}{\delta}$ of a proof $\varphi$ is obtained in the same way as $\CEResNF{\varphi}{\delta}$ except that, in all manipulations and constructions of structs, clause sets and projections, $\occCutPertComplex{\varphi}$ is used instead of $\occCutPert{\varphi}$, $\occCutImpertComplex{\varphi}$ is used instead of $\occCutImpert{\varphi}$ and complex-cut-pertinence of inferences is used instead of cut-pertinence of inferences.
-\end{definition}
-
-\begin{example}[$\CERes$-Normal-Form Ignoring Atomic Cuts]
-\label{example:CEResNormalFormIgnoringAtomicCuts}
-
-Let $\varphi$ be the proof below:
-
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hA{A} $}
-		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r^1$}
-	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$\wedge_l$}
-	\UIC{$\hA{A} \wedge \hB{B} \seq \hA{A} \wedge \hB{B}$}
-				\AXC{$\hC{B} \seq \hC{B} $}
-						\AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$\wedge_r^2$}
-					\BIC{$\hD{A}, \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$\wedge_l$}
-					\UIC{$\hD{A} \wedge \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$cut^3$}
-			\BIC{$\hA{A} \wedge \hB{B} \seq \hC{B} \wedge \hD{A}$}
-							\AXC{$\hE{C} \seq \hE{C}$} 
-									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut^4$}
-								\BIC{$\hE{C} \seq \hF{C}$} \RightLabel{$\vee_l^5$}
-					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C} $} 
-\end{prooftree}
-
-Its complex-cut-pertinent struct is shown below. It is interesting to note that $cut^4$ now corresponds to a $\structtimes$ connective, because $cut^4$ is complex-cut-impertinent.
-$$
-\struct{\varphi}^C 
-\equiv 
-((\hA{A} \structplus^1 \hB{B}) \structplus^3 (\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}}))
-\structtimes^5
-(\hE{\structtimesEmpty} \structtimes^4 \hF{\structtimesEmpty})
-$$
-
-The struct can be $\normalizePlusTimesS$-normalized to:
-$$
-S
-\equiv
-	(\hA{A}\structtimes^5 \hE{\structtimesEmpty} \structtimes^4 \hF{\structtimesEmpty}) 
-\structplus^1 
-	(\hB{B}\structtimes^5 \hE{\structtimesEmpty} \structtimes^4 \hF{\structtimesEmpty}) 
-\structplus^3 
-	(\hC{\structdual{B}} \structtimes^2 \hD{\structdual{A}})
-$$
-
-And the corresponding clause set is:
-$$
-\clauseset{\varphi}
-\equiv
-	\{ \ \ \seq \hA{A} \ \ ; \ \ \seq \hB{B} \ \ ; \ \ \hC{B}, \hD{A} \seq \ \ \}
-$$
-
-It can be refuted by the refutation $\delta$ shown below:
-
-\begin{prooftree}
-\AXC{$\seq \hA{A}$} 
-		\AXC{$\seq \hB{B}$}
-				\AXC{$\hC{B}, \hD{A} \seq$} \RightLabel{$r$}
-			\BIC{$\hD{A} \seq$} \RightLabel{$r$}
-	\BIC{$\seq$}
-\end{prooftree}
-
-
-The O-projection $\projection{\varphi}{\seq \hA{A}}$ is shown below. Interestingly, projections can now contain atomic cuts because they are complex-cut-impertinent inferences.
-
-\begin{prooftree}
-	\AXC{$\hA{A} \seq \hA{A} $} \RightLabel{$w_l$}
-	\UIC{$\hA{A}, \hG{B} \seq \hA{A}$} \RightLabel{$\wedge_l$}
-	\UIC{$\hA{A} \wedge \hG{B} \seq \hA{A}$}
-							\AXC{$\hE{C} \seq \hE{C}$} 
-									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut^4$}
-								\BIC{$\hE{C} \seq \hF{C}$} \RightLabel{$\vee_l^5$}
-					\BIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C} \seq \hA{A}, \hF{C} $} 
-\end{prooftree}
-
-
-Analogously, the O-projection $\projection{\varphi}{\seq \hB{B}}$ is:
-
-\begin{prooftree}
-	\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$w_l$}
-	\UIC{$\hG{A}, \hB{B} \seq \hB{B}$} \RightLabel{$\wedge_l$}
-	\UIC{$\hG{A} \wedge \hB{B} \seq \hB{B}$}
-							\AXC{$\hE{C} \seq \hE{C}$} 
-									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut^4$}
-								\BIC{$\hE{C} \seq \hF{C}$} \RightLabel{$\vee_l^5$}
-					\BIC{$(\hG{A} \wedge \hB{B}) \vee \hE{C} \seq \hB{B}, \hF{C} $} 
-\end{prooftree}
-
-And the O-projection $\projection{\varphi}{\hC{B}, \hD{A} \seq}$ is:
-
-\begin{prooftree}
-				\AXC{$\hC{B} \seq \hC{B} $}
-						\AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$\wedge_r^2$}
-					\BIC{$\hD{A}, \hC{B} \seq \hC{B} \wedge \hD{A}$} 
-\end{prooftree}
-
-\begin{landscape}
-Combining the refutation and the projections as usual, $\CEResNFComplexSwapO{\varphi}{\delta}$ is obtained:
-
-%\begin{footnotesize}
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hA{A} $} \RightLabel{$w_l$}
-\UIC{$\hA{A}, \hG{B} \seq \hA{A}$} \RightLabel{$\wedge_l$}
-\UIC{$\hA{A} \wedge \hG{B} \seq \hA{A}$}
-		\AXC{$\hE{C} \seq \hE{C}$} 
-				\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut^4$}
-			\BIC{$\hE{C} \seq \hF{C}$} \RightLabel{$\vee_l^5$}
-	\BIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C} \seq \hA{A}, \hF{C} $} 
-						\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$w_l$}
-						\UIC{$\hG{A}, \hB{B} \seq \hB{B}$} \RightLabel{$\wedge_l$}
-						\UIC{$\hG{A} \wedge \hB{B} \seq \hB{B}$}
-								\AXC{$\hE{C} \seq \hE{C}$} 
-										\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut^4$}
-									\BIC{$\hE{C} \seq \hF{C}$} \RightLabel{$\vee_l^5$}
-							\BIC{$(\hG{A} \wedge \hB{B}) \vee \hE{C} \seq \hB{B}, \hF{C} $}
-				\AXC{$\hC{B} \seq \hC{B} $}
-						\AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$\wedge_r^2$}
-					\BIC{$\hD{A}, \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$cut$}
-			\BIC{$(\hG{A} \wedge \hB{B}) \vee \hE{C}, \hD{A} \seq \hC{B} \wedge \hD{A}, \hF{C}$} \RightLabel{$cut$}
-	\BIC{$(\hA{A} \wedge \hG{B}) \vee \hE{C}, (\hG{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C}, \hF{C}$} \doubleLine \RightLabel{$c^*$}
-	\UIC{$(A \wedge B) \vee C \seq \hC{B} \wedge \hD{A}, C$}
-\end{prooftree}
-%\end{footnotesize}
-\end{landscape}
-
-\end{example}
-
-
-\label{sec:CutEliminationByResolution:CEResIgnoringQuantifierFreeCuts}
-
-
-In fact, for some applications, such as Herbrand sequent extraction \cite{BrunoWoltzenlogelPaleoMestradoEMCL2007,BrunoWoltzenlogelPaleoHerbrandSequentBook2008}, it suffices to eliminate only cuts that have quantifiers\footnote{In fact, even if the cut formula occurrences of a cut $\rho$ in a proof $\varphi$ do contain quantifiers, if these quantifiers are dummy in the sense that they were introduced by weakening inferences instead of being properly introduced by quantifier inferences, then $\rho$ could also be considered ``quantifier-free'' and therefore be ignored. Nevertheless, for simplicity, this additional improvement is not considered in detail here.} in their cut formulas.
-
-
-\newcommand{\occCutPertQuant}[1]{\Omega_{QCP}(#1)}   % Cut-pertinent occurrences of a proof. Argument: proof.
-\newcommand{\occCutImpertQuant}[1]{\Omega_{QCI}(#1)}   % Cut-impertinent occurrences of a proof. Argument: proof.
-\begin{definition}[Quantified-Cut-Pertinent and Quantified-Cut-Impertinent Occurrences]
-\label{definition:ComplexCutPertinenceOccurrences}
-A formula occurrence is \emph{quantified-cut-pertinent} if and only if it is an ancestor of a cut formula occurrence that contains quantifiers. The \emph{set of quantified-cut-pertinent formula occurrences} of a proof $\varphi$ is denoted $\occCutPertQuant{\varphi}$.
-
-A formula occurrence is \emph{quantified-cut-impertinent} if and only if it is not quantified-cut-pertinent. The \emph{set of quantified-cut-impertinent formula occurrences} of a proof $\varphi$ is denoted $\occCutImpertQuant{\varphi}$.
-\end{definition}
-
-\begin{definition}[Quantified-Cut-Pertinence]
-\label{definition:CutPertinenceInferences}
-An inference $\rho$ is \emph{quantified-cut-pertinent} if and only if $\rho$ is $\occCutPertQuant{\varphi}$-pertinent.
-
-An inference $\rho$ is \emph{quantified-cut-impertinent} if and only if $\rho$ is $\occCutImpertQuant{\varphi}$-pertinent.
-\end{definition}
-
-\begin{definition}[$\CERes$-Normal-Form Ignoring Quantifier-Free Cuts]
-\label{definition:CEResNormalFormIgnoringQuantifierFreeCuts} \hspace*{\fill} \\
-The \emph{$\CERes$-normal-form ignoring quantifier-free cuts} $\CEResNFQuant{\varphi}{\delta}$ of a proof $\varphi$ is obtained in the same way as $\CEResNF{\varphi}{\delta}$ except that, in all manipulations and constructions of structs, clause sets and projections, $\occCutPertQuant{\varphi}$ is used instead of $\occCutPert{\varphi}$, $\occCutImpertQuant{\varphi}$ is used instead of $\occCutImpert{\varphi}$ and quantified-cut-pertinence of inferences is used instead of cut-pertinence of inferences.
-\end{definition}
 
