@@ -204,7 +204,7 @@ The construction of projections requires special care when definitional clause s
 \label{definition:DProjectionDefinitional}
 The \emph{definitional projection} $\projectionDefinitional{\varphi}{c}$ of 
 a proof $\varphi$ w.r.t. a definitional clause $c$ from 
-$\clausesetDefinitional{\varphi}$ can be constructed according 
+$\clausesetDefinitional{\varphi}$ is constructed according 
 to one of the following templates:
 
 \begin{tiny}
@@ -249,7 +249,7 @@ to one of the following templates:
 \end{tiny}
 
 \noindent
-If $S_k$ is a negative literal, it is necessary to add negation inferences to the definitional projections above.
+If $S_k$ is a negative literal, negation inferences must be added in the templates.
 \end{definition}
 
 
@@ -259,16 +259,19 @@ Definitional projections w.r.t. the clauses shown in Example \ref{example:PlusTi
 
 \begin{multicols}{3}{
 $\projectionDefinitional{\varphi}{D \seq \hE{C}}$:
+\begin{scriptsize}
 \begin{prooftree}
 \AXC{$\hE{C} \seq \hE{C}$} \RightLabel{$w_l$}
 \UIC{$\hE{C}, \neg \hF{C} \seq \hE{C}$} \RightLabel{$\wedge_l$}
 \UIC{$\hE{C} \wedge \neg \hF{C} \seq \hE{C}$} \RightLabel{$d_l$}
 \UIC{$D \seq \hE{C}$} 
 \end{prooftree}
+\end{scriptsize}
 \vfill\columnbreak
 
 
 $\projectionDefinitional{\varphi}{D, \hF{C} \seq }$:
+\begin{scriptsize}
 \begin{prooftree}
 \AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$w_l$}
 \UIC{$\hE{C}, \hF{C} \seq \hF{C}$} \RightLabel{$\neg_l$}
@@ -276,8 +279,10 @@ $\projectionDefinitional{\varphi}{D, \hF{C} \seq }$:
 \UIC{$\hE{C} \wedge \neg \hF{C}, \hF{C} \seq $} \RightLabel{$d_l$}
 \UIC{$D, \hF{C} \seq $} 
 \end{prooftree}
+\end{scriptsize}
 
 $\projectionDefinitional{\varphi}{\hE{C} \seq D, \hF{C}}$:
+\begin{scriptsize}
 \begin{prooftree}
 \AXC{$\hE{C} \seq \hE{C}$}
 		\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$\neg_r$}
@@ -285,12 +290,14 @@ $\projectionDefinitional{\varphi}{\hE{C} \seq D, \hF{C}}$:
 	\BIC{$\hE{C} \seq \hF{C}, \hE{C} \wedge \neg \hF{C}$} \RightLabel{$d_r$}
 	\UIC{$\hE{C} \seq \hF{C}, D$} 
 \end{prooftree}
+\end{scriptsize}
 }
 \end{multicols}
 
 
 \begin{multicols}{3}{
 $\projectionDefinitional{\varphi}{\seq E, \hD{A}}$:
+\begin{scriptsize}
 \begin{prooftree}
 \AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$\neg_r$}
 \UIC{$\seq \neg \hD{A}, \hD{A}$} \RightLabel{$w_r$}
@@ -298,8 +305,10 @@ $\projectionDefinitional{\varphi}{\seq E, \hD{A}}$:
 \UIC{$\seq \neg \hC{B} \vee \neg \hD{A}, \hD{A}$} \RightLabel{$d_r$}
 \UIC{$\seq E, \hD{A}$} 
 \end{prooftree}
+\end{scriptsize}
 
 $\projectionDefinitional{\varphi}{\seq E, \hC{B}}$:
+\begin{scriptsize}
 \begin{prooftree}
 \AXC{$\hC{B} \seq \hC{B}$} \RightLabel{$\neg_r$}
 \UIC{$\seq \neg \hC{B}, \hC{B}$} \RightLabel{$w_r$}
@@ -307,9 +316,10 @@ $\projectionDefinitional{\varphi}{\seq E, \hC{B}}$:
 \UIC{$\seq \neg \hC{B} \vee \neg \hD{A}, \hC{B}$} \RightLabel{$d_r$}
 \UIC{$\seq E, \hC{B}$} 
 \end{prooftree}
+\end{scriptsize}
 
 $\projectionDefinitional{\varphi}{E, \hD{A}, \hC{B} \seq }$:
-\begin{small}
+\begin{tiny}
 \begin{prooftree}
 \AXC{$\hC{B} \seq \hC{B}$} \RightLabel{$\neg_l$}
 \UIC{$\neg \hC{B}, \hC{B} \seq $}
@@ -318,7 +328,7 @@ $\projectionDefinitional{\varphi}{E, \hD{A}, \hC{B} \seq }$:
 	\BIC{$\neg \hC{B} \vee \neg \hD{A}, \hC{B}, \hD{A} \seq $} \RightLabel{$d_l$}
 	\UIC{$E, \hC{B}, \hD{A} \seq $} 
 \end{prooftree}
-\end{small}
+\end{tiny}
 }
 \end{multicols}
 
@@ -327,28 +337,34 @@ $\projectionDefinitional{\varphi}{E, \hD{A}, \hC{B} \seq }$:
 
 \begin{multicols}{3}{
 $\projectionDefinitional{\varphi}{F \seq \hA{A}}$:
+\begin{scriptsize}
 \begin{prooftree}
 \AXC{$\hA{A} \seq \hA{A}$} \RightLabel{$w_l$}
 \UIC{$\hA{A}, \hB{B} \seq \hA{A}$} \RightLabel{$\wedge_l$}
 \UIC{$\hA{A} \wedge \hB{B} \seq \hA{A}$} \RightLabel{$d_l$}
 \UIC{$F \seq \hA{A}$} 
 \end{prooftree}
+\end{scriptsize}
 
 $\projectionDefinitional{\varphi}{F \seq \hB{B}}$:
+\begin{scriptsize}
 \begin{prooftree}
 \AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$w_l$}
 \UIC{$\hA{A}, \hB{B} \seq \hB{B}$} \RightLabel{$\wedge_l$}
 \UIC{$\hA{A} \wedge \hB{B} \seq \hB{B}$} \RightLabel{$d_l$}
 \UIC{$F \seq \hB{B}$} 
 \end{prooftree}
+\end{scriptsize}
 
 $\projectionDefinitional{\varphi}{\hA{A}, \hB{B} \seq F}$:
+\begin{scriptsize}
 \begin{prooftree}
 \AXC{$\hA{A} \seq \hA{A}$}
 		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r$}
 	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$d_r$}
 	\UIC{$\hA{A}, \hB{B} \seq F$} 
 \end{prooftree}
+\end{scriptsize}
 }
 \end{multicols}
 
@@ -358,58 +374,278 @@ $\projectionDefinitional{\varphi}{\hA{A}, \hB{B} \seq F}$:
 
 \begin{multicols}{3}{
 $\projectionDefinitional{\varphi}{G \seq F}$:
+\begin{scriptsize}
 \begin{prooftree}
 \AXC{$F \seq F$} \RightLabel{$w_l$}
 \UIC{$F, E \seq F$} \RightLabel{$\wedge_l$}
 \UIC{$F \wedge E \seq F$} \RightLabel{$d_l$}
 \UIC{$G \seq F$} 
 \end{prooftree}
+\end{scriptsize}
 
 $\projectionDefinitional{\varphi}{G \seq E}$:
+\begin{scriptsize}
 \begin{prooftree}
 \AXC{$E \seq E$} \RightLabel{$w_l$}
 \UIC{$F, E \seq E$} \RightLabel{$\wedge_l$}
 \UIC{$F \wedge E \seq E$} \RightLabel{$d_l$}
 \UIC{$G \seq E$} 
 \end{prooftree}
+\end{scriptsize}
 
 $\projectionDefinitional{\varphi}{F, E \seq G}$:
+\begin{scriptsize}
 \begin{prooftree}
 \AXC{$F \seq F$}
 		\AXC{$E \seq E$} \RightLabel{$\wedge_r$}
 	\BIC{$F, E \seq F \wedge E$} \RightLabel{$d_r$}
 	\UIC{$F, E \seq G$} 
 \end{prooftree}
+\end{scriptsize}
 }
 \end{multicols}
 
 
 \begin{multicols}{3}{
 $\projectionDefinitional{\varphi}{D \seq H}$:
+\begin{scriptsize}
 \begin{prooftree}
 \AXC{$D \seq D$} \RightLabel{$w_r$}
 \UIC{$D \seq G, D$} \RightLabel{$\vee_r$}
 \UIC{$D \seq G\vee D$} \RightLabel{$d_r$}
 \UIC{$D \seq H$} 
 \end{prooftree}
+\end{scriptsize}
 
 $\projectionDefinitional{\varphi}{G \seq H}$:
+\begin{scriptsize}
 \begin{prooftree}
 \AXC{$G \seq G$} \RightLabel{$w_r$}
 \UIC{$G \seq G, D$} \RightLabel{$\vee_r$}
 \UIC{$G \seq G\vee D$} \RightLabel{$d_r$}
 \UIC{$G \seq H$} 
 \end{prooftree}
+\end{scriptsize}
 
 $\projectionDefinitional{\varphi}{H \seq G, D}$:
+\begin{scriptsize}
 \begin{prooftree}
 \AXC{$G \seq G$}
 		\AXC{$D \seq D$} \RightLabel{$\vee_l$}
 	\BIC{$G \vee D \seq G, D$} \RightLabel{$d_l$}
 	\UIC{$H \seq G, D$} 
 \end{prooftree}
+\end{scriptsize}
 }
 \end{multicols}
+%\hfill\QED
+\end{example}
+
+
+\noindent
+While projections w.r.t. to definitional clauses can always be easily constructed 
+using the four templates given in Definition \ref{definition:DProjectionDefinitional},
+the proper clause requires a more sophisticated inductively constructed projection 
+that actually depends on the input proof.
+
+
+\begin{definition}[Proper Projection]
+\label{definition:DProjectionProper}
+The \emph{proper projection} $\projectionProper{\varphi}{\seq n(\struct{\varphi})}$ of a
+proof $\varphi$ w.r.t. its proper clause $\seq n(\struct{\varphi})$ is constructed 
+inductively. Let $\varphi'$ be a subproof of $\varphi$ and $\rho$ be its last inference.
+Let $S'$ be the subformula of $\struct{\varphi}$ at $\varphi'$. The following cases can be distinguished:
+
+\begin{itemize}
+\item $\rho$ is an axiom inference: Then $\varphi'$ is of the form:
+
+\begin{prooftree}
+\AXC{$ $} \RightLabel{$\rho$}
+\UIC{$A \seq A$}
+\end{prooftree}
+
+	\begin{itemize}
+	\item If both occurrences of $A$ are cut-ancestors, then let $\varphi''$ be:
+
+	\begin{prooftree}
+	\AXC{$ $} \RightLabel{$\rho$}
+	\UIC{$A \seq A$} \RightLabel{$\neg_r$}
+	\UIC{$\seq \neg A, A$} \RightLabel{$\vee_r$}
+	\UIC{$\seq \neg A \vee A$} \RightLabel{$d_r$}
+	\UIC{$\seq n(S')$}
+	\end{prooftree}
+
+	\item If only the antecedent's $A$ is a cut-ancestor, then let $\varphi''$ be:
+
+	\begin{prooftree}
+	\AXC{$ $} \RightLabel{$\rho$}
+	\UIC{$A \seq A$} \RightLabel{$\neg_r$}
+	\UIC{$\seq \neg A, A$}
+	\end{prooftree}
+
+ 
+	\item Otherwise, let $\varphi'' \defEq \varphi'$
+	\end{itemize}
+
+\item $\rho$ is a n-ary inference (with $n \geq 2$): Then $\varphi'$ is of the form:
+
+\begin{prooftree}
+\AXC{$\psi'_1 $} \noLine
+\UIC{$\Gamma'_1 \seq \Delta'_1$}
+	\AXC{$\ldots$}
+		\AXC{$\psi'_n $} \noLine
+		\UIC{$\Gamma'_n \seq \Delta'_n$}		\RightLabel{$\rho$}
+	\TIC{$\Gamma' \seq \Delta'$}
+\end{prooftree}
+
+By induction, $\psi''_k$ is of the form:
+
+\begin{prooftree}
+\AXC{$\psi''_k $} \noLine
+\UIC{$\Gamma''_1 \seq \Delta''_1, n(S'_{\psi'_k})$}
+\end{prooftree}
+
+where $S'_{\psi'_k}$ is the substruct of $S'$ corresponding to $\psi'_k$.
+
+	\begin{itemize}
+	\item $\rho$ operates on end-sequent-ancestors: Then let $\varphi''$ be:
+
+\begin{prooftree}
+\AXC{$\psi''_1 $} \noLine
+\UIC{$\Gamma''_1 \seq \Delta''_1, n(S'_{\psi'_1})$}
+	\AXC{$\ldots$}
+		\AXC{$\psi''_n $} \noLine
+		\UIC{$\Gamma''_n \seq \Delta''_n, n(S'_{\psi'_n})$}		\RightLabel{$\rho$}
+	\TIC{$\Gamma'' \seq \Delta'', n(S'_{\psi'_1}), \ldots, n(S'_{\psi'_n})$} \RightLabel{$\vee_r$}
+	\UIC{$\Gamma'' \seq \Delta'', n(S'_{\psi'_1}) \vee \ldots \vee n(S'_{\psi'_n})$}\RightLabel{$d_r$}
+	\UIC{$\Gamma'' \seq \Delta'', n(S')$}
+\end{prooftree}
+
+
+	\item $\rho$ operates on cut-ancestors: Then let $\varphi''$ be:
+
+\begin{prooftree}
+\AXC{$\psi''_1 $} \noLine
+\UIC{$\Gamma''_1 \seq \Delta''_1, n(S'_{\psi'_1})$}
+	\AXC{$\ldots$}
+		\AXC{$\psi''_n $} \noLine
+		\UIC{$\Gamma''_n \seq \Delta''_n, n(S'_{\psi'_n})$}		\RightLabel{$\wedge_r$}
+	\TIC{$\Gamma'' \seq \Delta'', n(S'_{\psi'_1}) \wedge \ldots \wedge n(S'_{\psi'_n})$} \RightLabel{$d_r$}
+	\UIC{$\Gamma'' \seq \Delta'', n(S')$}
+\end{prooftree}
+
+
+	\end{itemize}
+
+
+\item $\rho$ is a unary inference: Then $\varphi'$ is of the form:
+
+\begin{prooftree}
+\AXC{$\psi' $} \RightLabel{$\rho$}
+\UIC{$\Gamma' \seq \Delta'$}
+\end{prooftree}
+
+	\begin{itemize}
+
+	\item $\rho$ operates on cut-ancestors: then $\rho$ is simply skipped and thus $\varphi'' = \psi''$.
+
+	\item $\rho$ operates on end-sequent-ancestors: then $\rho$ is performed on the transformed premise and thus $\varphi''$ is of the form:
+
+\begin{prooftree}
+\AXC{$\psi'' $} \RightLabel{$\rho$}
+\UIC{$\Gamma'' \seq \Delta''$}
+\end{prooftree}
+
+	\end{itemize}
+
+\end{itemize}
+
+\noindent
+The \emph{proper projection} $\projectionProper{\varphi}{\seq n(\struct{\varphi})}$ is the final result of this inductive construction. $\projectionProper{\varphi}{\seq n(\struct{\varphi})} \defEq \varphi''$ when $\varphi' = \varphi$.
+\end{definition}
+
+
+\begin{example}
+\label{example:DProjectionProper}
+The proper projection $\projectionProper{\varphi}{\seq H }$ for the proof $\varphi$ from the previous example is:
+\begin{scriptsize}
+\begin{prooftree}
+\AXC{$\hA{A} \seq \hG{\hA{A}} $}
+		\AXC{$\hB{B} \seq \hG{\hB{B}}$} \RightLabel{$\hG{\wedge_r}$}
+	\BIC{$\hA{A}, \hB{B} \seq \hG{\hA{A}} \wedge \hG{\hB{B}}$} \RightLabel{$\hG{d_r}$}
+	\UIC{$\hA{A}, \hB{B} \seq \hG{F}$} \RightLabel{$\wedge_l$}
+	\UIC{$\hA{A} \wedge \hB{B} \seq \hG{F}$}
+				\AXC{$\hG{\hC{B}} \seq \hC{B} $} \RightLabel{$\hG{\neg_r}$}
+				\UIC{$ \seq \neg \hG{\hC{B}}, \hC{B} $}
+						\AXC{$\hG{\hD{A}} \seq \hD{A}$} \RightLabel{$\hG{\neg_r}$}
+						\UIC{$ \seq \neg \hG{\hD{A}}, \hD{A}$} \RightLabel{$\wedge_r$}
+					\BIC{$ \seq \neg \hG{\hC{B}}, \neg \hG{\hD{A}}, \hC{B} \wedge \hD{A}$} \RightLabel{$\hG{\vee_r}$}
+					\UIC{$ \seq \neg \hG{\hC{B}} \vee \neg \hG{\hD{A}}, \hC{B} \wedge \hD{A}$} \RightLabel{$\hG{d_r}$}
+					\UIC{$ \seq \hG{E}, \hC{B} \wedge \hD{A}$} \RightLabel{$\hG{\wedge_r}$}
+			\BIC{$\hA{A} \wedge \hB{B} \seq \hG{F} \wedge \hG{E}, \hC{B} \wedge \hD{A}$} \RightLabel{$\hG{d_r}$}
+			\UIC{$\hA{A} \wedge \hB{B} \seq \hG{G}, \hC{B} \wedge \hD{A}$}
+							\AXC{$\hE{C} \seq \hG{\hE{C}}$} 
+									\AXC{$\hG{\hF{C}} \seq \hF{C}$} \RightLabel{$\hG{\neg_r}$}
+									\UIC{$\seq \neg \hG{\hF{C}}, \hF{C}$}	 \RightLabel{$\hG{\wedge_r}$}
+								\BIC{$\hE{C} \seq \hE{C} \wedge \neg \hG{\hF{C}}, \hF{C}$} \RightLabel{$\hG{d_r}$} 
+								\UIC{$\hE{C} \seq \hG{D}, \hF{C}$} \RightLabel{$\vee_l$}
+					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hG{G}, \hG{D}, \hC{B} \wedge \hD{A}, \hF{C}$} \RightLabel{$\hG{\vee_r}$} 
+					\UIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hG{G} \vee \hG{D}, \hC{B} \wedge \hD{A}, \hF{C}$} \RightLabel{$\hG{d_r}$}
+					\UIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hG{H}, \hC{B} \wedge \hD{A}, \hF{C}$}
+\end{prooftree}
+\end{scriptsize}
+
+\noindent
+A step-by-step construction of this projection can be found in \cite{ToDo}.
 \hfill\QED
 \end{example}
 
+\begin{landscape}
+\begin{definition}[$\CEResD$-normal-form]
+$\CEResNFD{\varphi}{\delta}$ denotes the \emph{$\CEResD$-normal-form} of the proof $\varphi$ w.r.t. a resolution refutation $\delta$ of the definitional clause set $\clausesetDefinitional{\varphi}$. It is obtained in the same way as a $\CERes$-normal-form, but using the definitional clause set $\clausesetDefinitional{\varphi}$ instead of $\clauseset{\varphi}$ and using definitional and proper projections instead of the usual projections.
+\end{definition}
+
+
+\begin{example}[$\CEResD$-Normal-Form]
+By combining the proper projection shown in Example \ref{example:DProjectionProper} 
+and the definitional projections shown in Example \ref{example:DProjectionDefinitional}
+with a resolution refutation $\delta$ of $\clausesetDefinitional{\varphi}$, 
+the resulting normal form $\CEResNFD{\varphi}{\delta}$ is:
+
+\begin{tiny}
+\begin{prooftree}
+					\AXC{$ \projectionProper{\varphi}{\seq H} $} \noLine
+					\UIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hG{H}, \hC{B} \wedge \hD{A}, \hF{C}$}
+		\AXC{$\projectionDefinitional{\varphi}{H \seq G, D}$}
+				\AXC{$\projectionDefinitional{\varphi}{G\seq F}$}
+						\AXC{$\projectionDefinitional{\varphi}{G\seq E}$}
+								\AXC{$\projectionDefinitional{\varphi}{F \seq \hA{A}}$}
+										\AXC{$\projectionDefinitional{\varphi}{F \seq \hB{B}}$}
+												\AXC{$\projectionDefinitional{\varphi}{E, \hC{B}, \hD{A} \seq }$} \RightLabel{$ $}
+											\BIC{$F, E, \hD{A} \seq $} \RightLabel{$cut$}
+									\BIC{$F, F, E \seq $} \RightLabel{$c_l$}
+									\UIC{$F, E \seq$} \RightLabel{$cut$}
+							\BIC{$G, F \seq$} \RightLabel{$cut$}
+					\BIC{$G, G \seq$} \RightLabel{$c_l$}
+					\UIC{$G \seq$} \RightLabel{$cut$}
+			\BIC{$H \seq D$}
+												\AXC{$\projectionDefinitional{\varphi}{D \seq \hE{C}}$}
+														\AXC{$\projectionDefinitional{\varphi}{D, \hF{C} \seq}$} \RightLabel{$cut$}
+													\BIC{$D, D \seq$} \RightLabel{$c_l$}
+													\UIC{$D \seq$} \RightLabel{$cut$}
+								\BIC{$H \seq$} \RightLabel{$cut$}
+	\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C}$}
+\end{prooftree}
+\end{tiny}
+\end{example}
+
+\noindent
+Although in a $\CEResD$-normal-form the cuts appear to be atomic, 
+the atomic cut-formulas are actually defined predicate symbols that stand
+for complex propositional formulas. Therefore, it can be argued that 
+$\CEResD$ does not eliminate cuts as much as $\CERes$ and $\CEResSwap$ do. 
+Although this is a reasonable objection to $\CEResD$, it should be noted 
+that as long as the cuts are quantifier-free, as is the case for 
+$\CEResD$-normal-forms, summarized mathematical information in the form 
+of Herbrand sequents can still be obtained from the proof \cite{ToDo}.
+\end{landscape}
