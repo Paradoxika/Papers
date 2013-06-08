@@ -2,35 +2,57 @@
 \label{sec:StructuralClauseForm}
 
 
-The construction of standard clause sets from structs is analogous to the standard transformation of formulas to conjunctive normal forms. Consequently, it has the same well-known disadvantage of increasing the size significantly in the worst case. Indeed, the size of a standard clause set can be exponential with respect to the size of the struct from which it is constructed, in the same way that the size of a clause normal form of a formula can be exponential with respect to the size of the formula itself. There exists, however, an improved technique known as \emph{structural clause form transformation} \cite{BaazEglyLeitsch2001NormalFormTransformations}, based on the extension principle. By using this technique, it can be shown that the atomic size of the clause normal form of a formula is in the worst case only linearly bigger\footnote{However, the symbolic size can be quadratic due to Skolem terms produced by skolemization.} than the size of the formula itself. The price paid is that the structural conjunctive normal form of a formula is not logically equivalent to the formula anymore, because new defined predicate symbols are added, thus extending the signature. Nevertheless, satisfiability-equivalence is preserved: the formula is unsatisfiable if and only if its structural clause form is unsatisfiable.
-
-Although profile clause sets and swapped clause sets are great improvements of the standard clause set, it is not so hard to see that, in the worst case, the size of these clause sets is still exponential with respect to the size of the struct, because distributive duplications still occur (in cases corresponding to swapping of indirectly dependent inferences). It is therefore only natural to investigate the possibility of adapting the idea of structural clause form transformation to the construction of clause sets from structs, in order to avoid the exponential blow-up in size in the worst case\footnote{Since structs do not contain quantifiers, no skolemization is necessary. Therefore, by adapting the structural clause form transformation technique to structs, not only the atomic size of the clause set remains linearly bounded with respect to the atomic size of the struct but also its symbolic size remains linearly bounded with respect to the symbolic size of the struct.}. The purpose of this section is to show how this can be done.
+In order to avoid the exponential blow-up in the size of the clause set altogether, this section investigates the use of \emph{structural clause form transformation} \cite{BaazEglyLeitsch2001NormalFormTransformations}, which avoids the distribution of disjunction over conjunction by introducing new defined predicate symbols for each subformula of the formula to be normalized. The number of new predicate symbols is, therefore, linear w.r.t. to the size of the formula. Moreover, each literal is duplicated only a constant number of times. 
 
 
-\subsection{Cut-Pertinent Definitional Clause Set}
-
-Definition \ref{definition:NormalizationPlusTimesDefinitional} adapts to structs the idea of structural conjunctive normal form transformation. Every substruct is given a new name, a new predicate symbol defined to be equivalent to the substruct. The defining formulas are very shallow formulas and can be easily transformed to $\structplus$-junctions of $\structtimes$-junctions. 
-
-
-\newcommand{\normalizePlusTimesD}{\leadsto_{\structplus\structtimes_{D}}}
 \begin{definition}[$\normalizePlusTimesD$]
 \label{definition:NormalizationPlusTimesDefinitional}
-\index{Struct Normalization!Definitional}
-%\newcommand{\hF}[1]{{\color{brickred} #1}}
+For every conjunctive or disjunctive formula $S$ with free variables $x_1,\ldots, x_m$, a new predicate symbol $N_{S}(x_1,\ldots, x_m)$ can be created together with its corresponding defining formula:
+%
+\begin{small}
+$$
+D_{S} \ \ \defEq \ \  
+N_{S_1 \structtimes \ldots \structtimes S_n}(x_1,\ldots, x_m) 
+%\biimp N_{n(S'_1) \structtimes \ldots \structtimes n(S'_n)}(x_1,\ldots, x_m) 
+\biimp n(S_1) \structtimes \ldots \structtimes n(S_n)
+$$
+%
+%
+$$
+D_{S} \ \ \defEq \ \
+N_{S_1 \structplus \ldots \structplus S_n}(x_1,\ldots, x_m) 
+%\biimp N_{n(S'_1) \structplus \ldots \structplus n(S'_n)}(x_1,\ldots, x_m) 
+\biimp n(S_1) \structplus \ldots \structplus n(S_n)
+$$
+\end{small}
+where:
+\begin{small}
+$$
+n(S_k) = \left\{ \begin{array}{ll}
+S_k & \textrm{, if } S_k \textrm{ is a literal} \\
+N_{S_k}(y_1,\ldots, y_j) & \textrm{, if } S_k \textrm{ is a non-literal with free variables } y_1,\ldots, y_j
+\end{array}\right.
+$$
+\end{small}
 
-Let $S$ be a struct. For every non-literal substruct $S' \equiv S'_1 \structtimes \ldots \structtimes S'_n$ or $S' \equiv S'_1 \structplus \ldots \structplus S'_n$ of $S$, a new predicate symbol can be created together with a corresponding defining formula:
-%
+\noindent
+Then:
+\begin{small}
 $$
-\mathit{Def}_{S'} \ \ \defEq \ \  N_{S'}(x_1,\ldots, x_m) \biimp N_{n(S'_1) \structtimes \ldots \structtimes n(S'_n)}(x_1,\ldots, x_m) \biimp n(S'_1) \structtimes \ldots \structtimes n(S'_n)
+S \normalizePlusTimesD n(S) \structplus \structplusBig_{\scriptscriptstyle S' \in sub(S) } D_{S'}
 $$
-%
-or 
-%
-$$
-\mathit{Def}_{S'} \ \ \defEq \ \ N_{S'}(x_1,\ldots, x_m) \biimp N_{n(S'_1) \structplus \ldots \structplus n(S'_n)}(x_1,\ldots, x_m) \biimp n(S'_1) \structplus \ldots \structplus n(S'_n)
-$$
-%
-where $x_1,\ldots, x_m$ are the free variables of $S'$, $n(S'_k)$ is $S'_k$ if $S'_k$ is a literal struct and $N_{S'_k}(y_1,\ldots, y_j)$ if $S'_k$ is a non-literal struct with free variables $y_1,\ldots, y_j$. The connective $\biimp$ is considered to be just an abbreviation\footnote{The abbreviation can be intuitively understood due to the analogy of $\structtimes$ with $\vee$ and $\structplus$ with $\wedge$.}:
+\end{small}
+where $sub(S)$ is the set of non-literal subformulas of $S$.
+\end{definition}
+
+\noindent
+When a 
+Each defining formula $\mathit{D}_{S'}$ originates \emph{definitional clauses}, while $n(S)$) originates \emph{proper clauses}.
+
+
+\begin{remark}
+The connective $\biimp$ is considered to be just an abbreviation:
+\begin{small}
 $$
 A \biimp B_1 \structtimes \ldots \structtimes B_n \defEq 
 (\overline{A} \structtimes B_1 \structtimes \ldots \structtimes B_n) \structplus 
@@ -43,22 +65,9 @@ A \biimp B_1 \structplus \ldots \structplus B_n \defEq
 (\overline{A} \structtimes B_1) \structplus \ldots \structplus 
 (\overline{A} \structtimes B_n)
 $$
+\end{small}
 where $\overline{C}$ is $\structdual D$, if $C = D$, and $D$, if $C = \structdual D$.
-
-Then:
-
-$$
-S \normalizePlusTimesD S^*
-$$
-
-where:
-
-$$
-S^* \defEq n(S) \structplus \structplusBig_{\scriptscriptstyle \textrm{non-literal substructs } S'\textrm{ of }S } \mathit{Def}_{S'}
-$$
-
-Each defining formula $\mathit{Def}_{S'}$ originates so-called \emph{definitional $\structtimes$-junctions}. All other $\structtimes$-junctions (e.g. $n(S)$) are called \emph{proper $\structtimes$-junctions}.
-\end{definition}
+\end{remark}
 
 
 \begin{example}[$\structplus\structtimes_{D}$-Normalization]
@@ -1151,7 +1160,7 @@ $$
 Let $\varphi$ be a proof and $c$ a pure clause in $\clausesetSwappedDefinitional{\varphi}{S}$. Then the \emph{pure DW-projection} of $\varphi$ with respect to $c$ is constructed in the same way as a O-projection and thus simply defined as:
 
 $$
-\projectionDWDefinitional{\varphi}{c} \defEq \projectionO{\varphi}{c}
+\projectionDWDefinitional{\varphi}{c} \defEq \projection{\varphi}{c}
 $$
 \end{definition}
 
@@ -1408,7 +1417,7 @@ It can be refuted by the refutation $\delta$ shown below:
 \end{prooftree}
 
 
-The O-projection $\projectionO{\varphi}{\seq \hA{A}}$ is shown below. Interestingly, projections can now contain atomic cuts because they are complex-cut-impertinent inferences.
+The O-projection $\projection{\varphi}{\seq \hA{A}}$ is shown below. Interestingly, projections can now contain atomic cuts because they are complex-cut-impertinent inferences.
 
 \begin{prooftree}
 	\AXC{$\hA{A} \seq \hA{A} $} \RightLabel{$w_l$}
@@ -1421,7 +1430,7 @@ The O-projection $\projectionO{\varphi}{\seq \hA{A}}$ is shown below. Interestin
 \end{prooftree}
 
 
-Analogously, the O-projection $\projectionO{\varphi}{\seq \hB{B}}$ is:
+Analogously, the O-projection $\projection{\varphi}{\seq \hB{B}}$ is:
 
 \begin{prooftree}
 	\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$w_l$}
@@ -1433,7 +1442,7 @@ Analogously, the O-projection $\projectionO{\varphi}{\seq \hB{B}}$ is:
 					\BIC{$(\hG{A} \wedge \hB{B}) \vee \hE{C} \seq \hB{B}, \hF{C} $} 
 \end{prooftree}
 
-And the O-projection $\projectionO{\varphi}{\hC{B}, \hD{A} \seq}$ is:
+And the O-projection $\projection{\varphi}{\hC{B}, \hD{A} \seq}$ is:
 
 \begin{prooftree}
 				\AXC{$\hC{B} \seq \hC{B} $}
