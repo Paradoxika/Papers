@@ -161,7 +161,6 @@ The last three rules handle connectives that correspond to (partially) \emph{deg
 
 \begin{definition}[Swapped Clause Set]
 \label{definition:CutPertinentClauseSetSwap}
-\index{Clause Set!Swapped}
 A \emph{swapped clause set} $\clausesetSwap{\varphi}{S}$ of a proof $\varphi$ is the $\normalizePlusTimesS$-normal-form $S$ of $\struct{\varphi}$ written in sequent notation.
 \end{definition}
 
@@ -386,7 +385,7 @@ For any skolemized proof $\varphi$ and $\normalizePlusTimesS$-normal-form $S$ of
 By Lemma \ref{lemma:SwapNormalizeCorrespondence} in Appendix \ref{sec:Correspondence},
 there exists a proof $\psi$ such that $\struct{\psi} = S$. Clearly, 
 $\clausesetSwap{\varphi}{S} = \clausesetSwapUnique{\psi}$. 
-But $\clausesetSwapUnique{\psi} = \clausesetStandard{\psi}$, 
+But $\clausesetSwapUnique{\psi} = \clauseset{\psi}$, 
 since $S$ is also a $\normalizePlusTimes$-normal-form. 
 Therefore, $\clausesetSwap{\varphi}{S} = \clauseset{\psi}$ and, 
 by Theorem \ref{theorem:Unsatisfiability} and the fact that 

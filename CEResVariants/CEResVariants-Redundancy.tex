@@ -10,7 +10,7 @@ In the worst case, by Theorem \ref{theorem:SizeOfCEResNormalForms}, this redunda
 
 \begin{theorem}[Size of Characteristic Clause Set]
 \label{theorem:SizeOfClauseSets}
-There exist positive rational constants $k$ and $k'$ and a sequence of proofs $\varphi_1, \varphi_2, \ldots, \varphi_n, \ldots$ such that $\proofsizeSymbol{\varphi_n} \leq k 4^n$ and $|\clausesetStandard{\varphi_n}| \geq k' 2^{2^n}$.
+There exist positive rational constants $k$ and $k'$ and a sequence of proofs $\varphi_1, \varphi_2, \ldots, \varphi_n, \ldots$ such that $\proofsizeSymbol{\varphi_n} \leq k 4^n$ and $|\clauseset{\varphi_n}| \geq k' 2^{2^n}$.
 \end{theorem}
 \begin{proof}
 Let $\psi_1(s)$ be the following proof:
@@ -94,7 +94,7 @@ S_{\psi_j(s)}^r = \left\{ \begin{array}{ll}
 $$
 
 \noindent
-Let $f_l(n)$ be the number of clauses in $\clausesetStandard{\varphi_n}$ whose stemming from the left branch of the cut. Analogously, let $f_r(n)$ be the number of clauses stemming from the right branch of the cut. Clearly, $|\clausesetStandard{\varphi_n}| = f_l(n) + f_r(n)$. By analyzing the structure of the subformulas of $\struct{\varphi_n}$, it is possible to see that:
+Let $f_l(n)$ be the number of clauses in $\clauseset{\varphi_n}$ whose stemming from the left branch of the cut. Analogously, let $f_r(n)$ be the number of clauses stemming from the right branch of the cut. Clearly, $|\clauseset{\varphi_n}| = f_l(n) + f_r(n)$. By analyzing the structure of the subformulas of $\struct{\varphi_n}$, it is possible to see that:
 $$
 f_l(n) = \left\{ \begin{array}{ll}
 4 & \textrm{, if } n=1 \\
@@ -110,7 +110,7 @@ $$
 %
 It can be easily proved by induction that $f_l(n) = 4^{(2^n - 1)}$ and $f_r(n) = 2^{(2^n - 1)}$. Therefore:
 $$
-|\clausesetStandard{\varphi_n}| = 4^{(2^n - 1)} + 2^{(2^n - 1)} \geq 2^{(2^n)} 
+|\clauseset{\varphi_n}| = 4^{(2^n - 1)} + 2^{(2^n - 1)} \geq 2^{(2^n)} 
 $$
 \hfill\QED
 \end{proof}
@@ -128,7 +128,7 @@ There exist positive rational constants $k$ and $k''$ and a sequence of proofs $
 \end{theorem}
 \begin{proof}
 Consider the proofs $\varphi_n$ defined in the proof of the Theorem \ref{theorem:SizeOfClauseSets}. As proved there, 
-$|\clausesetStandard{\varphi_n}| \geq k' 2^{2^n}$, for some positive rational constant $k'$. Moreover, in any refutation $\delta_n$ of $\clausesetStandard{\varphi_n}$, every clause of $\clausesetStandard{\varphi_n}$ has to be used at least once. Therefore, $\proofsizeSymbol{\delta_n} \geq k'' 2^{2^n}$, for some $k'' > k'$. Since $\proofsizeSymbol{\CEResNF{\varphi_n}{\delta_n}} \geq \proofsizeSymbol{\delta_n}$, $\proofsizeSymbol{\CEResNF{\varphi_n}{\delta_n}} \geq k'' 2^{2^n}$ as well. As $\varphi_n$ contains neither implicit nor explicit contractions, the size strictly decreases with every reductive cut-elimination step. Hence, for any proof $\varphi_n^*$ obtained from $\varphi_n$ by reductive cut-elimination, $\proofsizeSymbol{\varphi_n^*} < \proofsizeSymbol{\varphi_n} < k 4^n$.
+$|\clauseset{\varphi_n}| \geq k' 2^{2^n}$, for some positive rational constant $k'$. Moreover, in any refutation $\delta_n$ of $\clauseset{\varphi_n}$, every clause of $\clauseset{\varphi_n}$ has to be used at least once. Therefore, $\proofsizeSymbol{\delta_n} \geq k'' 2^{2^n}$, for some $k'' > k'$. Since $\proofsizeSymbol{\CEResNF{\varphi_n}{\delta_n}} \geq \proofsizeSymbol{\delta_n}$, $\proofsizeSymbol{\CEResNF{\varphi_n}{\delta_n}} \geq k'' 2^{2^n}$ as well. As $\varphi_n$ contains neither implicit nor explicit contractions, the size strictly decreases with every reductive cut-elimination step. Hence, for any proof $\varphi_n^*$ obtained from $\varphi_n$ by reductive cut-elimination, $\proofsizeSymbol{\varphi_n^*} < \proofsizeSymbol{\varphi_n} < k 4^n$.
 \hfill\QED
 \end{proof}
 
