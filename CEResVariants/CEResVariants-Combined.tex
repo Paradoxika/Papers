@@ -19,7 +19,7 @@ $$
 $$
 
 \noindent
-$\normalizePlusTimesSDd$ denotes a restricted form of $\normalizePlusTimesD$, defined by the following rewriting rule, which can be applied only if $S \vee (S_1 \structplus \ldots \structplus S_n)$ is already in $\normalizePlusTimesSDs$-normal-form:
+$\normalizePlusTimesSDd$ denotes a restricted form of $\normalizePlusTimesD$, defined by the following rewriting rule, which can be applied only if $S \vee (S_1 \structplus \ldots \structplus S_n)$ is already in $\normalizePlusTimesSD$-normal-form:
 \begin{small}
 $$
 C[S \vee (S_1 \structplus \ldots \structplus S_n)]   
@@ -113,132 +113,75 @@ $$
 $D_{\hA{A} \structplus \hB{B}} \seq \hA{A}$, $D_{\hA{A} \structplus \hB{B}} \seq \hB{B}$ 
 and $\hA{A}, \hB{B} \seq D_{\hA{A} \structplus \hB{B}}$ are definitional clauses. 
 $\hF{C} \seq $ and 
-$\hC{B} , \hD{\structdual{A}} \seq$ are pure clauses. 
+$\hC{B} , \hD{A} \seq$ are pure clauses. 
 And $\seq D_{\hA{A} \structplus \hB{B}} , \hE{C}$ is a mixed clause.
 \hfill\QED
 \end{example}
 
 
-\noindent
+\noindent 
 While construction of definitional swapped clause sets is reasonably
-straightforward, the construction of projections
-presents some difficulties. As in the case of definitional clause sets, some
-clauses in definitional swapped clause sets are definitional, and their projections can be easily constructed according to Definition \ref{ToDo}. Other
-clauses are pure in the sense that they do not contain any defined predicate
-symbol, and hence their projections can be constructed in the standard way explained in Definition \ref{ToDo}. However, for mixed clauses, which contain a mix of defined and undefined predicate symbols, it is necessary to construct a \emph{mixed projection}, which combines the construction methods of standard and proper projections (from Definition \ref{ToDo}). 
+straightforward, the construction of projections presents some difficulties.
+As in the case of definitional clause sets, some clauses in definitional
+swapped clause sets are definitional, and their projections can be easily
+constructed according to Definition \ref{definition:DProjectionDefinitional}.
+Other clauses are pure in the sense that they do not contain any defined
+predicate symbol, and hence their projections can be constructed with the
+usual method explained in Definition \ref{definition:OProjection}. However,
+for mixed clauses, which contain a mix of defined and undefined predicate
+symbols, it is necessary to construct a \emph{mixed projection}, which
+combines the usual algorithm with the construction method for proper 
+projections described in Definition \ref{definition:DProjectionProper}.
 
 
 
 \begin{definition}[Encapsulated Formulas]
-\label{definition:EncapsulatedFormulaOccurrences}
-Let $S$ be a characteristic formula and $S'$ be a subformula of $S$ having $N$ as the new predicate symbol for $S'$ created during the $\normalizePlusTimesSD$-normalization of $S$. Then, the \emph{encapsulated formulas} of $N$ are all the atomic formulas of $S'$.
+\label{definition:EncapsulatedFormulaOccurrences} Let $S$ be a characteristic
+formula and $S'$ be a subformula of $S$ corresponding to a new predicate
+symbol $N_{S'}$ created during the $\normalizePlusTimesSD$-normalization of
+$S$. Then, the \emph{encapsulated formulas} of $N_{S'}$ are all the atomic
+formulas of $S'$. 
 \end{definition}
 
-\begin{example}
-\label{example:EncapsulatedFormulaOccurrences}
-The formulas encapsulated by the new predicate symbol $D_{\hA{A} \structplus \hB{B}}$ of the $\normalizePlusTimesSD$-normal-form of the struct $\struct{\varphi}$ shown in Example \ref{example:PlusTimesSwappeDefinitionalNormalization} are: $\hA{A}$ and $\hB{B}$.
-\hfill\QED
+\begin{example} 
+\label{example:EncapsulatedFormulaOccurrences} 
+The formulas encapsulated by the new predicate symbol 
+$D_{\hA{A} \structplus \hB{B}}$ of the $\normalizePlusTimesSD$-normal-form 
+of the struct $\struct{\varphi}$ shown
+in Example \ref{example:PlusTimesSwappeDefinitionalNormalization} are:
+$\hA{A}$ and $\hB{B}$. \hfill\QED 
 \end{example}
 
 
-% \begin{definition}[Encapsulated Inferences]
-% \label{definition:EncapsulatedInferences}
-% Let $S$ be a cut-pertinent struct of a proof $\varphi$ and $S'$ be a substruct of $S$. Let $N_{S'}$ be the defined predicate for $S'$. Then, every inference $\rho$ of $\varphi$ which corresponds to a connective $\structplus_{\rho}$ or $\structtimes_{\rho}$ in $S'$ or that is an axiom inference having a formula occurrence of $S'$ in its conclusion sequent is an \emph{encapsulated inference} of $N_{S'}$.
-% \end{definition}
-
-% \begin{example}[Encapsulated Inferences]
-% \label{example:EncapsulatedInferences}
-
-
-% The encapsulated inferences of the defined predicate $D_{\hA{A} \structplus \hB{B}}$ of the $\normalizePlusTimesSD$-normal-form of the struct $\struct{\varphi}$ shown in Example \ref{example:PlusTimesSwappeDefinitionalNormalization} are: $\wedge^1_r$ and the axiom inferences having $\hA{A} \seq \hA{A}$ and $\hB{B} \seq \hB{B}$ as conclusion sequents.
-% \end{example}
-
-
-Roughly, constructing a mixed DW-projection is initially similar to constructing an O-projection, taking care to include encapsulated formula occurrences in the slice. Later cut-pertinent inferences are replaced by $\wedge_r$ and $d_r$ inferences, similarly to what is done during the construction of proper D-projections, in order to re-encapsulate the encapsulated formula occurrences into the defined predicate symbol.
-
-
-\begin{definition}[Mixed DW-Projection]
+\begin{definition}[Mixed Projection]
 \label{definition:DWProjectionMixed}
-\index{Projection!Mixed DW-Projection}
-Let $\varphi$ be a proof and $c$ a mixed clause in $\clausesetSwapDef{\varphi}{S}$. Let $\Omega_E$ and $\Upsilon_E$ be the sets of, respectively, encapsulated formula occurrences and encapsulated inferences of defined predicates occurring in $c$. Let $\Omega_c$ be the set of undefined formula occurrences in $c$. Then the \emph{mixed DW-projection} of $\varphi$ with respect to $c$ can be computed according to the following steps:
-
+Let $\varphi$ be a proof and $c$ a mixed clause in $\clausesetSwapDef{\varphi}{S}$.
+The \emph{mixed projection} $\projectionDWMixed{\varphi}{c}$ of $\varphi$ w.r.t. $c$ is constructed in two steps:
 \begin{enumerate}
-%\item Construct $\varphi^1 \defEq \slice{\varphi}{\Omega_E \cup \Omega_c}$.
-\item Replace the inferences of $\Upsilon_E$ in $\varphi^1$ by $\neg_r$, $\wedge_r$, $\vee_r$ and $d_r$ (analogously to what is done in the construction of proper D-projections). Let $\varphi^2$ be the resulting proofoid.
-\item Construct $\varphi^3 \defEq \replacePert{\varphi^2}{\occCutPert{\varphi^2}}$ by replacing the cut-pertinent inferences of $\varphi^2$ by $Y$-inferences.
-\item Construct $\varphi^4 \defEq \WFix{\varphi^3}$ by fixing broken inferences with weakening.
-%\item Finally, construct the mixed DW-projection $\projectionDWMixed{\varphi}{c} \defEq \EliminateY{\varphi^4}$ by eliminating the $Y$-inferences from $\varphi^4$.
+\item Apply the usual algorithm from Definition \ref{definition:OProjection} to $\varphi$, letting $A$ be the set of axioms that contain formulas that contribute to $c$ or that are encapsulated by a new predicate symbol in $c$.
+%
+\item Replace inferences operating on descendants of encapsulated formulas by $\neg_r$, $\wedge_r$, $\vee_r$ and $d_r$, analogously to what is done in the construction of proper projections (Definition \ref{definition:DProjectionProper}).
 \end{enumerate}
 \end{definition}
 
 
-\begin{example}[Mixed DW-Projection]
+\begin{example}
 \label{example:DWProjectionMixed}
-
-
-
-Let ${\varphi}$ be the proof shown in Example \ref{example:PlusTimesSwappeDefinitionalNormalization}, which is displayed again for convenience below:
-
+Let $\varphi$ be the proof from previous examples. Noting that the axiom sequent $\hE{C} \seq \hE{C}$ contains a formula that directly contributes to $\seq D_{\hA{A} \structplus \hB{B}} , \hE{C}$, while the axiom sequents $\hA{A} \seq \hA{A}$ and $\hB{B} \seq \hB{B}$ contain formulas that are encapsulated by $D_{\hA{A} \structplus \hB{B}}$, the first step in the construction of the mixed 
+projection $\projectionDWMixed{\varphi}{\seq D_{\hA{A} \structplus \hB{B}} , \hE{C}}$generates the following proof:
+%
 \begin{prooftree}
 \AXC{$\hA{A} \seq \hA{A} $}
 		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r^1$}
 	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$\wedge_l$}
 	\UIC{$\hA{A} \wedge \hB{B} \seq \hA{A} \wedge \hB{B}$}
-				\AXC{$\hC{B} \seq \hC{B} $}
-						\AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$\wedge_r^2$}
-					\BIC{$\hD{A}, \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$\wedge_l$}
-					\UIC{$\hD{A} \wedge \hC{B} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$cut^3$}
-			\BIC{$\hA{A} \wedge \hB{B} \seq \hC{B} \wedge \hD{A}$}
-							\AXC{$\hE{C} \seq \hE{C}$} 
-									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut^4$}
-								\BIC{$\hE{C} \seq \hF{C}$} \RightLabel{$\vee_l^5$}
-					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C} $} 
+								\AXC{$\hE{C} \seq \hE{C}$} \RightLabel{$\vee_l^5$}
+					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hA{A} \wedge \hB{B}, \hE{C} $} 
 \end{prooftree}
+%
 
-The first step in the construction of the mixed DW-projection $\projectionDWMixed{\varphi}{\seq D_{\hA{A} \structplus \hB{B}} , \hE{C}}$ is the slicing with respect to $\Omega_E \cup \Omega_c$ where $\Omega_E = \{\hA{A}, \hB{B}\}$ and $\Omega_c = \{\hE{C}\}$:
-
-\renewcommand{\hC}[1]{\phantom{#1}}
-\renewcommand{\hD}[1]{\phantom{#1}}
-\renewcommand{\hF}[1]{\phantom{#1}}
-
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hA{A} $}
-		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r^1$}
-	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$\wedge_l$}
-	\UIC{$\hA{A} \wedge \hB{B} \seq \hA{A} \wedge \hB{B}$}
-				\AXC{$\hC{B} \seq \hC{B} $}
-						\AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$Y$}
-					\BIC{$\hD{A}\phantom{,} \hC{B} \seq \hC{B} \phantom{\wedge} \hD{A}$} \RightLabel{$Y$}
-					\UIC{$\hD{A} \phantom{\wedge} \hC{B} \seq \hC{B} \phantom{\wedge} \hD{A}$} \RightLabel{$Y$}
-			\BIC{$\hA{A} \wedge \hB{B} \seq \hA{A} \wedge \hB{B}$}
-							\AXC{$\hE{C} \seq \hE{C}$} 
-									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$Y$}
-								\BIC{$\hE{C} \seq \hE{C}$} \RightLabel{$\vee_l^5$}
-					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hA{A} \wedge \hB{B}, \hC{B} \phantom{\wedge} \hD{A}\phantom{,} \hE{C} $} 
-\end{prooftree}
-
-
-The second step is the introduction of definition inferences, resulting in the proofoid $\varphi^2$ below:
-
-\begin{prooftree}
-\AXC{$\hA{A} \seq \hA{A} $}
-		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r$}
-	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$d_r$}
-	\UIC{$\hA{A}, \hB{B} \seq D_{\hA{A} \structplus \hB{B}}$} \RightLabel{$\wedge_l$}
-	\UIC{$\hA{A} \wedge \hB{B} \seq D_{\hA{A} \structplus \hB{B}}$}
-				\AXC{$\hC{B} \seq \hC{B} $}
-						\AXC{$\hD{A} \seq \hD{A}$} \RightLabel{$Y$}
-					\BIC{$\hD{A}\phantom{,} \hC{B} \seq \hC{B} \phantom{\wedge} \hD{A}$} \RightLabel{$Y$}
-					\UIC{$\hD{A} \phantom{\wedge} \hC{B} \seq \hC{B} \phantom{\wedge} \hD{A}$} \RightLabel{$Y$}
-			\BIC{$\hA{A} \wedge \hB{B} \seq D_{\hA{A} \structplus \hB{B}}$}
-							\AXC{$\hE{C} \seq \hE{C}$} 
-									\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$Y$}
-								\BIC{$\hE{C} \seq \hE{C}$} \RightLabel{$\vee_l^5$}
-					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq D_{\hA{A} \structplus \hB{B}},  \hC{B} \phantom{\wedge} \hD{A}\phantom{,} \hE{C} $} 
-\end{prooftree}
-
-Subsequently, cut-pertinent inferences of $\varphi^2$ should be replaced by $Y$-inferences. However, since $\varphi^2$ has no cuts, there is nothing to be replaced, and hence $\varphi^3 = \varphi^2$. Subsequently, broken inferences of $\varphi^3$ should be W-fixed. However, there are no broken inferences in $\varphi^3$. Therefore, only the last step of eliminating $Y$-inferences remains and its result is the mixed DW-projection $\projectionDWMixed{\varphi}{\seq D_{\hA{A} \structplus \hB{B}} , \hE{C}}$ shown below:
-
+\noindent
+The second step introduces definition inferences to reencapsulate the formulas:
 \begin{prooftree}
 \AXC{$\hA{A} \seq \hA{A} $}
 		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r$}
@@ -248,32 +191,15 @@ Subsequently, cut-pertinent inferences of $\varphi^2$ should be replaced by $Y$-
 							\AXC{$\hE{C} \seq \hE{C}$} \RightLabel{$\vee_l^5$}
 					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq D_{\hA{A} \structplus \hB{B}}, \hE{C} $} 
 \end{prooftree}
-
+\hfill\QED
 \end{example}
 
+\begin{definition}[$\CEResDS$-normal-form]
+$\CEResNFDS{\varphi}{\delta}$ denotes the \\ \emph{$\CEResDS$-normal-form} of the proof $\varphi$ w.r.t. the resolution refutation $\delta$ of any definitional swapped clause set $\clausesetSwapDef{\varphi}{S}$. It is obtained in the same way as a $\CERes$-normal-form, but using a definitional swapped clause set $\clausesetSwapDef{\varphi}{S}$ instead of $\clauseset{\varphi}$ and using definitional and mixed projections when necessary.
+\end{definition}
 
-\begin{example}[$\CEResDSwapDSwap$-Normal-Form]
-
-Consider again the swapped definitional clause set of the proof $\varphi$ shown in Example \ref{example:SwappeDefinitionalClauseSet}:
-
-$$
-\clausesetSwapDefUnique{\varphi} \equiv  \left\{
-	\seq D_{\hA{A} \structplus \hB{B}} , \hE{C} 
-\ \ \ ; \ \
-	\hF{C} \seq 
-\ \ \ ; \ \
-	\hC{B} , \hD{A} \seq
-\ \ \ ; \ \
-	D_{\hA{A} \structplus \hB{B}} \seq \hA{A}  
-\ \ \ ; \ \
-	D_{\hA{A} \structplus \hB{B}} \seq \hB{B} 
-\ \ \ ; \ \
-	\hA{A}, \hB{B} \seq D_{\hA{A} \structplus \hB{B}} 
-\right\}
-$$
-
+\begin{example}
 The shortest refutation $\delta$ of $\clausesetSwapDefUnique{\varphi}$ is shown below:
-
 \begin{prooftree}
 \AXC{$\seq D_{\hA{A} \structplus \hB{B}} , \hE{C}$}
 		\AXC{$\hF{C} \seq$} \RightLabel{$r$}
@@ -287,18 +213,14 @@ The shortest refutation $\delta$ of $\clausesetSwapDefUnique{\varphi}$ is shown 
 			\BIC{$ \seq $}
 \end{prooftree}
 
-By using the mixed DW-projection shown in Example \ref{example:DWProjectionMixed}, pure DW-projections shown in Example \ref{example:OProjections} and definitional DW-projections shown in Example \ref{example:DProjectionDefinitional}, $\CEResNFDSwapDSwap{\varphi}{\delta}$ is:
-
-
-%\begin{small}
+\noindent
+Using the mixed projection shown in Example \ref{example:DWProjectionMixed}, 
+pure projections shown in Example \ref{example:OProjections} and definitional
+projections shown in Example \ref{example:DProjectionDefinitional}, 
+$\CEResNFDS{\varphi}{\delta}$ is:
+\begin{tiny}
 \begin{prooftree}
-\AXC{$\hA{A} \seq \hA{A} $}
-		\AXC{$\hB{B} \seq \hB{B}$} \RightLabel{$\wedge_r$}
-	\BIC{$\hA{A}, \hB{B} \seq \hA{A} \wedge \hB{B}$} \RightLabel{$d_r$}
-	\UIC{$\hA{A}, \hB{B} \seq D_{\hA{A} \structplus \hB{B}}$} \RightLabel{$\wedge_l$}
-	\UIC{$\hA{A} \wedge \hB{B} \seq D_{\hA{A} \structplus \hB{B}}$}
-							\AXC{$\hE{C} \seq \hE{C}$} \RightLabel{$\vee_l^5$}
-					\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq D_{\hA{A} \structplus \hB{B}}, \hE{C} $} 
+	\AXC{$\projectionDWMixed{\varphi}{\seq D_{\hA{A} \structplus \hB{B}} , \hE{C}}$}
                		\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut$}
                	\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq D_{\hA{A} \structplus \hB{B}}, \hF{C}$}
 	            				\AXC{$\hA{A} \seq \hA{A}$} \RightLabel{$w_l$}
@@ -317,15 +239,7 @@ By using the mixed DW-projection shown in Example \ref{example:DWProjectionMixed
                					\UIC{$D_{\hA{A} \structplus \hB{B}} \seq \hC{B} \wedge \hD{A}$} \RightLabel{$cut$}
                			\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C}$}
 \end{prooftree}
-%\end{small}
-
-
+\end{tiny}
+\hfill\QED
 \end{example}
-
-
-\section{Ignoring Atomic and Quantifier-Free Cuts}
-\label{sec:CutEliminationByResolution:CEResIgnoringAtomicCuts}
-
-If $\CERes$ is applied to a proof containing only atomic cuts, $\CERes$ still transforms the proof into a new proof containing only atomic cuts, but with additional structural inferences and with the atomic cuts located in the bottom of the proof. This is clearly non-ideal, because the proof could be simply left unchanged. More generally, if $\CERes$ is applied to a proof containing complex cuts and atomic cuts, $\CERes$ unnecessarily includes the atomic cuts in the process of reduction, even though atomic cuts cannot be reduced further. The inclusion of atomic cuts results in larger clause sets that are more costly to refute, and in normal forms with possibly additional structural inferences. This indicates that there is a very simple and evident improvement of the $\CERes$ method that has been thoroughly overlooked so far: instead of distinguishing between cut-pertinent and cut-impertinent formula occurrences (i.e. between ancestors and non-ancestors of \emph{all} cut formula occurrences) and cut-pertinent and cut-impertinent inferences (i.e inferences that operate on the ancestors and on the non-ancestors of cut formula occurrences), it suffices to distinguish between ancestors of \emph{complex} cut formula occurrences and ancestors of either occurrences in the end-sequent or of atomic cut-formula occurrences.
-
 
