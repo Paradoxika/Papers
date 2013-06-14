@@ -125,16 +125,8 @@ And below, the formulas belonging to $\occInference{\varphi}{cut_1}$ have been h
 \label{definition:NormalizationPlusTimesSwap}
 \index{Struct Normalization!Swapped}
 %\newcommand{\hF}[1]{{\color{brickred} #1}}
-In the rewriting rules below, let $\rho$ be the inference in $\varphi$ corresponding to $\hF{\structtimes_{\rho}}$. For the rewriting rules to be applicable
-%\footnote{
-%
-%Note that $m$ can be equal to zero, in which case the first rewriting rule simply degenerates to:
-%$$
-%\hF{S} \hF{\structtimes_{\rho}} (S_1 \structplus \ldots \structplus S_n) \normalizePlusTimesS  S_1 \structplus \ldots \structplus S_n 
-%$$
-%
-%}
-, $\hF{S_{n+1}}, \ldots, \hF{S_{n+m}}$ and $\hF{S}$ must contain at least one formula from $\occInference{\varphi}{\rho}$ each (i.e. there must be an atomic subformula $\hF{A}$ of $\hF{S_{n+k}}$ such that $\hF{A} \in \occInference{\varphi}{\rho}$), and $S_1, \ldots, S_n$ and $S'$ and $S''$ should not contain any formula from $\occInference{\varphi}{\rho}$. Moreover, an innermost rewriting strategy is enforced.
+In the rewriting rules below, let $\rho$ be the inference in $\varphi$ corresponding to $\hF{\structtimes_{\rho}}$. For the rewriting rules to be applicable, 
+$\hF{S_{n+1}}, \ldots, \hF{S_{n+m}}$ and $\hF{S}$ must contain at least one formula from $\occInference{\varphi}{\rho}$ each (i.e. there must be an atomic subformula $\hF{A}$ of $\hF{S_{n+k}}$ such that $\hF{A} \in \occInference{\varphi}{\rho}$), and $S_1, \ldots, S_n$ and $S'$ and $S''$ should not contain any formula from $\occInference{\varphi}{\rho}$. Moreover, an innermost rewriting strategy is enforced.
 $$
 \hF{S} \hF{\structtimes_{\rho}} (S_1 \structplus \ldots \structplus S_n \structplus \hF{S_{n+1}} \structplus \ldots \structplus \hF{S_{n+m}}) \normalizePlusTimesS  S_1 \structplus \ldots \structplus S_n \structplus (\hF{S} \hF{\structtimes_{\rho}} \hF{S_{n+1}}) \structplus \ldots \structplus (\hF{S} \hF{\structtimes_{\rho}} \hF{S_{n+m}}) 
 $$
@@ -154,8 +146,15 @@ $$
 
 \end{definition}
 
+\begin{definition}[Degenerate Inferences]
+An inference $\rho$ in a proof $\varphi$ is \emph{degenerate} when all its 
+auxiliary formulas are descendants of main formulas of 
+weakening inferences. When only some auxiliary (sub)formulas of $\rho$ are descendants of main formulas of weakening inferences, $\rho$ is \emph{partially degenerate}.
+\end{definition}
+
+
 \begin{remark}
-The last three rules handle connectives that correspond to (partially) \emph{degenerate inferences}, whose auxiliary formulas are introduced by weakening. These rules are related to downward permutation of weakening inferences, as shown in Lemma \ref{lemma:SwapNormalizeCorrespondence}. Because of the last two rules, $\normalizePlusTimesS$ is not confluent.
+The last three rules in Definition \ref{definition:NormalizationPlusTimesSwap} handle connectives that correspond to (partially) \emph{degenerate inferences}, whose auxiliary formulas are introduced by weakening. These rules are related to downward permutation of weakening inferences, as shown in Lemma \ref{lemma:SwapNormalizeCorrespondence}. Because of the last two rules, $\normalizePlusTimesS$ is not confluent.
 \end{remark}
 
 

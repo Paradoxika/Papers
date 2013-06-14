@@ -1,33 +1,43 @@
-
-
 \section{Inference Permutation}
 \label{appendix:InferencePermutation}
 
-In this section, a proof rewriting system (Definition \ref{definition:Swapping}) for inference swapping
-is described. It is subdivided according to the kind of dependence (Definition \ref{definition:InferenceDependence}) between the inferences that are being swapped. If the lower inference is independent of the upper inference, then they can easily be swapped (Definition \ref{definition:SwappingOfIndependentInferences}), with no increase of proof size. However, if the lower inference is indirectly dependent on the upper inference, then swapping requires a duplication of the lower inference, as well as the introduction of weakening and contraction inferences (Definition \ref{definition:SwappingOfIndirectlyDependentInferences}). The case of eigen-variable dependence can be avoided by considering skolemized proofs only. Even though two inferences cannot generally be swapped if there is direct dependence between them, swapping is possible in the particular case when the upper inference is a contraction (Definition \ref{definition:SwappingContraction}) or a weakening (downward swapping of weakening inferences, Definition \ref{definition:SwappingContraction}). 
+This section describes a proof rewriting system 
+(Definition \ref{definition:Swapping}) for permutting inferences. 
+The rules are subdivided according to the kind of dependence (Definition \ref{definition:InferenceDependence}) between the inferences that they permute. 
+If the lower inference is independent of the upper inference, then they can easily be permuted (Definition \ref{definition:SwappingOfIndependentInferences}), with no increase of proof size. 
+However, if the lower inference is indirectly dependent on the upper inference, then the permutation requires a duplication of the lower inference, as well as the introduction of weakening and contraction inferences (Definition \ref{definition:SwappingOfIndirectlyDependentInferences}). 
+The case of eigen-variable dependence can be avoided by considering skolemized proofs only. 
+Even though two inferences cannot generally be permuted if there is direct dependence between them, this is possible in the particular case when the upper inference is contraction (Definition \ref{definition:SwappingContraction}) or weakening (Definition \ref{definition:SwappingContraction}). 
+
+\begin{remark}
+Many symmetric and analogous cases have been ommitted 
+in the definitions of inference permutation rules in this section. 
+Full versions of the definitions, showing all cases, are available at \cite{Woltzenlogel-Paleo2009A-General-Analysis-of-Cut-Elimination-by-CERes}.
+\end{remark}
 
 
-
-\begin{definition}[Inference Dependence]
+\begin{definition}[Dependences between Inferences]
 \label{definition:InferenceDependence}
 \index{Inference Dependence}
-An inference $\rho_1$ is \emph{directly dependent} on another inference $\rho_2$, denoted $\rho_1 \dependentD \rho_2$, if and only if a main occurrence of $\rho_2$ is an ancestor of an auxiliary occurrence of $\rho_1$. 
-
-A strong quantifier inference $\rho_1$ is \emph{eigenvariable-dependent} on another inference $\rho_2$ occurring above $\rho_1$, denoted $\rho_1 \dependentQ \rho_2$, if and only if the substitution term of $\rho_2$ contains an occurrence of the eigenvariable of $\rho_1$.
-
-An inference $\rho_1$ is \emph{indirectly dependent} on another inference $\rho_2$ occurring above $\rho_1$, denoted $\rho_1 \dependentI \rho_2$, if and only if it is not directly dependent on $\rho_2$ and the auxiliary occurrences of $\rho_1$ have ancestors in more than one premise sequent of $\rho_2$.
-
-An inference $\rho_1$ is \emph{independent} of another inference $\rho_2$ if and only if $\rho_1$ is neither directly dependent nor eigenvariable-dependent nor indirectly dependent on $\rho_2$. 
+An inference $\rho_2$ is \emph{directly dependent} on another inference $\rho_1$, denoted $\rho_2 \dependentD \rho_1$, if and only if a main occurrence of $\rho_1$ is an ancestor of an auxiliary occurrence of $\rho_2$. 
+%
+A strong quantifier inference $\rho_2$ is \emph{eigenvariable-dependent} on weak quantifier inference $\rho_1$ occurring above $\rho_2$, denoted $\rho_2 \dependentQ \rho_1$, if and only if the term used by $\rho_1$ to substitute the weakly quantified variable contains an occurrence of the eigenvariable of $\rho_2$.
+%
+An inference $\rho_2$ is \emph{indirectly dependent} on another inference $\rho_1$ occurring above $\rho_2$, denoted $\rho_2 \dependentI \rho_1$, if and only if it is not directly dependent on $\rho_1$ and the auxiliary occurrences of $\rho_2$ have ancestors in more than one premise sequent of $\rho_1$.
+%
+An inference $\rho_2$ is \emph{independent} of another inference $\rho_1$ if and only if $\rho_2$ is neither directly dependent nor eigenvariable-dependent nor indirectly dependent on $\rho_1$. 
 \end{definition}
-
-
 
 
 
 \begin{definition}[$\swapI$]
 \label{definition:SwappingOfIndependentInferences}
-Swapping of Independent Inferences:
+For the permutation of independent inferences, the following rules can be used. 
 
+\medskip 
+
+\noindent
+When both inferences are unary:
 \begin{prooftree}
 \AXC{$\varphi_1$}\noLine
 \UIC{$\hA{\Gamma_1^{\rho_1}}, \hB{\Gamma_1^{\rho_2}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \hB{\Delta_1^{\rho_2}}, \Delta_1$}\RightLabel{$\rho_1$}
@@ -44,7 +54,8 @@ $$
 \UIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1 \seq \hA{\Delta^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1$} 
 \end{prooftree}
 
-
+\noindent
+When the lower inference is unary and the upper inference is binary:
 \begin{prooftree}
 \AXC{$\varphi_1$}\noLine
 \UIC{$\hA{\Gamma_1^{\rho_1}}, \hB{\Gamma_1^{\rho_2}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \hB{\Delta_1^{\rho_2}}, \Delta_1$}
@@ -66,30 +77,8 @@ $$
 \end{prooftree}
 
 
-
-%\begin{prooftree}
-%\AXC{$\varphi_2$}\noLine
-%\UIC{$\hA{\Gamma_2^{\rho_1}}, \Gamma_2  \seq \hA{\Delta_2^{\rho_1}}, \Delta_2$} 
-%		\AXC{$\varphi_1$}\noLine
-%		\UIC{$\hA{\Gamma_1^{\rho_1}}, \hB{\Gamma_1^{\rho_2}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \hB{\Delta_1^{\rho_2}}, \Delta_1$} \RightLabel{$\rho_1$}
-%	\BIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma_1^{\rho_2}}, \Gamma_1, \Gamma_2  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta_1^{\rho_2}}, \Delta_1, \Delta_2$}\RightLabel{$\rho_2$}
-%	\UIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1, \Gamma_2  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1, \Delta_2$} 
-%\end{prooftree}
-%$$
-%\Downarrow
-%$$
-%\begin{prooftree}
-%\AXC{$\varphi_2$}\noLine
-%\UIC{$\hA{\Gamma_2^{\rho_1}}, \Gamma_2  \seq \hA{\Delta_2^{\rho_1}}, \Delta_2$}  
-%			\AXC{$\varphi_1$}\noLine
-%			\UIC{$\hA{\Gamma_1^{\rho_1}}, \hB{\Gamma_1^{\rho_2}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \hB{\Delta_1^{\rho_2}}, \Delta_1$}\RightLabel{$\rho_2$}
-%			\UIC{$\hA{\Gamma_1^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1$} \RightLabel{$\rho_1$}
-%		\BIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1, \Gamma_2 \seq \hA{\Delta^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1, \Delta_2$} 
-%\end{prooftree}
-
-
-
-
+\noindent
+When the upper inference is unary and the lower inference is binary:
 \begin{prooftree}
 \AXC{$\varphi_1$}\noLine
 \UIC{$\hA{\Gamma_1^{\rho_1}}, \hB{\Gamma_1^{\rho_2}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \hB{\Delta_1^{\rho_2}}, \Delta_1$}  \RightLabel{$\rho_1$}
@@ -110,28 +99,10 @@ $$
 	\UIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1, \Gamma_2  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1, \Delta_2$} 
 \end{prooftree}
 
-%\begin{prooftree}
-%\AXC{$\varphi_2$}\noLine
-%\UIC{$\hB{\Gamma_2^{\rho_2}}, \Gamma_2  \seq \hB{\Delta_2^{\rho_2}}, \Delta_2$}
-%		\AXC{$\varphi_1$}\noLine
-%		\UIC{$\hA{\Gamma_1^{\rho_1}}, \hB{\Gamma_1^{\rho_2}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \hB{\Delta_1^{\rho_2}}, \Delta_1$}  \RightLabel{$\rho_1$}
-%		\UIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma_1^{\rho_2}}, \Gamma_1  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta_1^{\rho_2}}, \Delta_1$} \RightLabel{$\rho_2$}
-%	\BIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1, \Gamma_2  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1, \Delta_2$} 
-%\end{prooftree}
-%$$
-%\Downarrow
-%$$
-%\begin{prooftree}
-%\AXC{$\varphi_2$}\noLine
-%\UIC{$\hB{\Gamma_2^{\rho_2}}, \Gamma_2  \seq \hB{\Delta_2^{\rho_2}}, \Delta_2$} 
-%		\AXC{$\varphi_1$}\noLine
-%		\UIC{$\hA{\Gamma_1^{\rho_1}}, \hB{\Gamma_1^{\rho_2}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \hB{\Delta_1^{\rho_2}}, \Delta_1$} \RightLabel{$\rho_2$}
-%	\BIC{$\hA{\Gamma_1^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1, \Gamma_2  \seq \hA{\Delta_1^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1, \Delta_2$} \RightLabel{$\rho_1$}
-%	\UIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1, \Gamma_2  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1, \Delta_2$} 
-%\end{prooftree}
 
-
-
+\noindent
+When both inferences are binary:
+\begin{small}
 \begin{prooftree}
 \AXC{$\varphi_1$}\noLine
 \UIC{$\hA{\Gamma_1^{\rho_1}}, \hB{\Gamma_1^{\rho_2}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \hB{\Delta_1^{\rho_2}}, \Delta_1$}
@@ -155,91 +126,15 @@ $$
 				\UIC{$\hA{\Gamma_2^{\rho_1}}, \Gamma_2  \seq \hA{\Delta_2^{\rho_1}}, \Delta_2$}  \RightLabel{$\rho_1$}
 		\BIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1, \Gamma_2, \Gamma_3  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1, \Delta_2, \Delta_3$} 
 \end{prooftree}
-
-%\begin{prooftree}
-%\AXC{$\varphi_1$}\noLine
-%\UIC{$\hA{\Gamma_1^{\rho_1}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \Delta_1$}
-%		\AXC{$\varphi_2$}\noLine
-%		\UIC{$\hA{\Gamma_2^{\rho_1}}, \hB{\Gamma_2^{\rho_2}}, \Gamma_2  \seq \hA{\Delta_2^{\rho_1}}, \hB{\Delta_2^{\rho_2}}, \Delta_2$}  \RightLabel{$\rho_1$}
-%	\BIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma_2^{\rho_2}}, \Gamma_1, \Gamma_2  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta_2^{\rho_2}}, \Delta_1, \Delta_2$}
-%				\AXC{$\varphi_3$}\noLine
-%				\UIC{$\hB{\Gamma_3^{\rho_2}}, \Gamma_3  \seq \hB{\Delta_3^{\rho_2}}, \Delta_3$} \RightLabel{$\rho_2$}
-%			\BIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1, \Gamma_2, \Gamma_3  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1, \Delta_2, \Delta_3$} 
-%\end{prooftree}
-%$$
-%\Downarrow
-%$$
-%\begin{prooftree}
-%\AXC{$\varphi_1$}\noLine
-%\UIC{$\hA{\Gamma_1^{\rho_1}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \Delta_1$}
-%		\AXC{$\varphi_2$}\noLine
-%		\UIC{$\hA{\Gamma_2^{\rho_1}}, \hB{\Gamma_2^{\rho_2}}, \Gamma_2  \seq \hA{\Delta_2^{\rho_1}}, \hB{\Delta_2^{\rho_2}}, \Delta_2$}  
-%				\AXC{$\varphi_3$}\noLine
-%				\UIC{$\hB{\Gamma_3^{\rho_2}}, \Gamma_3  \seq \hB{\Delta_3^{\rho_2}}, \Delta_3$} \RightLabel{$\rho_2$}
-%			\BIC{$\hA{\Gamma_2^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_2, \Gamma_3  \seq \hA{\Delta_2^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_2, \Delta_3$} 
-%\RightLabel{$\rho_1$}
-%	\BIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1, \Gamma_2, \Gamma_3  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1, \Delta_2, \Delta_3$}
-%\end{prooftree}
-%
-%\begin{prooftree}
-%\AXC{$\varphi_3$}\noLine
-%\UIC{$\hB{\Gamma_3^{\rho_2}}, \Gamma_3  \seq \hB{\Delta_3^{\rho_2}}, \Delta_3$}
-%		\AXC{$\varphi_1$}\noLine
-%		\UIC{$\hA{\Gamma_1^{\rho_1}}, \hB{\Gamma_1^{\rho_2}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \hB{\Delta_1^{\rho_2}}, \Delta_1$}
-%				\AXC{$\varphi_2$}\noLine
-%				\UIC{$\hA{\Gamma_2^{\rho_1}}, \Gamma_2  \seq \hA{\Delta_2^{\rho_1}}, \Delta_2$}  \RightLabel{$\rho_1$}
-%			\BIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma_1^{\rho_2}}, \Gamma_1, \Gamma_2  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta_1^{\rho_2}}, \Delta_1, \Delta_2$}
-%				 \RightLabel{$\rho_2$}
-%	\BIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1, \Gamma_2, \Gamma_3  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1, \Delta_2, \Delta_3$} 
-%\end{prooftree}
-%$$
-%\Downarrow
-%$$
-%\begin{prooftree}
-%\AXC{$\varphi_3$}\noLine
-%\UIC{$\hB{\Gamma_3^{\rho_2}}, \Gamma_3  \seq \hB{\Delta_3^{\rho_2}}, \Delta_3$}
-%		\AXC{$\varphi_1$}\noLine
-%		\UIC{$\hA{\Gamma_1^{\rho_1}}, \hB{\Gamma_1^{\rho_2}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \hB{\Delta_1^{\rho_2}}, \Delta_1$} \RightLabel{$\rho_2$}
-%	\BIC{$\hA{\Gamma_1^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1, \Gamma_3  \seq \hA{\Delta_1^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1, \Delta_3$}
-%				\AXC{$\varphi_2$}\noLine
-%				\UIC{$\hA{\Gamma_2^{\rho_1}}, \Gamma_2  \seq \hA{\Delta_2^{\rho_1}}, \Delta_2$}  \RightLabel{$\rho_1$}
-%		\BIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1, \Gamma_2, \Gamma_3  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1, \Delta_2, \Delta_3$} 
-%\end{prooftree}
-%
-%\begin{prooftree}
-%\AXC{$\varphi_3$}\noLine
-%\UIC{$\hB{\Gamma_3^{\rho_2}}, \Gamma_3  \seq \hB{\Delta_3^{\rho_2}}, \Delta_3$}
-%		\AXC{$\varphi_1$}\noLine
-%		\UIC{$\hA{\Gamma_1^{\rho_1}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \Delta_1$}
-%				\AXC{$\varphi_2$}\noLine
-%				\UIC{$\hA{\Gamma_2^{\rho_1}}, \hB{\Gamma_2^{\rho_2}}, \Gamma_2  \seq \hA{\Delta_2^{\rho_1}}, \hB{\Delta_2^{\rho_2}}, \Delta_2$}  \RightLabel{$\rho_1$}
-%			\BIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma_2^{\rho_2}}, \Gamma_1, \Gamma_2  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta_2^{\rho_2}}, \Delta_1, \Delta_2$} \RightLabel{$\rho_2$}
-%	\BIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1, \Gamma_2, \Gamma_3  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1, \Delta_2, \Delta_3$} 
-%\end{prooftree}
-%$$
-%\Downarrow
-%$$
-%\begin{prooftree}
-%\AXC{$\varphi_1$}\noLine
-%\UIC{$\hA{\Gamma_1^{\rho_1}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \Delta_1$}
-%		\AXC{$\varphi_3$}\noLine
-%		\UIC{$\hB{\Gamma_3^{\rho_2}}, \Gamma_3  \seq \hB{\Delta_3^{\rho_2}}, \Delta_3$}
-%				\AXC{$\varphi_2$}\noLine
-%				\UIC{$\hA{\Gamma_2^{\rho_1}}, \hB{\Gamma_2^{\rho_2}}, \Gamma_2  \seq \hA{\Delta_2^{\rho_1}}, \hB{\Delta_2^{\rho_2}}, \Delta_2$}  \RightLabel{$\rho_2$}
-%			\BIC{$\hA{\Gamma_2^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_2, \Gamma_3  \seq \hA{\Delta_2^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_2, \Delta_3$} 
-%\RightLabel{$\rho_1$}
-%	\BIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1, \Gamma_2, \Gamma_3  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1, \Delta_2, \Delta_3$}
-%\end{prooftree}
-
-
+\end{small}
 \end{definition}
 
 
 
 \begin{definition}[$\swapID$]
 \label{definition:SwappingOfIndirectlyDependentInferences}
-Distributional Swapping of Indirectly Dependent Inferences:
-
+For the permutation of indirectly dependent inferences, the following rule can be used:
+\begin{small}
 \begin{prooftree}
 \AXC{$\varphi_1$}\noLine
 \UIC{$\hA{\Gamma_1^{\rho_1}}, \hB{\Gamma_1^{\rho_2}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \hB{\Delta_1^{\rho_2}}, \Delta_1$}
@@ -248,13 +143,15 @@ Distributional Swapping of Indirectly Dependent Inferences:
 	\BIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma_1^{\rho_2}}, \hB{\Gamma_2^{\rho_2}},\Gamma_1, \Gamma_2  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta_1^{\rho_2}}, \hB{\Gamma_2^{\rho_2}}, \Delta_1, \Delta_2$}\RightLabel{$\rho_2$}
 	\UIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1, \Gamma_2  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1, \Delta_2$} 
 \end{prooftree}
+\end{small}
 $$
 \Downarrow
 $$
+\begin{scriptsize}
 \begin{prooftree}
 \AXC{$\varphi_1$}\noLine
 \UIC{$\hA{\Gamma_1^{\rho_1}}, \hB{\Gamma_1^{\rho_2}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \hB{\Delta_1^{\rho_2}}, \Delta_1$} \doubleLine \RightLabel{$w^*$}
-\UIC{$\hA{\Gamma_1^{\rho_1}}, \hB{\Gamma_1^{\rho_2}}, \hB{\Gamma_2^{\rho_2}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \hB{\Delta_1^{\rho_2}}, \hB{\Delta_2^{\rho_2}} \Delta_1$} \RightLabel{$\rho_2$}
+\UIC{$\hA{\Gamma_1^{\rho_1}}, \hB{\Gamma_1^{\rho_2}}, \hB{\Gamma_2^{\rho_2}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \hB{\Delta_1^{\rho_2}}, \hB{\Delta_2^{\rho_2}}, \Delta_1$} \RightLabel{$\rho_2$}
 \UIC{$\hA{\Gamma_1^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1  \seq \hA{\Delta_1^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1$} 
 		\AXC{$\varphi_2$}\noLine
 		\UIC{$\hA{\Gamma_2^{\rho_1}}, \hB{\Gamma_2^{\rho_2}}, \Gamma_2  \seq \hA{\Delta_2^{\rho_1}}, \hB{\Delta_2^{\rho_2}}, \Delta_2$} \doubleLine \RightLabel{$w^*$}
@@ -264,20 +161,14 @@ $$
 	\BIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma^{\rho_2}},\hB{\Gamma^{\rho_2}}, \Gamma_1, \Gamma_2  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta^{\rho_2}},\hB{\Delta^{\rho_2}}, \Delta_1, \Delta_2$} \doubleLine \RightLabel{$c^*$}
 	\UIC{$\hA{\Gamma^{\rho_1}}, \hB{\Gamma^{\rho_2}}, \Gamma_1, \Gamma_2  \seq \hA{\Delta^{\rho_1}}, \hB{\Delta^{\rho_2}}, \Delta_1, \Delta_2$}
 \end{prooftree}
+\end{scriptsize}
 \end{definition}
-
-
-\begin{remark}
-While the inference $\rho_2$ in the proof rewriting rules of Definition \ref{definition:SwappingOfIndirectlyDependentInferences} can be a contraction, there are cases in which contractions can be swapped upward in a smarter way, as shown in Definition \ref{definition:SwappingIndirectlyDependentContraction}
-\end{remark}
-
 
 
 
 \begin{definition}[$\swapIDC$]
 \label{definition:SwappingIndirectlyDependentContraction}
-Swapping of indirectly dependent contractions:
-
+In cases when the dependent inference is a contraction and the inference $\rho$ on which it depends occurs twice above the contraction, they can be swapped in a smarter way according to the rules below:
 \begin{prooftree}
 \AXC{$\varphi_1$} \noLine
 \UIC{$\Gamma_1, \hA{\Gamma_{\rho}},\hB{\Gamma_{\rho}} \seq \Delta_1, \hA{\Delta_{\rho}},\hB{\Delta_{\rho}}$} \RightLabel{$\hB{\rho}$}
@@ -317,39 +208,13 @@ $$
 		\UIC{$\Gamma_2, \hC{\Gamma_2^{\rho}} \seq \Delta_2, \hC{\Delta_2^{\rho}}$}\RightLabel{$\hC{\rho}$}
 	\BIC{$\Gamma_1, \hC{\Pi_{\rho}} \seq \Delta_1, \hC{\Lambda_{\rho}}$}
 \end{prooftree}
-
-%\begin{prooftree}
-%\AXC{$\varphi_2$} \noLine
-%\UIC{$\Gamma_2, \hA{\Gamma_2^{\rho}} \seq \Delta_2, \hA{\Delta_2^{\rho}}$}
-%		\AXC{$\varphi_2$} \noLine
-%		\UIC{$\Gamma_2, \hB{\Gamma_2^{\rho}} \seq \Delta_2, \hB{\Delta_2^{\rho}}$}
-%				\AXC{$\varphi_1$} \noLine
-%				\UIC{$\Gamma_1, \hA{\Gamma_1^{\rho}},\hB{\Gamma_1^{\rho}} \seq \Delta_1, \hA{\Delta_{\rho}},\hB{\Delta_{\rho}}$} \RightLabel{$\hB{\rho}$}
-%			\BIC{$\Gamma_1, \hA{\Gamma_{\rho}},\hB{\Pi_{\rho}} \seq \Delta_1, \hA{\Delta_{\rho}}, \hB{\Lambda_{\rho}}$}\RightLabel{$\hA{\rho}$}
-%	\BIC{$\Gamma_1, \hA{\Pi_{\rho}}, \hB{\Pi_{\rho}} \seq \Delta_1, \hA{\Lambda_{\rho}}, \hB{\Lambda_{\rho}}$} \doubleLine \RightLabel{$c^*$}
-%	\UIC{$\Gamma_1, \hC{\Pi_{\rho}} \seq \Delta_1, \hC{\Lambda_{\rho}}$}
-%\end{prooftree}
-%$$
-%\Downarrow
-%$$
-%\begin{prooftree}
-%\AXC{$\varphi_2$} \noLine
-%\UIC{$\Gamma_2, \hA{\Gamma_2^{\rho}} \seq \Delta_2, \hA{\Delta_2^{\rho}}$}
-%		\AXC{$\varphi_1$} \noLine
-%		\UIC{$\Gamma_1, \hA{\Gamma_1^{\rho}}, \hB{\Gamma_1^{\rho}} \seq \Delta_1, \hA{\Delta_1^{\rho}}, \hB{\Delta_1^{\rho}}$} \doubleLine \RightLabel{$c^*$}
-%		\UIC{$\Gamma_1, \hC{\Gamma_{\rho}} \seq \Delta_1, \hC{\Delta_{\rho}}$}\RightLabel{$\hC{\rho}$}
-%	\BIC{$\Gamma_1, \hC{\Pi_{\rho}} \seq \Delta_1, \hC{\Lambda_{\rho}}$}
-%\end{prooftree}
-
-
 \end{definition}
 
 
 
 \begin{definition}[$\swapC$]
 \label{definition:SwappingContraction}
-Distributional Swapping over contractions:
-
+The permutation of an inference over contractions causes duplication of the inference, as shown in the rules below:
 \begin{prooftree}
 \AXC{$\varphi_1$} \noLine
 \UIC{$\Gamma_1, \hA{\Gamma_{\rho}}, \hA{\Gamma'_{\rho}} \seq \Delta_1, \hA{\Delta_{\rho}}, \hA{\Delta'_{\rho}}$} \doubleLine \RightLabel{$c^*$}
@@ -391,32 +256,6 @@ $$
 		\BIC{$\Gamma_1, \hA{\Pi_{\rho}}, \hB{\Pi_{\rho}} \seq \Delta_1, \hA{\Lambda_{\rho}}, \hB{\Lambda_{\rho}}$} \doubleLine \RightLabel{$c^*$}
 		\UIC{$\Gamma_1, \hC{\Pi_{\rho}} \seq \Delta_1, \hC{\Lambda_{\rho}}$}
 \end{prooftree}
-
-%\begin{prooftree}
-%\AXC{$\varphi_2$} \noLine
-%\UIC{$\Gamma_2, \hA{\Gamma_2^{\rho}} \seq \Delta_2, \hA{\Delta_2^{\rho}}$}
-%		\AXC{$\varphi_1$} \noLine
-%		\UIC{$\Gamma_1, \hA{\Gamma_1^{\rho}}, \hA{\Gamma_1^{\rho'}} \seq \Delta_1, \hA{\Delta_1^{\rho}}, \hA{\Delta_1^{\rho'}}$} \doubleLine \RightLabel{$c^*$}
-%		\UIC{$\Gamma_1, \hA{\Gamma_{\rho}} \seq \Delta_1, \hA{\Delta_{\rho}}$}\RightLabel{$\rho$}
-%	\BIC{$\Gamma_1, \hA{\Pi_{\rho}} \seq \Delta_1, \hA{\Lambda_{\rho}}$}
-%\end{prooftree}
-%$$
-%\Downarrow
-%$$
-%\begin{prooftree}
-%\AXC{$\varphi_2$} \noLine
-%\UIC{$\Gamma_2, \hA{\Gamma_2^{\rho}} \seq \Delta_2, \hA{\Delta_2^{\rho}}$}
-%		\AXC{$\varphi_2$} \noLine
-%		\UIC{$\Gamma_2, \hB{\Gamma_2^{\rho}} \seq \Delta_2, \hB{\Delta_2^{\rho}}$}
-%				\AXC{$\varphi_1$} \noLine
-%				\UIC{$\Gamma_1, \hA{\Gamma_1^{\rho}}, \hB{\Gamma_1^{\rho'}} \seq \Delta_1, \hA{\Delta_1^{\rho}}, \hB{\Delta_1^{\rho'}}$} \doubleLine \RightLabel{$w^*$}
-%				\UIC{$\Gamma_1, \hA{\Gamma_1^{\rho}},\hB{\Gamma_1^{\rho}} \seq \Delta_1, \hA{\Delta_{\rho}},\hB{\Delta_{\rho}}$} \RightLabel{$\hB{\rho}$}
-%			\BIC{$\Gamma_1, \hA{\Gamma_{\rho}},\hB{\Pi_{\rho}} \seq \Delta_1, \hA{\Delta_{\rho}}, \hB{\Lambda_{\rho}}$}\RightLabel{$\hA{\rho}$}
-%	\BIC{$\Gamma_1, \hA{\Pi_{\rho}}, \hB{\Pi_{\rho}} \seq \Delta_1, \hA{\Lambda_{\rho}}, \hB{\Lambda_{\rho}}$} \doubleLine \RightLabel{$c^*$}
-%	\UIC{$\Gamma_1, \hC{\Pi_{\rho}} \seq \Delta_1, \hC{\Lambda_{\rho}}$}
-%\end{prooftree}
-
-
 \end{definition}
 
 
@@ -424,9 +263,8 @@ $$
 
 
 \begin{definition}[$\swapWI$]
-Downward swapping of weakening inferences over independent inferences.
-
-\begin{multicols}{3}{
+An independent inference can be permuted with a weakening on which it does not depend. This is done according to the rules below, which are just special cases of the rules in Definition \ref{definition:SwappingOfIndependentInferences}: 
+%\begin{multicols}{3}{
 \begin{prooftree}
 \AXC{$\varphi_1$}\noLine
 \UIC{$\hB{\Gamma_1^{\rho}}, \Gamma  \seq \hB{\Delta_1^{\rho}}, \Delta$}\RightLabel{$w_l$}
@@ -434,7 +272,8 @@ Downward swapping of weakening inferences over independent inferences.
 \UIC{$\hA{F}, \hB{\Gamma^{\rho}}, \Gamma  \seq \hB{\Delta^{\rho}}, \Delta$} 
 \end{prooftree}
 $$
-\Rightarrow
+%\Rightarrow
+\Downarrow
 $$
 \begin{prooftree}
 \AXC{$\varphi_1$}\noLine
@@ -442,23 +281,7 @@ $$
 \UIC{$\hB{\Gamma^{\rho}}, \Gamma  \seq \hB{\Delta^{\rho}}, \Delta$} \RightLabel{$w_l$}
 \UIC{$\hA{F}, \hB{\Gamma^{\rho}}, \Gamma  \seq \hB{\Delta^{\rho}}, \Delta$} 
 \end{prooftree}
-
-%\begin{prooftree}
-%\AXC{$\varphi_1$}\noLine
-%\UIC{$\hB{\Gamma_1^{\rho}}, \Gamma  \seq \hB{\Delta_1^{\rho}}, \Delta$}\RightLabel{$w_r$}
-%\UIC{$\hB{\Gamma_1^{\rho}}, \Gamma  \seq \hB{\Delta_1^{\rho}}, \Delta, \hA{F}$}\RightLabel{$\rho$}
-%\UIC{$\hB{\Gamma^{\rho}}, \Gamma  \seq \hB{\Delta^{\rho}}, \Delta, \hA{F}$} 
-%\end{prooftree}
-%$$
-%\Downarrow
-%$$
-%\begin{prooftree}
-%\AXC{$\varphi_1$}\noLine
-%\UIC{$\hB{\Gamma_1^{\rho}}, \Gamma  \seq \hB{\Delta_1^{\rho}}, \Delta$} \RightLabel{$\rho$}
-%\UIC{$\hB{\Gamma^{\rho}}, \Gamma  \seq \hB{\Delta^{\rho}}, \Delta$} \RightLabel{$w_l$}
-%\UIC{$\hB{\Gamma^{\rho}}, \Gamma  \seq \hB{\Delta^{\rho}}, \Delta, \hA{F}$} 
-%\end{prooftree}
-}\end{multicols}
+%}\end{multicols}
 
 \begin{small}
 %\begin{multicols}{2}{
@@ -481,83 +304,14 @@ $$
 			\BIC{$\hB{\Gamma^{\rho}}, \Gamma_1, \Gamma_2  \seq \hB{\Delta^{\rho}}, \Delta_1, \Delta_2$} \RightLabel{$w_l$}
 			\UIC{$\hA{F}, \hB{\Gamma^{\rho}}, \Gamma_1, \Gamma_2  \seq \hB{\Delta^{\rho}}, \Delta_1, \Delta_2$}
 \end{prooftree}
-
-%\begin{prooftree}
-%\AXC{$\varphi_1$}\noLine
-%\UIC{$\hB{\Gamma_1^{\rho}}, \Gamma_1  \seq \hB{\Delta_1^{\rho}}, \Delta_1$}  \RightLabel{$w_r$}
-%\UIC{$\hB{\Gamma_1^{\rho}}, \Gamma_1  \seq \hB{\Delta_1^{\rho}}, \Delta_1, \hA{F}$}
-%				\AXC{$\varphi_2$}\noLine
-%				\UIC{$\hB{\Gamma_2^{\rho}}, \Gamma_2  \seq \hB{\Delta_2^{\rho}}, \Delta_2$} \RightLabel{$\rho$}
-%			\BIC{$\hB{\Gamma^{\rho}}, \Gamma_1, \Gamma_2  \seq \hB{\Delta^{\rho}}, \Delta_1, \hA{F}, \Delta_2$} 
-%\end{prooftree}
-%$$
-%\Downarrow
-%$$
-%\begin{prooftree}
-%\AXC{$\varphi_1$}\noLine
-%\UIC{$\hB{\Gamma_1^{\rho}}, \Gamma_1  \seq \hB{\Delta_1^{\rho}}, \Delta_1$}
-%				\AXC{$\varphi_2$}\noLine
-%				\UIC{$\hB{\Gamma_2^{\rho}}, \Gamma_2  \seq \hB{\Delta_2^{\rho}}, \Delta_2$} \RightLabel{$\rho$}
-%			\BIC{$\hB{\Gamma^{\rho}}, \Gamma_1, \Gamma_2  \seq \hB{\Delta^{\rho}}, \Delta_1, \Delta_2$} \RightLabel{$w_r$}
-%			\UIC{$\hB{\Gamma^{\rho}}, \Gamma_1, \Gamma_2  \seq \hB{\Delta^{\rho}}, \Delta_1, \hA{F}, \Delta_2$}
-%\end{prooftree}
-%}\end{multicols}
-
-%\begin{multicols}{2}{
-%\begin{prooftree}
-%\AXC{$\varphi_1$}\noLine
-%\UIC{$\hB{\Gamma_1^{\rho}}, \Gamma_1  \seq \hB{\Delta_1^{\rho}}, \Delta_1$}  
-%			\AXC{$\varphi_2$}\noLine
-%			\UIC{$\hB{\Gamma_2^{\rho}}, \Gamma_2  \seq \hB{\Delta_2^{\rho}}, \Delta_2$} \RightLabel{$w_l$}
-%			\UIC{$\hA{F}, \hB{\Gamma_2^{\rho}}, \Gamma_2  \seq \hB{\Delta_2^{\rho}}, \Delta_2$}\RightLabel{$\rho$}
-%		\BIC{$\hA{F}, \hB{\Gamma^{\rho}}, \Gamma_1, \Gamma_2  \seq \hB{\Delta^{\rho}}, \Delta_1, \Delta_2$} 
-%\end{prooftree}
-%$$
-%\Downarrow
-%$$
-%\begin{prooftree}
-%\AXC{$\varphi_1$}\noLine
-%\UIC{$\hB{\Gamma_1^{\rho}}, \Gamma_1  \seq \hB{\Delta_1^{\rho}}, \Delta_1$}
-%				\AXC{$\varphi_2$}\noLine
-%				\UIC{$\hB{\Gamma_2^{\rho}}, \Gamma_2  \seq \hB{\Delta_2^{\rho}}, \Delta_2$} \RightLabel{$\rho$}
-%			\BIC{$\hB{\Gamma^{\rho}}, \Gamma_1, \Gamma_2  \seq \hB{\Delta^{\rho}}, \Delta_1, \Delta_2$} \RightLabel{$w_l$}
-%			\UIC{$\hA{F}, \hB{\Gamma^{\rho}}, \Gamma_1, \Gamma_2  \seq \hB{\Delta^{\rho}}, \Delta_1, \Delta_2$}
-%\end{prooftree}
-%
-%\begin{prooftree}
-%\AXC{$\varphi_1$}\noLine
-%\UIC{$\hB{\Gamma_1^{\rho}}, \Gamma_1  \seq \hB{\Delta_1^{\rho}}, \Delta_1$}
-%			\AXC{$\varphi_2$}\noLine
-%			\UIC{$\hB{\Gamma_2^{\rho}}, \Gamma_2  \seq \hB{\Delta_2^{\rho}}, \Delta_2$} \RightLabel{$w_r$}
-%			\UIC{$\hB{\Gamma_2^{\rho}}, \Gamma_2  \seq \hB{\Delta_2^{\rho}}, \Delta_2, \hA{F}$}\RightLabel{$\rho$}
-%		\BIC{$\hB{\Gamma^{\rho}}, \Gamma_1, \Gamma_2  \seq \hB{\Delta^{\rho}}, \Delta_1, \hA{F}, \Delta_2$} 
-%\end{prooftree}
-%$$
-%\Downarrow
-%$$
-%\begin{prooftree}
-%\AXC{$\varphi_1$}\noLine
-%\UIC{$\hB{\Gamma_1^{\rho}}, \Gamma_1  \seq \hB{\Delta_1^{\rho}}, \Delta_1$}
-%				\AXC{$\varphi_2$}\noLine
-%				\UIC{$\hB{\Gamma_2^{\rho}}, \Gamma_2  \seq \hB{\Delta_2^{\rho}}, \Delta_2$} \RightLabel{$\rho$}
-%			\BIC{$\hB{\Gamma^{\rho}}, \Gamma_1, \Gamma_2  \seq \hB{\Delta^{\rho}}, \Delta_1, \Delta_2$} \RightLabel{$w_r$}
-%			\UIC{$\hB{\Gamma^{\rho}}, \Gamma_1, \Gamma_2  \seq \hB{\Delta^{\rho}}, \Delta_1, \hA{F}, \Delta_2$}
-%\end{prooftree}
-%}\end{multicols}
 \end{small}
-
-
 \end{definition}
 
 
-\begin{definition}[Degenerate Inferences]
-An inference $\rho$ in a proof $\varphi$ is \emph{degenerate} when all its auxiliary formula occurrences are descendants of main formula occurrences of weakening inferences. When only some auxiliary (sub)-formula occurrences of $\rho$ are descendants of main formula occurrences of weakening inferences, $\rho$ is \emph{partially degenerate}.
-\end{definition}
 
 
 \begin{definition}[$\swapWD$]
-Downward swapping of weakening inferences over directly dependent inferences.
-
+When an inference $\rho$ is directly dependent on a weakening, permuting the weakening down according ot the rules below leads to the disappearance of $\rho$.
 \begin{prooftree}
 \AXC{$\varphi_1$}\noLine
 \UIC{$\Gamma  \seq \Delta$} \doubleLine \RightLabel{$w^*$}
@@ -574,7 +328,6 @@ $$
 \end{prooftree}
 
 \begin{small}
-%\begin{multicols}{2}{
 \begin{prooftree}
 \AXC{$\varphi_1$}\noLine
 \UIC{$\Gamma_1  \seq \Delta_1$} \doubleLine \RightLabel{$w^*$}
@@ -591,46 +344,21 @@ $$
 \UIC{$\Gamma_1  \seq \Delta_1$} \doubleLine \RightLabel{$w^*$}
 \UIC{$\hB{\Gamma^{\rho}}, \Gamma_1, \Gamma_2  \seq \hB{\Delta^{\rho}}, \Delta_1, \Delta_2$}  
 \end{prooftree}
-
-%\begin{prooftree}
-%\AXC{$\varphi_2$}\noLine
-%\UIC{$\hB{\Gamma_2^{\rho}}, \Gamma_2  \seq \hB{\Delta_2^{\rho}}, \Delta_2$} 
-%		\AXC{$\varphi_1$}\noLine
-%		\UIC{$\Gamma_1  \seq \Delta_1$} \doubleLine \RightLabel{$w^*$}
-%		\UIC{$\hB{\Gamma_1^{\rho}}, \Gamma_1  \seq \hB{\Delta_1^{\rho}}, \Delta_1$}\RightLabel{$\rho$}
-%	\BIC{$\hB{\Gamma^{\rho}}, \Gamma_2, \Gamma_1  \seq \hB{\Delta^{\rho}}, \Delta_2, \Delta_1$} 
-%\end{prooftree}
-%$$
-%\Downarrow
-%$$
-%\begin{prooftree}
-%\AXC{$\varphi_1$}\noLine
-%\UIC{$\Gamma_1  \seq \Delta_1$} \doubleLine \RightLabel{$w^*$}
-%\UIC{$\hB{\Gamma^{\rho}}, \Gamma_2, \Gamma_1  \seq \hB{\Delta^{\rho}}, \Delta_2, \Delta_1$}  
-%\end{prooftree}
-%}\end{multicols}
 \end{small}
-
-
 \end{definition}
-
 
 
 
 \begin{definition}[$\swapW$]
 \label{definition:SwappingWeakening}
-\index{Inference Swapping!Swapping of Weakening}
-The proof rewriting relation for \emph{downward swapping of weakening} is:
-$$
-\swapW \ \defEq \ (\swapWI \cup \swapWD)
-$$
+The proof rewriting relation $\swapW$ for \emph{downward permutation of weakening} is the union of $\swapWI$ and $\swapWD$.
 \end{definition}
 
 
 \begin{definition}[$\swap$] 
 \label{definition:Swapping}
-The proof rewriting relation for \emph{inference swapping} is:
+The proof rewriting relation $\swap$ is: 
 $$
-\swap \ \defEq \ (\swapI \cup \swapID \cup \swapIDC \cup \swapC \cup \swapW)
+\swapI \cup \swapID \cup \swapIDC \cup \swapC \cup \swapW
 $$
 \end{definition}

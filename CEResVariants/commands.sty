@@ -63,20 +63,22 @@
 \newcommand{\dependentQ}{\prec_Q}
 \newcommand{\dependentI}{\prec_I}
 \newcommand{\swap}{\gg}
-\newcommand{\swapI}{\swap_I}
-\newcommand{\swapID}{\swap_{ID}}
-\newcommand{\swapIDC}{\swap_{IDC}}
-\newcommand{\swapC}{\swap_C}
-\newcommand{\swapWI}{\swap_{WI}}
-\newcommand{\swapWD}{\swap_{WD}}
-\newcommand{\swapW}{\swap_{W}}
+\newcommand{\swapX}[1]{\swap_{\mathsmaller{#1}}}
+\newcommand{\swapI}{\swapX{I}}
+\newcommand{\swapID}{\swapX{ID}}
+\newcommand{\swapIDC}{\swapX{DC}}
+\newcommand{\swapC}{\swapX{C}}
+\newcommand{\swapWI}{\swapX{WI}}
+\newcommand{\swapWD}{\swapX{WD}}
+\newcommand{\swapW}{\swapX{W}}
 
 \newcommand{\struct}[1]{\mathcal{S}_{#1}}
+\newcommand{\pertstruct}[2]{\mathcal{S}_{#1}^{#2}}
 
 \usepackage{relsize}
 
 \newcommand{\normalizePlusTimes}{\leadsto}
-\newcommand{\normalizePlusTimesS}{\stackrel{\star}{\leadsto}}
+\newcommand{\normalizePlusTimesS}{\stackrel{\mathsmaller{S}}{\leadsto}}
 \newcommand{\normalizePlusTimesD}{\stackrel{\mathsmaller{D}}{\leadsto}}
 \newcommand{\normalizePlusTimesSD}{\stackrel{\mathsmaller{DS}}{\leadsto}}
 \newcommand{\normalizePlusTimesSDs}{\stackrel{\mathsmaller{S'}}{\leadsto}}
