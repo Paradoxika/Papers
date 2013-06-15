@@ -1,92 +1,26 @@
-
 \section{Correspondence between $\normalizePlusTimesS$ and $\swap$}
 \label{sec:Correspondence}
 
-\begin{lemma}[Correspondence between $\normalizePlusTimesS$ and $\swap$]
-\label{lemma:SwapNormalizeCorrespondence}
+\begin{lemma}%[Correspondence between $\normalizePlusTimesS$ and $\swap$]
+%\label{lemma:SwapNormalizeCorrespondence}
 If $\varphi$ is skolemized and $\struct{\varphi} \normalizePlusTimesS S$, then there exists a proof $\psi$ such that $\varphi \swap^* \psi$ and $\struct{\psi} = S$. 
 \end{lemma}
 \begin{proof}
 
-The proof can be subdivided into the possible cases of $\normalizePlusTimesS$-rewriting:
-
-\begin{itemize}
-	\item Case 1: the selected reducible substruct has the form $\hF{S} \hF{\structtimes_{\rho}} (S_1 \structplus \ldots \structplus S_n)$ (and is rewritten to $S_1 \structplus \ldots \structplus S_n$):
-
-Let $\rho$ be the inference in $\varphi$ corresponding to $\hF{\structtimes_{\rho}}$. Let $\varphi'$ be the subproof having the conclusion sequent of $\rho$ as end-sequent, $\varphi'_1$ be the subproof of $\varphi$ having the left premise sequent of $\rho$ as its end-sequent and $\varphi'_2$ be the subproof of $\varphi$ having the right premise sequent of $\rho$ as its end-sequent. Clearly, $\pertstruct{\varphi'_1}{\occCutPert{\varphi}} = \hF{S}$ and $\pertstruct{\varphi'_2}{\occCutPert{\varphi}} = (S_1 \structplus \ldots \structplus S_n)$. 
-
-Since $\pertstruct{\varphi'_2}{\occCutPert{\varphi}}$ contains no occurrence of $\occInference{\varphi}{\rho}$, it must be the case that all auxiliary occurrences $\omega_i$ of $\rho$ occurring in its right premise sequent are descendants of main occurrences of weakening inferences. Hence, there is a proof $\swapW$-normal-form $\varphi''_2$ of $\varphi'_2$. 
-
-Moreover, since $\hF{S} \hF{\structtimes} (S_1 \structplus \ldots \structplus S_n)$ is a minimal reducible substruct, the occurrences $\omega_i$ are not ancestors of any cut-impertinent binary inference (for if they were, there would be a reducible substruct of $\hF{S} \hF{\structtimes} (S_1 \structplus \ldots \structplus S_n)$, contradicting the fact that $\hF{S} \hF{\structtimes} (S_1 \structplus \ldots \structplus S_n)$ is a minimal reducible substruct of $\struct{\varphi}$). And, clearly, $\omega_i$ are also not ancestors of any cut-pertinent binary inference, because $\rho$ is cut-impertinent. Therefore, in the sequence rewriting $\varphi'_2$ into $\varphi''_2$, none of the rewriting rules of $\swapWD$ that delete binary inferences is used. Consequently, $\pertstruct{\varphi''_2}{\occCutPert{\varphi}} = \pertstruct{\varphi'_2}{\occCutPert{\varphi}}$.
-
-Let $\varphi''$ be the result of replacing $\varphi'_2$ by $\varphi''_2$ in $\varphi'$. Clearly, $\varphi''$ is of the form:
-
-\begin{prooftree}
-\AXC{$\varphi'_1$}\noLine
-\UIC{$\hB{\Gamma_1^{\rho}}, \Gamma_1  \seq \hB{\Delta_1^{\rho}}, \Delta_1$} 
-		\AXC{$\varphi'''_2$}\noLine
-		\UIC{$\Gamma_2  \seq \Delta_2$} \doubleLine \RightLabel{$w^*$}
-		\UIC{$\hB{\Gamma_2^{\rho}}, \Gamma_2  \seq \hB{\Delta_2^{\rho}}, \Delta_2$}\RightLabel{$\rho$}
-	\BIC{$\hB{\Gamma^{\rho}}, \Gamma_2, \Gamma_1  \seq \hB{\Delta^{\rho}}, \Delta_2, \Delta_1$} 
-\end{prooftree}
-
-where $\varphi''_2$ is:
-
-\begin{prooftree}
-		\AXC{$\varphi'''_2$}\noLine
-		\UIC{$\Gamma_2  \seq \Delta_2$} \doubleLine \RightLabel{$w^*$}
-		\UIC{$\hB{\Gamma_2^{\rho}}, \Gamma_2  \seq \hB{\Delta_2^{\rho}}, \Delta_2$}
-\end{prooftree}
-
-By using one of the rewriting rules of $\swapWD$, $\varphi''$ can be rewritten to the proof $\psi'$ below:
-
-\begin{prooftree}
-\AXC{$\varphi'''_2$}\noLine
-\UIC{$\Gamma_2  \seq \Delta_2$} \doubleLine \RightLabel{$w^*$}
-\UIC{$\hB{\Gamma^{\rho}}, \Gamma_2, \Gamma_1  \seq \hB{\Delta^{\rho}}, \Delta_2, \Delta_1$}  
-\end{prooftree}
-
-Clearly, $\pertstruct{\psi'}{\occCutPert{\varphi}} = (S_1 \structplus \ldots \structplus S_n)$
-
-Therefore, there exists a proof $\psi$ (namely, the proof obtainable from $\varphi$ by replacing its subproof $\varphi'$ by $\psi'$) such that $\varphi \swapW \psi$ and $\struct{\psi}$ is $\struct{\varphi}$ with $\hF{S} \hF{\structtimes} (S_1 \structplus \ldots \structplus S_n)$ rewritten to $S_1 \structplus \ldots \structplus S_n$.
+The proof can be subdivided according to all possible cases of rewriting according to $\normalizePlusTimesS$. Here only three cases are shown, but every other case is either symmetric or analogous to one of these three cases.
 
 
-
-	\item Case 2: the selected reducible substruct has the form $(S_1 \structplus \ldots \structplus S_n) \hF{\structtimes} \hF{S}$ (and is rewritten to $S_1 \structplus \ldots \structplus S_n$): Symmetric to case 1.
-
-	\item Case 3: the selected reducible substruct has the form $S_l \hF{\structtimes} S_r$ (and is rewritten to $S_r$): Analogous to case 1.
-
-	\item Case 4: the selected reducible substruct has the form $S_l \hF{\structtimes} S_r$ (and is rewritten to $S_l$): Analogous to case 2.
-
-	\item Case 5: the selected reducible substruct has the form $S_l \hF{\structplus} S_r$ (and is rewritten to $S_r$): Analogous to case 1.
-
-	\item Case 6: the selected reducible substruct has the form $S_l \hF{\structplus} S_r$ (and is rewritten to $S_l$): Analogous to case 2.
-
-	\item Case 7: the selected reducible substruct has the form $\hF{S_l} \hF{\structplus} S_r$ (and is rewritten to $S_r$): Analogous to case 1.
-
-	\item Case 8: the selected reducible substruct has the form $S_l \hF{\structplus} \hF{S_r}$ (and is rewritten to $S_l$): Analogous to case 2.
-
-	\item Case 9: the selected reducible substruct has the form $\hF{S} \hF{\structtimes_{\rho_2}} (S' \structplus_{\rho_1} \hF{S''})$ (and is rewritten to $S' \structplus_{\rho_1} (\hF{S} \hF{\structtimes_{\rho_2}} \hF{S''})$):
-
-Let $\rho_2$ be the inference corresponding to $\hF{\structtimes_{\rho_2}}$ and $\rho_1$ be the inference corresponding to $\structplus_{\rho_1}$. Since $\rho_1$ is cut-pertinent and $\rho_2$ is cut-impertinent, $\rho_2$ is not directly dependent on $\rho_1$. Moreover, $\varphi$ is skolemized and thus $\rho_2$ is also not eigen-variable dependent on $\rho_1$. As only $\hF{S''}$ has occurrences of $\occInference{\varphi}{\rho_2}$, $\occInference{\varphi}{\rho_2}$ has occurrences in at most one premise sequent of $\rho_1$, and hence ancestors of auxiliary occurrences of $\rho_2$ occur in at most one premise sequent of $\rho_1$. Therefore $\rho_2$ is independent of $\rho_1$. Moreover, any inference $\rho_i$ (on the path between $\rho_2$ and $\rho_1$) on which $\rho_2$ directly depends is also independent of $\rho_1$.
-
-Consequently, there exists a proof $\psi$ with $\varphi \swapI^* \psi$ where $\rho_2$ and all inferences $\rho_i$ on which it depends have been swapped above $\rho_1$, so that $\struct{\psi}$ is $\struct{\varphi}$ with $\hF{S} \hF{\structtimes} (S' \structplus \hF{S''})$ rewritten to $S' \structplus (\hF{S} \hF{\structtimes} \hF{S''})$.
+\paragraph{\textbf{Case of rewriting with no duplication,}} 
+when the redex has the form $\hF{S} \hF{\structtimes_{\rho_2}} (S' \structplus_{\rho_1} \hF{S''})$ and is rewritten to $S' \structplus_{\rho_1} (\hF{S} \hF{\structtimes_{\rho_2}} \hF{S''})$):
+Since $\rho_1$ operates on cut ancestors and $\rho_2$ operates on end-sequent ancestors, $\rho_2$ is not directly dependent on $\rho_1$. Moreover, $\varphi$ is skolemized and thus $\rho_2$ is also not eigen-variable dependent on $\rho_1$. 
+Since $\hF{S}$ is distributed only to $\hF{S''}$, only $\hF{S''}$ contains formulas from $\occInference{\varphi}{\rho_2}$. Therefore, $\occInference{\varphi}{\rho_2}$ has formulas in at most one premise of $\rho_1$, and hence ancestors of auxiliary formulas of $\rho_2$ occur in at most one premise of $\rho_1$. Therefore $\rho_2$ is independent of $\rho_1$. Moreover, any inference $\rho_i$ on the path between $\rho_2$ and $\rho_1$ and on which $\rho_2$ directly depends is also independent of $\rho_1$. Consequently, there exists a proof $\psi$ with $\varphi \swapI^* \psi$ where $\rho_2$ and all inferences $\rho_i$ on which it depends have been swapped above $\rho_1$, so that $\struct{\psi}$ is equal to $\struct{\varphi}$ with $\hF{S} \hF{\structtimes} (S' \structplus \hF{S''})$ rewritten to $S' \structplus (\hF{S} \hF{\structtimes} \hF{S''})$.
 
 
-	\item Case 10: the selected reducible substruct has the form $\hF{S} \hF{\structtimes} (\hF{S'} \structplus S'')$ (and is rewritten to $(\hF{S} \hF{\structtimes} \hF{S'}) \structplus S''$): Analogous to case 7.
+\paragraph{\textbf{Case of rewriting with duplication,}} when the redex has the form $(\hF{S'} \structplus_{\rho_1} \hF{S''}) \hF{\structtimes_{\rho_2}} \hF{S}$ and is rewritten to $(\hF{S'} \hF{\structtimes_{\rho_2}} \hF{S}) \structplus_{\rho_1} (\hF{S''} \hF{\structtimes_{\rho_2}} \hF{S})$:
+Since $\rho_1$ operates on cut ancestors and $\rho_2$ operates on end-sequent ancestors, $\rho_2$ is not directly dependent on $\rho_1$. Moreover, $\varphi$ is skolemized and thus $\rho_2$ is also not eigen-variable dependent on $\rho_1$. However, as both $\hF{S'}$ and $\hF{S''}$ contain formulas from $\occInference{\varphi}{\rho_2}$, it must be the case that $\rho_2 \dependentI \rho_1$. In the sequent calculus $\LK$, this can only happen if there exists a sequence of unary\footnote{If the inferences were not unary, the redex would not be of the form $(\hF{S'} \structplus_{\rho_1} \hF{S''}) \hF{\structtimes_{\rho_2}} \hF{S}$.} inferences $\rho^*_D \equiv (\rho_{D_1},\ldots,\rho_{D_n})$ on the path between $\rho_2$ and $\rho_1$ such that $\rho_{D_i}$ is indirectly dependent on $\rho_1$ and $\rho_2$ depends on $\rho_{D_i}$, for any $i$ such that $1 \leq i \leq n$. Moreover, any inference $\rho_{D_i}$ (on the path between $\rho_2$ and $\rho_1$) on which $\rho_2$ directly depends is also independent of $\rho_1$.
 
-	\item Case 11: the selected reducible substruct has the form $(\hF{S'} \structplus S'') \hF{\structtimes} \hF{S}$ (and is rewritten to $(\hF{S'} \hF{\structtimes} \hF{S} ) \structplus S''$): Symmetric to case 7.
-
-	\item Case 12: the selected reducible substruct has the form $(S' \structplus \hF{S''}) \hF{\structtimes} \hF{S}$ (and is rewritten to $S' \structplus (\hF{S''} \hF{\structtimes} \hF{S} )$): Analogous to case 9.
-
-	\item Case 13: the selected reducible substruct has the form $(\hF{S'} \structplus_{\rho_1} \hF{S''}) \hF{\structtimes_{\rho_2}} \hF{S}$ (and is rewritten to $(\hF{S'} \hF{\structtimes_{\rho_2}} \hF{S}) \structplus_{\rho_1} (\hF{S''} \hF{\structtimes_{\rho_2}} \hF{S})$):
-
-
-Since $\rho_1$ is cut-pertinent and $\rho_2$ is cut-impertinent, $\rho_2$ is not directly dependent on $\rho_1$. Moreover, $\varphi$ is skolemized and thus $\rho_2$ is also not eigen-variable dependent on $\rho_1$. However, as both $\hF{S'}$ and $\hF{S''}$ have occurrences of $\occInference{\varphi}{\rho_2}$,  $\rho_2 \dependentI \rho_1$. In the sequent calculus $\LK$, this can only happen if there exists a sequence of unary\footnote{If the inferences were not unary, the struct would simply not be of the form $(\hF{S'} \structplus_{\rho_1} \hF{S''}) \hF{\structtimes_{\rho_2}} \hF{S}$.} inferences $\rho^*_D \equiv (\rho_{D_1},\ldots,\rho_{D_n})$ on the path between $\rho_2$ and $\rho_1$ such that $\rho_{D_i}$ is indirectly dependent on $\rho_1$ and $\rho_2$ depends on $\rho_{D_i}$, for any $i$ such that $1 \leq i \leq n$. Moreover, any inference $\rho_{D_i}$ (on the path between $\rho_2$ and $\rho_1$) on which $\rho_2$ directly depends is also independent of $\rho_1$.
-
-Let $\varphi'$ be the subproof of $\varphi$ having the conclusion sequent of $\rho_2$ as its end-sequent. Then, there exists a proof $\varphi''$ with $\varphi' \swap^* \varphi''$ (swapping $\rho^*_D$ and $\rho_2$ above all inferences on which they do not depend) such that $\varphi''$ has the following form (or a form symmetric to it):
-
-\begin{small}
+Let $\varphi'$ be the subproof of $\varphi$ having the conclusion sequent of $\rho_2$ as its end-sequent. Then, there exists a proof $\varphi''$ with $\varphi' \swap^* \varphi''$ (permuting $\rho^*_D$ and $\rho_2$ above all inferences on which they do not depend) such that $\varphi''$ has the following form (or a form symmetric to it):
+\begin{scriptsize}
 \begin{prooftree}
 \AXC{$\varphi_1$} \noLine
 \UIC{$\Gamma_1, \hF{\Gamma_1^{\rho_2}}, \Gamma_1^{\rho_1} \seq \Delta_1, \hF{\Delta_1^{\rho_2}}, \Delta_1^{\rho_1}$}	
@@ -98,10 +32,11 @@ Let $\varphi'$ be the subproof of $\varphi$ having the conclusion sequent of $\r
 					\UIC{$\Gamma_3 \seq \Delta_3, \hF{F_3^{\rho_2}}$}	\RightLabel{$\rho_2$}
 			\BIC{$\Gamma_1,\Gamma_2,\Gamma_3, \Gamma^{\rho_1} \seq \Delta_1,\Delta_2,\Delta_3,\hF{F^{\rho_2}},\Delta^{\rho_1} $}
 \end{prooftree}
-\end{small}
+\end{scriptsize}
 
-Then there exists a proof $\varphi'''$ with $\varphi'' \swap^* \varphi'''$ (swapping $\rho^*_D$ above  $\rho_1$) such that $\varphi'''$ has the following form:
-
+\begin{landscape}
+\noindent
+Then there exists a proof $\varphi'''$ with $\varphi'' \swap^* \varphi'''$ (permuting $\rho^*_D$ above  $\rho_1$) such that $\varphi'''$ has the following form:
 \begin{scriptsize}
 \begin{prooftree}
 \AXC{$\varphi_1$} \noLine
@@ -120,8 +55,8 @@ Then there exists a proof $\varphi'''$ with $\varphi'' \swap^* \varphi'''$ (swap
 \end{prooftree}
 \end{scriptsize}
 
-Then there exists a proof $\varphi^{(4)}$ with $\varphi''' \swapC \varphi^{(4)}$ (swapping $\rho_2$ above the contraction) such that $\varphi^{(4)}$ has the following form:
-
+\noindent
+Then there exists a proof $\varphi^{(4)}$ with $\varphi''' \swapC \varphi^{(4)}$ (permuting $\rho_2$ above the contraction) such that $\varphi^{(4)}$ has the following form:
 \begin{tiny}
 \begin{prooftree}
 \AXC{$\varphi_1$} \noLine
@@ -145,8 +80,8 @@ Then there exists a proof $\varphi^{(4)}$ with $\varphi''' \swapC \varphi^{(4)}$
 \end{prooftree}
 \end{tiny}
 
-Finally, there exists a proof $\psi'$ with $\varphi^{(4)} \swapI^* \psi'$ (swapping each copy of $\rho_2$ above $\rho_1$) such that $\psi'$ has the following form:
-
+\noindent
+Finally, there exists a proof $\psi'$ with $\varphi^{(4)} \swapI^* \psi'$ (permuting each copy of $\rho_2$ above $\rho_1$) such that $\psi'$ has the following form:
 \begin{tiny}
 \begin{prooftree}
 \AXC{$\varphi_1$} \noLine
@@ -168,12 +103,45 @@ Finally, there exists a proof $\psi'$ with $\varphi^{(4)} \swapI^* \psi'$ (swapp
 	   \UIC{$\Gamma_1,\Gamma_2,\Gamma_3, \Gamma^{\rho_1} \seq \Delta_1,\Delta_2,\Delta_3,\hE{F^{\rho_2}},\Delta^{\rho_1} $}
 \end{prooftree}
 \end{tiny}
+\end{landscape}
 
-Consequently, there exists a proof $\psi$ with $\varphi \swap^* \psi$ (namely, the proof obtained from $\varphi$ by rewriting its subproof $\varphi'$ to $\psi'$ as shown above) where $\rho_2$ and all unary inferences $\rho_{D_i}$ on which it depends have been swapped above $\rho_1$, so that $\struct{\psi}$ is $\struct{\varphi}$ with $(\hF{S'} \structplus \hF{S''}) \hF{\structtimes} \hF{S}$ rewritten to $(\hF{S'} \hF{\structtimes} \hF{S}) \structplus (\hF{S''} \hF{\structtimes} \hF{S})$.
+\noindent
+Consequently, there exists a proof $\psi$ with $\varphi \swap^* \psi$ (namely, the proof obtained from $\varphi$ by rewriting its subproof $\varphi'$ to $\psi'$ as shown above) where $\rho_2$ and all unary inferences $\rho_{D_i}$ on which it depends have been permuted above $\rho_1$, so that $\struct{\psi}$ is equal to $\struct{\varphi}$ with $(\hF{S'} \structplus \hF{S''}) \hF{\structtimes} \hF{S}$ rewritten to $(\hF{S'} \hF{\structtimes} \hF{S}) \structplus (\hF{S''} \hF{\structtimes} \hF{S})$.
 
 
-	\item Case 14: the selected reducible substruct has the form $\hF{S} \hF{\structtimes} (\hF{S'} \structplus \hF{S''})$ (and is rewritten to $(\hF{S} \hF{\structtimes} \hF{S'}) \structplus (\hF{S} \hF{\structtimes} \hF{S''})$): Symmetric to case 11.
 
-\end{itemize}
+\paragraph{\textbf{Degenerate case,}} when the redex has the form $\hF{S} \hF{\structtimes_{\rho}} (S_1 \structplus \ldots \structplus S_n)$ and is rewritten to $S_1 \structplus \ldots \structplus S_n$:
+Let $\varphi'$ be the subproof ending with $\rho$, $\varphi'_1$ be its left subproof (corresponding to $\hF{S}$) and $\varphi'_2$ be its right subproof (corresponding to $(S_1 \structplus \ldots \structplus S_n)$).
+Since $\varphi'_2$ contains no formula from $\occInference{\varphi}{\rho}$, it must be the case that all auxiliary formulas of $\rho$ occurring in its right premise are descendants of main formulas of weakening inferences. $\rho$ is a (partially) degenerate inference.
+Moreover, since the innermost rewriting strategy guarantees that $\hF{S} \hF{\structtimes} (S_1 \structplus \ldots \structplus S_n)$ is a minimal redex, the auxiliary formulas in the right premise of $\rho$ are not ancestors of any binary inference operating (for if they were, there would be a redex in $(S_1 \structplus \ldots \structplus S_n)$). Therefore, in the sequence rewriting $\varphi'_2$ into its $\swapW$-normal-form $\varphi''_2$, none of the rewriting rules of $\swapWD$ that delete binary inferences is used. Consequently, the characteristic formula remains unchanged when $\varphi'_2$ is rewritten into $\varphi''_2$. 
+Let $\varphi''$ be the result of replacing $\varphi'_2$ by $\varphi''_2$ in $\varphi'$.$\varphi''$ is of the following form:
+\begin{prooftree}
+\AXC{$\varphi'_1$}\noLine
+\UIC{$\hB{\Gamma_1^{\rho}}, \Gamma_1  \seq \hB{\Delta_1^{\rho}}, \Delta_1$} 
+		\AXC{$\varphi'''_2$}\noLine
+		\UIC{$\Gamma_2  \seq \Delta_2$} \doubleLine \RightLabel{$w^*$}
+		\UIC{$\hB{\Gamma_2^{\rho}}, \Gamma_2  \seq \hB{\Delta_2^{\rho}}, \Delta_2$}\RightLabel{$\rho$}
+	\BIC{$\hB{\Gamma^{\rho}}, \Gamma_2, \Gamma_1  \seq \hB{\Delta^{\rho}}, \Delta_2, \Delta_1$} 
+\end{prooftree}
+%
+with $\varphi''_2$ being:
+%
+\begin{prooftree}
+		\AXC{$\varphi'''_2$}\noLine
+		\UIC{$\Gamma_2  \seq \Delta_2$} \doubleLine \RightLabel{$w^*$}
+		\UIC{$\hB{\Gamma_2^{\rho}}, \Gamma_2  \seq \hB{\Delta_2^{\rho}}, \Delta_2$}
+\end{prooftree}
+
+\noindent
+By using one of the rewriting rules of $\swapWD$, $\varphi''$ can be rewritten to $\psi'$ below:
+\begin{prooftree}
+\AXC{$\varphi'''_2$}\noLine
+\UIC{$\Gamma_2  \seq \Delta_2$} \doubleLine \RightLabel{$w^*$}
+\UIC{$\hB{\Gamma^{\rho}}, \Gamma_2, \Gamma_1  \seq \hB{\Delta^{\rho}}, \Delta_2, \Delta_1$}  
+\end{prooftree}
+
+\noindent
+Therefore, there exists a proof $\psi$ (namely, the proof obtainable from $\varphi$ by replacing its subproof $\varphi'$ by $\psi'$) such that $\varphi \swapW \psi$ and $\struct{\psi}$ is $\struct{\varphi}$ with $\hF{S} \hF{\structtimes} (S_1 \structplus \ldots \structplus S_n)$ rewritten to $S_1 \structplus \ldots \structplus S_n$.
+\hfill\QED
 \end{proof}
 
