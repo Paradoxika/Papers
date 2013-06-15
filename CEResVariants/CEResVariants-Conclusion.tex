@@ -1,5 +1,20 @@
 \section{Conclusion}
 \label{sec:Conclusion}
 
+In this paper, a source of redundancy in cut-elimination with the $\CERes$
+method was identified and three variants ($\CEResSwap$, $\CEResD$ and
+$\CEResDS$) were developed to succesfully tackle this problem. By using
+$\CEResD$ or $\CEResDS$, it is possible to avoid an exponential increase in
+the size of the clause set extracted from the proof with cuts. This improves
+the efficiency of cut-elimination by resolution and allows it to generate
+smaller essentially cut-free proofs.
 
-Remark about difficulties in intuitionistic ceres
+The redundancy uncovered here is closely linked to the fact that the classical
+$\CERes$ method relies heavily on the use of contraction and weakening. This
+brings difficulties when applying $\CERes$ for logics that treat these
+structural inference rules more restrictively, such as substructural and
+intuitionistic logics \cite{WoltzenlogelPaleo20012iCERes}. Therefore,
+investigating redundancy sources in $\CERes$ not only is beneficial for
+improving the efficiency of $\CERes$ and for reducing the complexity of proofs
+it produces, but might also lead to insights on how to broaden the set of logics
+for which $\CERes$ is applicable.
