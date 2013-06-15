@@ -1,6 +1,18 @@
-\section{Ignoring Atomic and Quantifier-Free Cuts}
+\section{Ignoring Quantifier-Free Cuts}
 \label{sec:CutEliminationByResolution:CEResIgnoringAtomicCuts}
 
-If $\CERes$ is applied to a proof containing only atomic cuts, $\CERes$ still transforms the proof into a new proof containing only atomic cuts, but with additional structural inferences and with the atomic cuts located in the bottom of the proof. This is clearly non-ideal, because the proof could be simply left unchanged. More generally, if $\CERes$ is applied to a proof containing complex cuts and atomic cuts, $\CERes$ unnecessarily includes the atomic cuts in the process of reduction, even though atomic cuts cannot be reduced further. The inclusion of atomic cuts results in larger clause sets that are more costly to refute, and in normal forms with possibly additional structural inferences. This indicates that there is a very simple and evident improvement of the $\CERes$ method that has been thoroughly overlooked so far: instead of distinguishing between cut-pertinent and cut-impertinent formula occurrences (i.e. between ancestors and non-ancestors of \emph{all} cut formula occurrences) and cut-pertinent and cut-impertinent inferences (i.e inferences that operate on the ancestors and on the non-ancestors of cut formula occurrences), it suffices to distinguish between ancestors of \emph{complex} cut formula occurrences and ancestors of either occurrences in the end-sequent or of atomic cut-formula occurrences.
+When all that is desired is the possibility to 
+summarize the proof by means of Herbrand sequents 
+\cite{Paleo2007Herbrand-Sequent-Extraction,Paleo2008Herbrand-Sequent-Extraction,HetzlLeitschWellerPaleo2008Herbrand-Sequent-Extraction}, 
+it is only necessary to remove cuts that contain quantifiers. 
+This can be achieved with an easy modification of $\CERes$: 
+in the construction of the characteristic formula and of the projections, 
+ancestors of quantifier-free cuts should be treated in the same way 
+as end-sequent ancestors.
 
-
+Any of the previously defined variants of $\CERes$ can be modified in this
+manner. When this is done, more axioms are mapped to $\bot$ in the
+characteristic formula, and some inferences that were previously mapped to
+conjunctions are now mapped to disjunctions. Consequently, fewer
+distributions, redundant duplications and new predicate symbols are necessary.
+This leads to smaller and more easily refutable clause sets.

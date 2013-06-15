@@ -1,4 +1,4 @@
-\section{$\CERes$}
+\section{Cut-Elimination by Resolution}
 \label{sec:CERes}
 
 
@@ -71,10 +71,11 @@ $
 \begin{theorem}
 \label{theorem:Unsatisfiability}
 %For any proof $\varphi$, 
-$\all \overline{\alpha_{\varphi}}. \struct{\varphi}$, where $\overline{\alpha_{\varphi}}$ are the eigenvariables of $\varphi$, is unsatisfiable. \BWP{ToDo: check this}
+$\all \overline{\alpha_{\varphi}}. \struct{\varphi}$, where $\overline{\alpha_{\varphi}}$ are the eigenvariables of $\varphi$, is unsatisfiable.
 \end{theorem}
 \begin{proof}
 Recursively transform each subproof $\psi$ of $\varphi$ having end-sequent $\Gamma, \Gamma^* \seq \Delta, \Delta^*$, where $\Gamma^* \seq \Delta^*$ are cut-ancestors, into a proof $\psi'$ of $\all \overline{\alpha_{\psi}}. \struct{\rho}, \Gamma^* \seq \Delta^*$. By doing so, $\varphi$ itself is transformed into a proof $\varphi'$ with end-sequent $\all \overline{\alpha_{\varphi}}. \struct{\varphi} \seq$.
+\hfill\QED
 \end{proof}
 
 
@@ -189,7 +190,7 @@ The original method \cite{BaazLeitsch2009MethodsofCut-Elimination,BaazHetzlLeits
 
 \begin{definition}[Algorithm for Constructing Projections] %\hspace*{\fill} \\
 \label{definition:OProjection}
-Let $\varphi$ be a proof and $c$ be clause from $\clauseset{\varphi}$. Let $A$ be the set of axioms of $\varphi$ that contain formulas that contribute to $c$. Then, $\projection{\varphi}{c}$ is constructed by taking from $\varphi$ only the inferences that operate on formulas that are both descendents of axioms in $A$ and end-sequent ancestors, and adding weakening inferences when necessary.
+Let $\varphi$ be a proof and $c$ be a clause from $\clauseset{\varphi}$. Let $A$ be the set of axioms of $\varphi$ that contain formulas that contribute to $c$. Then, $\projection{\varphi}{c}$ is constructed by taking from $\varphi$ only the inferences that operate on formulas that are both descendents of axioms in $A$ and end-sequent ancestors, and adding weakening inferences when necessary.
 \end{definition}
 
 \begin{example}
@@ -271,18 +272,24 @@ The projections $\projection{\varphi}{\hC{B}, \hD{A} \seq \hE{C}}$ and $\project
 \hfill\QED
 \end{example}
 
+\clearpage
+
 \begin{theorem}
 Let $\psi$ be a proof and $\Gamma_c \seq \Delta_c$ be a clause in its characteristic clause set. Then $\projection{\psi}{\Gamma_c \seq \Delta_c}$ is a projection of $\psi$ with respect to the clause $\Gamma_c \seq \Delta_c$.
 \end{theorem}
 \begin{proof}
-A detailed proof is available in \cite{Woltzenlogel-Paleo2009A-General-Analysis-of-Cut-Elimination-by-CERes}. Here only a sketch is provided. Let $A$ be a set of axioms from $\psi$ that contain literals that contribute to $\Gamma_c \seq \Delta_c$. Note that, since the literals from $\Gamma_c \seq \Delta_c$ occur as cut-ancestors in the axioms in $A$, and inferences operating on cut-ancestors are not performed in the construction of $\projection{\psi}{\Gamma_c \seq \Delta_c}$, these literals are simply propagated down to the end-sequent of $\projection{\psi}{\Gamma_c \seq \Delta_c}$. Therefore, the end-sequent of $\projection{\psi}{\Gamma_c \seq \Delta_c}$ is a supersequent of $\Gamma_c \seq \Delta_c$. Among the formulas in the end-sequent of $\psi$, let $\Gamma' \seq \Delta'$ be the sequent containing all and only those formulas that contain descendents of axioms in $A$. Since $\projection{\psi}{\Gamma_c \seq \Delta_c}$ contains all the inferences that operate on formulas that are both end-sequent ancestors and descendents from axioms in $A$. The end-sequent of $\projection{\psi}{\Gamma_c \seq \Delta_c}$ is a supersequent of $\Gamma' \seq \Delta'$. And finally, $\projection{\psi}{\Gamma_c \seq \Delta_c}$ is cut-free, because it contains no inference operating on cut ancestors and, therefore, contains no cut.
+A detailed proof is available in \cite{Woltzenlogel-Paleo2009A-General-Analysis-of-Cut-Elimination-by-CERes}. Here only a sketch is provided. Let $A$ be a set of axioms from $\psi$ that contain literals that contribute to $\Gamma_c \seq \Delta_c$. Note that, since the literals from $\Gamma_c \seq \Delta_c$ occur as cut-ancestors in the axioms in $A$, and inferences operating on cut-ancestors are not performed in the construction of $\projection{\psi}{\Gamma_c \seq \Delta_c}$, these literals are simply propagated down to the end-sequent of $\projection{\psi}{\Gamma_c \seq \Delta_c}$. Therefore, the end-sequent of $\projection{\psi}{\Gamma_c \seq \Delta_c}$ is a supersequent of $\Gamma_c \seq \Delta_c$. Among the formulas in the end-sequent of $\psi$, let $\Gamma' \seq \Delta'$ be the sequent containing all and only those formulas that contain descendents of axioms in $A$. Since $\projection{\psi}{\Gamma_c \seq \Delta_c}$ contains all the inferences that operate on formulas that are both end-sequent ancestors and descendents from axioms in $A$, the end-sequent of $\projection{\psi}{\Gamma_c \seq \Delta_c}$ is a supersequent of $\Gamma' \seq \Delta'$. Finally, $\projection{\psi}{\Gamma_c \seq \Delta_c}$ is cut-free, because it contains no inference operating on cut ancestors and thus contains no cut.
+\hfill\QED
 \end{proof}
+
+\noindent
+The construction of the characteristic clause set in original descriptions of the $\CERes$ method \cite{BaazLeitsch1999MethodsofCut-Elimination,BaazLeitsch2000Cut-eliminationandRedundancy-eliminationbyResolution,BaazLeitsch2006Towardsaclausalanalysisofcut-elimination} differs slightly from the construction presented in this paper. There, instead of a characteristic formula, one consructs a \emph{characteristic clause term}, that has $\oplus$ instead of $\wedge$ (for binary inferences operating on cut-ancestors), $\otimes$ instead of $\vee$ (for binary inferences operating on end-sequent-ancestors), and singleton clause sets instead of formulas (for axioms). The operators $\oplus$ and $\otimes$ are then interpreted respectively as a set union and as a clause set merge operation in order to generate the characteristic clause set. Both approaches are clearly equivalent, but the approach described here is simpler as it does not require the invention of new operators and relies on the standard technique of clause form transformation for the generation of the characteristic clause set. This is crucial for understanding why proofs generated by $\CERes$ may contain redundancies.
 
 
 \begin{definition}[$\CERes$-normal-form]
 The \emph{$\CERes$-normal-form} of the proof $\varphi$ w.r.t. the resolution refutation $\delta$ of its clause set $\clauseset{\varphi}$ is denoted $\CEResNF{\varphi}{\delta}$ and obtained by:
 \begin{enumerate}
-\item converting resolution and factoring inferences from $\delta$ to, respectively, atomic cuts and contractions (with a substitution $\sigma$ that is the composition of all unifiers)
+\item converting resolution and factoring inferences from $\delta$ to, respectively, atomic cuts and contractions, using a substitution $\sigma$ obtained by the composition of all unifiers.
 \item replacing each axiom clause $c$ in $\delta$ by its corresponding projection $\projection{\psi}{c} \sigma$.
 \item adding contractions in the bottom of the proof, if necessary.
 \end{enumerate} 
@@ -331,11 +338,9 @@ Where $\psi$ is:
 						\BIC{$\hD{A}, (\hG{A} \wedge \hB{B}) \vee \hE{C},(\hG{A} \wedge \hB{B}) \vee \hG{C}, (\hG{A} \wedge \hG{B}) \vee \hE{C}, (\hG{A} \wedge \hG{B}) \vee \hG{C} \seq \hC{B} \wedge \hD{A}, \hC{B} \wedge \hD{A}, \hF{C}$}
 \end{prooftree}
 \end{scriptsize}
-
 \hfill\QED
 \end{example}
 
 
-The construction of the characteristic clause set in original descriptions of the $\CERes$ method \cite{BaazLeitsch1999MethodsofCut-Elimination,BaazLeitsch2000Cut-eliminationandRedundancy-eliminationbyResolution,BaazLeitsch2006Towardsaclausalanalysisofcut-elimination} differs slightly from the construction presented in this paper. There, instead of a characteristic formula, one consructs a \emph{characteristic clause term}, that has $\oplus$ instead of $\wedge$ (for binary inferences operating on cut-ancestors), $\otimes$ instead of $\vee$ (for binary inferences operating on end-sequent-ancestors), and singleton clause sets instead of formulas (for axioms). The operators $\oplus$ and $\otimes$ are then interpreted respectively as a set union and as a clause set merge operation in order to generate the characteristic clause set. Both approaches are clearly equivalent, but the approach described here is simpler as it does not require the invention of new operators and relies on the standard technique of clause form transformation for the generation of the characteristic clause set. This is crucial for understanding why proofs generated by $\CERes$ may contain redundancies.
 
 \end{landscape}

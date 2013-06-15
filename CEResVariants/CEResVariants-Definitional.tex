@@ -47,13 +47,13 @@ where $sub(S)$ is the set of non-literal subformulas of $S$.
 The connective $\biimp$ is considered to be just an abbreviation:
 \begin{small}
 $$
-A \biimp B_1 \structtimes \ldots \structtimes B_n \defEq 
+A \biimp B_1 \structtimes \ldots \structtimes B_n  \ \ \defEq  \ \
 (\overline{A} \structtimes B_1 \structtimes \ldots \structtimes B_n) \structplus 
 (\overline{B_1} \structtimes A) \structplus \ldots \structplus 
 (\overline{B_n} \structtimes A)
 $$
 $$
-A \biimp B_1 \structplus \ldots \structplus B_n \defEq 
+A \biimp B_1 \structplus \ldots \structplus B_n \ \ \defEq \ \  
 (\overline{B_1} \structtimes \ldots \structtimes \overline{B_n} \structtimes A ) \structplus 
 (\overline{A} \structtimes B_1) \structplus \ldots \structplus 
 (\overline{A} \structtimes B_n)
@@ -98,48 +98,48 @@ $$
 
 \noindent
 New predicate symbols can be created and defined by the following formulas: 
-\begin{itemize}
-\item $D \biimp \hE{C} \structplus \hF{\structdual{C}}$
-
-\item $E \biimp \hC{\structdual{B}} \structtimes \hD{\structdual{A}}$
-
-\item $F \biimp \hA{A} \structplus \hB{B}$
-
-\item $G \biimp F \structplus E$
-
-\item $H \biimp G \structtimes D$
-\end{itemize}
+$$
+D \biimp \hE{C} \structplus \hF{\structdual{C}}
+\qquad
+E \biimp \hC{\structdual{B}} \structtimes \hD{\structdual{A}}
+\qquad
+F \biimp \hA{A} \structplus \hB{B}
+\qquad
+G \biimp F \structplus E
+\qquad
+H \biimp G \structtimes D
+$$
 
 \noindent
 The $\normalizePlusTimesD$-normal-form of $\struct{\varphi}$ is:
 $$
 \begin{array}{rcl}
-S^*	
-& \defEq & H \structplus \\
+%S^*	
+&           & H \ \structplus \\
 &			& 
 (\structdual D \structtimes \hE{C})
 \structplus
 (\structdual D \structtimes \structdual \hF{C})
 \structplus
-( \structdual \hE{C} \structtimes D \structtimes \hF{C}) \structplus \\
+( \structdual \hE{C} \structtimes D \structtimes \hF{C}) \ \structplus \\
 &			&
 (\structdual E \structtimes \structdual \hC{B} \structtimes \structdual \hD{A} )
 \structplus
 (E \structtimes \hC{B})
 \structplus
-(E \structtimes \hD{A}) \structplus \\
+(E \structtimes \hD{A}) \ \structplus \\
 &			&
 (\structdual F \structtimes \hA{A})
 \structplus
 (\structdual F \structtimes \hB{B})
 \structplus
-(\structdual \hA{A} \structtimes \structdual \hB{B} \structtimes F) \structplus \\
+(\structdual \hA{A} \structtimes \structdual \hB{B} \structtimes F) \ \structplus \\
 &			&
 (\structdual G \structtimes F)
 \structplus
 (\structdual G \structtimes E)
 \structplus
-(\structdual E \structtimes \structdual F \structtimes G) \structplus \\
+(\structdual E \structtimes \structdual F \structtimes G) \ \structplus \\
 &			&
 (\structdual H \structtimes G \structtimes D)
 \structplus
@@ -198,6 +198,7 @@ $D \seq H$
 \hfill\QED
 \end{example}
 
+\noindent
 The construction of projections requires special care when definitional clause sets are used. The reason is that the clauses now contain many new predicate symbols which do not occur in the input proof. Fortunately, for all definitional clauses of a definitional clause set, projections can be constructed easily and independently of the input proof, by using definition inference rules in the sequent calculus.
 
 \begin{definition}[Definitional Projection]
@@ -212,7 +213,7 @@ to one of the following templates:
 \begin{prooftree}
 \AXC{$n(S_1) \seq n(S_1)$}
 	\AXC{$\ldots$}
-		\AXC{$n(S_n) \seq n(S_n)$} \doubleLine \RightLabel{$\vee^*_l$}
+		\AXC{$n(S_n) \seq n(S_n)$} \RightLabel{$\vee^*_l$}
 	\TIC{$n(S_1) \vee \ldots \vee n(S_n) \seq n(S_1), \ldots , n(S_n)$} \RightLabel{$d_l$}
 	\UIC{$N_{S_1 \structtimes \ldots \structtimes S_n}(x_1,\ldots, x_m) \seq  n(S_1), \ldots , n(S_n)$} 
 \end{prooftree}
@@ -220,7 +221,7 @@ to one of the following templates:
 
 \begin{prooftree}
 \AXC{$n(S_k) \seq n(S_k)$} \doubleLine \RightLabel{$w^*_r$}
-\UIC{$n(S_k) \seq n(S_1), \ldots, n(S_n)$} \doubleLine \RightLabel{$\vee^*_r$}
+\UIC{$n(S_k) \seq n(S_1), \ldots, n(S_n)$} \RightLabel{$\vee^*_r$}
 \UIC{$n(S_k) \seq n(S_1) \vee \ldots \vee n(S_n)$} \RightLabel{$d_r$}
 \UIC{$n(S_k) \seq N_{S_1 \structtimes \ldots \structtimes S_n}(x_1,\ldots, x_m)$}
 \end{prooftree}
@@ -233,7 +234,7 @@ to one of the following templates:
 \begin{prooftree}
 \AXC{$n(S_1) \seq n(S_1)$}
 	\AXC{$\ldots$}
-		\AXC{$n(S_n) \seq n(S_n)$} \doubleLine \RightLabel{$\wedge^*_r$}
+		\AXC{$n(S_n) \seq n(S_n)$} \RightLabel{$\wedge^*_r$}
 	\TIC{$n(S_1), \ldots , n(S_n) \seq n(S_1) \wedge \ldots \wedge n(S_n)$} \RightLabel{$d_r$}
 	\UIC{$n(S_1), \ldots , n(S_n) \seq  N_{S_1 \structplus \ldots \structplus S_n}(x_1,\ldots, x_m)$} 
 \end{prooftree}
@@ -241,7 +242,7 @@ to one of the following templates:
 
 \begin{prooftree}
 \AXC{$n(S_k) \seq n(S_k)$} \doubleLine \RightLabel{$w^*_l$}
-\UIC{$n(S_1), \ldots, n(S_n)\seq n(S_k)$} \doubleLine \RightLabel{$\wedge^*_l$}
+\UIC{$n(S_1), \ldots, n(S_n)\seq n(S_k)$} \RightLabel{$\wedge^*_l$}
 \UIC{$n(S_1) \wedge \ldots \wedge n(S_n) \seq n(S_k)$} \RightLabel{$d_l$}
 \UIC{$N_{S_1 \structplus \ldots \structplus S_n}(x_1,\ldots, x_m) \seq n(S_k)$} 
 \end{prooftree}
@@ -443,7 +444,7 @@ $\projectionDefinitional{\varphi}{H \seq G, D}$:
 
 
 \noindent
-While projections w.r.t. to definitional clauses can always be easily constructed 
+While projections w.r.t. definitional clauses can always be easily constructed 
 using the four templates given in Definition \ref{definition:DProjectionDefinitional},
 the proper clause requires a more sophisticated inductively constructed projection 
 that actually depends on the input proof.
@@ -459,14 +460,17 @@ Let $S'$ be the subformula of $\struct{\varphi}$ at $\varphi'$. The following ca
 \begin{itemize}
 \item $\rho$ is an axiom inference: Then $\varphi'$ is of the form:
 
+\begin{small}
 \begin{prooftree}
 \AXC{$ $} \RightLabel{$\rho$}
 \UIC{$A \seq A$}
 \end{prooftree}
+\end{small}
 
 	\begin{itemize}
 	\item If both occurrences of $A$ are cut-ancestors, then let $\varphi''$ be:
 
+	\begin{small}
 	\begin{prooftree}
 	\AXC{$ $} \RightLabel{$\rho$}
 	\UIC{$A \seq A$} \RightLabel{$\neg_r$}
@@ -474,14 +478,17 @@ Let $S'$ be the subformula of $\struct{\varphi}$ at $\varphi'$. The following ca
 	\UIC{$\seq \neg A \vee A$} \RightLabel{$d_r$}
 	\UIC{$\seq n(S')$}
 	\end{prooftree}
+	\end{small}
 
 	\item If only the antecedent's $A$ is a cut-ancestor, then let $\varphi''$ be:
 
+	\begin{small}
 	\begin{prooftree}
 	\AXC{$ $} \RightLabel{$\rho$}
 	\UIC{$A \seq A$} \RightLabel{$\neg_r$}
 	\UIC{$\seq \neg A, A$}
 	\end{prooftree}
+	\end{small}
 
  
 	\item Otherwise, let $\varphi'' \defEq \varphi'$
@@ -489,6 +496,7 @@ Let $S'$ be the subformula of $\struct{\varphi}$ at $\varphi'$. The following ca
 
 \item $\rho$ is a n-ary inference (with $n \geq 2$): Then $\varphi'$ is of the form:
 
+\begin{small}
 \begin{prooftree}
 \AXC{$\psi'_1 $} \noLine
 \UIC{$\Gamma'_1 \seq \Delta'_1$}
@@ -497,19 +505,23 @@ Let $S'$ be the subformula of $\struct{\varphi}$ at $\varphi'$. The following ca
 		\UIC{$\Gamma'_n \seq \Delta'_n$}		\RightLabel{$\rho$}
 	\TIC{$\Gamma' \seq \Delta'$}
 \end{prooftree}
+\end{small}
 
 By induction, $\psi''_k$ is of the form:
 
+\begin{small}
 \begin{prooftree}
 \AXC{$\psi''_k $} \noLine
 \UIC{$\Gamma''_1 \seq \Delta''_1, n(S'_{\psi'_k})$}
 \end{prooftree}
+\end{small}
 
 where $S'_{\psi'_k}$ is the substruct of $S'$ corresponding to $\psi'_k$.
 
 	\begin{itemize}
 	\item $\rho$ operates on end-sequent-ancestors: Then let $\varphi''$ be:
 
+\begin{small}
 \begin{prooftree}
 \AXC{$\psi''_1 $} \noLine
 \UIC{$\Gamma''_1 \seq \Delta''_1, n(S'_{\psi'_1})$}
@@ -520,10 +532,11 @@ where $S'_{\psi'_k}$ is the substruct of $S'$ corresponding to $\psi'_k$.
 	\UIC{$\Gamma'' \seq \Delta'', n(S'_{\psi'_1}) \vee \ldots \vee n(S'_{\psi'_n})$}\RightLabel{$d_r$}
 	\UIC{$\Gamma'' \seq \Delta'', n(S')$}
 \end{prooftree}
-
+\end{small}
 
 	\item $\rho$ operates on cut-ancestors: Then let $\varphi''$ be:
 
+\begin{small}
 \begin{prooftree}
 \AXC{$\psi''_1 $} \noLine
 \UIC{$\Gamma''_1 \seq \Delta''_1, n(S'_{\psi'_1})$}
@@ -533,17 +546,19 @@ where $S'_{\psi'_k}$ is the substruct of $S'$ corresponding to $\psi'_k$.
 	\TIC{$\Gamma'' \seq \Delta'', n(S'_{\psi'_1}) \wedge \ldots \wedge n(S'_{\psi'_n})$} \RightLabel{$d_r$}
 	\UIC{$\Gamma'' \seq \Delta'', n(S')$}
 \end{prooftree}
-
+\end{small}
 
 	\end{itemize}
 
 
 \item $\rho$ is a unary inference: Then $\varphi'$ is of the form:
 
+\begin{small}
 \begin{prooftree}
 \AXC{$\psi' $} \RightLabel{$\rho$}
 \UIC{$\Gamma' \seq \Delta'$}
 \end{prooftree}
+\end{small}
 
 	\begin{itemize}
 
@@ -551,10 +566,12 @@ where $S'_{\psi'_k}$ is the substruct of $S'$ corresponding to $\psi'_k$.
 
 	\item $\rho$ operates on end-sequent-ancestors: then $\rho$ is performed on the transformed premise and thus $\varphi''$ is of the form:
 
+\begin{small}
 \begin{prooftree}
 \AXC{$\psi'' $} \RightLabel{$\rho$}
 \UIC{$\Gamma'' \seq \Delta''$}
 \end{prooftree}
+\end{small}
 
 	\end{itemize}
 
@@ -600,7 +617,27 @@ A step-by-step construction of this projection can be found in \cite{Woltzenloge
 \hfill\QED
 \end{example}
 
-ToDo: add complexity remarks about the size of projections and clause set here.
+\begin{theorem}[Size of Definitional Clause Set]
+\label{theorem:SizeOfDefinitionalClauseSets}
+There exists a positive constant $k$ such that $|\clausesetDefinitional{\varphi}| \leq k \proofsizeSymbol{\varphi}$, for any proof $\varphi$.
+\end{theorem}
+\begin{proof}
+The number of subformulas in $\struct{\varphi}$ is linearly proportional to the size of $\struct{\varphi}$, and structural clause form transformation adds three definitional clauses for each subformula. The definitional clauses have at most $k_a + 1$ literals each, where $k_a$ is the maximum arity of disjunctions and conjunctions in $\struct{\varphi}$. Therefore, $|\clausesetDefinitional{\varphi}| \leq k |\struct{\varphi}| \leq k \proofsizeSymbol{\varphi}$, for some positive $k$.
+\hfill\QED
+\end{proof}
+
+\begin{theorem}[Size of Proper and Definitional Projections]
+\label{theorem:SizeOfCEResDProjections}
+There exist positive constants $k$ and $k'$ such that, for any proof $\varphi$:
+\begin{itemize}
+\item $\proofsizeSymbol{\projectionProper{\varphi}{c}} \leq k \proofsizeSymbol{\varphi_n}$
+\item $\proofsizeSymbol{\projectionDefinitional{\varphi}{c'}} \leq k'$
+\end{itemize}
+\end{theorem}
+\begin{proof}
+Definitional projections have a size that is bounded by a constant proportional to the maximum arity of disjunctions and conjunctions. The proper projection $\projectionProper{\varphi}{c}$ is just $\varphi$ with inferences operating on cut-ancestors replaced by a bounded number of $\neg_r$, $\vee_r$, $\wedge_r$ and $d_r$ inferences.
+\hfill\QED
+\end{proof}
 
 \begin{landscape}
 \begin{definition}[$\CEResD$-normal-form]
@@ -639,6 +676,7 @@ the resulting normal form $\CEResNFD{\varphi}{\delta}$ is:
 	\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq \hC{B} \wedge \hD{A}, \hF{C}$}
 \end{prooftree}
 \end{tiny}
+\hfill\QED
 \end{example}
 
 \noindent

@@ -149,14 +149,15 @@ The formulas encapsulated by the new predicate symbol
 $D_{\hA{A} \structplus \hB{B}}$ of the $\normalizePlusTimesSD$-normal-form 
 of the struct $\struct{\varphi}$ shown
 in Example \ref{example:PlusTimesSwappeDefinitionalNormalization} are:
-$\hA{A}$ and $\hB{B}$. \hfill\QED 
+$\hA{A}$ and $\hB{B}$. 
+\hfill\QED 
 \end{example}
 
 
 \begin{definition}[Mixed Projection]
 \label{definition:DWProjectionMixed}
 Let $\varphi$ be a proof and $c$ a mixed clause in $\clausesetSwapDef{\varphi}{S}$.
-The \emph{mixed projection} $\projectionDWMixed{\varphi}{c}$ of $\varphi$ w.r.t. $c$ is constructed in two steps:
+The \emph{mixed projection} $\projectionMixed{\varphi}{c}$ of $\varphi$ w.r.t. $c$ is constructed in two steps:
 \begin{enumerate}
 \item Apply the usual algorithm from Definition \ref{definition:OProjection} to $\varphi$, letting $A$ be the set of axioms that contain formulas that contribute to $c$ or that are encapsulated by a new predicate symbol in $c$.
 %
@@ -168,7 +169,7 @@ The \emph{mixed projection} $\projectionDWMixed{\varphi}{c}$ of $\varphi$ w.r.t.
 \begin{example}
 \label{example:DWProjectionMixed}
 Let $\varphi$ be the proof from previous examples. Noting that the axiom sequent $\hE{C} \seq \hE{C}$ contains a formula that directly contributes to $\seq D_{\hA{A} \structplus \hB{B}} , \hE{C}$, while the axiom sequents $\hA{A} \seq \hA{A}$ and $\hB{B} \seq \hB{B}$ contain formulas that are encapsulated by $D_{\hA{A} \structplus \hB{B}}$, the first step in the construction of the mixed 
-projection $\projectionDWMixed{\varphi}{\seq D_{\hA{A} \structplus \hB{B}} , \hE{C}}$generates the following proof:
+projection $\projectionMixed{\varphi}{\seq D_{\hA{A} \structplus \hB{B}} , \hE{C}}$generates the following proof:
 %
 \begin{prooftree}
 \AXC{$\hA{A} \seq \hA{A} $}
@@ -195,7 +196,7 @@ The second step introduces definition inferences to reencapsulate the formulas:
 \end{example}
 
 \begin{definition}[$\CEResDS$-normal-form]
-$\CEResNFDS{\varphi}{\delta}$ denotes the \\ \emph{$\CEResDS$-normal-form} of the proof $\varphi$ w.r.t. the resolution refutation $\delta$ of any definitional swapped clause set $\clausesetSwapDef{\varphi}{S}$. It is obtained in the same way as a $\CERes$-normal-form, but using a definitional swapped clause set $\clausesetSwapDef{\varphi}{S}$ instead of $\clauseset{\varphi}$ and using definitional and mixed projections when necessary.
+$\CEResNFDS{\varphi}{\delta}$ denotes the \emph{$\CEResDS$ normal-form} of the proof $\varphi$ w.r.t. the resolution refutation $\delta$ of any definitional swapped clause set $\clausesetSwapDef{\varphi}{S}$. It is obtained in the same way as a $\CERes$-normal-form, but using a definitional swapped clause set $\clausesetSwapDef{\varphi}{S}$ instead of $\clauseset{\varphi}$ and using definitional and mixed projections when necessary.
 \end{definition}
 
 \begin{example}
@@ -220,7 +221,7 @@ projections shown in Example \ref{example:DProjectionDefinitional},
 $\CEResNFDS{\varphi}{\delta}$ is:
 \begin{tiny}
 \begin{prooftree}
-	\AXC{$\projectionDWMixed{\varphi}{\seq D_{\hA{A} \structplus \hB{B}} , \hE{C}}$}
+	\AXC{$\projectionMixed{\varphi}{\seq D_{\hA{A} \structplus \hB{B}} , \hE{C}}$}
                		\AXC{$\hF{C} \seq \hF{C}$} \RightLabel{$cut$}
                	\BIC{$(\hA{A} \wedge \hB{B}) \vee \hE{C} \seq D_{\hA{A} \structplus \hB{B}}, \hF{C}$}
 	            				\AXC{$\hA{A} \seq \hA{A}$} \RightLabel{$w_l$}
