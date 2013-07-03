@@ -5,25 +5,33 @@ include('Quantified_S5.ax').
 
 %------------------------------------------------------------------------------
 
-thf(god_tp,type,(god: mu > $i > $o)).
-thf(pos_prop_tp,type,(pos_prop: (mu > $i > $o) > $i > $o )).
+thf(god_tp,type,( god : mu > $i > $o )).
+thf(positive_tp,type,( positive : (mu > $i > $o) > $i > $o )).
 
-   
+%----Definition of god
+thf(god_def,definition, ( god =
+    ( ^ [X: mu] :
+      ( mforall_indset
+         @ ( ^ [P: mu > $i > $o] :
+             ( mimplies @
+               ( positive @ P ) @
+               ( P @ X ) ) ) ) ) ) ).
+    
 %----Assuming Theorem 1 (proved before) 
 thf(thm1,axiom,
     ( mvalid
     @ ( mforall_indset
-          @ ^ [Phi: mu > $i > $o] :
-              ( mimplies @ ( pos_prop @ Phi )
+          @ ^ [P: mu > $i > $o] :
+              ( mimplies @ ( positive @ P )
               @ ( mdia_s5
                 @ ( mexists_ind
                   @ ^ [X: mu] :
-                      ( Phi @ X ) ) ) ) ) ) ).
+                      ( P @ X ) ) ) ) ) ) ).
 
 %----Axiom 3
-thf(ax3,axiom,(mvalid @ (pos_prop @ god))).
+thf(ax3,axiom,(mvalid @ (positive @ god))).
 
-
+% LEO-II and Satallax can prove this very quickly
 %----Theorem 2
 thf(thm2,conjecture,
     (mvalid

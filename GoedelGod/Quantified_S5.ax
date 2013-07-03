@@ -32,6 +32,14 @@ thf(mbox,definition,
           ( ~ ( R @ W @ V )
           | ( Phi @ V ) ) ) )).
 
+%----Equality
+thf(meq_ind_type,type,(
+    meq_ind: mu > mu > $i > $o )).
+
+thf(meq_ind,definition,
+    ( meq_ind
+    = ( ^ [X: mu,Y: mu,W: $i] : ( X = Y ) ) )).
+
 %----Modal quantifier (as constant Pi) for individuals and propositions 
 
 thf(mforall_ind_type,type,(

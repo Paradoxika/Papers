@@ -6,42 +6,42 @@ include('Quantified_S5.ax').
 %------------------------------------------------------------------------------
 
 % thf(god_tp,type,(god: mu > $i > $o)).
-thf(pos_prop_tp,type,(pos_prop: (mu > $i > $o) > $i > $o )).
+thf(positive_tp,type,(positive: (mu > $i > $o) > $i > $o )).
    
 %----Axiom 1
 thf(ax1,axiom,
     ( mvalid @
           ( mforall_indset
-          @ ^ [Phi: mu > $i > $o] :
+          @ ^ [P: mu > $i > $o] :
               ( mforall_indset
-              @ ^ [Psi: mu > $i > $o] :
+              @ ^ [Q: mu > $i > $o] :
                   ( mimplies
-                  @ ( mand @ ( pos_prop @ Phi )
+                  @ ( mand @ ( positive @ P )
                     @ ( mbox_s5
                       @ ( mforall_ind
                         @ ^ [X: mu] :
-                            ( mimplies @ ( Phi @ X ) @ ( Psi @ X ) ) ) ) )
-                  @ ( pos_prop @ Psi ) ) ) ) ) ).
+                            ( mimplies @ ( P @ X ) @ ( Q @ X ) ) ) ) )
+                  @ ( positive @ Q ) ) ) ) ) ).
 
 %----Axiom 2
 thf(ax2,axiom,
     ( mvalid @
           ( mforall_indset
-          @ ^ [Phi: mu > $i > $o] :
+          @ ^ [P: mu > $i > $o] :
               ( mequiv
-              @ ( pos_prop
+              @ ( positive
                 @ ^ [W: mu] :
-                    ( mnot @ ( Phi @ W ) ) )
-              @ ( mnot @ ( pos_prop @ Phi ) ) ) ) ) ).
+                    ( mnot @ ( P @ W ) ) )
+              @ ( mnot @ ( positive @ P ) ) ) ) ) ).
 
-   
+% LEO-II and Satallax can quickly prove this
 %----Conjecture 
 thf(thm,conjecture,
     ( mvalid @
           ( mforall_indset
-          @ ^ [Phi: mu > $i > $o] :
-              ( mimplies @ ( pos_prop @ Phi )
+          @ ^ [P: mu > $i > $o] :
+              ( mimplies @ ( positive @ P )
               @ ( mdia_s5
                 @ ( mexists_ind
                   @ ^ [X: mu] :
-                      ( Phi @ X ) ) ) ) ) ) ).
+                      ( P @ X ) ) ) ) ) ) ).
