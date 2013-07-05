@@ -34,6 +34,29 @@ thf(thm1,axiom,
               @ ^ [X: mu] :
                   ( P @ X ) ) ) ) ) )).
 
+%----Axiom 2
+thf(ax2,axiom,
+    ( mvalid @
+          ( mforall_indset
+          @ ^ [P: mu > $i > $o] :
+              ( mequiv
+              @ ( positive
+                @ ^ [W: mu] :
+                    ( mnot @ ( P @ W ) ) )
+              @ ( mnot @ ( positive @ P ) ) ) ) ) ).
+
+
+%----Axiom 2 boxed
+thf(ax2b,axiom,
+    ( mvalid @ ( mbox_s5 @ (
+          ( mforall_indset
+          @ ^ [P: mu > $i > $o] :
+              ( mequiv
+              @ ( positive
+                @ ^ [W: mu] :
+                    ( mnot @ ( P @ W ) ) )
+              @ ( mnot @ ( positive @ P ) ) ) ) ) ) ) ).              
+
 %----Axiom 3
 thf(ax3,axiom,
     ( mvalid @ ( positive @ god ) )).
@@ -64,6 +87,15 @@ thf(ax4,axiom,
     @ ( mforall_indset
       @ ^ [P: mu > $i > $o] :
           ( mimplies @ ( positive @ P ) @ ( mbox_s5 @ ( positive @ P ) ) ) ) )).
+
+
+%----Axiom 4 boxed
+thf(ax4b,axiom,
+    ( mvalid @ ( mbox_s5
+    @ ( mforall_indset
+      @ ^ [P: mu > $i > $o] :
+          ( mimplies @ ( positive @ P ) @ ( mbox_s5 @ ( positive @ P ) ) ) ) ) ) ).
+
 
 %----Theorem 3
 thf(thm3,conjecture,
