@@ -1,4 +1,27 @@
 %--------------------------------------------------------------------------
+% This file contains an semantic embedding of quantified modal logic S5 into
+% classical higher-order logic (Church's simple type theory).-
+% 
+% This embedding has been worked out by Christoph Benzmueller as an adaptation
+% of the work presented in the following article: 
+%
+%   Quantified Multimodal Logics in Simple Type Theory (Christoph Benzmüller, 
+%   Lawrence Paulson), In Logica Universalis (Special Issue on Multimodal 
+%   Logics), volume 7, number 1, pp. 7-20, 2013. 
+%
+% New is a quantifier supporting quantification over sets of individuals. 
+% Embeddings of such higher quantifiers have already been presented in the 
+% following paper:
+%
+%   Exploring Properties of Normal Multimodal Logics in Simple Type Theory 
+%   with LEO-II (Christoph Benzmüller, Lawrence Paulson), Chapter in Reasoning 
+%   in Simple Type Theory --- Festschrift in Honor of Peter B. Andrews on His 
+%   70th Birthday (Christoph Benzmüller, Chad Brown, Jörg Siekmann, Richard 
+%   Statman, eds.), College Publications, Studies in Logic, Mathematical Logic 
+%   and Foundations, pp. 386-406, 2008.
+%
+% Christoph Benzmueller, July 2013
+%--------------------------------------------------------------------------
 %----Declaration of additional base type mu (for individuals)
 %----type $i stands for possible worlds
 thf(mu_type,type,(
@@ -32,14 +55,6 @@ thf(mbox,definition,
           ( ~ ( R @ W @ V )
           | ( Phi @ V ) ) ) )).
 
-%----Equality
-thf(meq_ind_type,type,(
-    meq_ind: mu > mu > $i > $o )).
-
-thf(meq_ind,definition,
-    ( meq_ind
-    = ( ^ [X: mu,Y: mu,W: $i] : ( X = Y ) ) )).
-
 %----Modal quantifier (as constant Pi) for individuals and propositions 
 
 thf(mforall_ind_type,type,(
@@ -51,15 +66,6 @@ thf(mforall_ind,definition,
         ! [X: mu] :
           ( Phi @ X @ W ) ) )).
 
-thf(mforall_prop_type,type,(
-    mforall_prop: ( ( $i > $o ) > $i > $o ) > $i > $o )).
-
-thf(mforall_prop,definition,
-    ( mforall_prop
-    = ( ^ [Phi: ( $i > $o ) > $i > $o,W: $i] :
-        ! [P: $i > $o] :
-          ( Phi @ P @ W ) ) )).
-
 %----Modal quantifier for sets of individuals
 %----this is new!
 
@@ -70,18 +76,6 @@ thf(mforall_indset,definition,
     ( mforall_indset
     = ( ^ [Phi: ( mu > $i > $o ) > $i > $o,W: $i] :
         ! [X: mu > $i > $o] :
-          ( Phi @ X @ W ) ) )).
-
-%----Modal quantifier for sets of sets of individuals 
-%----this is new!
-
-thf(mforall_indsetset_type,type,(
-    mforall_indsetset: ( ( ( mu > $i > $o ) > $i > $o ) > $i > $o ) > $i > $o )).
-
-thf(mforall_indsetset,definition,
-    ( mforall_indsetset
-    = ( ^ [Phi: ( ( mu > $i > $o ) > $i > $o ) > $i > $o,W: $i] :
-        ! [X: ( mu > $i > $o ) > $i > $o] :
           ( Phi @ X @ W ) ) )).
 
 %----Further modal operators
@@ -157,17 +151,6 @@ thf(mexists_ind,definition,
           @ ( mforall_ind
             @ ^ [X: mu] :
                 ( mnot @ ( Phi @ X ) ) ) ) ) )).
-
-thf(mexists_prop_type,type,(
-    mexists_prop: ( ( $i > $o ) > $i > $o ) > $i > $o )).
-
-thf(mexists_prop,definition,
-    ( mexists_prop
-    = ( ^ [Phi: ( $i > $o ) > $i > $o] :
-          ( mnot
-          @ ( mforall_prop
-            @ ^ [P: $i > $o] :
-                ( mnot @ ( Phi @ P ) ) ) ) ) )).
 
 %----Definition of validity
 thf(mvalid_type,type,(
