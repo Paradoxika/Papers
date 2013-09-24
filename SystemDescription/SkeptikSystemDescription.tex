@@ -1,0 +1,142 @@
+\documentclass{llncs}
+
+\usepackage{xcolor}
+\usepackage{enumitem,amsmath,amssymb}
+\usepackage{breakurl}    % used for \url and \burl
+\usepackage[linesnumbered,boxed,noline,noend]{algorithm2e}
+\def\defaultHypSeparation{\hskip.1in}
+
+\usepackage{tikz}
+\usepackage{subfig}
+\usepackage{array,booktabs,multirow}
+\usepackage{placeins}
+
+\usepackage{logictools}
+\usepackage{prooftheory}
+\usepackage{comment}
+\usepackage{mathenvironments}
+\usepackage{drawproof}
+
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.75}
+
+\title{The \skeptik Proof Compression System}
+
+\author{
+  Joseph Boudou\inst{1}
+  \thanks{Supported by the Google Summer of Code 2012 program.}
+  \and 
+  Andreas Fellner\inst{2}
+  \thanks{Supported by the Google Summer of Code 2013 program.}
+  \and 
+  Bruno Woltzenlogel Paleo\inst{3}
+  \thanks{Supported by the Austrian Science Fund, project P24300.}
+}
+
+\authorrunning{J.\~Boudou \and A. Fellner \and B.\~Woltzenlogel Paleo}
+
+\institute{
+  Universit\'e Paul Sabatier, France \\
+  \email{joseph.boudou@matabio.net}
+  \and 
+  Free University of Bolzano, Italy \\
+  \email{fellner.a@gmail.com}
+  \and 
+  Vienna University of Technology, Austria \\
+  \email{bruno@logic.at}
+}
+
+
+
+
+\begin{document}
+
+\maketitle
+
+
+\begin{abstract}
+This paper describes \skeptik: a system for compressing and improving proofs obtained by automated reasoning tools. 
+\end{abstract}
+
+\setcounter{footnote}{0}
+
+
+\section{Introduction}
+
+
+
+\section{User Interface}
+
+
+
+\section{Supported Proof Formats}
+
+\subsection{TraceCheck Format}
+
+\subsection{The \veriT Proof Format}
+
+\subsection{The \skeptik Proof Format}
+
+
+
+\section{Available Proof Compression Algorithms}
+
+
+\subsection{RPI}
+
+\subsection{LU}
+
+\subsection{LUniv}
+
+\subsection{RedRec}
+
+\subsection{Split}
+
+\subsection{TautologyElimination}
+
+\subsection{StructuralHashing}
+
+\subsection{DAGification}
+
+\subsection{Subsumption}
+
+\subsection{Pebbling}
+
+
+
+
+
+\section{Implementation Details}
+
+ToDo: statistics about the code
+
+\subsection{Organization of the Code}
+
+ToDo: brief description of the package structure
+
+
+\subsection{Data Structures for Formulas}
+
+
+\subsection{Data Structures for Proofs}
+
+
+\subsection{}
+
+
+
+\section{Conclusions and Future Work}
+
+ToDo: limitation: memory consumption in Scala
+underlying symbols are strings
+
+
+
+\bibliographystyle{splncs}
+\bibliography{biblio}
+
+
+\end{document}
+
+% vim: tw=100
