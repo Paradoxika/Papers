@@ -15,39 +15,29 @@
 \newcommand{\all}{\forall}
 \newcommand{\ex}{\exists}
 \newcommand{\seq}{\vdash}
+\newcommand{\subst}[2]{\{#1/#2\}}
 
 % Names of Calculi
 \newcommand{\LK}{\mathbf{LK}}
 
 % Proof Sizes
-%\newcommand{\prooflength}[1]{\mathit{length}(#1)}
 \newcommand{\proofsizeSymbol}[1]{|#1|}
 
 
 % CERes Methods
-\newcommand{\CERes}{\mathrm{CERes}}
-\newcommand{\CEResSwap}{\mathrm{SCERes}}
-\newcommand{\CEResD}{\mathrm{DCERes}}
-\newcommand{\CEResDS}{\mathrm{DSCERes}}
+\newcommand{\CERes}{\texttt{CERes}}
+\newcommand{\CEResSwap}{\texttt{SCERes}}
+\newcommand{\CEResD}{\texttt{DCERes}}
+\newcommand{\CEResDS}{\texttt{DSCERes}}
 
 
 % CERes Normalization
 \newcommand{\CEResNF}[2]{\mathit{CERes}(#1,#2)}
 \newcommand{\CEResNFSwap}[2]{\mathit{SCERes}(#1,#2)}
-\newcommand{\CEResNFD}[2]{\mathrm{DCERes}(#1,#2)}
-\newcommand{\CEResNFDS}[2]{\mathrm{DSCERes}(#1,#2)}
+\newcommand{\CEResNFD}[2]{\mathit{DCERes}(#1,#2)}
+\newcommand{\CEResNFDS}[2]{\mathit{DSCERes}(#1,#2)}
 
 
-\newcommand{\CEResNFDSwapDSwap}[2]{\mathrm{CERes}^{DW}_{DW}(#1,#2)}
-\newcommand{\CEResNFComplex}[2]{\mathrm{DCERes}(#1,#2)}
-\newcommand{\CEResNFComplexSwapO}[2]{\mathrm{CCERes}^O_W(#1,#2)}
-\newcommand{\CEResQuant}{\mathrm{QCERes}}
-\newcommand{\CEResNFQuant}[2]{\mathrm{QCERes}(#1,#2)}
-
-
-
-\newcommand{\occCutPert}[1]{\Omega_{CP}(#1)}   % Cut-pertinent occurrences of a proof. Argument: proof.
-\newcommand{\occCutImpert}[1]{\Omega_{CI}(#1)}   % Cut-impertinent occurrences of a proof. Argument: proof.
 \newcommand{\occInference}[2]{\Omega_{#2}(#1)}
 
 \newcommand{\structdual}{\neg}
@@ -63,84 +53,43 @@
 \newcommand{\dependentQ}{\prec_Q}
 \newcommand{\dependentI}{\prec_I}
 \newcommand{\swap}{\gg}
-\newcommand{\swapI}{\swap_I}
-\newcommand{\swapID}{\swap_{ID}}
-\newcommand{\swapIDC}{\swap_{IDC}}
-\newcommand{\swapC}{\swap_C}
-\newcommand{\swapWI}{\swap_{WI}}
-\newcommand{\swapWD}{\swap_{WD}}
-\newcommand{\swapW}{\swap_{W}}
+\newcommand{\swapX}[1]{\swap_{\mathsmaller{#1}}}
+\newcommand{\swapI}{\swapX{I}}
+\newcommand{\swapID}{\swapX{ID}}
+\newcommand{\swapIDC}{\swapX{DC}}
+\newcommand{\swapC}{\swapX{C}}
+\newcommand{\swapWI}{\swapX{WI}}
+\newcommand{\swapWD}{\swapX{WD}}
+\newcommand{\swapW}{\swapX{W}}
 
 \newcommand{\struct}[1]{\mathcal{S}_{#1}}
+\newcommand{\pertstruct}[2]{\mathcal{S}_{#1}^{#2}}
 
 \usepackage{relsize}
 
 \newcommand{\normalizePlusTimes}{\leadsto}
-\newcommand{\normalizePlusTimesS}{\stackrel{\star}{\leadsto}}
+\newcommand{\normalizePlusTimesS}{\stackrel{\mathsmaller{S}}{\leadsto}}
 \newcommand{\normalizePlusTimesD}{\stackrel{\mathsmaller{D}}{\leadsto}}
 \newcommand{\normalizePlusTimesSD}{\stackrel{\mathsmaller{DS}}{\leadsto}}
 \newcommand{\normalizePlusTimesSDs}{\stackrel{\mathsmaller{S'}}{\leadsto}}
 \newcommand{\normalizePlusTimesSDd}{\stackrel{\mathsmaller{D'}}{\leadsto}}
 
 
-
-\newcommand{\clausify}[1]{\textrm{cl}(#1)}
 \newcommand{\clauseset}[1]{\mathcal{C}_{#1}}
-\newcommand{\clausesetSwap}[2]{\mathcal{C}^{\star}_{#1|#2}}
-\newcommand{\clausesetSwapUnique}[1]{\mathcal{C}^{\star}_{#1}}
+\newcommand{\clausesetSwap}[2]{\mathcal{C}^{\mathsmaller{S}}_{#1|#2}}
+\newcommand{\clausesetSwapUnique}[1]{\mathcal{C}^{\mathsmaller{S}}_{#1}}
 \newcommand{\clausesetDefinitional}[1]{\mathcal{C}^{\mathsmaller{D}}_{#1}}
-\newcommand{\clausesetSwapDef}[2]{\mathcal{C}^{D\star}_{#1|#2}}
-\newcommand{\clausesetSwapDefUnique}[1]{\mathcal{C}^{D\star}_{#1}}
+\newcommand{\clausesetSwapDef}[2]{\mathcal{C}^{\mathsmaller{DS}}_{#1|#2}}
+\newcommand{\clausesetSwapDefUnique}[1]{\mathcal{C}^{\mathsmaller{DS}}_{#1}}
 
 
 \newcommand{\projection}[2]{\lfloor #1 \rfloor_{#2} }
 \newcommand{\projectionDefinitional}[2]{\lfloor #1 \rfloor_{#2}^{\mathsmaller{D}} }
 \newcommand{\projectionProper}[2]{\lfloor #1 \rfloor_{#2}^{\mathsmaller{P}} }
+\newcommand{\projectionMixed}[2]{\lfloor #1 \rfloor_{#2}^{\mathsmaller{M}}}
 
 
-\newcommand{\projectionDWDefinitional}[2]{\lfloor #1 \rfloor_{#2}^{DW_D}}
-\newcommand{\projectionDWPure}[2]{\lfloor #1 \rfloor_{#2}^{DW_P}}
-\newcommand{\projectionDWMixed}[2]{\lfloor #1 \rfloor_{#2}^{DW_M}}
 
-\newcommand{\replacePert}[2]{Y_{\structplus}^{#2}(#1)}
-
-\newcommand{\axlink}{\multimapdotboth} % Axiom-linkage Relation
-
-\newcommand{\partialProof}[2]{\llparenthesis#1\rrparenthesis_{#2}}
-\newcommand{\WFix}[1]{W_{\mathrm{fix}}(#1)}
-
-
-% CERes System
-\newcommand{\CEResSystem}{\textbf{CERes}}
-\newcommand{\ProofTool}{\textbf{ProofTool}}
-\newcommand{\HLK}{\textbf{HLK}}
-
-% Reductive Cut-Elimination
-\newcommand{\cutred}{\rhd}
-\newcommand{\cutredProp}{\cutred_p}
-\newcommand{\cutredPropAnd}{\cutred_{p_{\wedge}}}
-\newcommand{\cutredPropOr}{\cutred_{p_{\vee}}}
-\newcommand{\cutredPropImp}{\cutred_{p_{\imp}}}
-\newcommand{\cutredPropNeg}{\cutred_{p_{\neg}}}
-\newcommand{\cutredQuant}{\cutred_q}
-\newcommand{\cutredQuantAll}{\cutred_{q_{\all}}}
-\newcommand{\cutredQuantEx}{\cutred_{q_{\ex}}}
-\newcommand{\cutredDef}{\cutred_{d}}
-\newcommand{\cutredNonAxiom}{\cutred_{\overline{a}}}
-\newcommand{\cutredNonAxiomWeakContr}{\cutred_{\tilde{a}}}
-\newcommand{\cutredAxiom}{\cutred_a}
-\newcommand{\cutredWeak}{\cutred_w}
-\newcommand{\cutredWeakNonAtomic}{\cutred_{w_{\scriptscriptstyle{\mathit{non-atomic}}}}}
-\newcommand{\cutredContr}{\cutred_c}
-\newcommand{\cutredContrNonAtomic}{\cutred_{c_{\scriptscriptstyle{\mathit{non-atomic}}}}}
-\newcommand{\cutredRank}{\cutred_r}
-\newcommand{\cutredRankNonAtomic}{\cutred_{r_{\scriptscriptstyle{\mathit{non-atomic}}}}}
-\newcommand{\cutredRankUnary}{\cutred_{r_1}}
-\newcommand{\cutredRankBinary}{\cutred_{r_2}}
-
-
-% Various Functions
-\newcommand{\argmin}[1]{\underset{#1}{\operatorname{argmin}}\;}
 
 
 % Colors

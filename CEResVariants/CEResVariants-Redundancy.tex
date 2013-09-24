@@ -10,7 +10,7 @@ In the worst case, by Theorem \ref{theorem:SizeOfCEResNormalForms}, this redunda
 
 \begin{theorem}[Size of Characteristic Clause Set]
 \label{theorem:SizeOfClauseSets}
-There exist positive rational constants $k$ and $k'$ and a sequence of proofs $\varphi_1, \varphi_2, \ldots, \varphi_n, \ldots$ such that $\proofsizeSymbol{\varphi_n} \leq k 4^n$ and $|\clauseset{\varphi_n}| \geq k' 2^{2^n}$.
+There exist positive constants $k$ and $k'$ and a sequence of proofs $\varphi_1, \varphi_2, \ldots, \varphi_n, \ldots$ such that $\proofsizeSymbol{\varphi_n} \leq k 4^n$ and $|\clauseset{\varphi_n}| \geq k' 2^{2^n}$.
 \end{theorem}
 \begin{proof}
 Let $\psi_1(s)$ be the following proof:
@@ -94,7 +94,7 @@ S_{\psi_j(s)}^r = \left\{ \begin{array}{ll}
 $$
 
 \noindent
-Let $f_l(n)$ be the number of clauses in $\clauseset{\varphi_n}$ whose stemming from the left branch of the cut. Analogously, let $f_r(n)$ be the number of clauses stemming from the right branch of the cut. Clearly, $|\clauseset{\varphi_n}| = f_l(n) + f_r(n)$. By analyzing the structure of the subformulas of $\struct{\varphi_n}$, it is possible to see that:
+Let $f_l(n)$ be the number of clauses in $\clauseset{\varphi_n}$ stemming from the left branch of the cut. Analogously, let $f_r(n)$ be the number of clauses stemming from the right branch of the cut. Clearly, $|\clauseset{\varphi_n}| = f_l(n) + f_r(n)$. By analyzing the structure of the subformulas of $\struct{\varphi_n}$, it is possible to see that:
 $$
 f_l(n) = \left\{ \begin{array}{ll}
 4 & \textrm{, if } n=1 \\
@@ -119,7 +119,7 @@ $$
 
 \begin{theorem}[Size of $\CERes$-Normal-Form]
 \label{theorem:SizeOfCEResNormalForms}
-There exist positive rational constants $k$ and $k''$ and a sequence of proofs $\varphi_1, \varphi_2, \ldots, \varphi_n, \ldots$ such that:
+There exist positive constants $k$ and $k''$ and a sequence of proofs $\varphi_1, \varphi_2, \ldots, \varphi_n, \ldots$ such that:
 \begin{itemize}
 \item $\proofsizeSymbol{\varphi_n} \leq k 4^n$.
 \item $\proofsizeSymbol{\CEResNF{\varphi_n}{\delta_n}} \geq k'' 2^{2^n}$, for any refutation $\delta_n$.

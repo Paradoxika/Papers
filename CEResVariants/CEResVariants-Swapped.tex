@@ -5,7 +5,7 @@ Redundancy originates in the distribution of disjunction over conjunction during
 
 \begin{example}
 \label{example:InferencePermutation}
-Permutation inferences operating on cut-ancestors downward transforms proof $\varphi$ from Example \ref{example:CutPertinentStruct} into the proof $\psi$ shown below:
+Downward permutation of all inferences operating on cut ancestors transforms proof $\varphi$ from Example \ref{example:CutPertinentStruct} into the proof $\psi$ shown below:
 \begin{small}
 \begin{prooftree}
 			\AXC{$\psi'$} \noLine
@@ -45,8 +45,6 @@ $$
 \struct{\psi} 
 \equiv 
 (((A\structtimes C) \structplus (B\structtimes C)) \structplus \structdual{C}) \structplus (\structdual{B} \structtimes \structdual{A})
-%\equiv 
-%(A\structtimes C) \structplus (B\structtimes C) \structplus \structdual{C} \structplus (\structdual{B} \structtimes \structdual{A})
 $$
 
 \noindent
@@ -62,7 +60,7 @@ Thanks to inference permutations, fewer duplications occur in $\clauseset{\psi}$
 
 
 \noindent
-However, local proof rewriting such as inference permutation inefficient. It is typical of reductive cut-elimination methods and it is something that cut-elimination by resolution strives to avoid and improve. Therefore, a method for transforming the characteristic formula into clause form that takes the possibility of inference permutation into account without actually having to perform inference permutations is desirable. Such a method ($\normalizePlusTimesS$) is defined in this section, and it is shown in Lemma \ref{lemma:SwapNormalizeCorrespondence} that every rewriting of the characteristic formula according to $\normalizePlusTimesS$ corresponds to a sequence of inference permutation steps according to the rules in Appendix \ref{appendix:InferencePermutation}. Thus, while $\normalizePlusTimes$ does full distribution of disjunction over conjunction, as if inferences operating on cut-ancestors were always indirectly dependent on the inferences operating on end-sequent ancestors above them, $\normalizePlusTimesS$ does partial distribution when the corresponding inferences are independent and permutable without the need for duplications. For the partial distribution to be possible, the characteristic formula must contain extra information to allow the retrieval of the dependencies between the branching inferences.
+However, local proof rewriting such as inference permutation are inefficient. It is typical of reductive cut-elimination methods and it is something that cut-elimination by resolution strives to avoid and improve. Therefore, a method for transforming the characteristic formula into clause form that takes the possibility of inference permutation into account without actually having to perform inference permutations is desirable. Such a method ($\normalizePlusTimesS$) is defined in this section, and it is shown in Lemma \ref{lemma:SwapNormalizeCorrespondence} that every rewriting of the characteristic formula according to $\normalizePlusTimesS$ corresponds to a sequence of inference permutation steps according to the rules in Appendix \ref{appendix:InferencePermutation}. Thus, while $\normalizePlusTimes$ does full distribution of disjunction over conjunction, as if inferences operating on cut-ancestors were always indirectly dependent on the inferences operating on end-sequent ancestors above them, $\normalizePlusTimesS$ does partial distribution when the corresponding inferences are independent and permutable without the need for duplications. For the partial distribution to be possible, the characteristic formula must contain extra information to allow the retrieval of the dependencies between the branching inferences.
 
 
 
@@ -113,7 +111,7 @@ And below, the formulas belonging to $\occInference{\varphi}{cut_1}$ have been h
 								\BIC{$C \seq C$} \RightLabel{$\vee_l$}
 					\BIC{$(\hB{A} \wedge \hB{B}) \vee C \seq \hB{B} \wedge \hB{A}, C $} 
 \end{prooftree}
-\hfill\QED
+%\hfill\QED
 \end{example}
 
 
@@ -125,18 +123,10 @@ And below, the formulas belonging to $\occInference{\varphi}{cut_1}$ have been h
 \label{definition:NormalizationPlusTimesSwap}
 \index{Struct Normalization!Swapped}
 %\newcommand{\hF}[1]{{\color{brickred} #1}}
-In the rewriting rules below, let $\rho$ be the inference in $\varphi$ corresponding to $\hF{\structtimes_{\rho}}$. For the rewriting rules to be applicable
-%\footnote{
-%
-%Note that $m$ can be equal to zero, in which case the first rewriting rule simply degenerates to:
-%$$
-%\hF{S} \hF{\structtimes_{\rho}} (S_1 \structplus \ldots \structplus S_n) \normalizePlusTimesS  S_1 \structplus \ldots \structplus S_n 
-%$$
-%
-%}
-, $\hF{S_{n+1}}, \ldots, \hF{S_{n+m}}$ and $\hF{S}$ must contain at least one formula from $\occInference{\varphi}{\rho}$ each (i.e. there must be an atomic subformula $\hF{A}$ of $\hF{S_{n+k}}$ such that $\hF{A} \in \occInference{\varphi}{\rho}$), and $S_1, \ldots, S_n$ and $S'$ and $S''$ should not contain any formula from $\occInference{\varphi}{\rho}$. Moreover, an innermost rewriting strategy is enforced.
+In the rewriting rules below, let $\rho$ be the inference in $\varphi$ corresponding to $\hF{\structtimes_{\rho}}$. For the rewriting rules to be applicable, 
+$\hF{S_{n+1}}, \ldots, \hF{S_{n+m}}$ and $\hF{S}$ must contain at least one formula from $\occInference{\varphi}{\rho}$ each (i.e. there must be an atomic subformula $\hF{A}$ of $\hF{S_{n+k}}$ such that $\hF{A} \in \occInference{\varphi}{\rho}$), and $S_1, \ldots, S_n$ and $S'$ and $S''$ should not contain any formula from $\occInference{\varphi}{\rho}$. Moreover, an innermost rewriting strategy is enforced.
 $$
-\hF{S} \hF{\structtimes_{\rho}} (S_1 \structplus \ldots \structplus S_n \structplus \hF{S_{n+1}} \structplus \ldots \structplus \hF{S_{n+m}}) \normalizePlusTimesS  S_1 \structplus \ldots \structplus S_n \structplus (\hF{S} \hF{\structtimes_{\rho}} \hF{S_{n+1}}) \structplus \ldots \structplus (\hF{S} \hF{\structtimes_{\rho}} \hF{S_{n+m}}) 
+\hF{S} \hF{\structtimes_{\rho}} (S_1 \structplus \ldots \structplus S_n \structplus \hF{S_{n+1}} \structplus \ldots \structplus \hF{S_{n+m}}) \normalizePlusTimesS  S_1 \structplus \ldots \structplus S_n \structplus (\hF{S} \hF{\structtimes_{\rho}} \hF{S_{n+1}}) \structplus \ldots \structplus (\hF{S} \hF{\structtimes_{\rho}} \hF{S_{n+m}})
 $$
 \begin{multicols}{3}{
 $$
@@ -154,8 +144,15 @@ $$
 
 \end{definition}
 
+\begin{definition}[Degenerate Inferences]
+An inference $\rho$ in a proof $\varphi$ is \emph{degenerate} when all its 
+auxiliary formulas are descendants of main formulas of 
+weakening inferences. When only some auxiliary (sub)formulas of $\rho$ are descendants of main formulas of weakening inferences, $\rho$ is \emph{partially degenerate}.
+\end{definition}
+
+
 \begin{remark}
-The last three rules handle connectives that correspond to (partially) \emph{degenerate inferences}, whose auxiliary formulas are introduced by weakening. These rules are related to downward permutation of weakening inferences, as shown in Lemma \ref{lemma:SwapNormalizeCorrespondence}. Because of the last two rules, $\normalizePlusTimesS$ is not confluent.
+The last three rules in Definition \ref{definition:NormalizationPlusTimesSwap} handle connectives that correspond to (partially) \emph{degenerate inferences}, whose auxiliary formulas are introduced by weakening. These rules are related to downward permutation of weakening inferences, as shown in Lemma \ref{lemma:SwapNormalizeCorrespondence}. Because of the last two rules, $\normalizePlusTimesS$ is not confluent.
 \end{remark}
 
 
@@ -175,7 +172,7 @@ Swapped clause sets are very similar to \emph{profiles}, which have been defined
 
 
 \begin{definition}[$\CEResSwap$-normal-form]
-$\CEResNFSwap{\varphi}{\delta}$ denotes the \emph{$\CEResSwap$-normal-form} of the proof $\varphi$ w.r.t. the resolution refutation $\delta$ of any swapped clause set $\clausesetSwap{\varphi}{S}$. It is obtained in the same way as a $\CERes$-normal-form, but using a swapped clause set $\clausesetSwap{\varphi}{S}$ instead of the clause set $\clauseset{\varphi}$.
+$\CEResNFSwap{\varphi}{\delta}$ denotes \emph{$\CEResSwap$ normal form} of the proof $\varphi$ w.r.t. the resolution refutation $\delta$ of any swapped clause set $\clausesetSwap{\varphi}{S}$. It is obtained in the same way as a $\CERes$-normal-form, but using a swapped clause set $\clausesetSwap{\varphi}{S}$ instead of the clause set $\clauseset{\varphi}$.
 \end{definition}
 
 
@@ -325,6 +322,7 @@ $$
 
 \noindent
 It is interesting to note that $\clausesetSwap{\varphi}{S_1} = \clausesetSwap{\varphi}{S_2}$ (because they are sets). This is not a coincidence. It always occurs when the non-confluence is due to non-degenerated applications of the first rewriting rule. A refutation $\delta$ of $\clausesetSwapUnique{\varphi}$ is shown below:
+\begin{small}
 \begin{prooftree}
 \AXC{$\seq \hA{A}, \hE{C}$}
 			\AXC{$\seq \hB{B}, \hE{C}$}
@@ -335,6 +333,7 @@ It is interesting to note that $\clausesetSwap{\varphi}{S_1} = \clausesetSwap{\v
 			\AXC{$\hF{C} \seq$} \RightLabel{$r$}
 		\BIC{$\seq$}
 \end{prooftree}
+\end{small}
 
 \noindent
 $\CEResNFSwap{\varphi}{\delta}$ is the $\CERes$-normal-form obtained with the swapped clause set:
@@ -370,11 +369,18 @@ where $\varphi_0$ is:
 \end{scriptsize}
 
 \noindent
-As expected, less redundant clause sets and projections result in smaller proofs. $\CEResNFSwap{\varphi}{\delta}$ shown above is significantly smaller than $\CEResNF{\varphi}{\delta}$ shown in Example \ref{example:CEResSONormalForm}. 
+As expected, less redundant clause sets and projections result in a $\CEResNFSwap{\varphi}{\delta}$ significantly smaller than $\CEResNF{\varphi}{\delta}$ shown in Example \ref{example:CEResSONormalForm}. 
 \hfill\QED
 \end{example}
 
 
+\begin{lemma}[Correspondence between $\normalizePlusTimesS$ and $\swap$]
+\label{lemma:SwapNormalizeCorrespondence}
+If $\varphi$ is skolemized and $\struct{\varphi} \normalizePlusTimesS S$, then there exists a proof $\psi$ such that $\varphi \swap^* \psi$ and $\struct{\psi} = S$. 
+\end{lemma}
+\begin{proof}
+In Appendix \ref{sec:Correspondence}.
+\end{proof}
 
 
 \begin{theorem}[Unsatisfiability of the Swapped Clause Set]
@@ -382,8 +388,8 @@ As expected, less redundant clause sets and projections result in smaller proofs
 For any skolemized proof $\varphi$ and $\normalizePlusTimesS$-normal-form $S$ of $\struct{\varphi}$, $\clausesetSwap{\varphi}{S}$ is unsatisfiable.
 \end{theorem}
 \begin{proof}
-By Lemma \ref{lemma:SwapNormalizeCorrespondence} in Appendix \ref{sec:Correspondence},
-there exists a proof $\psi$ such that $\struct{\psi} = S$. Clearly, 
+By Lemma \ref{lemma:SwapNormalizeCorrespondence},
+there is $\psi$ such that $\struct{\psi} = S$. Clearly, 
 $\clausesetSwap{\varphi}{S} = \clausesetSwapUnique{\psi}$. 
 But $\clausesetSwapUnique{\psi} = \clauseset{\psi}$, 
 since $S$ is also a $\normalizePlusTimes$-normal-form. 
@@ -391,6 +397,7 @@ Therefore, $\clausesetSwap{\varphi}{S} = \clauseset{\psi}$ and,
 by Theorem \ref{theorem:Unsatisfiability} and the fact that 
 $\clauseset{\psi}$ is equisatisfiable with $\struct{\psi}$, 
 $\clausesetSwap{\varphi}{S}$ is unsatisfiable.
+\hfill\QED
 \end{proof}
 
 
@@ -404,19 +411,20 @@ Although $\CEResSwap$-normal-forms are usually much less redundant than $\CERes$
 
 \begin{theorem}[Size of Swapped Clause Set]
 \label{theorem:SizeOfSwappedClauseSets}
-There exist positive rational constants $k$ and $k'$ and a sequence of proofs $\varphi_1, \varphi_2, \ldots, \varphi_n, \ldots$ such that $\proofsizeSymbol{\varphi_n} \leq k 4^n$ and $|\clausesetSwapUnique{\varphi_n}| \geq k' 2^{2^n}$.
+There exist positive constants $k$ and $k'$ and a sequence of proofs $\varphi_1, \varphi_2, \ldots, \varphi_n, \ldots$ such that $\proofsizeSymbol{\varphi_n} \leq k 4^n$ and $|\clausesetSwapUnique{\varphi_n}| \geq k' 2^{2^n}$.
 \end{theorem}
 
 \begin{theorem}[Size of $\CEResSwap$-Normal-Form]
 \label{theorem:SizeOfCEResSwapNormalForms}
-There exist positive rational constants $k$ and $k''$ and a sequence of proofs $\varphi_1, \varphi_2, \ldots, \varphi_n, \ldots$ such that:
+There exist positive constants $k$ and $k''$ and a sequence of proofs $\varphi_1, \varphi_2, \ldots, \varphi_n, \ldots$ such that:
 \begin{itemize}
 \item $\proofsizeSymbol{\varphi_n} \leq k 4^n$.
 \item $\proofsizeSymbol{\CEResNFSwap{\varphi_n}{\delta_n}} \geq k'' 2^{2^n}$, for any refutation $\delta_n$.
 \end{itemize}
 \end{theorem}
 \begin{proof}
-For both theorems above, the same sequence of proofs used in the proof of 
+For both theorems above, the same sequence of proofs used in 
 Theorem \ref{theorem:SizeOfClauseSets} can be used, 
 because $\clauseset{\varphi_k} = \clausesetSwapUnique{\varphi_k}$ for any proof $\varphi_k$ in that sequence.
+\hfill\QED
 \end{proof}

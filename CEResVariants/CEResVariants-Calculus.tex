@@ -1,0 +1,105 @@
+\section{Sequent Calculus}
+\label{sec:Calculus}
+
+\newcommand{\m}[1]{#1}
+
+The sequent calculus used in this paper is shown below. 
+$\m{\Gamma}$,$\m{\Delta}$,$\m{\Gamma_1}$,$\m{\Delta_1}$,$\m{\Gamma_2}$,$\m{\Delta_2}$
+are multisets of formulas called \emph{contexts}. 
+For each rule, the active formula below the line, colored in red, 
+is its \emph{main} formula, while the active formulas in the premises, 
+colored in blue, are its \emph{auxiliary} formulas.
+
+
+\begin{scriptsize}
+$$
+\infer[axiom]{\hA{\m{A}} \seq \hA{\m{A}}}{ }
+\qquad
+\infer[cut]{\m{\Gamma_1},\m{\Gamma_2}\seq\m{\Delta_1},\m{\Delta_2}}{
+    \m{\Gamma_1}\seq\m{\Delta_1},\hB{\m{F}}
+    &
+    \hB{\m{F}},\m{\Gamma_2}\seq\m{\Gamma_2}
+}
+$$
+
+    $$
+    \infer[w_l]{\hA{\m{F}},\m{\Gamma}\seq\m{\Delta}}{\m{\Gamma}\seq\m{\Delta}}
+    \qquad
+    \infer[w_r]{\m{\Gamma}\seq\m{\Delta},\hA{\m{F}}}{\m{\Gamma}\seq\m{\Delta}}
+    \qquad
+    \infer[c_l]{ \hA{\m{F}}, \m{\Gamma} \seq \m{\Delta}} { \hB{\m{F}}, \hB{\m{F}}, \m{\Gamma}
+    \seq \m{\Delta}}
+    \qquad
+    \infer[c_r]{\m{\Gamma}\seq \m{\Delta}, \hA{\m{F}}} {\m{\Gamma}\seq
+    \m{\Delta}, \hB{\m{F}}, \hB{\m{F}}}
+    $$
+
+$$
+\infer[\wedge_l]{\hA{\m{F_1}\land \m{F_2}},\m{\Gamma}\seq\m{\Delta}}{
+    \hB{\m{F_1}},\hB{\m{F_2}},\m{\Gamma}\seq\m{\Delta}
+}
+\qquad
+\infer[\wedge_r]{\m{\Gamma_1},\m{\Gamma_2}\seq\m{\Delta_1},\m{\Delta_2},\hA{\m{F_1}\land \m{F_2}}}{
+    \m{\Gamma_1}\seq\m{\Delta_1},\hB{\m{F_1}}
+    &
+    \m{\Gamma_2}\seq\m{\Delta_2},\hB{\m{F_2}}
+}
+\qquad
+\infer[\neg_l]{\hA{\neg \m{F}},\m{\Gamma}\seq\m{\Delta}}{\m{\Gamma}\seq\m{\Delta}, \hB{\m{F}}}
+$$
+
+$$
+\infer[\vee_l]{\hA{\m{F_1}\lor \m{F_2}},\m{\Gamma_1},\m{\Gamma_2}\seq\m{\Delta_1},\m{\Delta_2}}{
+    \hB{\m{F_1}},\m{\Gamma_1}\seq\m{\Delta_1}
+    &
+    \hB{\m{F_2}},\m{\Gamma_2}\seq \m{\Delta_2}
+}
+\qquad
+\infer[\vee_r]{\m{\Gamma}\seq\m{\Delta},\hA{\m{F_1}\lor \m{F_2}}}{
+    \m{\Gamma}\seq\m{\Delta},\hB{\m{F_1}},\hB{\m{F_2}}
+}
+\qquad
+\infer[\neg_r]{\m{\Gamma}\seq\m{\Delta},\hA{\neg \m{F}}}{\hB{\m{F}},\m{\Gamma}\seq\m{\Delta}}
+$$
+
+$$
+\infer[\imp_l]{\hA{\m{F_1}\imp \m{F_2}},\m{\Gamma_1},\m{\Gamma_2}\seq\m{\Delta_1},\m{\Delta_2}}{
+    \m{\Gamma_1}\seq\m{\Delta_1},\hB{\m{F_1}}
+    &
+    \hB{\m{F_2}},\m{\Gamma_2}\seq \m{\Delta_2}
+}
+\qquad
+\infer[\imp_r]{\m{\Gamma}\seq\m{\Delta},\hA{\m{F_1}\imp \m{F_2}}}{
+    \hB{\m{F_1}},\m{\Gamma}\seq\m{\Delta},\hB{\m{F_2}}
+}
+$$
+
+$$
+\infer[\forall_l]{\hA{(\forall x)\m{F}},\m{\Gamma}\seq\m{\Delta}}{\hB{\m{F}\subst{x}{t}},\m{\Gamma}\seq\m{\Delta}}
+\qquad
+\infer[\forall_r]{\m{\Gamma}\seq\m{\Delta},\hA{(\forall x)\m{F}}}{\m{\Gamma}\seq\m{\Delta},\hB{\m{F}\subst{x}{\alpha}}}
+\qquad
+\infer[\exists_l]{\hA{(\exists x)\m{F}},\m{\Gamma}\seq\m{\Delta}}{\hB{\m{F}\subst{x}{\alpha}},\m{\Gamma}\seq\m{\Delta}}
+\qquad
+\infer[\exists_r]{\m{\Gamma}\seq\m{\Delta},\hA{(\exists x)\m{F}}}{\m{\Gamma}\seq\m{\Delta},\hB{\m{F}\subst{x}{t}}}
+$$
+%
+\begin{center}
+$\alpha$ should occur neither in $\m{\Gamma}$ nor in $\m{\Delta}$ nor in $\m{F}$.
+$t$ must not contain a variable that is bound in $\m{F}$.
+\end{center}
+
+
+$$
+\infer[d_l]{\hA{\m{P(x_1,\ldots, x_n)}},\m{\Gamma}\seq\m{\Delta}}
+{\hB{\m{F[x_1,\ldots, x_n]}},\m{\Gamma}\seq\m{\Delta}}
+\qquad
+\infer[d_r]{\m{\Gamma}\seq\m{\Delta},\hA{\m{P(x_1,\ldots, x_n)}}}
+{\m{\Gamma}\seq\m{\Delta},\hB{\m{F[x_1,\ldots, x_n]}}}
+$$
+%
+\begin{center}
+where $x_1, \ldots, x_n$ are the free variables of $F$ and $P$ is defined by:
+$P(x_1,\ldots, x_n) \biimp F[x_1,\ldots, x_n]$.
+\end{center}
+\end{scriptsize}
