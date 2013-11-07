@@ -38,7 +38,7 @@
 
 \institute{
   IRIT, Universit\'e de Toulouse, France \\
-  \email{joseph.boudou@matabio.net}
+  \email{joseph.boudou@irit.fr}
   \and 
   Free University of Bolzano, Italy \\
   \email{fellner.a@gmail.com}
@@ -88,6 +88,19 @@ This paper describes \skeptik: a system for compressing and improving proofs obt
 \subsection{LU}
 
 \subsection{LUniv}
+
+The \algo{LowerUnivalents} algorithm \cite{LUniv} (\algo{LUniv}) is a generalisation of
+\algo{LowerUnits}. Taking into account the already lowered subproofs it becomes possible to lower a
+non-unit node if all its conclusion's literals but one can be deleted by those already lowered
+subproofs. Moreover, some partial regularisation based on the lowered pivots can be achieved
+simultaneously.
+
+In \skeptik this algorithm has been implemented as a replacement of the \algo{fixProof} function
+used by some algorithms to reconstruct a proof after deletions. Therefore, non-sequential
+combinations of those algorithms with \algo{LUniv} are easy to implement. For instance,
+\algo{LUnivRPI} is a non-sequential combination of \algo{LUniv} after \algo{RPI}. This latter
+algorithm is currently one the best tradeoff between compression time and compression ratio
+\cite{LUniv}.
 
 \subsection{RPI[3]LU and RPI[3]LUniv}
 
@@ -142,8 +155,6 @@ ToDo: brief description of the package structure
 
 \subsection{Data Structures for Proofs}
 
-
-\subsection{}
 
 
 
