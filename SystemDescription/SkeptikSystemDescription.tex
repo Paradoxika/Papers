@@ -82,9 +82,18 @@ This paper describes \skeptik: a system for compressing and improving proofs obt
 
 \section{Available Proof Compression Algorithms}
 
-\subsection{RPI}
+\subsection{RecyclePivotsWithIntersection}
 
-\subsection{LU}
+\subsection{LowerUnits}
+
+Another kind of proof redundancy happens when a node $\node$ appears as premise of many resolutions
+on the same pivot $p$. In that case, it would be better to resolve $\node$ on $p$ only once. The
+\algo{LowerUnits} (\algo{LU}) algorithm \cite{LURPI} reduces this kind of redundancy by lowering
+\emph{units} down to the root of the proof. Units are subproofs whose conclusion consists in a
+single literal. Such a subproof can always be lowered down to the proof.
+
+\algo{LowerUnits} is of linear time complexity in the length of the proof. It is a very fast
+algorithm which perform good compression ratio.
 
 \subsection{LowerUnivalents}
 
