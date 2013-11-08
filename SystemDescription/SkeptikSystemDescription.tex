@@ -82,29 +82,40 @@ This paper describes \skeptik: a system for compressing and improving proofs obt
 
 \section{Available Proof Compression Algorithms}
 
-
 \subsection{RPI}
 
 \subsection{LU}
 
-\subsection{LUniv}
+\subsection{LowerUnivalents}
 
-The \algo{LowerUnivalents} algorithm \cite{LUniv} (\algo{LUniv}) is a generalisation of
-\algo{LowerUnits}. Taking into account the already lowered subproofs it becomes possible to lower a
-non-unit node if all its conclusion's literals but one can be deleted by those already lowered
-subproofs. Moreover, some partial regularisation based on the lowered pivots can be achieved
-simultaneously.
+The \algo{LowerUnivalents} algorithm \cite{LUniv} (\algo{LUniv}) generalizes \algo{LowerUnits} by
+exploiting the information of the already lowered subproofs and their pivots. Then, it becomes
+possible to lower a non-unit node if all its conclusion's literals but one can be deleted by the
+already lowered subproofs. Moreover, some partial regularization based on the lowered pivots can be
+achieved simultaneously.
 
-In \skeptik this algorithm has been implemented as a replacement of the \algo{fixProof} function
+In \skeptik, \algo{LUniv} has been implemented as a replacement for the \algo{fixProof} function
 used by some algorithms to reconstruct a proof after deletions. Therefore, non-sequential
 combinations of those algorithms with \algo{LUniv} are easy to implement. For instance,
 \algo{LUnivRPI} is a non-sequential combination of \algo{LUniv} after \algo{RPI}. This latter
-algorithm is currently one the best tradeoff between compression time and compression ratio
+algorithm is currently one the best trade-off between compression time and compression ratio
 \cite{LUniv}.
 
 \subsection{RPI[3]LU and RPI[3]LUniv}
 
-\subsection{RedRec}
+\subsection{ReduceAndReconstruct}
+
+The \algo{ReduceAndReconstruct} (\algo{RedRec}) approach consists in applying local transformation
+rules to each node. The set of local rules presented in \cite{RedRec} are sufficient to emulate any
+other compression algorithm. Unfortunately, the proposed heuristic only consists in trying to apply
+each rule (with given priorities) to each node in a top-down traversal. For this heuristic to be
+efficient, the process has to be repeated many times. The resulting algorithm can achieve very good
+compression ratio if run long enough.
+
+As this algorithm allows experimentations in the local transformation rules, the heuristic to apply
+them and the termination conditions, its implementation in \skeptik is very modular. Each component
+is defined independently and a convenient framework allows to combine them as desired. A handful of
+alternative local transformation rules and termination conditions have been implemented too.
 
 \subsection{Split}
 
