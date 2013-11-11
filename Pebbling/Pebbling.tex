@@ -1,0 +1,426 @@
+\documentclass{llncs}
+
+\usepackage{xcolor}
+\usepackage{enumitem,amsmath,amssymb}
+\usepackage{breakurl}    % used for \url and \burl
+\usepackage[linesnumbered,boxed,noline,noend]{algorithm2e}
+\def\defaultHypSeparation{\hskip.1in}
+
+\usepackage{tikz}
+\usepackage{subfig}
+\usepackage{array,booktabs,multirow}
+\usepackage{placeins}
+
+\usepackage{logictools}
+\usepackage{prooftheory}
+\usepackage{comment}
+\usepackage{mathenvironments}
+\usepackage{drawproof}
+
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.75}
+
+\title{Pebbling}
+
+\author{
+  Andreas Fellner\inst{1}
+  \thanks{Supported by the Google Summer of Code 2012 program.}
+  \and 
+  Bruno Woltzenlogel Paleo\inst{2}
+  \thanks{Supported by the Austrian Science Fund, project P24300.}
+}
+
+\authorrunning{J.\~Boudou \and B.\~Woltzenlogel Paleo}
+
+\institute{
+  Universit\'e Paul Sabatier, Toulouse \\
+  \email{joseph.boudou@matabio.net}
+  \and 
+  Vienna University of Technology \\
+  \email{bruno@logic.at}
+}
+
+
+
+
+\begin{document}
+
+\maketitle
+
+
+\begin{abstract}
+Bruno
+\end{abstract}
+
+\setcounter{footnote}{0}
+
+\section{Introduction}
+
+Bruno
+
+
+\section{Propositional Resolution Calculus}
+
+A \emph{literal} is a propositional variable or the negation of a propositional variable. The
+\emph{complement} of a literal $\ell$ is denoted $\dual{\ell}$ (i.e. for any propositional variable $p$,
+$\dual{p} = \neg p$ and $\dual{\neg p} = p$). The set of all literals is denoted $\mathcal{L}$. A
+\emph{clause} is a set of literals. $\bot$ denotes the \emph{empty clause}.
+
+
+\newcommand{\axiom}[1]{\widehat{#1}}
+\newcommand{\n}{v}
+\newcommand{\raiz}[1]{\rho(#1)}
+
+\begin{definition}[Proof] 
+\label{def:proof}
+A directed acyclic graph $\langle V, E, \clause \rangle$, where $V$ is a set of nodes and $E$ is a
+set of edges labeled by literals (i.e. $E \subset V \times \mathcal{L} \times V$ and $\n_1
+\xrightarrow{\ell} \n_2$ denotes an edge from node $\n_1$ to node $\n_2$ labeled by $\ell$), is a
+proof of a clause $\clause$ iff it is inductively constructible according to the following cases:
+%
+\begin{enumerate}
+  \item If $\Gamma$ is a clause, $\axiom{\Gamma}$ denotes some proof $\langle \{ \n \}, \varnothing,
+    \Gamma \rangle$, where $\n$ is a new node.
+  \item If $\psi_L$ is a proof $\langle V_L, E_L, \clause_L \rangle$ and
+    $\psi_R$ is a proof $\langle V_R, E_R, \clause_R \rangle$ and $\ell$ is a literal such that
+    $\dual{\ell} \in \clause_L$ and $\ell \in \clause_R$, then
+    $\psi_L \odot_\ell \psi_R$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
+    \begin{align*}
+      V &= V_L \cup V_R \cup \{\n \} \\
+      E &= E_L \cup E_R \cup
+                    \left\{ \n \xrightarrow{\dual{\ell}} \raiz{\psi_L}, \n \xrightarrow{\ell} \raiz{\psi_R} \right\} \\
+     \Gamma &= \left( \clause_L \setminus \left\{ \dual{\ell} \right\} \right) \cup \left( \clause_R
+                    \setminus \left\{ \ell \right\} \right)
+    \end{align*}
+    where $\n$ is a new node and $\raiz{\varphi}$ denotes the root node of $\varphi$.
+  \qed
+\end{enumerate}
+\end{definition}
+
+
+\newcommand{\Vertices}[1]{V_{#1}}
+\newcommand{\Edges}[1]{E_{#1}}
+\newcommand{\Conclusion}[1]{\clause_{#1}}
+
+\noindent
+If $\psi = \varphi_L \odot_{\ell} \varphi_R$, then $\varphi_L$ and $\varphi_R$ are \emph{direct
+subproofs} of $\psi$ and $\psi$ is a \emph{child} of both $\varphi_L$ and $\varphi_R$. The
+transitive closure of the direct subproof relation is the \emph{subproof} relation. A subproof which
+has no direct subproof is an \emph{axiom} of the proof. Contrary to the usual proof
+theoretic conventions but following the actual implementation of the data structures used by
+\LowerUnivalents, edges are directed from children (resolvents) to their parents (premises).
+%
+$\Vertices{\psi}$, $\Edges{\psi}$ and $\Conclusion{\psi}$
+denote, respectively, the nodes, edges and proved clause (conclusion) of $\psi$.
+
+\newcommand{\Active}[2]{A_{#2}(#1)}
+\begin{definition}[Active literals]
+Given a proof $\psi$, the set of active literals $\Active{\varphi}{\psi}$ of a subproof $\varphi$
+are the labels of edges coming into $\varphi$'s root: 
+$$
+\Active{\varphi}{\psi} =
+  \{\ell \ | \ \exists \varsigma \in \Vertices{\psi}. \ \varsigma \xrightarrow{\ell} \raiz{\varphi} \}
+$$
+\end{definition}
+
+\SetKwFunction{Rec}{delete}
+\SetKw{Let}{let}
+
+
+Two operations on proofs are used in this paper: the resolution operation~$\odot_\ell$ introduced
+above and the deletion of a set of subproofs from a proof, denoted
+$\dn{\psi}{\varphi_1 \ldots \varphi_n}$ where $\psi$ is the whole proof and $\varphi_i$ are the
+deleted subproofs. Algorithm \ref{algo:del} describes the deletion operation, with
+$\dn{\psi}{\varphi_1 \ldots \varphi_n}$ being the result of \Rec{$\psi$,$\{\varphi_1, \ldots ,
+\varphi_n\}$}. Both the resolution and deletion operations are considered to be left associative.
+
+\begin{algorithm}[bt]
+  \KwIn{a proof $\varphi$}
+  \KwIn{$D$ a set of subproofs}
+  \KwOut{a proof $\varphi'$ obtained by deleting the subproofs in $D$ from $\varphi$}
+  \BlankLine
+
+  \newcommand{\fixL}{\ensuremath{\varphi'_L}}
+  \newcommand{\fixR}{\ensuremath{\varphi'_R}}
+
+  \uIf{$\varphi \in D$ or $\raiz{\varphi}$ has no premises}{
+    \Return{$\varphi$} \;
+  }
+  \BlankLine
+
+  \Else{
+    \Let{$\varphi_L$, $\varphi_R$ and $\ell$} be such that
+      $\varphi = \varphi_L \odot_\ell \varphi_R$ \;
+    \Let{$\varphi'_L = $ \Rec{$\varphi_L$,$D$}} \;
+    \Let{$\varphi'_R = $ \Rec{$\varphi_R$,$D$}} \;
+    \BlankLine
+
+    \uIf{$\varphi'_L \in D$}
+      { \Return{\fixR} \; }
+    \uElseIf{$\varphi'_R \in D$}
+      { \Return{\fixL} \; }
+    \BlankLine
+
+    \uElseIf{$\dual{\ell} \notin \Conclusion{\fixL}$}
+      { \Return{\fixL} \; }
+    \uElseIf{$\ell \notin \Conclusion{\fixR}$}
+      { \Return{\fixR} \; }
+    \BlankLine
+
+    \Else{ \Return{ \fixL~$\odot_\ell$~\fixR} \; }
+  }
+
+  \caption[.]{\FuncSty{delete}}
+  \label{algo:del}
+\end{algorithm}
+
+The deletion algorithm is a minor variant of the \textsc{Reconstruct-Proof} algorithm presented in
+\cite{RP11}.
+The basic idea is to traverse the proof in a top-down manner, replacing
+each subproof having one of its premises marked for deletion (i.e. in $D$) by its other direct
+subproof. The special case when both $\varphi'_L$ and $\varphi'_R$ belong to $D$ is treated rather
+implicitly and deserves an explanation: in such a case, one might intuitively expect the result
+$\varphi'$ to be undefined and arbitrary. Furthermore, to any child of $\varphi$, $\varphi'$ ought
+to be seen as if it were in $D$, as if the deletion of $\varphi'_L$ and $\varphi'_R$ propagated to
+$\varphi'$ as well. Instead of assigning some arbitrary proof to $\varphi'$ and adding it to $D$,
+the algorithm arbitrarily returns (in line 8) $\varphi'_R$ (which is already in $D$) as the result
+$\varphi'$. In this way, the propagation of deletion is done automatically and implicitly. For
+instance, the following hold:
+\begin{align}
+  \dn{\varphi_1 \odot_\ell \varphi_2}{\varphi_1, \varphi_2} &= \varphi_2 \label{eq:exampledel1} \\
+\dn{\varphi_1 \odot_\ell \varphi_2 \odot_{\ell'} \varphi_3}{\varphi_1, \varphi_2} &=
+  \dn{\varphi_3}{\varphi_1, \varphi_2} \label{eq:exampledel2}
+\end{align}
+A side-effect of this clever implicit propagation of deletion is that the actual result of deletion
+is only meaningful if it is not in $D$. In the example (\ref{eq:exampledel1}), as $\dn{\varphi_1
+\odot_\ell \varphi_2}{\varphi_1, \varphi_2} \in \{\varphi_1, \varphi_2\} $, the actual resulting
+proof is meaningless. Only the information that it is a deleted subproof is relevant, as it suffices
+to obtain meaningful results as shown in (\ref{eq:exampledel2}).
+
+\begin{proposition} \label{prop:del_assoc}
+For any proof $\psi$ and any sets $A$ and $B$ of $\psi$'s subproofs,
+either $\dn{\psi}{A \cup B}  \in A \cup B$
+and    $\dn{\dn{\psi}{A}}{B} \in A \cup B$,
+or     $\dn{\psi}{A \cup B} = \dn{\dn{\psi}{A}}{B}$.
+\end{proposition}
+
+
+\begin{definition}[Valent literal]
+  In a proof $\psi$, a literal $\ell$ is \emph{valent} for the subproof $\varphi$ iff $\dual{\ell}$
+  belongs to the conclusion of $\dn{\psi}{\varphi}$ but not to the conclusion of $\psi$.
+\end{definition}
+
+\begin{proposition} \label{prop:valentactive}
+In a proof $\psi$, every valent literal of a subproof $\varphi$ is an active literal of $\varphi$.
+\end{proposition}
+
+\newcommand{\pedge}[3]{\ensuremath{\raiz{#1} \xrightarrow{#2} \raiz{#3}}}
+
+\begin{proof}
+Lines 2, 12, 14 and 16 from Algorithm \ref{algo:del} can not introduce a new literal in the conclusion of
+the subproof being processed. Let $\ell$ be a valent literal of $\varphi$ in $\psi$. Because
+there is only one subproof to be deleted, $\dual{\ell}$ can only be introduced when processing a
+subproof $\varphi'$ such that $\pedge{\varphi'}{\ell}{\varphi}$. \qed
+\end{proof}
+
+\begin{proposition}
+Given a proof $\psi$ and a set $D = \{\varphi_1 \ldots \varphi_n\}$ of $\psi$'s subproofs, $\forall
+\ell \in \mathcal{L}$ s.t. $\ell$ is in the conclusion of $\dn{\psi}{D}$ but not in $\psi$'s
+conclusion, then $\exists i$ s.t. $\dual{\ell}$ is a valent literal of $\varphi_i$ in $\psi$.
+\end{proposition}
+
+
+\section{Pebbling Game} \label{sec:LU}
+
+\section{Greedy Pebbling Algorithms}
+
+\begin{algorithm}[bt]
+  \KwIn {a proof $\psi$}
+  \KwOut{a compressed proof $\psi'$}
+  \BlankLine
+
+  \SetKwData{Units}{Units}
+  \Units $\leftarrow \varnothing$ \;
+  \BlankLine
+
+  \For{every subproof $\varphi$ in a bottom-up traversal}{
+    \If{$\varphi$ is a unit and has more than one child}{Enqueue $\varphi$ in \Units \; }
+  }
+  \BlankLine
+
+  $\psi' \leftarrow $ \Rec{$\psi$,$\Units$} \;
+  \BlankLine
+
+  \For{every unit $\varphi$ in \Units}{
+    \Let{$\{\ell\} = \Conclusion{\varphi}$} \;
+    \lIf{$\dual{\ell} \in \Conclusion{\psi'}$}{
+    $\psi' \leftarrow \psi' \odot_\ell \varphi$ \;}
+  }
+
+  \caption{\LowerUnits}
+  \label{algo:LU}
+\end{algorithm}
+
+
+\subsection{Last Child Heuristic}
+
+\subsection{Node Distance Heuristic}
+
+\subsection{Number of Children Heuristic}
+
+
+
+
+\section{Experiments} \label{sec:exp}
+
+{\LowerUnivalents} and {\LUnivRPI} have been implemented in the functional programming
+language Scala\footnote{\url{http://www.scala-lang.org/}} as part of the \skeptik
+library\footnote{\url{https://github.com/Paradoxika/Skeptik}}. {\LowerUnivalents} has been implemented as a
+recursive \FuncSty{delete} improvement.
+
+The algorithms have been applied to 5\,059 proofs produced by the SMT-solver
+{\veriT}\footnote{\url{http://www.verit-solver.org/}} on unsatisfiable benchmarks from the
+SMT-Lib\footnote{\url{http://www.smtlib.org/}}.  The details on the number of proofs per SMT category
+are shown in Table \ref{tab:benchmarks}.  The proofs were translated into pure resolution proofs by
+considering every non-resolution inference as an axiom.
+
+\begin{table}[tb]
+  \caption{Number of proofs per benchmark category}
+  \label{tab:benchmarks}
+  \centering
+  \begin{tabular}{lr}
+    \toprule
+    Benchmark~ &  Number \\
+    Category       & ~of Proofs \\
+    \midrule
+    QF\_UF      & 3907 \\
+    QF\_IDL     &  475 \\
+    QF\_LIA     &  385 \\
+    QF\_UFIDL   &  156 \\
+    QF\_UFLIA   &  106 \\
+    QF\_RDL     &   30 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The experiment compared the following algorithms:
+\begin{description}
+  \item[LU:] the {\LowerUnits} algorithm from \cite{LURPI};
+  \item[LUniv:] the {\LowerUnivalents} algorithm;
+  \item[RPILU:] a non-sequential combination of {\RPI} after {\LowerUnits};
+  \item[RPILUniv:] a non-sequential combination of {\RPI} after {\LowerUnivalents};
+  \item[LU.RPI:] the sequential composition of {\LowerUnits} after {\RPI};
+  \item[LUnivRPI:] the non-sequential combination of {\LowerUnivalents} after {\RPI} as described in Sect. \ref{sec:LUnivRPI};
+  \item[RPI:] the {\RecyclePivotsIntersection} from \cite{LURPI};
+  \item[Split:] Cotton's \texttt{Split} algorithm (\cite{CottonSplit});
+  \item[RedRec:] the {\ReduceReconstruct} algorithm from \cite{RedRec};
+  \item[Best RPILU/LU.RPI:] which performs both \texttt{RPILU} and \texttt{LU.RPI} and chooses the smallest resulting compressed proof;
+  \item[Best RPILU/LUnivRPI:] which performs \texttt{RPILU} and \texttt{LUnivRPI} and chooses the smallest resulting
+    compressed proof.
+\end{description}
+
+For each of these algorithms, the time needed to compress the proof along with the number of nodes
+and the number of axioms (i.e. \emph{unsat core} size) have been measured. Raw data of the
+experiment can be downloaded from the web\footnote{\url{http://www.matabio.net/skeptik/LUniv/experiments/}}.
+
+The experiments were executed on the Vienna Scientific Cluster\footnote{\url{http://vsc.ac.at/}}
+VSC\nobreakdash-2. Each algorithm was executed in a single core and had up to 16 GB of memory available. This amount of memory has been useful to compress the biggest proofs (with more than $10^6$ nodes).
+
+
+The overall results of the experiments are shown in Table \ref{tab:average}. The compression ratios
+in the second column are computed according to formula (\ref{eq:compression}), in which $\psi$
+ranges over all the proofs in the benchmark and $\psi'$ ranges over the corresponding compressed
+proofs.
+\begin{equation} \label{eq:compression}
+  1 - \frac{ \sum {|\Vertices{\psi'}|} }{ \sum {|\Vertices{\psi}|} }
+\end{equation}
+The unsat core compression ratios are computed in the same way, but using the number of axioms instead of
+the number of nodes. The speeds on the fourth column are computed according to formula
+(\ref{eq:speed}) in which $d_{\psi}$ is the duration in milliseconds of $\psi$'s compression by a
+given algorithm.
+\begin{equation} \label{eq:speed}
+  \frac{ \sum {|\Vertices{\psi}|} }{ \sum {d_{\psi}} }
+\end{equation}
+
+For the \texttt{Split} and \texttt{RedRec} algorithms, which must be repeated, a timeout has
+been fixed so that the speed is about 3 nodes per millisecond. 
+
+
+\begin{table}[tb]
+  \caption{Total compression ratios}
+  \label{tab:average}
+  \centering
+  \begin{tabular}{lrrr}
+    \toprule
+    \multirow{2}{*}{Algorithm} & \multirow{2}{*}{Compression} & Unsat Core    & \phantom{.........}\multirow{2}{*}{Speed} \\
+                                             &                                               & \phantom{...}Compression &        \\
+    \midrule
+    LU                &  7.5 \% &  0.0 \% & 22.4 n/ms \\
+    LUniv             &  8.0 \% &  0.8 \% & 20.4 n/ms \\
+    RPILU             & 22.0 \% &  3.6 \% &  7.4 n/ms \\
+    RPILUniv          & 22.1 \% &  3.6 \% &  6.5 n/ms \\
+    LU.RPI            & 21.7 \% &  3.1 \% & 15.1 n/ms \\
+    LUnivRPI          & 22.0 \% &  3.6 \% & 17.8 n/ms \\
+    RPI               & 17.8 \% &  3.1 \% & 31.3 n/ms \\
+    Split             & 21.0 \% &  0.8 \% &  2.9 n/ms \\
+    RedRec            & 26.4 \% &  0.4 \% &  2.9 n/ms \\
+    Best RPILU/LU.RPI       & 22.0 \% &  3.7 \% &  5.0 n/ms \\
+    Best RPILU/LUnivRPI & 22.2 \% &  3.7 \% &  5.2 n/ms \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\newcommand{\va}[1]{\ensuremath{v_{\text{#1}}}}
+
+Figure \ref{fig:LU} shows the comparison of {\LowerUnits} with {\LowerUnivalents}. Subfigures (a) and (b) are scatter plots where each dot represents a single benchmark proof. 
+Subfigure (c) is a histogram showing, in the vertical axis, the proportion of proofs having \emph{(normalized) compression ratio difference} within the intervals showed in the horizontal axis. This difference is computed using formula (\ref{eq:histogram}) with \va{LU}
+and \va{LUniv} being the compression ratios obtained respectively by {\LowerUnits} and
+{\LowerUnivalents}.
+\begin{equation} \label{eq:histogram}
+  \frac { \va{LU} - \va{LUniv} }{ \frac{\va{LU} + \va{LUniv}}{2} }
+\end{equation}
+The number of proofs for which $\va{LU} = \va{LUniv}$ is not displayed in the histogram.
+The \emph{(normalized) duration differences} in subfigure (d) are computed using the same formula~(\ref{eq:histogram}) but
+with \va{LU} and \va{LUniv} being the time taken to compress the proof by {\LowerUnits} and
+{\LowerUnivalents} respectively.
+
+
+
+As expected, {\LowerUnivalents} always compresses more than {\LowerUnits} (subfigure (a)) at the expense of a longer
+computation (subfigure (d)). And even if the compression gain is low on average (as noticeable in Table \ref{tab:average}), subfigure (a) shows that {\LowerUnivalents} compresses some proofs significantly more than {\LowerUnits}.
+
+It has to be noticed that \veriT already does its best to produce compact proofs. In particular,
+a forward subsumption algorithm is applied, which results in proofs not having two different subproofs
+with the same conclusion. This results in {\LowerUnits} being unable to reduce unsat core.
+But as {\LowerUnivalents} lowers non-unit subproofs and performs some partial regularization, it
+achieves some unsat core reduction, as noticeable in subfigure (b).
+
+The comparison of the sequential \texttt{LU.RPI} with the non-sequential {\LUnivRPI} shown in Fig.
+\ref{fig:LUnivRPI} outlines the ability of {\LowerUnivalents} to be efficiently combined with other
+algorithms. Not only compression ratios are improved but {\LUnivRPI} is faster than the sequential
+composition for more than 80 \% of the proofs.
+
+
+
+
+
+
+
+\section{Conclusions and Future Work}
+
+Bruno
+
+
+\vspace{-10pt}
+\paragraph{Acknowledgments:}
+
+
+
+\bibliographystyle{splncs}
+\bibliography{biblio}
+
+
+\end{document}
+
+% vim: tw=100
