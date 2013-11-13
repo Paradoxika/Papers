@@ -21,21 +21,24 @@
 \renewcommand{\textfraction}{0.1}
 \renewcommand{\floatpagefraction}{0.75}
 
+\newcommand{\defeq}{\mathrel{\mathop:}=}
+\newcommand{\eqdef}{\mathrel{\mathop=}:}
+
 \title{Pebbling}
 
 \author{
   Andreas Fellner\inst{1}
-  \thanks{Supported by the Google Summer of Code 2012 program.}
+  \thanks{Supported by the Google Summer of Code 2013 program.}
   \and 
   Bruno Woltzenlogel Paleo\inst{2}
   \thanks{Supported by the Austrian Science Fund, project P24300.}
 }
 
-\authorrunning{J.\~Boudou \and B.\~Woltzenlogel Paleo}
+\authorrunning{A.\~Fellner \and B.\~Woltzenlogel Paleo}
 
 \institute{
-  Universit\'e Paul Sabatier, Toulouse \\
-  \email{joseph.boudou@matabio.net}
+  Vienna University of Technology \\
+  \email{fellner.a@gmail.com}
   \and 
   Vienna University of Technology \\
   \email{bruno@logic.at}
@@ -59,6 +62,23 @@ Bruno
 
 Bruno
 
+\section{Introduction}
+Bruno
+
+Propositional Resolution proofs usually are huge. So huge that when processing such proofs memory limits are reached and exceeded.
+%A proof is only good if it is verifiable.
+%Software that verifies the correctness of a proof has only got a limited amount of memory that it can allocate. 
+%\Skeptik and similar pieces of software provide compression methods that reduce the number of proof nodes and therefore the required memory.
+%Additionally when reading a proof incrementally, one can never be sure if a proof node that lies in memory will be needed later in the proof.
+However not the whole proof needs to be kept in memory. 
+Proof nodes that are not used further on can be removed from memory.
+Information when to remove which node can be added as extra lines in the proof output.
+%Such deletion information can be added to the proof when writing it to a file.
+The maximum number of proof nodes that have to be kept in memory at once using deletion information is called the space measure.
+This measure is closely related to the Black Pebbling Game \cite{kasai1979classes,gilbert1980pebbling}.
+A strategy for this game corresponds to a topological ordering of the proof nodes plus deletion information.
+Finding an optimal strategy for the Black Pebbling Game is PSPACE-complete \cite{gilbert1980pebbling} and therefore not a feasible approach to compress big proofs.
+This paper investigates heuristic approaches to the problem.
 
 \section{Propositional Resolution Calculus}
 
@@ -80,7 +100,7 @@ set of edges labeled by literals (i.e. $E \subset V \times \mathcal{L} \times V$
 proof of a clause $\clause$ iff it is inductively constructible according to the following cases:
 %
 \begin{enumerate}
-  \item If $\Gamma$ is a clause, $\axiom{\Gamma}$ denotes some proof $\langle \{ \n \}, \varnothing,
+  \item If $\Gamma$ is a clause, $\axiom{\Gamma}$ denotes some proof $\langle \{ \n \}, \emptyset ,
     \Gamma \rangle$, where $\n$ is a new node.
   \item If $\psi_L$ is a proof $\langle V_L, E_L, \clause_L \rangle$ and
     $\psi_R$ is a proof $\langle V_R, E_R, \clause_R \rangle$ and $\ell$ is a literal such that
@@ -102,166 +122,111 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
 \newcommand{\Vertices}[1]{V_{#1}}
 \newcommand{\Edges}[1]{E_{#1}}
 \newcommand{\Conclusion}[1]{\clause_{#1}}
+\newcommand{\Premises}[2]{P_{#1}^{#2}}
+\newcommand{\Children}[2]{C_{#1}^{#2}}
 
 \noindent
 If $\psi = \varphi_L \odot_{\ell} \varphi_R$, then $\varphi_L$ and $\varphi_R$ are \emph{direct
 subproofs} of $\psi$ and $\psi$ is a \emph{child} of both $\varphi_L$ and $\varphi_R$. The
 transitive closure of the direct subproof relation is the \emph{subproof} relation. A subproof which
-has no direct subproof is an \emph{axiom} of the proof. Contrary to the usual proof
+has no direct subproof is an \emph{axiom} of the proof. 
+%I will probably never need the following paragraph in this paper
+Contrary to the usual proof
 theoretic conventions but following the actual implementation of the data structures used by
-\LowerUnivalents, edges are directed from children (resolvents) to their parents (premises).
+\PebblingAlgorithms, edges are directed from children (resolvents) to their parents (premises).
 %
 $\Vertices{\psi}$, $\Edges{\psi}$ and $\Conclusion{\psi}$
-denote, respectively, the nodes, edges and proved clause (conclusion) of $\psi$.
+denote, respectively, the nodes, edges and proved clause (conclusion) of $\psi$.\\
+Let $\n$ be a node in $\psi$, then $\Premises{\n}{\psi}$ denotes its premises and $\Children{\n}{\psi}$ its children in $\psi$.
 
-\newcommand{\Active}[2]{A_{#2}(#1)}
-\begin{definition}[Active literals]
-Given a proof $\psi$, the set of active literals $\Active{\varphi}{\psi}$ of a subproof $\varphi$
-are the labels of edges coming into $\varphi$'s root: 
+\begin{definition}[Topological Order]
+\label{def:topological order}
+A topological order of a proof $\psi$ is a linear order relation $<_T$ on $\Vertices{\psi}$, such that 
 $$
-\Active{\varphi}{\psi} =
-  \{\ell \ | \ \exists \varsigma \in \Vertices{\psi}. \ \varsigma \xrightarrow{\ell} \raiz{\varphi} \}
+\text{for all } \n \in \Vertices{\psi} \text{, for all } p \in \Premises{\n}{\psi} \text{ hold }\\
+p <_T v
 $$
 \end{definition}
+A topological order $<_T$ can be represented by a sequence of proof nodes $S = (s_1,\ldots,\s_n)$, by defining $<_T \defeq \{(s_i,s_j) \mid 1 \leq i < j \leq n\}$.\\
+Note that there are proofs, for which exponentially many different topological orders exists: Consider a proof with $n$ axioms. Every permutation of these axioms can be extended to a sequence which represent a topological order. There are $n!$ such permutations, so the overall number of topological orders is at least exponential in $n$.\\
+This means that when looking for a good topological order w.r.t. any characteristic, enumeration is not a feasible option.
 
-\SetKwFunction{Rec}{delete}
-\SetKw{Let}{let}
+By loading nodes into memory following a topological order, proofs can be traversed in a top-down fashion, for example to check the correctness of the proof.\\
+Not all nodes have to be kept in memory when doing such a traversal. As soon as all nodes $p \in \Children{\n}{\psi}$ have been loaded into memory, $\n$ can be removed from memory,
+since it will not be needed further on.
 
-
-Two operations on proofs are used in this paper: the resolution operation~$\odot_\ell$ introduced
-above and the deletion of a set of subproofs from a proof, denoted
-$\dn{\psi}{\varphi_1 \ldots \varphi_n}$ where $\psi$ is the whole proof and $\varphi_i$ are the
-deleted subproofs. Algorithm \ref{algo:del} describes the deletion operation, with
-$\dn{\psi}{\varphi_1 \ldots \varphi_n}$ being the result of \Rec{$\psi$,$\{\varphi_1, \ldots ,
-\varphi_n\}$}. Both the resolution and deletion operations are considered to be left associative.
-
-\begin{algorithm}[bt]
-  \KwIn{a proof $\varphi$}
-  \KwIn{$D$ a set of subproofs}
-  \KwOut{a proof $\varphi'$ obtained by deleting the subproofs in $D$ from $\varphi$}
-  \BlankLine
-
-  \newcommand{\fixL}{\ensuremath{\varphi'_L}}
-  \newcommand{\fixR}{\ensuremath{\varphi'_R}}
-
-  \uIf{$\varphi \in D$ or $\raiz{\varphi}$ has no premises}{
-    \Return{$\varphi$} \;
-  }
-  \BlankLine
-
-  \Else{
-    \Let{$\varphi_L$, $\varphi_R$ and $\ell$} be such that
-      $\varphi = \varphi_L \odot_\ell \varphi_R$ \;
-    \Let{$\varphi'_L = $ \Rec{$\varphi_L$,$D$}} \;
-    \Let{$\varphi'_R = $ \Rec{$\varphi_R$,$D$}} \;
-    \BlankLine
-
-    \uIf{$\varphi'_L \in D$}
-      { \Return{\fixR} \; }
-    \uElseIf{$\varphi'_R \in D$}
-      { \Return{\fixL} \; }
-    \BlankLine
-
-    \uElseIf{$\dual{\ell} \notin \Conclusion{\fixL}$}
-      { \Return{\fixL} \; }
-    \uElseIf{$\ell \notin \Conclusion{\fixR}$}
-      { \Return{\fixR} \; }
-    \BlankLine
-
-    \Else{ \Return{ \fixL~$\odot_\ell$~\fixR} \; }
-  }
-
-  \caption[.]{\FuncSty{delete}}
-  \label{algo:del}
-\end{algorithm}
-
-The deletion algorithm is a minor variant of the \textsc{Reconstruct-Proof} algorithm presented in
-\cite{RP11}.
-The basic idea is to traverse the proof in a top-down manner, replacing
-each subproof having one of its premises marked for deletion (i.e. in $D$) by its other direct
-subproof. The special case when both $\varphi'_L$ and $\varphi'_R$ belong to $D$ is treated rather
-implicitly and deserves an explanation: in such a case, one might intuitively expect the result
-$\varphi'$ to be undefined and arbitrary. Furthermore, to any child of $\varphi$, $\varphi'$ ought
-to be seen as if it were in $D$, as if the deletion of $\varphi'_L$ and $\varphi'_R$ propagated to
-$\varphi'$ as well. Instead of assigning some arbitrary proof to $\varphi'$ and adding it to $D$,
-the algorithm arbitrarily returns (in line 8) $\varphi'_R$ (which is already in $D$) as the result
-$\varphi'$. In this way, the propagation of deletion is done automatically and implicitly. For
-instance, the following hold:
-\begin{align}
-  \dn{\varphi_1 \odot_\ell \varphi_2}{\varphi_1, \varphi_2} &= \varphi_2 \label{eq:exampledel1} \\
-\dn{\varphi_1 \odot_\ell \varphi_2 \odot_{\ell'} \varphi_3}{\varphi_1, \varphi_2} &=
-  \dn{\varphi_3}{\varphi_1, \varphi_2} \label{eq:exampledel2}
-\end{align}
-A side-effect of this clever implicit propagation of deletion is that the actual result of deletion
-is only meaningful if it is not in $D$. In the example (\ref{eq:exampledel1}), as $\dn{\varphi_1
-\odot_\ell \varphi_2}{\varphi_1, \varphi_2} \in \{\varphi_1, \varphi_2\} $, the actual resulting
-proof is meaningless. Only the information that it is a deleted subproof is relevant, as it suffices
-to obtain meaningful results as shown in (\ref{eq:exampledel2}).
-
-\begin{proposition} \label{prop:del_assoc}
-For any proof $\psi$ and any sets $A$ and $B$ of $\psi$'s subproofs,
-either $\dn{\psi}{A \cup B}  \in A \cup B$
-and    $\dn{\dn{\psi}{A}}{B} \in A \cup B$,
-or     $\dn{\psi}{A \cup B} = \dn{\dn{\psi}{A}}{B}$.
-\end{proposition}
-
-
-\begin{definition}[Valent literal]
-  In a proof $\psi$, a literal $\ell$ is \emph{valent} for the subproof $\varphi$ iff $\dual{\ell}$
-  belongs to the conclusion of $\dn{\psi}{\varphi}$ but not to the conclusion of $\psi$.
+\begin{definition}[Space measure]
+\label{def:space measure}
+The space measure $sp_{<_T}(\psi)$ of a proof $\psi$ is the maximum number of nodes that have to be kept in memory, when traversing $\psi$ in a top-down fashion, following the topological order $<_T$.
 \end{definition}
 
-\begin{proposition} \label{prop:valentactive}
-In a proof $\psi$, every valent literal of a subproof $\varphi$ is an active literal of $\varphi$.
-\end{proposition}
-
-\newcommand{\pedge}[3]{\ensuremath{\raiz{#1} \xrightarrow{#2} \raiz{#3}}}
-
-\begin{proof}
-Lines 2, 12, 14 and 16 from Algorithm \ref{algo:del} can not introduce a new literal in the conclusion of
-the subproof being processed. Let $\ell$ be a valent literal of $\varphi$ in $\psi$. Because
-there is only one subproof to be deleted, $\dual{\ell}$ can only be introduced when processing a
-subproof $\varphi'$ such that $\pedge{\varphi'}{\ell}{\varphi}$. \qed
-\end{proof}
-
-\begin{proposition}
-Given a proof $\psi$ and a set $D = \{\varphi_1 \ldots \varphi_n\}$ of $\psi$'s subproofs, $\forall
-\ell \in \mathcal{L}$ s.t. $\ell$ is in the conclusion of $\dn{\psi}{D}$ but not in $\psi$'s
-conclusion, then $\exists i$ s.t. $\dual{\ell}$ is a valent literal of $\varphi_i$ in $\psi$.
-\end{proposition}
-
-
-\section{Pebbling Game} \label{sec:LU}
+\section{Pebbling Game}
 
 \section{Greedy Pebbling Algorithms}
 
-\begin{algorithm}[bt]
-  \KwIn {a proof $\psi$}
-  \KwOut{a compressed proof $\psi'$}
+The following two algorithms search for a topological order of a proof in a bottom-up fashion, using a predefined heuristic.
+
+\SetKwFunction{KwVisit}{visit}
+
+\begin{algorithm}[h]
+  \KwIn{a proof $\psi$ with root node $r$}
+  \KwOut{a topological order $<_T$ of $\psi$ represented by a sequence of nodes}
   \BlankLine
 
-  \SetKwData{Units}{Units}
-  \Units $\leftarrow \varnothing$ \;
-  \BlankLine
+	$S$ is the empty sequence\;
+	$V = \emptyset$\;
+	\Return \KwVisit{$\psi$,$r$,$V$,$S$}\;
 
-  \For{every subproof $\varphi$ in a bottom-up traversal}{
-    \If{$\varphi$ is a unit and has more than one child}{Enqueue $\varphi$ in \Units \; }
-  }
-  \BlankLine
-
-  $\psi' \leftarrow $ \Rec{$\psi$,$\Units$} \;
-  \BlankLine
-
-  \For{every unit $\varphi$ in \Units}{
-    \Let{$\{\ell\} = \Conclusion{\varphi}$} \;
-    \lIf{$\dual{\ell} \in \Conclusion{\psi'}$}{
-    $\psi' \leftarrow \psi' \odot_\ell \varphi$ \;}
-  }
-
-  \caption{\LowerUnits}
-  \label{algo:LU}
+  \caption[.]{\FuncSty{Bottom-up Pebbling}}
+  \label{algo:BUpebbling}
 \end{algorithm}
 
+\begin{algorithm}[h]
+  \KwIn{a proof $\psi$, a node $\n$}
+	\KwIn{a set of visited nodes $V$} 
+	\KwIn{initial sequence of nodes $S$}
+  \KwOut{a sequence of nodes}
+	
+	$V_1 = V \cup \{\n\}$\;
+	$D = \Premises{\n}{\psi} \setminus V$\;
+	$S_1 = S$
+	
+  \While{$D$ is not empty}{
+    choose $p \in D$ heuristically\;
+		$D = D \setminus \n$\;
+		$S_1 = S_1 \oplus visit(\psi,\n,V,S)$\;
+  }
+	
+	\Return $S_1 \oplus \n$\;
+	
+  \caption[.]{\FuncSty{visit}}
+  \label{algo:visit}
+\end{algorithm}
+
+The following algorithm searches for a topological order of a proof in a top-down fashion, using a predefined heuristic.
+
+\begin{algorithm}[h]
+  \KwIn{a proof $\psi$}
+  \KwOut{a topological order $<_T$ of $\psi$ represented by a sequence of nodes}
+	
+	$S$ is the empty sequence\;
+	$A = \{p \in \Verices{\psi} \mid p \text{ is an axiom}\}$\;
+	
+  \While{$A$ is not empty}{
+    choose $\n \in A$ heuristically\;
+		\For{\KwSty{each} $c \in \Children{\n}{\psi}$}{
+			\If{$\forall p \in \Premises{c}{\psi}: p \in S$}
+					{$A = A \cup \{c\}$\;}
+					}
+		$A = A \setminus \{\n\}$\;
+		$S = S \oplus \n$\;
+  }
+	
+	\Return $S$\;
+	
+  \caption[.]{\FuncSty{top-down pebbling}}
+  \label{algo:TDpebbling}
+\end{algorithm}
 
 \subsection{Last Child Heuristic}
 
