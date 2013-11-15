@@ -17,6 +17,8 @@
 \usepackage{mathenvironments}
 \usepackage{drawproof}
 
+
+
 \renewcommand{\topfraction}{0.85}
 \renewcommand{\textfraction}{0.1}
 \renewcommand{\floatpagefraction}{0.75}
@@ -44,13 +46,9 @@
   \email{bruno@logic.at}
 }
 
-
-
-
 \begin{document}
 
 \maketitle
-
 
 \begin{abstract}
 Bruno
@@ -147,7 +145,7 @@ $$
 p <_T v
 $$
 \end{definition}
-A topological order $<_T$ can be represented by a sequence of proof nodes $S = (s_1,\ldots,\s_n)$, by defining $<_T \defeq \{(s_i,s_j) \mid 1 \leq i < j \leq n\}$.\\
+A topological order $<_T$ can be represented by a sequence of proof nodes $S = (s_1,\dots,s_n)$, by defining $<_T \defeq \{(s_i,s_j) \mid 1 \leq i < j \leq n\}$.\\
 Note that there are proofs, for which exponentially many different topological orders exists: Consider a proof with $n$ axioms. Every permutation of these axioms can be extended to a sequence which represent a topological order. There are $n!$ such permutations, so the overall number of topological orders is at least exponential in $n$.\\
 This means that when looking for a good topological order w.r.t. any characteristic, enumeration is not a feasible option.
 
@@ -164,7 +162,54 @@ The space measure $sp_{<_T}(\psi)$ of a proof $\psi$ is the maximum number of no
 
 \section{Greedy Pebbling Algorithms}
 
-The following two algorithms search for a topological order of a proof in a bottom-up fashion, using a predefined heuristic.
+In the following we present two different approaches of heuristically constructing pebbling strategies.
+They are called Top-down and Bottom-up Pebbling. Their names reflect the traversal direction in which the algorithms operate on a proof.
+
+\subsection{Top-down Pebbling}
+
+Top-down Pebbling constructs a topological order of a proof by traversing it starting from one axioms and ending in its root.
+This approach closely corresponds to how a human would play the pebbling game. 
+A human would look at the nodes that are available for pebbling at a given state, choose one of them to pebble and remove pebbles if possible.
+He would naturally not unpebble a node, that would have to be pebbled later on again. Also he would not pebble a node that was unpebbled earlier.\\
+Similarly the algorithm keeps track of pebblable nodes in form of a set $P$. Initially $P$ are exactly the axioms of the proof. 
+When pebbling a node $\n$, it is removed from $P$, added to the sequence representing the topological order and for all its children it is checked, weather they are now available for pebbling and if so added to $P$.\\
+Since the graph is acyclic by definition, $P$ being empty implies that all nodes have been pebbled and a topological order has been found.
+
+Note that $\oplus$ is used for the concatenation operation on sequences. %should I define this?
+
+\begin{algorithm}[h]
+  \KwIn{a proof $\psi$}
+  \KwOut{a topological order $<_T$ of $\psi$ represented by a sequence of nodes}
+	
+	$S$ is the empty sequence\;
+	$A = \{p \in \Vertices{\psi} \mid p \text{ is an axiom}\}$\;
+	
+  \While{$A$ is not empty}{
+    choose $\n \in A$ heuristically\;
+		\For{\KwSty{each} $c \in \Children{\n}{\psi}$}{
+			\If{$\forall p \in \Premises{c}{\psi}: p \in S$}
+					{$A = A \cup \{c\}$\;}
+					}
+		$A = A \setminus \{\n\}$\;
+		$S = S \oplus \n$\;
+  }
+	
+	\Return $S$\;
+	
+  \caption[.]{\FuncSty{top-down pebbling}}
+  \label{algo:TDpebbling}
+\end{algorithm}
+
+\subsection{Bottom-up Pebbling}
+
+Bottom-up Pebbling constructs a topological order of a proof by traversing it starting from its root and ending in one of its axioms.\\
+The algorithm constructs the order by visiting nodes and their premises recursively. 
+At every node it is decided heuristically in what order the premises are visited.
+After visiting the its premises, the node itself is added to the current sequence of nodes.
+Since axioms don't have any premises, there is no recursive call for axioms and these nodes are simply added to the sequence.
+The recursion is started by a call to visit the root.
+Since all proof nodes are recursive premises of the root, after the root has been visited a topological order is found.
+As opposed to Top-down Pebbling, this is more of a structural approach, instead to actually playing the pebbling game.
 
 \SetKwFunction{KwVisit}{visit}
 
@@ -203,39 +248,227 @@ The following two algorithms search for a topological order of a proof in a bott
   \label{algo:visit}
 \end{algorithm}
 
-The following algorithm searches for a topological order of a proof in a top-down fashion, using a predefined heuristic.
+\subsection{Top-down vs Bottom-up Pebbling} %or: Which way to go?
 
-\begin{algorithm}[h]
-  \KwIn{a proof $\psi$}
-  \KwOut{a topological order $<_T$ of $\psi$ represented by a sequence of nodes}
+\label{sec:TDvsBU}
+
+In principal every topological order of a given proof can be constructed using Top-down or Bottom-up Pebbling.
+Both algorithms have linear run-time in the proof size (given that the heuristic choice does only require constant time). 
+The question relevant for this paper is, which approach behaves better for constructing orders, that are good w.r.t. the space measure.
+It turns out Bottom-up Pebbling wins the race.\\
+The reason is that Top-down Pebbling often encounters situations, where it pebbles nodes that are far away from the previously pebbled nodes.
+Far away here is meant with respect to the amount of undirected edges between proof nodes in the proof graph. Figure \ref{fig:TDPIssue} displays this issue with an example.\\
+Bottom-up Pebbling does not suffer from this unlocality issue that much, because queuing up the processing of premises enforces local pebbling.
+
+\begin{figure}[p]
+Consider the following proof and the initial sequence of nodes $(1,2,3)$. 
+For a greedy heuristic, that only has information about pebbled nodes, their premises and children, all nodes marked with '$4?$' are considered equally worthy to pebble next.
+	\begin{center}
+		\begin{tikzpicture}[node distance=1.2cm]
+			\proofnodeBW{root};
+			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
+			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
+			\proofnodeBW[above left of = n7]{n3};
+			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
+			\proofnodeBW[above right of = n12]{n10};
+			\withchildrenBW{n3}{n1}{n2};
+			\withchildrenBW{n6}{n4}{n5};
+			\withchildrenBW{n10}{n8}{n9};
+			\drawchildren{root}{n7}{n12};
+			\drawchildren{n7}{n3}{n6};
+			\drawchildren{n12}{n6}{n10};
+			\blacknode{n3};
+			\node [color=red, yshift = 2mm] (cap1) at (n1.north) {\small{1}};
+			\node [color=red, yshift = 2mm] (cap2) at (n2.north) {\small{2}};
+			\node [color=red, yshift = 2mm] (cap3) at (n3.north) {\small{3}};
+			\node [color=red, yshift = 2mm] (cap4) at (n4.north) {\small{4?}};
+			\node [color=red, yshift = 2mm] (cap5) at (n5.north) {\small{4?}};
+			\node [color=red, yshift = 2mm] (cap6) at (n8.north) {\small{4?}};
+			\node [color=red, yshift = 2mm] (cap7) at (n9.north) {\small{4?}};
+		\end{tikzpicture}
+	\end{center}
+Now suppose the following node marked black is pebbled.
+	\begin{center}
+		\begin{tikzpicture}[node distance=1.2cm]
+			\proofnodeBW{root};
+			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
+			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
+			\proofnodeBW[above left of = n7]{n3};
+			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
+			\proofnodeBW[above right of = n12]{n10};
+			\withchildrenBW{n3}{n1}{n2};
+			\withchildrenBW{n6}{n4}{n5};
+			\withchildrenBW{n10}{n8}{n9};
+			\drawchildren{root}{n7}{n12};
+			\drawchildren{n7}{n3}{n6};
+			\drawchildren{n12}{n6}{n10};
+			\blacknode{n3};
+			\blacknode{n8};
+			\node [color=red, yshift = 2mm] (cap1) at (n1.north) {\small{1}};
+			\node [color=red, yshift = 2mm] (cap2) at (n2.north) {\small{2}};
+			\node [color=red, yshift = 2mm] (cap3) at (n3.north) {\small{3}};
+			\node [color=red, yshift = 2mm] (cap8) at (n8.north) {\small{4}};
+		\end{tikzpicture}
+	\end{center}
 	
-	$S$ is the empty sequence\;
-	$A = \{p \in \Verices{\psi} \mid p \text{ is an axiom}\}$\;
-	
-  \While{$A$ is not empty}{
-    choose $\n \in A$ heuristically\;
-		\For{\KwSty{each} $c \in \Children{\n}{\psi}$}{
-			\If{$\forall p \in \Premises{c}{\psi}: p \in S$}
-					{$A = A \cup \{c\}$\;}
-					}
-		$A = A \setminus \{\n\}$\;
-		$S = S \oplus \n$\;
-  }
-	
-	\Return $S$\;
-	
-  \caption[.]{\FuncSty{top-down pebbling}}
-  \label{algo:TDpebbling}
-\end{algorithm}
+The following moves can be found by a greedy heuristic. Pebbling '$5$' opens up the possibility to remove a pebble in the next move, which is done by pebbling '$6$'.
+After that only '$7$' and '$8$' are left to pebble. They can again be considered to be equally worthy to pebble next, but in this situation it does not matter which one is pebbled first.
+
+	\begin{center}
+		\begin{tikzpicture}[node distance=1.2cm]
+			\proofnodeBW{root};
+			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
+			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
+			\proofnodeBW[above left of = n7]{n3};
+			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
+			\proofnodeBW[above right of = n12]{n10};
+			\withchildrenBW{n3}{n1}{n2};
+			\withchildrenBW{n6}{n4}{n5};
+			\withchildrenBW{n10}{n8}{n9};
+			\drawchildren{root}{n7}{n12};
+			\drawchildren{n7}{n3}{n6};
+			\drawchildren{n12}{n6}{n10};
+			\blacknode{n3};
+			\blacknode{n10};
+			\blacknode{n4};
+			\blacknode{n5};
+			\node [color=red, yshift = 2mm] (cap1) at (n1.north) {\small{1}};
+			\node [color=red, yshift = 2mm] (cap2) at (n2.north) {\small{2}};
+			\node [color=red, yshift = 2mm] (cap3) at (n3.north) {\small{3}};
+			\node [color=red, yshift = 2mm] (cap4) at (n8.north) {\small{4}};
+			\node [color=red, yshift = 2mm] (cap5) at (n9.north) {\small{5}};
+			\node [color=red, yshift = 2mm] (cap6) at (n10.north) {\small{6}};
+			\node [color=red, yshift = 2mm] (cap7) at (n4.north) {\small{7}};
+			\node [color=red, yshift = 2mm] (cap8) at (n5.north) {\small{8}};
+		\end{tikzpicture}
+				
+	\end{center}
+At this point, $4$ pebbles are used, which is one more than what an optimal strategy needs.
+\caption{Top-down Pebbling issue}
+\label{fig:TDPIssue}
+\end{figure}
+
+\begin{figure}[p]
+Consider the same example proof like in Figure \ref{fig:TDPIssue}, and suppose that the hatched nodes were chosen by the heuristic to be processed before the respective other premise.
+	\begin{center}
+		\begin{tikzpicture}[node distance=1.2cm]
+			\proofnodeBW{root};
+			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
+			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
+			\proofnodeBW[above left of = n7]{n3};
+			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
+			\proofnodeBW[above right of = n12]{n10};
+			\withchildrenBW{n3}{n1}{n2};
+			\withchildrenBW{n6}{n4}{n5};
+			\withchildrenBW{n10}{n8}{n9};
+			\drawchildren{root}{n7}{n12};
+			\drawchildren{n7}{n3}{n6};
+			\drawchildren{n12}{n6}{n10};
+			\waitingnode{n7};
+			\waitingnode{n3};
+			\waitingnode{n1};
+		\end{tikzpicture}
+	\end{center}
+Similar to the Top-down Pebbling scenario, this results in the initial sequence $(1,2,3)$
+	\begin{center}
+		\begin{tikzpicture}[node distance=1.2cm]
+			\proofnodeBW{root};
+			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
+			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
+			\proofnodeBW[above left of = n7]{n3};
+			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
+			\proofnodeBW[above right of = n12]{n10};
+			\withchildrenBW{n3}{n1}{n2};
+			\withchildrenBW{n6}{n4}{n5};
+			\withchildrenBW{n10}{n8}{n9};
+			\drawchildren{root}{n7}{n12};
+			\drawchildren{n7}{n3}{n6};
+			\drawchildren{n12}{n6}{n10};
+			\waitingnode{n7};
+			\blacknode{n3};
+			\node [color=red, yshift = 2mm] (cap1) at (n1.north) {\small{1}};
+			\node [color=red, yshift = 2mm] (cap2) at (n2.north) {\small{2}};
+			\node [color=red, yshift = 2mm] (cap3) at (n3.north) {\small{3}};
+		\end{tikzpicture}
+	\end{center}
+At this point however, the choice where to go next is predefined, by the hatched node. 
+Since one of its premises is completely processed, the other premise is visited next.
+	\begin{center}
+		\begin{tikzpicture}[node distance=1.2cm]
+			\proofnodeBW{root};
+			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
+			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
+			\proofnodeBW[above left of = n7]{n3};
+			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
+			\proofnodeBW[above right of = n12]{n10};
+			\withchildrenBW{n3}{n1}{n2};
+			\withchildrenBW{n6}{n4}{n5};
+			\withchildrenBW{n10}{n8}{n9};
+			\drawchildren{root}{n7}{n12};
+			\drawchildren{n7}{n3}{n6};
+			\drawchildren{n12}{n6}{n10};
+			\waitingnode{n7};
+			\blacknode{n3};
+			\waitingnode{n6};
+			\node [color=red, yshift = 2mm] (cap1) at (n1.north) {\small{1}};
+			\node [color=red, yshift = 2mm] (cap2) at (n2.north) {\small{2}};
+			\node [color=red, yshift = 2mm] (cap3) at (n3.north) {\small{3}};
+		\end{tikzpicture}
+	\end{center}
+
+The result is that node '$7$' can be pebbled early and at no point more than 3 pebbles are used for the proof.
+
+	\begin{center}
+		\begin{tikzpicture}[node distance=1.2cm]
+			\proofnodeBW{root};
+			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
+			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
+			\proofnodeBW[above left of = n7]{n3};
+			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
+			\proofnodeBW[above right of = n12]{n10};
+			\withchildrenBW{n3}{n1}{n2};
+			\withchildrenBW{n6}{n4}{n5};
+			\withchildrenBW{n10}{n8}{n9};
+			\drawchildren{root}{n7}{n12};
+			\drawchildren{n7}{n3}{n6};
+			\drawchildren{n12}{n6}{n10};
+			\blacknode{n7};
+			\node [color=red, yshift = 2mm] (cap1) at (n1.north) {\small{1}};
+			\node [color=red, yshift = 2mm] (cap2) at (n2.north) {\small{2}};
+			\node [color=red, yshift = 2mm] (cap3) at (n3.north) {\small{3}};
+			\node [color=red, yshift = 2mm] (cap4) at (n4.north) {\small{5}};
+			\node [color=red, yshift = 2mm] (cap5) at (n5.north) {\small{4}};
+			\node [color=red, yshift = 2mm] (cap6) at (n6.north) {\small{6}};
+			\node [color=red, yshift = 2mm] (cap7) at (n7.north) {\small{7}};
+		\end{tikzpicture}
+	\end{center}
+
+\caption{Bottom-up Pebbling}
+\label{fig:BUP}
+\end{figure}
+
 
 \subsection{Last Child Heuristic}
 
+As soon as all children of a node $\n$ are pebbled, $\n$ can be unpebbled. 
+More precisely, $\n$ can be unpebbled as soon as the its last child is pebbled.
+
+%In a way this heuristic is weird, because it relies on an existing order. Also 
+
 \subsection{Node Distance Heuristic}
+
+In section Section \ref{sec:TDvsBU} the issue with non local pebbling was explained.
+Capturing the full structure of a proof would be inefficient in general, however a limited distance search can help to do local pebbling.
+The Node Distance Heuristic searches for pebbled nodes that are close to the decision node.
+It does this by calculating spheres with a limited radius around nodes.
+A sphere with radius $r$ around the node $\n$ in the proof $\psi$ is defined in the following way: 
+$$K_r^{\psi}(\n) \eqdef \{p \in \Vertices{\psi} \mid \text{ there are at most } r \text{ (undirected) proof edges between } p \text{ and } \n\}$$
 
 \subsection{Number of Children Heuristic}
 
-
-
+This heuristic uses the number of children nodes $|\Children{\n}{\psi}|$ of a node $\n$ the deciding characteristic. 
+The smaller the number of children nodes, the better a node is considered. 
+The idea behind this heuristic is, that nodes with a low number of children can be unpebbled quickly after being pebbled.
 
 \section{Experiments} \label{sec:exp}
 
