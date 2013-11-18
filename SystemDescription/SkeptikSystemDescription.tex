@@ -82,7 +82,21 @@ This paper describes \skeptik: a system for compressing and improving proofs obt
 
 \section{Available Proof Compression Algorithms}
 
-\subsection{RecyclePivotsWithIntersection}
+\subsection{RecyclePivots and RecyclePivotsWithIntersection}
+
+In \cite{Tseitin}, Tseitin outlines a first kind of proof redundancy with the concept of
+\emph{irregular proof}. A proof is irregular if some pivot is resolved more than once on some path
+from the root to a leaf. But Goerdt \cite{Goerdt} proved that the corresponding regular proof of an
+irregular proof may be exponentialy bigger than the original. Therefore, only \emph{partial}
+regularisation algorithm can compress a proof.
+
+\algo{RecyclePivots} (\algo{RP}) \cite{RP08,RP11} and \algo{RecyclePivotsWithIntersection}
+(\algo{RPI}) \cite{LURPI} are such partial regularisation algorithms. They both compute for each
+node a set of \emph{safe literals} and then delete a premise iff its auxiliary literal is safe. The
+set of safe literals is constructed recursively from the root of the proof by adding the dual of the
+auxiliary literal. The two algorithms only differs for nodes which are premises of more than one
+resolution. In that case, \algo{RP} resets the safe literals to the empty set whereas \algo{RPI}
+computes the intersection of the safe literals corresponding to each incoming edge.
 
 \subsection{LowerUnits}
 
@@ -90,7 +104,7 @@ Another kind of proof redundancy happens when a node $\node$ appears as premise 
 on the same pivot $p$. In that case, it would be better to resolve $\node$ on $p$ only once. The
 \algo{LowerUnits} (\algo{LU}) algorithm \cite{LURPI} reduces this kind of redundancy by lowering
 \emph{units} down to the root of the proof. Units are subproofs whose conclusion consists in a
-single literal. Such a subproof can always be lowered down to the proof.
+single literal. Such a subproof can always be lowered down the proof.
 
 \algo{LowerUnits} is of linear time complexity in the length of the proof. It is a very fast
 algorithm which perform good compression ratio.
@@ -100,8 +114,8 @@ algorithm which perform good compression ratio.
 The \algo{LowerUnivalents} algorithm \cite{LUniv} (\algo{LUniv}) generalizes \algo{LowerUnits} by
 exploiting the information of the already lowered subproofs and their pivots. Then, it becomes
 possible to lower a non-unit node if all its conclusion's literals but one can be deleted by the
-already lowered subproofs. Moreover, some partial regularization based on the lowered pivots can be
-achieved simultaneously.
+already lowered subproofs. Moreover, the lowered pivots are safe literals and thus some partial
+regularization can be achieved simultaneously.
 
 In \skeptik, \algo{LUniv} has been implemented as a replacement for the \algo{fixProof} function
 used by some algorithms to reconstruct a proof after deletions. Therefore, non-sequential
