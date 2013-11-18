@@ -126,6 +126,15 @@ algorithm is currently one the best trade-off between compression time and compr
 
 \subsection{RPI[3]LU and RPI[3]LUniv}
 
+\algo{RPI[3]LU} and \algo{RPI[3]LUniv} are non-sequential combinations of \algo{RPI} after \algo{LU}
+and \algo{LUniv}. They consist in three traversals. The first traversal collects subproofs to be
+lowered down the proof. The second traversal computes the sets of safe literals for each node,
+taking into account the subproofs marked for being lowered. The last traversal actualy compress the
+proof by removing redundant branches and lowering subproofs.
+
+These algorithm are optimizations of the corresponding sequential compositions, achieving the
+same compression ratio in less time. 
+
 \subsection{ReduceAndReconstruct}
 
 The \algo{ReduceAndReconstruct} (\algo{RedRec}) approach consists in applying local transformation
