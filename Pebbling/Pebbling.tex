@@ -1,0 +1,624 @@
+\documentclass{llncs}
+
+\usepackage{xcolor}
+\usepackage{enumitem,amsmath,amssymb}
+\usepackage{breakurl}    % used for \url and \burl
+\usepackage[linesnumbered,boxed,noline,noend]{algorithm2e}
+\def\defaultHypSeparation{\hskip.1in}
+
+\usepackage{tikz}
+\usepackage{subfig}
+\usepackage{array,booktabs,multirow}
+\usepackage{placeins}
+
+\usepackage{logictools}
+\usepackage{prooftheory}
+\usepackage{comment}
+\usepackage{mathenvironments}
+\usepackage{drawproof}
+
+
+
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.75}
+
+\newcommand{\defeq}{\mathrel{\mathop:}=}
+\newcommand{\eqdef}{\mathrel{\mathop=}:}
+
+\title{Pebbling}
+
+\author{
+  Andreas Fellner\inst{1}
+  \thanks{Supported by the Google Summer of Code 2013 program.}
+  \and 
+  Bruno Woltzenlogel Paleo\inst{2}
+  \thanks{Supported by the Austrian Science Fund, project P24300.}
+}
+
+\authorrunning{A.\~Fellner \and B.\~Woltzenlogel Paleo}
+
+\institute{
+  Vienna University of Technology \\
+  \email{fellner.a@gmail.com}
+  \and 
+  Vienna University of Technology \\
+  \email{bruno@logic.at}
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Bruno
+\end{abstract}
+
+\setcounter{footnote}{0}
+
+\section{Introduction}
+
+Bruno
+
+\section{Introduction}
+Bruno
+
+Propositional Resolution proofs usually are huge. So huge that when processing such proofs memory limits are reached and exceeded.
+%A proof is only good if it is verifiable.
+%Software that verifies the correctness of a proof has only got a limited amount of memory that it can allocate. 
+%\Skeptik and similar pieces of software provide compression methods that reduce the number of proof nodes and therefore the required memory.
+%Additionally when reading a proof incrementally, one can never be sure if a proof node that lies in memory will be needed later in the proof.
+However not the whole proof needs to be kept in memory. 
+Proof nodes that are not used further on can be removed from memory.
+Information when to remove which node can be added as extra lines in the proof output.
+%Such deletion information can be added to the proof when writing it to a file.
+The maximum number of proof nodes that have to be kept in memory at once using deletion information is called the space measure.
+This measure is closely related to the Black Pebbling Game \cite{kasai1979classes,gilbert1980pebbling}.
+A strategy for this game corresponds to a topological ordering of the proof nodes plus deletion information.
+Finding an optimal strategy for the Black Pebbling Game is PSPACE-complete \cite{gilbert1980pebbling} and therefore not a feasible approach to compress big proofs.
+This paper investigates heuristic approaches to the problem.
+
+\section{Propositional Resolution Calculus}
+
+A \emph{literal} is a propositional variable or the negation of a propositional variable. The
+\emph{complement} of a literal $\ell$ is denoted $\dual{\ell}$ (i.e. for any propositional variable $p$,
+$\dual{p} = \neg p$ and $\dual{\neg p} = p$). The set of all literals is denoted $\mathcal{L}$. A
+\emph{clause} is a set of literals. $\bot$ denotes the \emph{empty clause}.
+
+
+\newcommand{\axiom}[1]{\widehat{#1}}
+\newcommand{\n}{v}
+\newcommand{\raiz}[1]{\rho(#1)}
+
+\begin{definition}[Proof] 
+\label{def:proof}
+A directed acyclic graph $\langle V, E, \clause \rangle$, where $V$ is a set of nodes and $E$ is a
+set of edges labeled by literals (i.e. $E \subset V \times \mathcal{L} \times V$ and $\n_1
+\xrightarrow{\ell} \n_2$ denotes an edge from node $\n_1$ to node $\n_2$ labeled by $\ell$), is a
+proof of a clause $\clause$ iff it is inductively constructible according to the following cases:
+%
+\begin{enumerate}
+  \item If $\Gamma$ is a clause, $\axiom{\Gamma}$ denotes some proof $\langle \{ \n \}, \emptyset ,
+    \Gamma \rangle$, where $\n$ is a new node.
+  \item If $\psi_L$ is a proof $\langle V_L, E_L, \clause_L \rangle$ and
+    $\psi_R$ is a proof $\langle V_R, E_R, \clause_R \rangle$ and $\ell$ is a literal such that
+    $\dual{\ell} \in \clause_L$ and $\ell \in \clause_R$, then
+    $\psi_L \odot_\ell \psi_R$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
+    \begin{align*}
+      V &= V_L \cup V_R \cup \{\n \} \\
+      E &= E_L \cup E_R \cup
+                    \left\{ \n \xrightarrow{\dual{\ell}} \raiz{\psi_L}, \n \xrightarrow{\ell} \raiz{\psi_R} \right\} \\
+     \Gamma &= \left( \clause_L \setminus \left\{ \dual{\ell} \right\} \right) \cup \left( \clause_R
+                    \setminus \left\{ \ell \right\} \right)
+    \end{align*}
+    where $\n$ is a new node and $\raiz{\varphi}$ denotes the root node of $\varphi$.
+  \qed
+\end{enumerate}
+\end{definition}
+
+
+\newcommand{\Vertices}[1]{V_{#1}}
+\newcommand{\Edges}[1]{E_{#1}}
+\newcommand{\Conclusion}[1]{\clause_{#1}}
+\newcommand{\Premises}[2]{P_{#1}^{#2}}
+\newcommand{\Children}[2]{C_{#1}^{#2}}
+
+\noindent
+If $\psi = \varphi_L \odot_{\ell} \varphi_R$, then $\varphi_L$ and $\varphi_R$ are \emph{direct
+subproofs} of $\psi$ and $\psi$ is a \emph{child} of both $\varphi_L$ and $\varphi_R$. The
+transitive closure of the direct subproof relation is the \emph{subproof} relation. A subproof which
+has no direct subproof is an \emph{axiom} of the proof. 
+%I will probably never need the following paragraph in this paper
+Contrary to the usual proof
+theoretic conventions but following the actual implementation of the data structures used by
+\PebblingAlgorithms, edges are directed from children (resolvents) to their parents (premises).
+%
+$\Vertices{\psi}$, $\Edges{\psi}$ and $\Conclusion{\psi}$
+denote, respectively, the nodes, edges and proved clause (conclusion) of $\psi$.\\
+Let $\n$ be a node in $\psi$, then $\Premises{\n}{\psi}$ denotes its premises and $\Children{\n}{\psi}$ its children in $\psi$.
+
+\begin{definition}[Topological Order]
+\label{def:topological order}
+A topological order of a proof $\psi$ is a linear order relation $<_T$ on $\Vertices{\psi}$, such that 
+$$
+\text{for all } \n \in \Vertices{\psi} \text{, for all } p \in \Premises{\n}{\psi} \text{ hold }\\
+p <_T v
+$$
+\end{definition}
+A topological order $<_T$ can be represented by a sequence of proof nodes $S = (s_1,\dots,s_n)$, by defining $<_T \defeq \{(s_i,s_j) \mid 1 \leq i < j \leq n\}$.\\
+Note that there are proofs, for which exponentially many different topological orders exists: Consider a proof with $n$ axioms. Every permutation of these axioms can be extended to a sequence which represent a topological order. There are $n!$ such permutations, so the overall number of topological orders is at least exponential in $n$.\\
+This means that when looking for a good topological order w.r.t. any characteristic, enumeration is not a feasible option.
+
+By loading nodes into memory following a topological order, proofs can be traversed in a top-down fashion, for example to check the correctness of the proof.\\
+Not all nodes have to be kept in memory when doing such a traversal. As soon as all nodes $p \in \Children{\n}{\psi}$ have been loaded into memory, $\n$ can be removed from memory,
+since it will not be needed further on.
+
+\begin{definition}[Space measure]
+\label{def:space measure}
+The space measure $sp_{<_T}(\psi)$ of a proof $\psi$ is the maximum number of nodes that have to be kept in memory, when traversing $\psi$ in a top-down fashion, following the topological order $<_T$.
+\end{definition}
+
+\section{Pebbling Game}
+
+\section{Greedy Pebbling Algorithms}
+
+In the following we present two different approaches of heuristically constructing pebbling strategies.
+They are called Top-down and Bottom-up Pebbling. Their names reflect the traversal direction in which the algorithms operate on a proof.
+
+\subsection{Top-down Pebbling}
+
+Top-down Pebbling constructs a topological order of a proof by traversing it starting from one axioms and ending in its root.
+This approach closely corresponds to how a human would play the pebbling game. 
+A human would look at the nodes that are available for pebbling at a given state, choose one of them to pebble and remove pebbles if possible.
+He would naturally not unpebble a node, that would have to be pebbled later on again. Also he would not pebble a node that was unpebbled earlier.\\
+Similarly the algorithm keeps track of pebblable nodes in form of a set $P$. Initially $P$ are exactly the axioms of the proof. 
+When pebbling a node $\n$, it is removed from $P$, added to the sequence representing the topological order and for all its children it is checked, weather they are now available for pebbling and if so added to $P$.\\
+Since the graph is acyclic by definition, $P$ being empty implies that all nodes have been pebbled and a topological order has been found.
+
+Note that $\oplus$ is used for the concatenation operation on sequences. %should I define this?
+
+\begin{algorithm}[h]
+  \KwIn{a proof $\psi$}
+  \KwOut{a topological order $<_T$ of $\psi$ represented by a sequence of nodes}
+	
+	$S$ is the empty sequence\;
+	$A = \{p \in \Vertices{\psi} \mid p \text{ is an axiom}\}$\;
+	
+  \While{$A$ is not empty}{
+    choose $\n \in A$ heuristically\;
+		\For{\KwSty{each} $c \in \Children{\n}{\psi}$}{
+			\If{$\forall p \in \Premises{c}{\psi}: p \in S$}
+					{$A = A \cup \{c\}$\;}
+					}
+		$A = A \setminus \{\n\}$\;
+		$S = S \oplus \n$\;
+  }
+	
+	\Return $S$\;
+	
+  \caption[.]{\FuncSty{top-down pebbling}}
+  \label{algo:TDpebbling}
+\end{algorithm}
+
+\subsection{Bottom-up Pebbling}
+
+Bottom-up Pebbling constructs a topological order of a proof by traversing it starting from its root and ending in one of its axioms.\\
+The algorithm constructs the order by visiting nodes and their premises recursively. 
+At every node it is decided heuristically in what order the premises are visited.
+After visiting the its premises, the node itself is added to the current sequence of nodes.
+Since axioms don't have any premises, there is no recursive call for axioms and these nodes are simply added to the sequence.
+The recursion is started by a call to visit the root.
+Since all proof nodes are recursive premises of the root, after the root has been visited a topological order is found.
+As opposed to Top-down Pebbling, this is more of a structural approach, instead to actually playing the pebbling game.
+
+\SetKwFunction{KwVisit}{visit}
+
+\begin{algorithm}[h]
+  \KwIn{a proof $\psi$ with root node $r$}
+  \KwOut{a topological order $<_T$ of $\psi$ represented by a sequence of nodes}
+  \BlankLine
+
+	$S$ is the empty sequence\;
+	$V = \emptyset$\;
+	\Return \KwVisit{$\psi$,$r$,$V$,$S$}\;
+
+  \caption[.]{\FuncSty{Bottom-up Pebbling}}
+  \label{algo:BUpebbling}
+\end{algorithm}
+
+\begin{algorithm}[h]
+  \KwIn{a proof $\psi$, a node $\n$}
+	\KwIn{a set of visited nodes $V$} 
+	\KwIn{initial sequence of nodes $S$}
+  \KwOut{a sequence of nodes}
+	
+	$V_1 = V \cup \{\n\}$\;
+	$D = \Premises{\n}{\psi} \setminus V$\;
+	$S_1 = S$
+	
+  \While{$D$ is not empty}{
+    choose $p \in D$ heuristically\;
+		$D = D \setminus \n$\;
+		$S_1 = S_1 \oplus visit(\psi,\n,V,S)$\;
+  }
+	
+	\Return $S_1 \oplus \n$\;
+	
+  \caption[.]{\FuncSty{visit}}
+  \label{algo:visit}
+\end{algorithm}
+
+\subsection{Top-down vs Bottom-up Pebbling} %or: Which way to go?
+
+\label{sec:TDvsBU}
+
+In principal every topological order of a given proof can be constructed using Top-down or Bottom-up Pebbling.
+Both algorithms have linear run-time in the proof size (given that the heuristic choice does only require constant time). 
+The question relevant for this paper is, which approach behaves better for constructing orders, that are good w.r.t. the space measure.
+It turns out Bottom-up Pebbling wins the race.\\
+The reason is that Top-down Pebbling often encounters situations, where it pebbles nodes that are far away from the previously pebbled nodes.
+Far away here is meant with respect to the amount of undirected edges between proof nodes in the proof graph. Figure \ref{fig:TDPIssue} displays this issue with an example.\\
+Bottom-up Pebbling does not suffer from this unlocality issue that much, because queuing up the processing of premises enforces local pebbling.
+
+\begin{figure}[p]
+Consider the following proof and the initial sequence of nodes $(1,2,3)$. 
+For a greedy heuristic, that only has information about pebbled nodes, their premises and children, all nodes marked with '$4?$' are considered equally worthy to pebble next.
+	\begin{center}
+		\begin{tikzpicture}[node distance=1.2cm]
+			\proofnodeBW{root};
+			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
+			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
+			\proofnodeBW[above left of = n7]{n3};
+			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
+			\proofnodeBW[above right of = n12]{n10};
+			\withchildrenBW{n3}{n1}{n2};
+			\withchildrenBW{n6}{n4}{n5};
+			\withchildrenBW{n10}{n8}{n9};
+			\drawchildren{root}{n7}{n12};
+			\drawchildren{n7}{n3}{n6};
+			\drawchildren{n12}{n6}{n10};
+			\blacknode{n3};
+			\node [color=red, yshift = 2mm] (cap1) at (n1.north) {\small{1}};
+			\node [color=red, yshift = 2mm] (cap2) at (n2.north) {\small{2}};
+			\node [color=red, yshift = 2mm] (cap3) at (n3.north) {\small{3}};
+			\node [color=red, yshift = 2mm] (cap4) at (n4.north) {\small{4?}};
+			\node [color=red, yshift = 2mm] (cap5) at (n5.north) {\small{4?}};
+			\node [color=red, yshift = 2mm] (cap6) at (n8.north) {\small{4?}};
+			\node [color=red, yshift = 2mm] (cap7) at (n9.north) {\small{4?}};
+		\end{tikzpicture}
+	\end{center}
+Now suppose the following node marked black is pebbled.
+	\begin{center}
+		\begin{tikzpicture}[node distance=1.2cm]
+			\proofnodeBW{root};
+			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
+			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
+			\proofnodeBW[above left of = n7]{n3};
+			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
+			\proofnodeBW[above right of = n12]{n10};
+			\withchildrenBW{n3}{n1}{n2};
+			\withchildrenBW{n6}{n4}{n5};
+			\withchildrenBW{n10}{n8}{n9};
+			\drawchildren{root}{n7}{n12};
+			\drawchildren{n7}{n3}{n6};
+			\drawchildren{n12}{n6}{n10};
+			\blacknode{n3};
+			\blacknode{n8};
+			\node [color=red, yshift = 2mm] (cap1) at (n1.north) {\small{1}};
+			\node [color=red, yshift = 2mm] (cap2) at (n2.north) {\small{2}};
+			\node [color=red, yshift = 2mm] (cap3) at (n3.north) {\small{3}};
+			\node [color=red, yshift = 2mm] (cap8) at (n8.north) {\small{4}};
+		\end{tikzpicture}
+	\end{center}
+	
+The following moves can be found by a greedy heuristic. Pebbling '$5$' opens up the possibility to remove a pebble in the next move, which is done by pebbling '$6$'.
+After that only '$7$' and '$8$' are left to pebble. They can again be considered to be equally worthy to pebble next, but in this situation it does not matter which one is pebbled first.
+
+	\begin{center}
+		\begin{tikzpicture}[node distance=1.2cm]
+			\proofnodeBW{root};
+			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
+			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
+			\proofnodeBW[above left of = n7]{n3};
+			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
+			\proofnodeBW[above right of = n12]{n10};
+			\withchildrenBW{n3}{n1}{n2};
+			\withchildrenBW{n6}{n4}{n5};
+			\withchildrenBW{n10}{n8}{n9};
+			\drawchildren{root}{n7}{n12};
+			\drawchildren{n7}{n3}{n6};
+			\drawchildren{n12}{n6}{n10};
+			\blacknode{n3};
+			\blacknode{n10};
+			\blacknode{n4};
+			\blacknode{n5};
+			\node [color=red, yshift = 2mm] (cap1) at (n1.north) {\small{1}};
+			\node [color=red, yshift = 2mm] (cap2) at (n2.north) {\small{2}};
+			\node [color=red, yshift = 2mm] (cap3) at (n3.north) {\small{3}};
+			\node [color=red, yshift = 2mm] (cap4) at (n8.north) {\small{4}};
+			\node [color=red, yshift = 2mm] (cap5) at (n9.north) {\small{5}};
+			\node [color=red, yshift = 2mm] (cap6) at (n10.north) {\small{6}};
+			\node [color=red, yshift = 2mm] (cap7) at (n4.north) {\small{7}};
+			\node [color=red, yshift = 2mm] (cap8) at (n5.north) {\small{8}};
+		\end{tikzpicture}
+				
+	\end{center}
+At this point, $4$ pebbles are used, which is one more than what an optimal strategy needs.
+\caption{Top-down Pebbling issue}
+\label{fig:TDPIssue}
+\end{figure}
+
+\begin{figure}[p]
+Consider the same example proof like in Figure \ref{fig:TDPIssue}, and suppose that the hatched nodes were chosen by the heuristic to be processed before the respective other premise.
+	\begin{center}
+		\begin{tikzpicture}[node distance=1.2cm]
+			\proofnodeBW{root};
+			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
+			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
+			\proofnodeBW[above left of = n7]{n3};
+			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
+			\proofnodeBW[above right of = n12]{n10};
+			\withchildrenBW{n3}{n1}{n2};
+			\withchildrenBW{n6}{n4}{n5};
+			\withchildrenBW{n10}{n8}{n9};
+			\drawchildren{root}{n7}{n12};
+			\drawchildren{n7}{n3}{n6};
+			\drawchildren{n12}{n6}{n10};
+			\waitingnode{n7};
+			\waitingnode{n3};
+			\waitingnode{n1};
+		\end{tikzpicture}
+	\end{center}
+Similar to the Top-down Pebbling scenario, this results in the initial sequence $(1,2,3)$
+	\begin{center}
+		\begin{tikzpicture}[node distance=1.2cm]
+			\proofnodeBW{root};
+			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
+			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
+			\proofnodeBW[above left of = n7]{n3};
+			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
+			\proofnodeBW[above right of = n12]{n10};
+			\withchildrenBW{n3}{n1}{n2};
+			\withchildrenBW{n6}{n4}{n5};
+			\withchildrenBW{n10}{n8}{n9};
+			\drawchildren{root}{n7}{n12};
+			\drawchildren{n7}{n3}{n6};
+			\drawchildren{n12}{n6}{n10};
+			\waitingnode{n7};
+			\blacknode{n3};
+			\node [color=red, yshift = 2mm] (cap1) at (n1.north) {\small{1}};
+			\node [color=red, yshift = 2mm] (cap2) at (n2.north) {\small{2}};
+			\node [color=red, yshift = 2mm] (cap3) at (n3.north) {\small{3}};
+		\end{tikzpicture}
+	\end{center}
+At this point however, the choice where to go next is predefined, by the hatched node. 
+Since one of its premises is completely processed, the other premise is visited next.
+	\begin{center}
+		\begin{tikzpicture}[node distance=1.2cm]
+			\proofnodeBW{root};
+			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
+			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
+			\proofnodeBW[above left of = n7]{n3};
+			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
+			\proofnodeBW[above right of = n12]{n10};
+			\withchildrenBW{n3}{n1}{n2};
+			\withchildrenBW{n6}{n4}{n5};
+			\withchildrenBW{n10}{n8}{n9};
+			\drawchildren{root}{n7}{n12};
+			\drawchildren{n7}{n3}{n6};
+			\drawchildren{n12}{n6}{n10};
+			\waitingnode{n7};
+			\blacknode{n3};
+			\waitingnode{n6};
+			\node [color=red, yshift = 2mm] (cap1) at (n1.north) {\small{1}};
+			\node [color=red, yshift = 2mm] (cap2) at (n2.north) {\small{2}};
+			\node [color=red, yshift = 2mm] (cap3) at (n3.north) {\small{3}};
+		\end{tikzpicture}
+	\end{center}
+
+The result is that node '$7$' can be pebbled early and at no point more than 3 pebbles are used for the proof.
+
+	\begin{center}
+		\begin{tikzpicture}[node distance=1.2cm]
+			\proofnodeBW{root};
+			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
+			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
+			\proofnodeBW[above left of = n7]{n3};
+			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
+			\proofnodeBW[above right of = n12]{n10};
+			\withchildrenBW{n3}{n1}{n2};
+			\withchildrenBW{n6}{n4}{n5};
+			\withchildrenBW{n10}{n8}{n9};
+			\drawchildren{root}{n7}{n12};
+			\drawchildren{n7}{n3}{n6};
+			\drawchildren{n12}{n6}{n10};
+			\blacknode{n7};
+			\node [color=red, yshift = 2mm] (cap1) at (n1.north) {\small{1}};
+			\node [color=red, yshift = 2mm] (cap2) at (n2.north) {\small{2}};
+			\node [color=red, yshift = 2mm] (cap3) at (n3.north) {\small{3}};
+			\node [color=red, yshift = 2mm] (cap4) at (n4.north) {\small{5}};
+			\node [color=red, yshift = 2mm] (cap5) at (n5.north) {\small{4}};
+			\node [color=red, yshift = 2mm] (cap6) at (n6.north) {\small{6}};
+			\node [color=red, yshift = 2mm] (cap7) at (n7.north) {\small{7}};
+		\end{tikzpicture}
+	\end{center}
+
+\caption{Bottom-up Pebbling}
+\label{fig:BUP}
+\end{figure}
+
+
+\subsection{Last Child Heuristic}
+
+As soon as all children of a node $\n$ are pebbled, $\n$ can be unpebbled. 
+More precisely, $\n$ can be unpebbled as soon as the its last child is pebbled.
+
+%In a way this heuristic is weird, because it relies on an existing order. Also 
+
+\subsection{Node Distance Heuristic}
+
+In section Section \ref{sec:TDvsBU} the issue with non local pebbling was explained.
+Capturing the full structure of a proof would be inefficient in general, however a limited distance search can help to do local pebbling.
+The Node Distance Heuristic searches for pebbled nodes that are close to the decision node.
+It does this by calculating spheres with a limited radius around nodes.
+A sphere with radius $r$ around the node $\n$ in the proof $\psi$ is defined in the following way: 
+$$K_r^{\psi}(\n) \eqdef \{p \in \Vertices{\psi} \mid \text{ there are at most } r \text{ (undirected) proof edges between } p \text{ and } \n\}$$
+
+\subsection{Number of Children Heuristic}
+
+This heuristic uses the number of children nodes $|\Children{\n}{\psi}|$ of a node $\n$ the deciding characteristic. 
+The smaller the number of children nodes, the better a node is considered. 
+The idea behind this heuristic is, that nodes with a low number of children can be unpebbled quickly after being pebbled.
+
+\section{Experiments} \label{sec:exp}
+
+{\LowerUnivalents} and {\LUnivRPI} have been implemented in the functional programming
+language Scala\footnote{\url{http://www.scala-lang.org/}} as part of the \skeptik
+library\footnote{\url{https://github.com/Paradoxika/Skeptik}}. {\LowerUnivalents} has been implemented as a
+recursive \FuncSty{delete} improvement.
+
+The algorithms have been applied to 5\,059 proofs produced by the SMT-solver
+{\veriT}\footnote{\url{http://www.verit-solver.org/}} on unsatisfiable benchmarks from the
+SMT-Lib\footnote{\url{http://www.smtlib.org/}}.  The details on the number of proofs per SMT category
+are shown in Table \ref{tab:benchmarks}.  The proofs were translated into pure resolution proofs by
+considering every non-resolution inference as an axiom.
+
+\begin{table}[tb]
+  \caption{Number of proofs per benchmark category}
+  \label{tab:benchmarks}
+  \centering
+  \begin{tabular}{lr}
+    \toprule
+    Benchmark~ &  Number \\
+    Category       & ~of Proofs \\
+    \midrule
+    QF\_UF      & 3907 \\
+    QF\_IDL     &  475 \\
+    QF\_LIA     &  385 \\
+    QF\_UFIDL   &  156 \\
+    QF\_UFLIA   &  106 \\
+    QF\_RDL     &   30 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The experiment compared the following algorithms:
+\begin{description}
+  \item[LU:] the {\LowerUnits} algorithm from \cite{LURPI};
+  \item[LUniv:] the {\LowerUnivalents} algorithm;
+  \item[RPILU:] a non-sequential combination of {\RPI} after {\LowerUnits};
+  \item[RPILUniv:] a non-sequential combination of {\RPI} after {\LowerUnivalents};
+  \item[LU.RPI:] the sequential composition of {\LowerUnits} after {\RPI};
+  \item[LUnivRPI:] the non-sequential combination of {\LowerUnivalents} after {\RPI} as described in Sect. \ref{sec:LUnivRPI};
+  \item[RPI:] the {\RecyclePivotsIntersection} from \cite{LURPI};
+  \item[Split:] Cotton's \texttt{Split} algorithm (\cite{CottonSplit});
+  \item[RedRec:] the {\ReduceReconstruct} algorithm from \cite{RedRec};
+  \item[Best RPILU/LU.RPI:] which performs both \texttt{RPILU} and \texttt{LU.RPI} and chooses the smallest resulting compressed proof;
+  \item[Best RPILU/LUnivRPI:] which performs \texttt{RPILU} and \texttt{LUnivRPI} and chooses the smallest resulting
+    compressed proof.
+\end{description}
+
+For each of these algorithms, the time needed to compress the proof along with the number of nodes
+and the number of axioms (i.e. \emph{unsat core} size) have been measured. Raw data of the
+experiment can be downloaded from the web\footnote{\url{http://www.matabio.net/skeptik/LUniv/experiments/}}.
+
+The experiments were executed on the Vienna Scientific Cluster\footnote{\url{http://vsc.ac.at/}}
+VSC\nobreakdash-2. Each algorithm was executed in a single core and had up to 16 GB of memory available. This amount of memory has been useful to compress the biggest proofs (with more than $10^6$ nodes).
+
+
+The overall results of the experiments are shown in Table \ref{tab:average}. The compression ratios
+in the second column are computed according to formula (\ref{eq:compression}), in which $\psi$
+ranges over all the proofs in the benchmark and $\psi'$ ranges over the corresponding compressed
+proofs.
+\begin{equation} \label{eq:compression}
+  1 - \frac{ \sum {|\Vertices{\psi'}|} }{ \sum {|\Vertices{\psi}|} }
+\end{equation}
+The unsat core compression ratios are computed in the same way, but using the number of axioms instead of
+the number of nodes. The speeds on the fourth column are computed according to formula
+(\ref{eq:speed}) in which $d_{\psi}$ is the duration in milliseconds of $\psi$'s compression by a
+given algorithm.
+\begin{equation} \label{eq:speed}
+  \frac{ \sum {|\Vertices{\psi}|} }{ \sum {d_{\psi}} }
+\end{equation}
+
+For the \texttt{Split} and \texttt{RedRec} algorithms, which must be repeated, a timeout has
+been fixed so that the speed is about 3 nodes per millisecond. 
+
+
+\begin{table}[tb]
+  \caption{Total compression ratios}
+  \label{tab:average}
+  \centering
+  \begin{tabular}{lrrr}
+    \toprule
+    \multirow{2}{*}{Algorithm} & \multirow{2}{*}{Compression} & Unsat Core    & \phantom{.........}\multirow{2}{*}{Speed} \\
+                                             &                                               & \phantom{...}Compression &        \\
+    \midrule
+    LU                &  7.5 \% &  0.0 \% & 22.4 n/ms \\
+    LUniv             &  8.0 \% &  0.8 \% & 20.4 n/ms \\
+    RPILU             & 22.0 \% &  3.6 \% &  7.4 n/ms \\
+    RPILUniv          & 22.1 \% &  3.6 \% &  6.5 n/ms \\
+    LU.RPI            & 21.7 \% &  3.1 \% & 15.1 n/ms \\
+    LUnivRPI          & 22.0 \% &  3.6 \% & 17.8 n/ms \\
+    RPI               & 17.8 \% &  3.1 \% & 31.3 n/ms \\
+    Split             & 21.0 \% &  0.8 \% &  2.9 n/ms \\
+    RedRec            & 26.4 \% &  0.4 \% &  2.9 n/ms \\
+    Best RPILU/LU.RPI       & 22.0 \% &  3.7 \% &  5.0 n/ms \\
+    Best RPILU/LUnivRPI & 22.2 \% &  3.7 \% &  5.2 n/ms \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\newcommand{\va}[1]{\ensuremath{v_{\text{#1}}}}
+
+Figure \ref{fig:LU} shows the comparison of {\LowerUnits} with {\LowerUnivalents}. Subfigures (a) and (b) are scatter plots where each dot represents a single benchmark proof. 
+Subfigure (c) is a histogram showing, in the vertical axis, the proportion of proofs having \emph{(normalized) compression ratio difference} within the intervals showed in the horizontal axis. This difference is computed using formula (\ref{eq:histogram}) with \va{LU}
+and \va{LUniv} being the compression ratios obtained respectively by {\LowerUnits} and
+{\LowerUnivalents}.
+\begin{equation} \label{eq:histogram}
+  \frac { \va{LU} - \va{LUniv} }{ \frac{\va{LU} + \va{LUniv}}{2} }
+\end{equation}
+The number of proofs for which $\va{LU} = \va{LUniv}$ is not displayed in the histogram.
+The \emph{(normalized) duration differences} in subfigure (d) are computed using the same formula~(\ref{eq:histogram}) but
+with \va{LU} and \va{LUniv} being the time taken to compress the proof by {\LowerUnits} and
+{\LowerUnivalents} respectively.
+
+
+
+As expected, {\LowerUnivalents} always compresses more than {\LowerUnits} (subfigure (a)) at the expense of a longer
+computation (subfigure (d)). And even if the compression gain is low on average (as noticeable in Table \ref{tab:average}), subfigure (a) shows that {\LowerUnivalents} compresses some proofs significantly more than {\LowerUnits}.
+
+It has to be noticed that \veriT already does its best to produce compact proofs. In particular,
+a forward subsumption algorithm is applied, which results in proofs not having two different subproofs
+with the same conclusion. This results in {\LowerUnits} being unable to reduce unsat core.
+But as {\LowerUnivalents} lowers non-unit subproofs and performs some partial regularization, it
+achieves some unsat core reduction, as noticeable in subfigure (b).
+
+The comparison of the sequential \texttt{LU.RPI} with the non-sequential {\LUnivRPI} shown in Fig.
+\ref{fig:LUnivRPI} outlines the ability of {\LowerUnivalents} to be efficiently combined with other
+algorithms. Not only compression ratios are improved but {\LUnivRPI} is faster than the sequential
+composition for more than 80 \% of the proofs.
+
+
+
+
+
+
+
+\section{Conclusions and Future Work}
+
+Bruno
+
+
+\vspace{-10pt}
+\paragraph{Acknowledgments:}
+
+
+
+\bibliographystyle{splncs}
+\bibliography{biblio}
+
+
+\end{document}
+
+% vim: tw=100
