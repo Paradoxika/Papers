@@ -160,6 +160,38 @@ The space measure $sp_{<_T}(\psi)$ of a proof $\psi$ is the maximum number of no
 
 \section{Pebbling Game}
 
+\subsection{SAT encoding}
+
+To obtain the pebbling strategy that uses the least pebbles, the question weather a proof can be pebbled, can be translated into a propositional satisfiability problem.\\
+Let $\psi$ be a proof with root $r$ and $n$ nodes. It is assumed that the strategy contains of exactly $n$ pebbling moves.
+This assumption corresponds to the limitation of never pebbling a node twice.
+\subsubsection*{Variables} For every $\n \in \Vertices{\psi}$ and every $t \in \{1,\ldots,n\}$, there is a propositional variable $p_{\n}^t$ denoting weather or not $\n$ is pebbled when the $t$-th move is done.
+\subsubsection*{Clauses}
+
+\begin{enumerate}
+	\item At least one node is pebbled initially\\
+				$$\bigvee_{\n \in \Vertices{\psi}} p_{\n}^{1}$$
+				
+	\item At most one node is pebbled initially\\
+				$$\bigwedge_{(\n_1, \n_2) \in \Vertices{\psi} \times \Vertices{\psi}, \n_1 \neq \n_2} \neg p_{\n_1}^{1} \vee \neg p_{\n_2}^{1}$$
+				
+	\item At most one node is pebbled each move\\
+				$$\bigwedge_{t \in \{1,\ldots,n-1\}} \bigwedge_{\n \in \Vertices{\psi}} (\neg p_{\n}^t \wedge p_{\n}^{t+1}) \rightarrow 
+				\Big(\bigwedge_{n \in \Vertices{\psi} \setminus \{\n\}} \neg (\neg p_{n}^t \wedge p_{n}^{t+1})\Big)$$
+				
+	\item For pebbling a node, its premises have to be pebbled\\
+				$$\bigwedge_{t \in \{1,\ldots,n-1\}} \bigwedge_{\n \in \Vertices{\psi}} (\neg p_{\n}^t \wedge p_{\n}^{t+1}) \rightarrow
+				\bigwedge_{n \in \Premises{\n}{\psi}} p_{n}^t$$
+				
+	\item \label{atMostK} At most $k$ pebbles are used each move\\
+				$$\bigwedge_{t \in \{1,\ldots,n\}} \bigwedge_{\{\n_1,\ldots,\n_{k+1}\} \subseteq \Vertices{\psi}} (\neg p_{\n_1}^t \vee \ldots \vee \neg p_{\n_{k+1}}^t)$$
+				
+	\item After $n$ moves $r$ is pebbled \\
+				$$p_{r}^{n}$$
+\end{enumerate}
+
+Clause \ref{atMostK} selects all subsets of size $k+1$ out of a set of size $n$. There are $n \choose k+1$ such sets, which is exponential in $n$.
+
 \section{Greedy Pebbling Algorithms}
 
 In the following we present two different approaches of heuristically constructing pebbling strategies.
