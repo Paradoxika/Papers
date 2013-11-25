@@ -192,6 +192,32 @@ This assumption corresponds to the limitation of never pebbling a node twice.
 
 Clause \ref{atMostK} selects all subsets of size $k+1$ out of a set of size $n$. There are $n \choose k+1$ such sets, which is exponential in $n$.
 
+\subsection{SAT encoding 2}
+
+$k$ Pebbles\\
+$n$ nodes\\
+$p_{x,i,t} \rightarrow $ pebble $x$ is on node $i$ at time $t$
+
+\begin{enumerate}
+	\item Root is pebbled
+				$$\bigvee_{x = 1}^k p_{x,n,n}$$
+				
+	\item At most one node is pebbled initially\\
+				$$\bigwedge_{x = 1}^k \bigwedge_{j = 1}^n \left( p_{x,j,1} \rightarrow \bigwedge_{y = 1, y \neq x}^k \bigwedge_{i = 1}^n p_{y,i,n} \right)$$
+	
+	\item At least one axiom is pebbled initially\\
+				$$\bigvee_{x = 1}^k \bigvee_{j \in axioms} p_{x,j,1}$$
+				
+	\item A pebble can only be on one node at one time
+				$$\bigwedge_{x = 1}^k \bigwedge_{j = 1}^n \bigwedge_{t = 1}^n \left( p_{x,j,t} \rightarrow \bigwedge_{i = 1, i \neq j}^n \neg p_{x,i,t} \right)$$ 
+				
+	\item For pebbling a node, its premises have to be pebbled and only 1 node is pebbled each time\\
+				$$\bigwedge_{x = 1}^k \bigwedge_{j = 1}^n \bigwedge_{t = 1}^n \left( (\neg p_{x,j,t} \wedge p_{x,j,(t+1)} ) \rightarrow 
+					\left( \bigwedge_{i \in \Premises{x}{\psi}} \bigvee_{y = 1, y \neq x}^k p_{y,i,t} \right) \wedge 
+					\left( \bigwedge_{i = 1}^n \bigwedge_{y = 1, y \neq x}^k \neg ( \neg p_{y,i,t} \wedge p_{y,i,(t+1)} ) \right) \right)$$
+				
+\end{enumerate}
+
 \section{Greedy Pebbling Algorithms}
 
 In the following we present two different approaches of heuristically constructing pebbling strategies.
