@@ -1,5 +1,10 @@
 \documentclass{llncs}
 
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\captionsetup{compatibility=false}
+
 \usepackage{xcolor}
 \usepackage{enumitem,amsmath,amssymb}
 \usepackage{breakurl}    % used for \url and \burl
@@ -7,7 +12,7 @@
 \def\defaultHypSeparation{\hskip.1in}
 
 \usepackage{tikz}
-\usepackage{subfig}
+%\usepackage{subfig}
 \usepackage{array,booktabs,multirow}
 \usepackage{placeins}
 
@@ -17,14 +22,15 @@
 \usepackage{mathenvironments}
 \usepackage{drawproof}
 
-
-
 \renewcommand{\topfraction}{0.85}
 \renewcommand{\textfraction}{0.1}
 \renewcommand{\floatpagefraction}{0.75}
 
 \newcommand{\defeq}{\mathrel{\mathop:}=}
 \newcommand{\eqdef}{\mathrel{\mathop=}:}
+
+\newcommand{\nodedistance}{0.6cm}
+\newcommand{\nodedistanceTwo}{1.2cm}
 
 \title{Pebbling}
 
@@ -122,81 +128,97 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
 \newcommand{\Conclusion}[1]{\clause_{#1}}
 \newcommand{\Premises}[2]{P_{#1}^{#2}}
 \newcommand{\Children}[2]{C_{#1}^{#2}}
+\newcommand{\Axioms}[1]{A_{#1}}
 
 \noindent
 If $\psi = \varphi_L \odot_{\ell} \varphi_R$, then $\varphi_L$ and $\varphi_R$ are \emph{direct
 subproofs} of $\psi$ and $\psi$ is a \emph{child} of both $\varphi_L$ and $\varphi_R$. The
 transitive closure of the direct subproof relation is the \emph{subproof} relation. A subproof which
 has no direct subproof is an \emph{axiom} of the proof. 
-%I will probably never need the following paragraph in this paper
-Contrary to the usual proof
-theoretic conventions but following the actual implementation of the data structures used by
-\PebblingAlgorithms, edges are directed from children (resolvents) to their parents (premises).
 %
-$\Vertices{\psi}$, $\Edges{\psi}$ and $\Conclusion{\psi}$
-denote, respectively, the nodes, edges and proved clause (conclusion) of $\psi$.\\
-Let $\n$ be a node in $\psi$, then $\Premises{\n}{\psi}$ denotes its premises and $\Children{\n}{\psi}$ its children in $\psi$.
+$\Vertices{\psi}$, $\Edges{\psi}$, $\Axioms{\psi}$ and $\Conclusion{\psi}$
+denote, respectively, the nodes, edges, axioms and proved clause (conclusion) of $\psi$.\\
+Let $\n$ be a node in $\psi$, then $\Premises{\n}{\psi}$ denotes its premises and $\Children{\n}{\psi}$ its children in the corresponding graph.
 
 \begin{definition}[Topological Order]
-\label{def:topological order}
-A topological order of a proof $\psi$ is a linear order relation $<_T$ on $\Vertices{\psi}$, such that 
+\label{def:topological-order}
+A topological order of a proof $\psi$ is a total order relation $<_T$ on $\Vertices{\psi}$, such that 
 $$
 \text{for all } \n \in \Vertices{\psi} \text{, for all } p \in \Premises{\n}{\psi} \text{ hold }\\
 p <_T v
 $$
+\qed
 \end{definition}
-A topological order $<_T$ can be represented by a sequence of proof nodes $S = (s_1,\dots,s_n)$, by defining $<_T \defeq \{(s_i,s_j) \mid 1 \leq i < j \leq n\}$.\\
-Note that there are proofs, for which exponentially many different topological orders exists: Consider a proof with $n$ axioms. Every permutation of these axioms can be extended to a sequence which represent a topological order. There are $n!$ such permutations, so the overall number of topological orders is at least exponential in $n$.\\
-This means that when looking for a good topological order w.r.t. any characteristic, enumeration is not a feasible option.
+A topological order $<_T$ can be represented by a sequence of proof nodes $(s_1,\dots,s_n)$, by defining $<_T \defeq \{(s_i,s_j) \mid 1 \leq i < j \leq n\}$.\\
+Note that there are proofs, for which exponentially many different topological orders exists:\\
+Consider a perfect binary tree with $m$ axioms and $n=2m-1$ nodes. It is easy to see that there is a proof corresponding to this graph.
+There is at least one topological order $(s_1,\ldots,s_n)$, which for example can be constructed using one of the algorithms described in section \ref{section:algorithms}. 
+Let $\Axioms{\psi} = \{s_{k_1},\ldots,s_{k_m}\}$, then $(s_{k_1},\ldots,s_{k_m},s_{l_1},\ldots,s_{l_{n-m}})$, where $(l_1,\ldots,l_{n-m}) = (1,\ldots,n) \setminus (k_1,\ldots,k_m)$, is a topological order. 
+Likewise $(s_{\pi({k_1})},\ldots,s_{\pi({k_m})},s_{l_1},\ldots,s_{l_{n-m}})$ is a topological order, for every permutation $\pi$ of $\{k_1,\ldots,k_m\}$. There are $m!$ such permutations, so the overall number of topological orders is at least exponential in $m$ and therefore also in $n$.\\
+This means that when looking for a good topological order w.r.t. any characteristic, enumeration is not a feasible option.\\
 
-By loading nodes into memory following a topological order, proofs can be traversed in a top-down fashion, for example to check the correctness of the proof.\\
-Not all nodes have to be kept in memory when doing such a traversal. As soon as all nodes $p \in \Children{\n}{\psi}$ have been loaded into memory, $\n$ can be removed from memory,
-since it will not be needed further on.
+\noindent 
+By loading nodes into memory, following a topological order, proofs can be traversed in a top-down fashion, for example to check the correctness or manipulate the proof.\\
+Doing such a traversal, some nodes can (temporarily) be removed from memory. This gives rise to the following definition:
 
 \begin{definition}[Space measure]
 \label{def:space measure}
-The space measure $sp_{<_T}(\psi)$ of a proof $\psi$ is the maximum number of nodes that have to be kept in memory, when traversing $\psi$ in a top-down fashion, following the topological order $<_T$.
+The \emph{space measure} %$sp_{<_T}(\psi)$ 
+of a proof $\psi$ is the maximum number of nodes that have to be kept in memory at once, when traversing $\psi$ in a top-down fashion, following the topological order $<_T$.
+\qed
 \end{definition}
 
 \section{Pebbling Game}
+\label{sec:pebbling-game}
+%There are many pebble games defined in the literature \cite{kasai1979classes,chan2013pebble}. 
+Pebbling games were first formulated in the 70's and were used to model the expressivity of programming languages \cite{paterson1970comparative,Walker1973404} and compiler construction \cite{sethi1975complete}.
+More recently, pebbling games have been used to investigate various questions in parallel complexity \cite{chan2013pebble} and in proof complexity \cite{ben2008short,Esteban200184,nordstrom2009narrow}. They are used to get bounds for space and time requirements and tradeoffs between the two measures \cite{van1979move}.\\
+The motivation of this work is to compress propositional resolution proofs w.r.t. the space measure. 
+However the results can easily be transferred to more general kinds of DAGs.
+For our purposes we use a slight variation of the Black Pebbling Game presented in \cite{hertel2007black,pippenger1982advances} and since we don't consider any other pebbling game in this work, we will omit the \textit{Black}.\\
+In the following, we use the verbs \textit{pebble} and \textit{unpebble} as abbreviations for \textit{put a pebble on} and \textit{remove a pebble from}.\\
+A node is said to be \textit{pebbleable}, if all its predecessors are pebbled.
+
+\begin{definition}[Pebbling Game]
+\label{def:pebbling-game}
+The \emph{Pebbling Game} is played by one player on a DAG $G = (V,E)$ with one distinguished node $s$.
+The goal of the game is to pebble $s$. Pebbles are put on nodes according to the following rules:
+\begin{enumerate}
+	\item \label{rule:premises} If all predecessors of a node $\n$ are pebbled, then $\n$ can be pebbled.
+	\item Nodes can be unpebbled at any time.
+	\item \label{rule:onlyonce} Each node can be pebbled only once.
+\end{enumerate}
+As a consequence of rule \ref{rule:premises}, pebbles can be put on nodes without predecessors at any time.\\
+A \emph{pebbling strategy} for $G$ and node $s$ is a sequence of moves in the pebbling game, where the last move is pebbling $s$.\\
+The \emph{pebble number of a pebbling strategy} is the maximum number of pebbles, that are placed on nodes simultaneously, following the moves of the strategy.\\
+The \emph{pebble number of a graph $G$ and node $s$} is the minimum pebble number of all pebble strategies, for the pebbling game played on $G$ and $s$.\\
+\qed
+\end{definition}
+
+
+The Black Pebbling Game defined in \cite{hertel2007black,pippenger1982advances} introduces another rule with which a pebble can be moved from a predecessor to the node instead of using a fresh one.
+Including this rule results in strategies that use exactly one pebble less, as shown in \cite{van1979move}.\\
+Omitting rule \ref{rule:onlyonce} allows for pebbling strategies with lower pebbling numbers (\cite{sethi1975complete} has an example on page 1).
+However \cite{van1979move} shows that this possibly has the cost of needing exponentially more moves in the game.\\
+In \cite{gilbert1980pebbling} it is shown, that deciding the question, weather the pebbling number of a graph $G$ and node $s$ is smaller than $k$, is PSPACE-complete. 
+The same question has shown to be NP-complete \cite{sethi1975complete} when rule \ref{rule:onlyonce} is included.\\ %weird paper - weird notation
+In the version of the game we use and the aim to construct a strategy with a low pebbling number, unpebbling moves can be dropped from the pebbling strategy, because they are given implicitly. 
+A node is unpebbled right after all its successors have been pebbled. 
+It can't be unpebbled earlier, since otherwise its yet unpebbled successors can't be pebbled. 
+Unpebbling it later could increase the pebbling number.\\
+In the following sections, when constructing a pebbling strategy for a proof $\psi$, the distinguished node $s$, will always be the root node $\Conclusion{\psi}$. Instead of predecessors and successors, we will speak of premises and children.
+A pebbling strategy with implicit unpebbling moves directly corresponds to a topological order, defined in \ref{def:topological-order}.
 
 \subsection{SAT encoding}
 
-To obtain the pebbling strategy that uses the least pebbles, the question weather a proof can be pebbled, can be translated into a propositional satisfiability problem.\\
-Let $\psi$ be a proof with root $r$ and $n$ nodes. It is assumed that the strategy contains of exactly $n$ pebbling moves.
-This assumption corresponds to the limitation of never pebbling a node twice.
-\subsubsection*{Variables} For every $\n \in \Vertices{\psi}$ and every $t \in \{1,\ldots,n\}$, there is a propositional variable $p_{\n}^t$ denoting weather or not $\n$ is pebbled when the $t$-th move is done.
-\subsubsection*{Clauses}
-
-\begin{enumerate}
-	\item At least one node is pebbled initially\\
-				$$\bigvee_{\n \in \Vertices{\psi}} p_{\n}^{1}$$
-				
-	\item At most one node is pebbled initially\\
-				$$\bigwedge_{(\n_1, \n_2) \in \Vertices{\psi} \times \Vertices{\psi}, \n_1 \neq \n_2} \neg p_{\n_1}^{1} \vee \neg p_{\n_2}^{1}$$
-				
-	\item At most one node is pebbled each move\\
-				$$\bigwedge_{t \in \{1,\ldots,n-1\}} \bigwedge_{\n \in \Vertices{\psi}} (\neg p_{\n}^t \wedge p_{\n}^{t+1}) \rightarrow 
-				\Big(\bigwedge_{n \in \Vertices{\psi} \setminus \{\n\}} \neg (\neg p_{n}^t \wedge p_{n}^{t+1})\Big)$$
-				
-	\item For pebbling a node, its premises have to be pebbled\\
-				$$\bigwedge_{t \in \{1,\ldots,n-1\}} \bigwedge_{\n \in \Vertices{\psi}} (\neg p_{\n}^t \wedge p_{\n}^{t+1}) \rightarrow
-				\bigwedge_{n \in \Premises{\n}{\psi}} p_{n}^t$$
-				
-	\item \label{atMostK} At most $k$ pebbles are used each move\\
-				$$\bigwedge_{t \in \{1,\ldots,n\}} \bigwedge_{\{\n_1,\ldots,\n_{k+1}\} \subseteq \Vertices{\psi}} (\neg p_{\n_1}^t \vee \ldots \vee \neg p_{\n_{k+1}}^t)$$
-				
-	\item After $n$ moves $r$ is pebbled \\
-				$$p_{r}^{n}$$
-\end{enumerate}
-
-Clause \ref{atMostK} selects all subsets of size $k+1$ out of a set of size $n$. There are $n \choose k+1$ such sets, which is exponential in $n$.
-
-\subsection{SAT encoding 2}
-
-$k$ Pebbles\\
-$n$ nodes\\
-$p_{x,i,t} \rightarrow $ pebble $x$ is on node $i$ at time $t$
+To find the pebbling number of a proof, the question weather this proof can be pebbled using no more than $k$ pebbles, can be translated into a propositional satisfiability problem.\\
+Let $\psi$ be a proof with nodes $\n_1,\ldots,\n_n$ and let $\n_n = \Conclusion{\psi}$. It is assumed that the strategy contains of exactly $n$ pebbling moves.
+This assumption directly reflects rule \ref{rule:onlyonce} of the pebbling game, defined above.
+\subsubsection*{Variables}
+For every $x \in \{1,\ldots,k\}$, every $j \in \{1,\ldots,n\}$ and every $t \in \{1,\ldots,n\}$ there is a propositional variable $p_{x,j,t}$, denoting if true that pebble $x$ is placed on node $v_j$ at move $t$.
+\subsubsection*{Constraints}
+The following constraints, combined conjunctively, are satisfiable \textit{iff} there is a pebbling strategy for $\psi$, using at most $k$ pebbles.\\
+The sets $\Axioms{\psi}$ and $\Premises{j}{\psi}$ are interpreted as sets of indices of the respective nodes.
 
 \begin{enumerate}
 	\item Root is pebbled
@@ -206,86 +228,91 @@ $p_{x,i,t} \rightarrow $ pebble $x$ is on node $i$ at time $t$
 				$$\bigwedge_{x = 1}^k \bigwedge_{j = 1}^n \left( p_{x,j,1} \rightarrow \bigwedge_{y = 1, y \neq x}^k \bigwedge_{i = 1}^n p_{y,i,n} \right)$$
 	
 	\item At least one axiom is pebbled initially\\
-				$$\bigvee_{x = 1}^k \bigvee_{j \in axioms} p_{x,j,1}$$
+				$$\bigvee_{x = 1}^k \bigvee_{j \in \Axioms{\psi}} p_{x,j,1}$$
 				
-	\item A pebble can only be on one node at one time
+	\item A pebble can only be on one node at each move
 				$$\bigwedge_{x = 1}^k \bigwedge_{j = 1}^n \bigwedge_{t = 1}^n \left( p_{x,j,t} \rightarrow \bigwedge_{i = 1, i \neq j}^n \neg p_{x,i,t} \right)$$ 
 				
-	\item For pebbling a node, its premises have to be pebbled and only 1 node is pebbled each time\\
+	\item \label{c:pebble} For pebbling a node, its premises have to be pebbled and only 1 node is pebbled each move\\
 				$$\bigwedge_{x = 1}^k \bigwedge_{j = 1}^n \bigwedge_{t = 1}^n \left( (\neg p_{x,j,t} \wedge p_{x,j,(t+1)} ) \rightarrow 
-					\left( \bigwedge_{i \in \Premises{x}{\psi}} \bigvee_{y = 1, y \neq x}^k p_{y,i,t} \right) \wedge 
-					\left( \bigwedge_{i = 1}^n \bigwedge_{y = 1, y \neq x}^k \neg ( \neg p_{y,i,t} \wedge p_{y,i,(t+1)} ) \right) \right)$$
+					\bigg( \bigwedge_{i \in \Premises{j}{\psi}} \bigvee_{y = 1, y \neq x}^k p_{y,i,t} \bigg) \wedge 
+					\bigg( \bigwedge_{i = 1}^n \bigwedge_{y = 1, y \neq x}^k \neg ( \neg p_{y,i,t} \wedge p_{y,i,(t+1)} ) \bigg) \right)$$
 				
 \end{enumerate}
+\subsubsection*{}
+This encoding is polynomial, both in $n$ and $k$. However constraint \ref{c:pebble} accounts to $O(n^3*k^2)$ clauses. Many propositional resolution proofs have more than $1000$ nodes and the pebbling number should be bigger than $100$, which adds up to $10^{13}$ clauses for constraint \ref{c:pebble} alone. This unfortunately are too many, so this encoding does not show results for reasonably big examples.
+
+\subsubsection*{Proof?}
 
 \section{Greedy Pebbling Algorithms}
+\label{section:algorithms}
 
-In the following we present two different approaches of heuristically constructing pebbling strategies.
-They are called Top-down and Bottom-up Pebbling. Their names reflect the traversal direction in which the algorithms operate on a proof.
+In this section we present two different approaches for constructing pebbling strategies using heuristics.
+They are called Top-down and Bottom-up Pebbling. Their names reflect the traversal direction in which the algorithms operate on proofs.
 
 \subsection{Top-down Pebbling}
 
-Top-down Pebbling constructs a topological order of a proof by traversing it starting from one axioms and ending in its root.
+Algorithm \ref{algo:TDpebbling} displays Top-down Pebbling, which constructs a topological order of a proof $\psi$ by traversing it from one axiom to its root node $\Conclusion{\psi}$.
 This approach closely corresponds to how a human would play the pebbling game. 
-A human would look at the nodes that are available for pebbling at a given state, choose one of them to pebble and remove pebbles if possible.
-He would naturally not unpebble a node, that would have to be pebbled later on again. Also he would not pebble a node that was unpebbled earlier.\\
-Similarly the algorithm keeps track of pebblable nodes in form of a set $P$. Initially $P$ are exactly the axioms of the proof. 
-When pebbling a node $\n$, it is removed from $P$, added to the sequence representing the topological order and for all its children it is checked, weather they are now available for pebbling and if so added to $P$.\\
-Since the graph is acyclic by definition, $P$ being empty implies that all nodes have been pebbled and a topological order has been found.
+A human would look at the nodes that are available for pebbling at a given state, choose one of them to pebble and remove pebbles if possible.\\
+Similarly the algorithm keeps track of pebblable nodes in form of a set $P$, initialized as $\Axioms{\psi}$.
+When pebbling a node $\n$, it is removed from $P$ and added to the sequence representing the topological order. 
+For all its children it is checked, weather they are now available for pebbling and if so they are added to $P$.\\
+Since $\psi$ is a DAG, $P$ being empty implies that all nodes have been pebbled and a topological order has been found.
 
-Note that $\oplus$ is used for the concatenation operation on sequences. %should I define this?
 
 \begin{algorithm}[h]
   \KwIn{a proof $\psi$}
   \KwOut{a topological order $<_T$ of $\psi$ represented by a sequence of nodes}
 	
 	$S$ is the empty sequence\;
-	$A = \{p \in \Vertices{\psi} \mid p \text{ is an axiom}\}$\;
+	$P = \Axioms{\psi}$;
 	
-  \While{$A$ is not empty}{
-    choose $\n \in A$ heuristically\;
+  \While{$P$ is not empty}{
+    choose $\n \in P$ heuristically\;
 		\For{\KwSty{each} $c \in \Children{\n}{\psi}$}{
 			\If{$\forall p \in \Premises{c}{\psi}: p \in S$}
-					{$A = A \cup \{c\}$\;}
+					{$P = P \cup \{c\}$\;}
 					}
-		$A = A \setminus \{\n\}$\;
-		$S = S \oplus \n$\;
+		$P = P \setminus \{\n\}$\;
+		$S = S \oplus \n$\ //$\oplus$ is the concatenation of sequences;
   }
 	
 	\Return $S$\;
 	
-  \caption[.]{\FuncSty{top-down pebbling}}
+  \caption[.]{\FuncSty{Top-down Pebbling}}
   \label{algo:TDpebbling}
 \end{algorithm}
 
 \subsection{Bottom-up Pebbling}
 
-Bottom-up Pebbling constructs a topological order of a proof by traversing it starting from its root and ending in one of its axioms.\\
+Algorithm \ref{algo:BUpebbling} and \ref{algo:visit} display Bottom-up Pebbling, which constructs a topological order of a proof $\psi$ by traversing it from its root node $\Conclusion{\psi}$ to one of its axioms.\\
 The algorithm constructs the order by visiting nodes and their premises recursively. 
 At every node it is decided heuristically in what order the premises are visited.
-After visiting the its premises, the node itself is added to the current sequence of nodes.
+After visiting its premises, the node itself is added to the current sequence of nodes.
 Since axioms don't have any premises, there is no recursive call for axioms and these nodes are simply added to the sequence.
 The recursion is started by a call to visit the root.
 Since all proof nodes are recursive premises of the root, after the root has been visited a topological order is found.
-As opposed to Top-down Pebbling, this is more of a structural approach, instead to actually playing the pebbling game.
+As opposed to Top-down Pebbling, this is more of a structural approach, instead of actually playing the pebbling game.
 
 \SetKwFunction{KwVisit}{visit}
 
 \begin{algorithm}[h]
-  \KwIn{a proof $\psi$ with root node $r$}
+  \KwIn{a proof $\psi$}
   \KwOut{a topological order $<_T$ of $\psi$ represented by a sequence of nodes}
   \BlankLine
 
 	$S$ is the empty sequence\;
 	$V = \emptyset$\;
-	\Return \KwVisit{$\psi$,$r$,$V$,$S$}\;
+	\Return \KwVisit{$\psi$,$\Conclusion{\psi}$,$V$,$S$}\;
 
   \caption[.]{\FuncSty{Bottom-up Pebbling}}
   \label{algo:BUpebbling}
 \end{algorithm}
 
 \begin{algorithm}[h]
-  \KwIn{a proof $\psi$, a node $\n$}
+  \KwIn{a proof $\psi$}
+	\KwIn{a node $\n$}
 	\KwIn{a set of visited nodes $V$} 
 	\KwIn{initial sequence of nodes $S$}
   \KwOut{a sequence of nodes}
@@ -297,7 +324,7 @@ As opposed to Top-down Pebbling, this is more of a structural approach, instead 
   \While{$D$ is not empty}{
     choose $p \in D$ heuristically\;
 		$D = D \setminus \n$\;
-		$S_1 = S_1 \oplus visit(\psi,\n,V,S)$\;
+		$S_1 = S_1 \oplus visit(\psi,\n,V,S)$\ //$\oplus$ is the concatenation of sequences;
   }
 	
 	\Return $S_1 \oplus \n$\;
@@ -310,24 +337,34 @@ As opposed to Top-down Pebbling, this is more of a structural approach, instead 
 
 \label{sec:TDvsBU}
 
-In principal every topological order of a given proof can be constructed using Top-down or Bottom-up Pebbling.
-Both algorithms have linear run-time in the proof size (given that the heuristic choice does only require constant time). 
-The question relevant for this paper is, which approach behaves better for constructing orders, that are good w.r.t. the space measure.
+In principle every topological order of a given proof can be constructed using Top-down or Bottom-up Pebbling.
+Both algorithms have linear run-time in the proof size (given that the heuristic choice only requires constant time). 
+The question relevant for this paper is, which approach behaves better for constructing orders, that produce small space measures.
 It turns out Bottom-up Pebbling wins the race.\\
 The reason is that Top-down Pebbling often encounters situations, where it pebbles nodes that are far away from the previously pebbled nodes.
-Far away here is meant with respect to the amount of undirected edges between proof nodes in the proof graph. Figure \ref{fig:TDPIssue} displays this issue with an example.\\
-Bottom-up Pebbling does not suffer from this unlocality issue that much, because queuing up the processing of premises enforces local pebbling.
+Far away here is meant with respect to the amount of undirected edges between nodes in the graph. Example \ref{example:TDPIssue} displays this issue.\\
+Bottom-up Pebbling does not suffer from this unlocality issue that much, because queuing up the processing of premises enforces local pebbling, which is shown in example \ref{example:BUP}.
 
-\begin{figure}[p]
-Consider the following proof and the initial sequence of nodes $(1,2,3)$. 
-For a greedy heuristic, that only has information about pebbled nodes, their premises and children, all nodes marked with '$4?$' are considered equally worthy to pebble next.
-	\begin{center}
-		\begin{tikzpicture}[node distance=1.2cm]
+\begin{example}
+\label{example:TDP}
+Consider the graph shown in figure \ref{fig:TDP} and the initial sequence of nodes $(1,2,3)$, which was found by some heuristic. 
+For a greedy heuristic, that only has information about pebbled nodes, their premises and children, all nodes marked with '$4?$' are considered equally worthy to pebble next.\\
+Suppose the node marked with '$4$' in the middle graph is pebbled next.
+The subsequent pebbling moves are reasonable and can be found by a greedy heuristic. Pebbling '$5$' opens up the possibility to remove a pebble in the next move, which is done by pebbling '$6$'.
+After that only '$7$' and '$8$' are pebbleable. In this situation, it does not matter which is pebbled first.
+After pebbling '$7$' and '$8$', four pebbles are used, which is one more than what an optimal strategy needs.\\
+Pebbling '$7$' after '$3$' can be done with a heuristic that measures the number of edges between pebbled and pebbleable nodes. However for every $d$, one can easily construct a similar example in which '$7$' and '$3$' have $d + 1$ edges between them. Computing $d$-Spheres w.r.t. this measure can be exponential in $d$. 
+Therefore only relatively small spheres can be used, in order not to slow down the whole process too much.
+
+\begin{figure}[h]
+	\makebox[\textwidth][c]{
+	\begin{minipage}{.4\textwidth}
+		\begin{tikzpicture}[node distance=\nodedistance]
 			\proofnodeBW{root};
-			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
-			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
+			\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
+			\proofnodeBW[above right of = n7,xshift=\nodedistance]{n6};
 			\proofnodeBW[above left of = n7]{n3};
-			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
+			\proofnodeBW[above right of = root,xshift=\nodedistance]{n12};
 			\proofnodeBW[above right of = n12]{n10};
 			\withchildrenBW{n3}{n1}{n2};
 			\withchildrenBW{n6}{n4}{n5};
@@ -336,23 +373,22 @@ For a greedy heuristic, that only has information about pebbled nodes, their pre
 			\drawchildren{n7}{n3}{n6};
 			\drawchildren{n12}{n6}{n10};
 			\blacknode{n3};
-			\node [color=red, yshift = 2mm] (cap1) at (n1.north) {\small{1}};
-			\node [color=red, yshift = 2mm] (cap2) at (n2.north) {\small{2}};
-			\node [color=red, yshift = 2mm] (cap3) at (n3.north) {\small{3}};
-			\node [color=red, yshift = 2mm] (cap4) at (n4.north) {\small{4?}};
-			\node [color=red, yshift = 2mm] (cap5) at (n5.north) {\small{4?}};
-			\node [color=red, yshift = 2mm] (cap6) at (n8.north) {\small{4?}};
-			\node [color=red, yshift = 2mm] (cap7) at (n9.north) {\small{4?}};
+			\node [yshift = 2mm] (cap1) at (n1.north) {\small{1}};
+			\node [yshift = 2mm] (cap2) at (n2.north) {\small{2}};
+			\node [yshift = 2mm] (cap3) at (n3.north) {\small{3}};
+			\node [yshift = 2mm] (cap4) at (n4.north) {\small{4?}};
+			\node [yshift = 2mm] (cap5) at (n5.north) {\small{4?}};
+			\node [yshift = 2mm] (cap6) at (n8.north) {\small{4?}};
+			\node [yshift = 2mm] (cap7) at (n9.north) {\small{4?}};
 		\end{tikzpicture}
-	\end{center}
-Now suppose the following node marked black is pebbled.
-	\begin{center}
-		\begin{tikzpicture}[node distance=1.2cm]
+	\end{minipage}%
+	\begin{minipage}{.4\textwidth}
+		\begin{tikzpicture}[node distance=\nodedistance]
 			\proofnodeBW{root};
-			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
-			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
+			\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
+			\proofnodeBW[above right of = n7,xshift=\nodedistance]{n6};
 			\proofnodeBW[above left of = n7]{n3};
-			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
+			\proofnodeBW[above right of = root,xshift=\nodedistance]{n12};
 			\proofnodeBW[above right of = n12]{n10};
 			\withchildrenBW{n3}{n1}{n2};
 			\withchildrenBW{n6}{n4}{n5};
@@ -362,23 +398,19 @@ Now suppose the following node marked black is pebbled.
 			\drawchildren{n12}{n6}{n10};
 			\blacknode{n3};
 			\blacknode{n8};
-			\node [color=red, yshift = 2mm] (cap1) at (n1.north) {\small{1}};
-			\node [color=red, yshift = 2mm] (cap2) at (n2.north) {\small{2}};
-			\node [color=red, yshift = 2mm] (cap3) at (n3.north) {\small{3}};
-			\node [color=red, yshift = 2mm] (cap8) at (n8.north) {\small{4}};
+			\node [yshift = 2mm] (cap1) at (n1.north) {\small{1}};
+			\node [yshift = 2mm] (cap2) at (n2.north) {\small{2}};
+			\node [yshift = 2mm] (cap3) at (n3.north) {\small{3}};
+			\node [yshift = 2mm] (cap8) at (n8.north) {\small{4}};
 		\end{tikzpicture}
-	\end{center}
-	
-The following moves can be found by a greedy heuristic. Pebbling '$5$' opens up the possibility to remove a pebble in the next move, which is done by pebbling '$6$'.
-After that only '$7$' and '$8$' are left to pebble. They can again be considered to be equally worthy to pebble next, but in this situation it does not matter which one is pebbled first.
-
-	\begin{center}
-		\begin{tikzpicture}[node distance=1.2cm]
+	\end{minipage}%
+	\begin{minipage}{.4\textwidth}
+	\begin{tikzpicture}[node distance=\nodedistance]
 			\proofnodeBW{root};
-			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
-			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
+			\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
+			\proofnodeBW[above right of = n7,xshift=\nodedistance]{n6};
 			\proofnodeBW[above left of = n7]{n3};
-			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
+			\proofnodeBW[above right of = root,xshift=\nodedistance]{n12};
 			\proofnodeBW[above right of = n12]{n10};
 			\withchildrenBW{n3}{n1}{n2};
 			\withchildrenBW{n6}{n4}{n5};
@@ -390,99 +422,109 @@ After that only '$7$' and '$8$' are left to pebble. They can again be considered
 			\blacknode{n10};
 			\blacknode{n4};
 			\blacknode{n5};
-			\node [color=red, yshift = 2mm] (cap1) at (n1.north) {\small{1}};
-			\node [color=red, yshift = 2mm] (cap2) at (n2.north) {\small{2}};
-			\node [color=red, yshift = 2mm] (cap3) at (n3.north) {\small{3}};
-			\node [color=red, yshift = 2mm] (cap4) at (n8.north) {\small{4}};
-			\node [color=red, yshift = 2mm] (cap5) at (n9.north) {\small{5}};
-			\node [color=red, yshift = 2mm] (cap6) at (n10.north) {\small{6}};
-			\node [color=red, yshift = 2mm] (cap7) at (n4.north) {\small{7}};
-			\node [color=red, yshift = 2mm] (cap8) at (n5.north) {\small{8}};
+			\node [yshift = 2mm] (cap1) at (n1.north) {\small{1}};
+			\node [yshift = 2mm] (cap2) at (n2.north) {\small{2}};
+			\node [yshift = 2mm] (cap3) at (n3.north) {\small{3}};
+			\node [yshift = 2mm] (cap4) at (n8.north) {\small{4}};
+			\node [yshift = 2mm] (cap5) at (n9.north) {\small{5}};
+			\node [yshift = 2mm] (cap6) at (n10.north) {\small{6}};
+			\node [yshift = 2mm] (cap7) at (n4.north) {\small{7}};
+			\node [yshift = 2mm] (cap8) at (n5.north) {\small{8}};
 		\end{tikzpicture}
-				
-	\end{center}
-At this point, $4$ pebbles are used, which is one more than what an optimal strategy needs.
-\caption{Top-down Pebbling issue}
-\label{fig:TDPIssue}
+	\end{minipage}%
+	}
+	\caption{Top-down Pebbling issue}
+	\label{fig:TDP}
 \end{figure}
+\label{example:TDPIssue}
+\end{example}
 
-\begin{figure}[p]
-Consider the same example proof like in Figure \ref{fig:TDPIssue}, and suppose that the hatched nodes were chosen by the heuristic to be processed before the respective other premise.
-	\begin{center}
-		\begin{tikzpicture}[node distance=1.2cm]
-			\proofnodeBW{root};
-			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
-			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
-			\proofnodeBW[above left of = n7]{n3};
-			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
-			\proofnodeBW[above right of = n12]{n10};
-			\withchildrenBW{n3}{n1}{n2};
-			\withchildrenBW{n6}{n4}{n5};
-			\withchildrenBW{n10}{n8}{n9};
-			\drawchildren{root}{n7}{n12};
-			\drawchildren{n7}{n3}{n6};
-			\drawchildren{n12}{n6}{n10};
-			\waitingnode{n7};
-			\waitingnode{n3};
-			\waitingnode{n1};
-		\end{tikzpicture}
-	\end{center}
-Similar to the Top-down Pebbling scenario, this results in the initial sequence $(1,2,3)$
-	\begin{center}
-		\begin{tikzpicture}[node distance=1.2cm]
-			\proofnodeBW{root};
-			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
-			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
-			\proofnodeBW[above left of = n7]{n3};
-			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
-			\proofnodeBW[above right of = n12]{n10};
-			\withchildrenBW{n3}{n1}{n2};
-			\withchildrenBW{n6}{n4}{n5};
-			\withchildrenBW{n10}{n8}{n9};
-			\drawchildren{root}{n7}{n12};
-			\drawchildren{n7}{n3}{n6};
-			\drawchildren{n12}{n6}{n10};
-			\waitingnode{n7};
-			\blacknode{n3};
-			\node [color=red, yshift = 2mm] (cap1) at (n1.north) {\small{1}};
-			\node [color=red, yshift = 2mm] (cap2) at (n2.north) {\small{2}};
-			\node [color=red, yshift = 2mm] (cap3) at (n3.north) {\small{3}};
-		\end{tikzpicture}
-	\end{center}
-At this point however, the choice where to go next is predefined, by the hatched node. 
-Since one of its premises is completely processed, the other premise is visited next.
-	\begin{center}
-		\begin{tikzpicture}[node distance=1.2cm]
-			\proofnodeBW{root};
-			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
-			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
-			\proofnodeBW[above left of = n7]{n3};
-			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
-			\proofnodeBW[above right of = n12]{n10};
-			\withchildrenBW{n3}{n1}{n2};
-			\withchildrenBW{n6}{n4}{n5};
-			\withchildrenBW{n10}{n8}{n9};
-			\drawchildren{root}{n7}{n12};
-			\drawchildren{n7}{n3}{n6};
-			\drawchildren{n12}{n6}{n10};
-			\waitingnode{n7};
-			\blacknode{n3};
-			\waitingnode{n6};
-			\node [color=red, yshift = 2mm] (cap1) at (n1.north) {\small{1}};
-			\node [color=red, yshift = 2mm] (cap2) at (n2.north) {\small{2}};
-			\node [color=red, yshift = 2mm] (cap3) at (n3.north) {\small{3}};
-		\end{tikzpicture}
-	\end{center}
+%\newcommand{\nodedistance2}{0.6cm}
+\begin{example}
+Figure \ref{fig:BUP} shows a possible computation of Bottom-Up Pebbling on the same graph as presented in Figure \ref{fig:TDP}.
+The hatched nodes were chosen by the heuristic to be processed before the respective other premise.
+Similar to the Top-down Pebbling scenario, this results in the initial sequence $(1,2,3)$.
+However the choice where to go next is predefined by the hatched nodes. 
+Since one of its premises ($3$) is completely processed, the other premise is visited next.
+The result is that node '$7$' can be pebbled early and at no point more than 3 pebbles will be used for pebbling the root node.\\
+Note that this result is independent of the heuristic choices.
 
-The result is that node '$7$' can be pebbled early and at no point more than 3 pebbles are used for the proof.
-
-	\begin{center}
-		\begin{tikzpicture}[node distance=1.2cm]
+\begin{figure}
+	\makebox[\textwidth][c]{
+		\begin{minipage}{0.4\textwidth}
+			\begin{tikzpicture}[node distance=\nodedistance]
+				\proofnodeBW{root};
+				\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
+				\proofnodeBW[above right of = n7,xshift=\nodedistance]{n6};
+				\proofnodeBW[above left of = n7]{n3};
+				\proofnodeBW[above right of = root,xshift=\nodedistance]{n12};
+				\proofnodeBW[above right of = n12]{n10};
+				\withchildrenBW{n3}{n1}{n2};
+				\withchildrenBW{n6}{n4}{n5};
+				\withchildrenBW{n10}{n8}{n9};
+				\drawchildren{root}{n7}{n12};
+				\drawchildren{n7}{n3}{n6};
+				\drawchildren{n12}{n6}{n10};
+				\waitingnode{n7};
+				\waitingnode{n3};
+				\waitingnode{n1};
+				\waitingnode{root};
+			\end{tikzpicture}
+		\end{minipage}%
+		\begin{minipage}{0.4\textwidth}
+			\begin{tikzpicture}[node distance=\nodedistance]
+				\proofnodeBW{root};
+				\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
+				\proofnodeBW[above right of = n7,xshift=\nodedistance]{n6};
+				\proofnodeBW[above left of = n7]{n3};
+				\proofnodeBW[above right of = root,xshift=\nodedistance]{n12};
+				\proofnodeBW[above right of = n12]{n10};
+				\withchildrenBW{n3}{n1}{n2};
+				\withchildrenBW{n6}{n4}{n5};
+				\withchildrenBW{n10}{n8}{n9};
+				\drawchildren{root}{n7}{n12};
+				\drawchildren{n7}{n3}{n6};
+				\drawchildren{n12}{n6}{n10};
+				\waitingnode{n7};
+				\waitingnode{root};
+				\blacknode{n3};
+				\node [yshift = 2mm] (cap1) at (n1.north) {\small{1}};
+				\node [yshift = 2mm] (cap2) at (n2.north) {\small{2}};
+				\node [yshift = 2mm] (cap3) at (n3.north) {\small{3}};
+			\end{tikzpicture}
+		\end{minipage}%
+		}
+		\makebox[\textwidth][c]{
+		\begin{minipage}{0.4\textwidth}
+			\begin{tikzpicture}[node distance=\nodedistance]
+				\proofnodeBW{root};
+				\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
+				\proofnodeBW[above right of = n7,xshift=\nodedistance]{n6};
+				\proofnodeBW[above left of = n7]{n3};
+				\proofnodeBW[above right of = root,xshift=\nodedistance]{n12};
+				\proofnodeBW[above right of = n12]{n10};
+				\withchildrenBW{n3}{n1}{n2};
+				\withchildrenBW{n6}{n4}{n5};
+				\withchildrenBW{n10}{n8}{n9};
+				\drawchildren{root}{n7}{n12};
+				\drawchildren{n7}{n3}{n6};
+				\drawchildren{n12}{n6}{n10};
+				\waitingnode{n7};
+				\blacknode{n3};
+				\waitingnode{n6};
+				\waitingnode{root};
+				\node [yshift = 2mm] (cap1) at (n1.north) {\small{1}};
+				\node [yshift = 2mm] (cap2) at (n2.north) {\small{2}};
+				\node [yshift = 2mm] (cap3) at (n3.north) {\small{3}};
+			\end{tikzpicture}
+			\end{minipage}%
+			\begin{minipage}{0.4\textwidth}
+			\begin{tikzpicture}[node distance=\nodedistance]
 			\proofnodeBW{root};
-			\proofnodeBW[above left of = root,xshift=-1.2cm]{n7};
-			\proofnodeBW[above right of = n7,xshift=1.2cm]{n6};
+			\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
+			\proofnodeBW[above right of = n7,xshift=\nodedistance]{n6};
 			\proofnodeBW[above left of = n7]{n3};
-			\proofnodeBW[above right of = root,xshift=1.2cm]{n12};
+			\proofnodeBW[above right of = root,xshift=\nodedistance]{n12};
 			\proofnodeBW[above right of = n12]{n10};
 			\withchildrenBW{n3}{n1}{n2};
 			\withchildrenBW{n6}{n4}{n5};
@@ -491,42 +533,157 @@ The result is that node '$7$' can be pebbled early and at no point more than 3 p
 			\drawchildren{n7}{n3}{n6};
 			\drawchildren{n12}{n6}{n10};
 			\blacknode{n7};
-			\node [color=red, yshift = 2mm] (cap1) at (n1.north) {\small{1}};
-			\node [color=red, yshift = 2mm] (cap2) at (n2.north) {\small{2}};
-			\node [color=red, yshift = 2mm] (cap3) at (n3.north) {\small{3}};
-			\node [color=red, yshift = 2mm] (cap4) at (n4.north) {\small{5}};
-			\node [color=red, yshift = 2mm] (cap5) at (n5.north) {\small{4}};
-			\node [color=red, yshift = 2mm] (cap6) at (n6.north) {\small{6}};
-			\node [color=red, yshift = 2mm] (cap7) at (n7.north) {\small{7}};
+			\waitingnode{root};
+			\node [yshift = 2mm] (cap1) at (n1.north) {\small{1}};
+			\node [yshift = 2mm] (cap2) at (n2.north) {\small{2}};
+			\node [yshift = 2mm] (cap3) at (n3.north) {\small{3}};
+			\node [yshift = 2mm] (cap4) at (n4.north) {\small{5}};
+			\node [yshift = 2mm] (cap5) at (n5.north) {\small{4}};
+			\node [yshift = 2mm] (cap6) at (n6.north) {\small{6}};
+			\node [yshift = 2mm] (cap7) at (n7.north) {\small{7}};
 		\end{tikzpicture}
-	\end{center}
-
-\caption{Bottom-up Pebbling}
-\label{fig:BUP}
+		\end{minipage}%
+			}
+		\caption{Example \ref{example:TDP} with Bottom-Up Pebbling}
+		\label{fig:BUP}
 \end{figure}
+\label{example:BUP}
+\end{example}
 
-
-\subsection{Last Child Heuristic}
-
-As soon as all children of a node $\n$ are pebbled, $\n$ can be unpebbled. 
-More precisely, $\n$ can be unpebbled as soon as the its last child is pebbled.
-
-%In a way this heuristic is weird, because it relies on an existing order. Also 
-
-\subsection{Node Distance Heuristic}
-
-In section Section \ref{sec:TDvsBU} the issue with non local pebbling was explained.
-Capturing the full structure of a proof would be inefficient in general, however a limited distance search can help to do local pebbling.
-The Node Distance Heuristic searches for pebbled nodes that are close to the decision node.
-It does this by calculating spheres with a limited radius around nodes.
-A sphere with radius $r$ around the node $\n$ in the proof $\psi$ is defined in the following way: 
-$$K_r^{\psi}(\n) \eqdef \{p \in \Vertices{\psi} \mid \text{ there are at most } r \text{ (undirected) proof edges between } p \text{ and } \n\}$$
+\section{Heuristics}
+\label{sec:heuristics}
+Pebbling heuristics for a proof $\psi$ are defined by a function $h: \Vertices{\psi} \rightarrow H$, where $(H,\prec)$ is a totally ordered set. 
+Top-down-, as well as Bottom-Up-, Pebbling select one node $\n$ out of a set of nodes $N \subseteq \Vertices{\psi}$ where $\n = max_{n \in N} h(n)$ using the order $\prec$.
+For Top-down Pebbling, $N$ is the set of pebbleable nodes and for Bottom-Up Pebbling, $N$ is the set of premises of a node.
+%\subsection{Left to Right}
+%A trivial heuristic for Pebbling is to always choose the leftmost available node.
 
 \subsection{Number of Children Heuristic}
 
-This heuristic uses the number of children nodes $|\Children{\n}{\psi}|$ of a node $\n$ the deciding characteristic. 
-The smaller the number of children nodes, the better a node is considered. 
-The idea behind this heuristic is, that nodes with a low number of children can be unpebbled quickly after being pebbled.
+This heuristic uses the number of children nodes of a node $\n$ the deciding characteristic, i.e. $h(\n) = |\Children{\n}{\psi}|$, $H = \mathbb{N}$ and $\prec$ is the natural smaller relation.\\
+The motivation of this heuristic is that nodes with many children, will require many pebbles. Example \ref{example:hardfirst} shows why it is a good idea to process hard subproofs first.
+
+\begin{example}
+Figure \ref{example:hardfirst} shows a simple proof with two subproofs. 
+The numbers in the subproofs denote the pebbling number, after it has been pebbled. 
+The left, easy subproof needs 4 pebbles and the right, hard subproof requires 5 pebbles. 
+After pebbling one of them, the pebble on its root node has to be kept there until the other is pebbled fully. 
+This increases the pebbling number of the other subproof by one.
+So pebbling the easy subproof first increases the overall pebbling number to 6, while pebbling the hard one first leaves it at 5.\\
+Note that this is a simplified situation with two independent subproofs, for which pebbling one does not influence the pebbling number of the other, which is not true if they share nodes.
+
+\begin{figure}[h]
+	\usetikzlibrary{shapes.geometric}
+	\tikzset{
+    triangle/.style={
+        draw,
+        shape border rotate=180,
+        regular polygon,
+        regular polygon sides=3,
+        node distance=\nodedistanceTwo,
+        %minimum height=4em,
+				minimum width= 1.5cm
+			}
+	}
+	\makebox[\textwidth][c]{
+	\begin{minipage}{.3\textwidth}
+		\begin{tikzpicture}[node distance=\nodedistanceTwo]
+			\proofnodeBW{root};
+			\addchildrenBW{root}{n1}{n2};
+			\node[triangle, above of = n1, yshift = -4mm]{4};
+			\node[triangle, above of = n2, yshift = -4mm]{5};
+			\whitenode{n1};
+			\whitenode{n2};
+			\drawchildren{root}{n1}{n2};
+		\end{tikzpicture}
+	\end{minipage}%
+		\begin{minipage}{.3\textwidth}
+		\begin{tikzpicture}[node distance=\nodedistanceTwo]
+			\proofnodeBW{root};
+			\addchildrenBW{root}{n1}{n2};
+			\node[triangle, above of = n1, yshift = -4mm]{ };
+			\node[triangle, above of = n2, yshift = -4mm]{6};
+			\blacknode{n1};
+			\whitenode{n2};
+			\drawchildren{root}{n1}{n2};
+		\end{tikzpicture}
+	\end{minipage}%
+		\begin{minipage}{.3\textwidth}
+		\begin{tikzpicture}[node distance=\nodedistanceTwo]
+			\proofnodeBW{root};
+			\addchildrenBW{root}{n1}{n2};
+			\node[triangle, above of = n1, yshift = -4mm]{5};
+			\node[triangle, above of = n2, yshift = -4mm]{ };
+			\whitenode{n1};
+			\blacknode{n2};
+			\drawchildren{root}{n1}{n2};
+		\end{tikzpicture}
+	\end{minipage}%
+	}
+	\caption{Hard subproof first}
+	\label{fig:TDP}
+\end{figure}
+	
+\label{example:hardfirst}
+\end{example}
+
+\subsection{Last Child Heuristic}
+
+In section \ref{sec:pebbling-game} we explained the implicit unpebbling of a node $\n$ as soon as all of its children have been pebbled.
+More precisely, $\n$ can be unpebbled as soon as the its last child, w.r.t. a topological order $<_T$, is pebbled. 
+The idea of this heuristic is to prefer nodes that are last children of other nodes.\\
+Pebbling a node, which allows another one to be unpebbled, is always a good move. 
+It does not increase the pebbling number, it might decrease the current number of pebbles used, if more than one premise can be unpebbled, and it possibly opens up new nodes for pebbling.\\
+For determining the number of premises of which a node is the last children of, it first has to be traversed top-down once, using some topological order $<_T$.
+Before the traversal, $h(\n)$ is set to 0 for every node $\n$. During the traversal $h(\n)$ is increased by 1, if $\n$ is the last child of the current node w.r.t. $<_T$.
+So for this heuristic, just like as the Number of Children Heuristic, $H = \mathbb{N}$ and $\prec$ is the natural smaller relation.\\
+To some extent, this heuristic is a paradox, because pebbling the last child $\n$ of some node early, might results in $\n$ not being the last child anymore.\\
+However some nodes are forced to be the last child of another node with more than one child by the structure of the proof, as shown in figure \ref{fig:forcedLC}, where the bottom node is the last child of the top right node in every topological order.
+
+\begin{figure}[h]
+	\centering{
+	\begin{tikzpicture}[node distance=1cm]
+		\proofnodeBW{n4};
+		\proofnodeBW[above left of = n4]{n3};
+		\withchildrenBW{n3}{n1}{n2};
+		\drawchildren{n4}{n3}{n2};
+	\end{tikzpicture}
+	}
+	\caption{Forced last child}
+	\label{fig:forcedLC}
+\end{figure}
+\subsection{Node Distance Heuristic}
+
+In section Section \ref{sec:TDvsBU} the issue with non local pebbling was explained.
+%Capturing the full structure of a proof would be inefficient in general, however a limited distance search can help to do local pebbling.
+The Node Distance Heuristic searches for pebbled nodes that are close to the decision node.
+It does this by calculating spheres with a limited radius around nodes.
+A sphere with radius $r$ around the node $\n$ in the graph $G = (V,E)$ is defined in the following way: 
+$$K_r^{G}(\n) \eqdef \{p \in V \mid \text{ there are at most } r \text{ (undirected) edges between } p \text{ and } \n\}$$
+%This can probably be defined nicer, with the notion of paths
+Using these spheres, the characteristic for this heuristic is defined as follows:
+\begin{align*}
+d(\n) &\defeq -min\{r \mid K_r^{G}(\n)\text{ contains a pebbled node}\}\\
+	s(\n) &\defeq |K_{-d(\n)}^G|\\
+	l(\n) &\defeq max_{<_P}K_{-d(\n)}^G\\
+	h(\n) &\defeq (d(\n),s(\n),l(\n))
+\end{align*}
+where $<_P$ denotes the total order on the initial sequence of pebbled nodes $P$, i.e. nodes in spheres that were pebbled later are preferred.
+So $H = \mathbb{Z} \times \mathbb{N} \times P$ and the order used is the lexicographic order of two times the natural smaller relation and $<_P$.
+The spheres $K_r(\n)$ can grow exponentially in $r$. Therefore the maximum sphere calculated has to be limited and if no pebbled node is found in any of the calculated spheres, another heuristic has to be used.
+
+\subsection{Decay Heuristics}
+
+Decay Heuristics denote a family of meta heuristics. 
+The idea is to not only use the measure of a single node, but also to include the measures of its premises.
+Such a heuristic has four parameters: a heuristic function $h_u: V \rightarrow H$, a recursion depth $d \in \mathbb{N}$, a decay factor $\gamma \in \mathbb{R}^+ \cup \{0\}$ and a family of combining functions $com: H^n \rightarrow H$ for $n \in \mathbb{N}$.\\
+The resulting heuristic function $h: V \rightarrow H$ is defined with the help of the recusive function $rec: (V \times \mathbb{N}) \rightarrow H$:
+\begin{align*}
+	rec(\n,0) &\defeq h_u(\n) &\\
+	rec(\n,k) &\defeq h_u(\n) + com(rec(p_1,k-1),\ldots,rec(p_n,k-1)) * \gamma & \text{ where } \Premises{\n}{\psi} = \{p_1,\ldots,p_n\}\\& & \text{ and } k \in \{1,\ldots,d\} \\
+	%rec(\n,k) &\defeq com(h_u(\n), rec(p_1,k-1)*\gamma,\ldots,rec(p_{n-1},k-1) * \gamma)\\ %might be better - I will try this in the experiments
+	h(\n) &\defeq rec(\n,d) &
+\end{align*}
 
 \section{Experiments} \label{sec:exp}
 
