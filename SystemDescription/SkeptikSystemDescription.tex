@@ -27,7 +27,7 @@
   Joseph Boudou\inst{1}
   \thanks{Supported by the Google Summer of Code 2012 program.}
   \and 
-  Andreas Fellner\inst{2}
+  Andreas Fellner\inst{2,3}
   \thanks{Supported by the Google Summer of Code 2013 program.}
   \and 
   Bruno Woltzenlogel Paleo\inst{3}
@@ -56,7 +56,7 @@
 
 
 \begin{abstract}
-This paper describes \skeptik: a system for compressing and improving proofs obtained by automated reasoning tools. 
+This paper describes the current state of \skeptik: a system for checking, compressing and improving proofs obtained by automated reasoning tools.
 \end{abstract}
 
 \setcounter{footnote}{0}
@@ -64,20 +64,50 @@ This paper describes \skeptik: a system for compressing and improving proofs obt
 
 \section{Introduction}
 
+There are various reasons why it is highly desirable 
+that automated reasoning
+tools output not only a \emph{yes} or \emph{no} answer to a problem 
+but also \emph{proofs/refutation} or \emph{(counter)models}. 
+
+Firstly, state-of-the-art tools are complex and often heavily optimized. 
+Their code is hard to understand and difficult to automatically verify.
+Therefore, it is reasonable to distrust their answers. 
+But if proofs or (counter)models are produced, 
+they can serve as independently checkable certificates of 
+correctness for the provided answers. 
+
+Secondly, for most applications, a \emph{yes/no} is inherently insufficient. We often already known in advance whether a problem is expected to be satisfiable or unsatisfiable, and we want more than just a confirmation of this expectation. For satisfiable formulas, it is the model that encodes the desired information; for valid formulas, it is the proof that contains the desired information. In case the expectation was wrong, refutations and countermodels can be very helpful to explain issues in the encoding of the problem, in order to correct and refine it.
+
+Proofs and refutations have been used, for example, to extract unsatisfiable cores \cite{ToDo}, interpolants \cite{}, Herbrand disjunctions \cite{}, implicatures \cite{} \ldots
+
+Although current automated deduction tools are very efficient at finding proofs, they do not necessarily find the best proofs. {\skeptik}\footnote{\url{http://github.com/Paradoxika/Skeptik/}} aims precisely at efficiently analyzing proofs, in order to eliminate their redundancies. The proofs thus compressed and improved by Skeptik can better serve the needs of applications using proofs.
 
 
-\section{User Interface}
+\paragraph{Related Work} ToDo: mention CERes and GAPT
+
+
+\section{Usage}
 
 
 
 \section{Supported Proof Formats}
+\label{sec:ProofFormats}
+
+ToDo: RUP
 
 \subsection{TraceCheck Format}
 
-\subsection{The \veriT Proof Format}
+ToDo (Andreas)
 
-\subsection{The \skeptik Proof Format}
+\subsection{The SMT-Lib Proof Format}
 
+{\veriT}
+
+ToDo (Bruno)
+
+\subsection{{\skeptik}'s own Proof Format}
+
+ToDo (Joseph)
 
 
 \section{Available Proof Compression Algorithms}
@@ -178,7 +208,7 @@ There are three subsumption based compression algorithms implemented into Skepti
 
 \subsection{Pebbling}
 
-Pebbling algorithms compress proofs in the \textbf{space measure}, as opposed to the usual length compression. The space measure of a proof indicates how many proof nodes maximally have to be kept in memory, while reading the proof, simultaniously.\\
+Pebbling algorithms compress proofs in the \textbf{space measure}, as opposed to the usual length compression. The space measure of a proof indicates how many proof nodes maximally have to be kept in memory, while reading the proof, simultaneously.\\
 This measure is closely related to the \textbf{Black Pebbling Game} \cite{gilbert1980pebbling}, which lends its name to the algorithms described here. A strategy for this game directly corresponds to a topological node ordering, i.e. an ordering of nodes such that every premise of each node is lower than the node itself, combined with deletion information, i.e. extra lines in the proof output indicating that a node can be deleted from memory. An optimal strategy for the Black Pebbling Game would therefore result in optimal space compression of the proof. However, as shown in \cite{gilbert1980pebbling}, finding the optimal solution is PSPACE-complete and therefore not a feasable approach for this program.\\
 To obtain algorithms that have an acceptable runtime greedy heuristics for finding a good node ordering are used.\\
 \textbf{Top-down pebbling} directly corresponds to playing the game with limited information on how the proof looks. At every point there are nodes which can be pebbled (initially these are only the axioms). Using information from these nodes and their children nodes, it is decided which node to pebble next, which can make other nodes pebblable. This is done until the root node is pebbled. Unfortunately the lack of knowledge about the structure of the proof often results in bad space compression.\\
@@ -198,7 +228,7 @@ ToDo: brief description of the package structure
 
 \subsection{Data Structures for Proofs}
 
-
+immutable
 
 
 \section{Conclusions and Future Work}
@@ -206,6 +236,9 @@ ToDo: brief description of the package structure
 ToDo: limitation: memory consumption in Scala
 underlying symbols are strings
 
+New proof formats on demand
+
+extension to first-order
 
 
 \bibliographystyle{splncs}
