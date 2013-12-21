@@ -30,13 +30,13 @@ Skeptik [System Description]
 
 \author{
   Joseph Boudou\inst{1}
-  \thanks{Supported by the Google Summer of Code 2012 program.}
+  %\thanks{Supported by the Google Summer of Code 2012 program.}
   \and 
   Andreas Fellner\inst{2,3}
-  \thanks{Supported by the Google Summer of Code 2013 program.}
+  %\thanks{Supported by the Google Summer of Code 2013 program.}
   \and 
   Bruno Woltzenlogel Paleo\inst{3}
-  \thanks{Supported by the Austrian Science Fund, project P24300.}
+  \thanks{Funded by Google Summer of Code 2012 and 2013 and FWF project P24300.}
 }
 
 \authorrunning{J.\~Boudou \and A. Fellner \and B.\~Woltzenlogel Paleo}
@@ -73,22 +73,21 @@ There are various reasons why it is desirable
 that automated reasoning
 tools output not only a \emph{yes} or \emph{no} answer to a problem 
 but also \emph{proofs/refutations} or \emph{(counter)models}. 
-
+%
 Firstly, state-of-the-art tools are complex and often heavily optimized. 
 Their code is hard to understand and difficult to automatically verify.
 Therefore, it is reasonable to distrust their answers. 
 But if proofs or (counter)models are produced, 
 they can serve as independently checkable certificates of 
 correctness for the provided answers. 
-
+%
 Secondly, for most applications, a \emph{yes/no} is inherently insufficient. We often already known in advance whether a problem is expected to be satisfiable or unsatisfiable, and we want more than just a confirmation of this expectation. For satisfiable formulas, the desired information is encoded in the model; for valid formulas, it is contained in the proof. In case the expectation was wrong, refutations and countermodels can be very helpful to explain issues in the encoding of the problem, in order to correct and refine it.
-
+%
 Proofs and refutations can been used, for example, to extract unsatisfiable cores \cite{ToDo}, interpolants \cite{ToDo}, Herbrand disjunctions \cite{ToDo}, linguistic implicatures \cite{ToDo} \ldots
 
-Although current automated deduction tools are very efficient at finding proofs, they do not necessarily find the best proofs. {\skeptik}\footnote{\url{http://github.com/Paradoxika/Skeptik/}} aims precisely at efficiently analyzing proofs, in order to compress and improve them by eliminating their redundancies.
+Although current automated deduction tools are very efficient at finding proofs, they do not necessarily find the best proofs. {\skeptik} (\url{http://github.com/Paradoxika/Skeptik/}) aims precisely at efficiently analyzing proofs, in order to compress and improve them by eliminating their redundancies.
 
-
-\paragraph{Related Work:} \texttt{CERes}\footnote{\url{http://www.logic.at/ceres}} \cite{ToDo} is another proof transformation system, especialized in cut-elimination for classical first-order sequent calculus. It was replaced by \texttt{GAPT}\footnote{\url{http://code.google.com/p/gapt/}} \cite{ToDo}, extended with cut-introduction techniques \cite{ToDo}. \texttt{MINLOG}\footnote{\url{http://www.mathematik.uni-muenchen.de/~logik/minlog/}} \cite{ToDo} extracts functional programs from proofs, employing a refined A-translation for functional proofs.
+\paragraph{Related Work:} \texttt{CERes} (\url{http://www.logic.at/ceres}) \cite{ToDo} is another proof transformation system, especialized in cut-elimination for classical first-order sequent calculus. It was replaced by \texttt{GAPT} (\url{http://code.google.com/p/gapt/}) \cite{ToDo}, extended with cut-introduction techniques \cite{ToDo}. \texttt{MINLOG} (\url{http://www.mathematik.uni-muenchen.de/~logik/minlog/}) \cite{ToDo} extracts functional programs from proofs, employing a refined A-translation for functional proofs.
 
 
 \newcommand{\com}[1]{\texttt{#1}}
@@ -107,6 +106,11 @@ The command \com{java -jar skeptik.jar --help} displays a help message explainin
 
 
 \newcommand{\class}[1]{\texttt{#1}}
+
+
+\section{Usage as a Library}
+
+ToDo
 
 \section{Implementation Details}
 
@@ -133,7 +137,9 @@ ToDo: brief description of the package structure
 \section{Supported Proof Formats}
 \label{sec:ProofFormats}
 
-Scala's combinator parsing library makes it easy to implement parsers for various proof formats. {\skeptik} uses the extension of a file to  determine its proof format. The currently available proof formats are:
+Scala's combinator parsing library makes it easy to implement parsers for various proof formats. {\skeptik} uses the extension of a file to  determine its proof format. To export proofs in various formats, {\skeptik} provides many classes in exporters that extend Java's \class{java.io.Writer} class.
+
+The currently available proof formats are:
 
 
 \paragraph{The SMT-Lib Proof Format: }
@@ -143,7 +149,7 @@ Scala's combinator parsing library makes it easy to implement parsers for variou
 ToDo (Bruno)
 
 
-\paragraph{TraceCheck Format}
+\paragraph{TraceCheck Format: }
 
 ToDo (Andreas)
 
@@ -152,7 +158,7 @@ ToDo: RUP
 cite Armin Biere's sat-solver
 
 
-\paragraph{{\skeptik}'s own Proof Format}
+\paragraph{{\skeptik}'s Proof Format: }
 
 ToDo (Joseph)
 
@@ -164,27 +170,12 @@ ToDo: with deletion
 Most algorithms for the compression of propositional resolution proofs generated by sat-solvers and smt-solvers described in the literature are available in {\skeptik}. They are shortly described below:
 
 
-\paragraph{RecyclePivots} (\algo{RP}) \cite{RP08,RP11} compresses a proof by partially regularizing it. A proof is \emph{irregular} \cite{Tseitin} some pivot is resolved more than once on some path
-from the root to a leaf.
+\paragraph{RecyclePivots} (\algo{RP}) \cite{RP08,RP11} compresses a proof by partially regularizing it. A proof is \emph{irregular} \cite{Tseitin} if the resolved literal of a resolution proof node is resolved again on the path from this node to the root node. \algo{RP} finds irregular nodes efficiently by traversing the proof from the root to the leaves a single time and memorizing which literals were resolved. When it finds an irregular node, it marks one of its premises for deletion. In a second traversal, from the leaves to the root, irregular nodes are replaced by their non-deleted premises. As full regularization can lead to an exponential blow-up in the proof length \cite{Goerdt}, it is important to regularize carefully and only partially. \algo{RP} achieves this by resetting the set of literals for a node to the empty set when it has more than one child (i.e. when it is the premise of more than one node).
 
 
+\paragraph{RecyclePivotsWithIntersection} (\algo{RPI}) \cite{LURPI}
+differs from \algo{RP} in the treatment of a node with more than one child. Instead of resetting its set of literals to the empty set, the intersection of the sets of literals incoming from its children is computed. In this manner, the exponential blow-up is still avoided, but strictly more irregular nodes are detected and regularized.
 
-\paragraph{RecyclePivotsWithIntersection} (\algo{RPI}): 
-
-
-
-, Tseitin outlines a first kind of proof redundancy with the concept of
-\emph{irregular proof}. A proof is irregular if  But Goerdt \cite{Goerdt} proved that the corresponding regular proof of an
-irregular proof may be exponentialy bigger than the original. Therefore, only \emph{partial}
-regularisation algorithm can compress a proof.
-
-\algo{RecyclePivots} (\algo{RP})  and \algo{RecyclePivotsWithIntersection}
-(\algo{RPI}) \cite{LURPI} are such partial regularisation algorithms. They both compute for each
-node a set of \emph{safe literals} and then delete a premise iff its auxiliary literal is safe. The
-set of safe literals is constructed recursively from the root of the proof by adding the dual of the
-auxiliary literal. The two algorithms only differs for nodes which are premises of more than one
-resolution. In that case, \algo{RP} resets the safe literals to the empty set whereas \algo{RPI}
-computes the intersection of the safe literals corresponding to each incoming edge.
 
 \subsection{LowerUnits}
 
@@ -286,6 +277,8 @@ extension to first-order
 contextual natural deduction
 
 cut-introduction
+
+Vienna Scientific Cluster
 
 \bibliographystyle{splncs}
 \bibliography{biblio}
