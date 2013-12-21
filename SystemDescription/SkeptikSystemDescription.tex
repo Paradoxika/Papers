@@ -11,6 +11,9 @@
 \usepackage{array,booktabs,multirow}
 \usepackage{placeins}
 
+\usepackage{graphicx}
+\usepackage{wrapfig}
+
 \usepackage{logictools}
 \usepackage{prooftheory}
 \usepackage{comment}
@@ -21,7 +24,9 @@
 \renewcommand{\textfraction}{0.1}
 \renewcommand{\floatpagefraction}{0.75}
 
-\title{The \skeptik Proof Compression System}
+\title{ 
+Skeptik [System Description]
+}
 
 \author{
   Joseph Boudou\inst{1}
@@ -56,7 +61,7 @@
 
 
 \begin{abstract}
-This paper describes the current state of \skeptik: a system for checking, compressing and improving proofs obtained by automated reasoning tools.
+This paper introduces \skeptik: a system for checking, compressing and improving proofs obtained by automated reasoning tools.
 \end{abstract}
 
 \setcounter{footnote}{0}
@@ -64,10 +69,10 @@ This paper describes the current state of \skeptik: a system for checking, compr
 
 \section{Introduction}
 
-There are various reasons why it is highly desirable 
+There are various reasons why it is desirable 
 that automated reasoning
 tools output not only a \emph{yes} or \emph{no} answer to a problem 
-but also \emph{proofs/refutation} or \emph{(counter)models}. 
+but also \emph{proofs/refutations} or \emph{(counter)models}. 
 
 Firstly, state-of-the-art tools are complex and often heavily optimized. 
 Their code is hard to understand and difficult to automatically verify.
@@ -76,19 +81,31 @@ But if proofs or (counter)models are produced,
 they can serve as independently checkable certificates of 
 correctness for the provided answers. 
 
-Secondly, for most applications, a \emph{yes/no} is inherently insufficient. We often already known in advance whether a problem is expected to be satisfiable or unsatisfiable, and we want more than just a confirmation of this expectation. For satisfiable formulas, it is the model that encodes the desired information; for valid formulas, it is the proof that contains the desired information. In case the expectation was wrong, refutations and countermodels can be very helpful to explain issues in the encoding of the problem, in order to correct and refine it.
+Secondly, for most applications, a \emph{yes/no} is inherently insufficient. We often already known in advance whether a problem is expected to be satisfiable or unsatisfiable, and we want more than just a confirmation of this expectation. For satisfiable formulas, the desired information is encoded in the model; for valid formulas, it is contained in the proof. In case the expectation was wrong, refutations and countermodels can be very helpful to explain issues in the encoding of the problem, in order to correct and refine it.
 
-Proofs and refutations have been used, for example, to extract unsatisfiable cores \cite{ToDo}, interpolants \cite{}, Herbrand disjunctions \cite{}, implicatures \cite{} \ldots
+Proofs and refutations can been used, for example, to extract unsatisfiable cores \cite{ToDo}, interpolants \cite{ToDo}, Herbrand disjunctions \cite{ToDo}, linguistic implicatures \cite{ToDo} \ldots
 
-Although current automated deduction tools are very efficient at finding proofs, they do not necessarily find the best proofs. {\skeptik}\footnote{\url{http://github.com/Paradoxika/Skeptik/}} aims precisely at efficiently analyzing proofs, in order to eliminate their redundancies. The proofs thus compressed and improved by Skeptik can better serve the needs of applications using proofs.
+Although current automated deduction tools are very efficient at finding proofs, they do not necessarily find the best proofs. {\skeptik}\footnote{\url{http://github.com/Paradoxika/Skeptik/}} aims precisely at efficiently analyzing proofs, in order to compress and improve them by eliminating their redundancies.
 
 
-\paragraph{Related Work} ToDo: mention CERes and GAPT
+\paragraph{Related Work:} \texttt{CERes}\footnote{\url{http://www.logic.at/ceres}} \cite{ToDo} is another proof transformation system, especialized in cut-elimination for classical first-order sequent calculus. It was replaced by \texttt{GAPT}\footnote{\url{http://code.google.com/p/gapt/}} \cite{ToDo}, extended with cut-introduction techniques \cite{ToDo}. \texttt{MINLOG}\footnote{\url{http://www.mathematik.uni-muenchen.de/~logik/minlog/}} \cite{ToDo} extracts functional programs from proofs, employing a refined A-translation for functional proofs.
+
+
+\newcommand{\com}[1]{\texttt{#1}}
+
+\section{Installation}
+
+{\skeptik} is implemented in Scala and runs on the java virtual machine (JVM). Therefore, Java\footnote{\url{https://www.java.com/}} must be installed. The easiest way to download {\skeptik} is via \texttt{git}\footnote{\url{http://git-scm.com/}}, by executing \com{git clone git@github.com:Paradoxika/Skeptik.git} in the folder where {\skeptik} should be downloaded. It is helpful to install \texttt{SBT}\footnote{\url{http://www.scala-sbt.org/}}, a build tool that automatically downloads all compilers and libraries on which {\skeptik} depends. To compile, build and package {\skeptik}, run \com{sbt one-jar} in {\skeptik}'s home folder. This generates a jar file that can be executed like any other Java jar file.
+
+\texttt{SBT} and Scala programs may need a lot of memory for compilation and execution. If out-of-memory problems occur, the JVM's maximum available memory can be increased by executing \com{export JAVA\_TOOL\_OPTIONS=``-Xmx1024m''} in the terminal.
 
 
 \section{Usage}
 
+The command \com{java -jar skeptik.jar --help} displays a help message explaining how to use {\skeptik}. For example, to compress the proof ``eq\_diamond9.smt2'' using the algorithm \texttt{RPI} and write the compressed proof using the `smt2' proof format, the following command should be executed: \com{java -jar skeptik.jar -a RPI -f smt2 examples/proofs/VeriT/eq\_diamond9.smt2}.
 
+{\skeptik} can be called with an arbitrary number of algorithms and proofs. The following command would compress the proofs ``p1.smt2'' and ``p2.smt2'' with two algorithms each (\texttt{RP} and a sequential composition of \texttt{DAGify}, \texttt{RPI} and \texttt{LU}): \\
+\com{java -jar skeptik.jar -a RP -a (DAGify*RPI*LU) p1.smt2 p2.smt2} 
 
 \section{Supported Proof Formats}
 \label{sec:ProofFormats}
@@ -240,6 +257,9 @@ New proof formats on demand
 
 extension to first-order
 
+contextual natural deduction
+
+cut-introduction
 
 \bibliographystyle{splncs}
 \bibliography{biblio}
