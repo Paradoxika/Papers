@@ -70,31 +70,26 @@ This paper introduces \skeptik: a system for checking, compressing and improving
 \section{Introduction}
 
 There are various reasons why it is desirable 
-that automated reasoning
-tools output not only a \emph{yes} or \emph{no} answer to a problem 
+for automated reasoning
+tools to output not only a \emph{yes} or \emph{no} answer to a problem 
 but also \emph{proofs/refutations} or \emph{(counter)models}. 
 %
-Firstly, state-of-the-art tools are complex and often heavily optimized. 
-Their code is hard to understand and difficult to automatically verify.
-Therefore, it is reasonable to distrust their answers. 
-But if proofs or (counter)models are produced, 
-they can serve as independently checkable certificates of 
-correctness for the provided answers. 
-%
-Secondly, for most applications, a \emph{yes/no} is inherently insufficient. We often already known in advance whether a problem is expected to be satisfiable or unsatisfiable, and we want more than just a confirmation of this expectation. For satisfiable formulas, the desired information is encoded in the model; for valid formulas, it is contained in the proof. In case the expectation was wrong, refutations and countermodels can be very helpful to explain issues in the encoding of the problem, in order to correct and refine it.
-%
-Proofs and refutations can been used, for example, to extract unsatisfiable cores \cite{ToDo}, interpolants \cite{ToDo}, Herbrand disjunctions \cite{ToDo}, linguistic implicatures \cite{ToDo} \ldots
+Firstly, state-of-the-art tools are complex and heavily optimized. Their code is often long, hard to understand and difficult to automatically verify. Consequently, the \emph{yes/no} answers cannot be fully trusted, unless they are accompanied by proofs or (counter)models that serve as independently checkable certificates of 
+their correctness. 
 
-Although current automated deduction tools are very efficient at finding proofs, they do not necessarily find the best proofs. {\skeptik} (\url{http://github.com/Paradoxika/Skeptik/}) aims precisely at efficiently analyzing proofs, in order to compress and improve them by eliminating their redundancies.
+Furthermore, for most applications, a \emph{yes/no} answer is inherently insufficient. We often already known in advance whether a problem is expected to be satisfiable or unsatisfiable, and we want more than just a confirmation of this expectation. For satisfiable formulas, the desired information is encoded in the model; while for valid formulas, it is contained in the proof. In case the expectation was wrong, refutations and countermodels can be very helpful to explain issues in the encoding of the problem, in order to correct and refine it. 
+% Proofs and refutations can been used, for example, to extract unsatisfiable cores \cite{ToDo}, interpolants \cite{ToDo}, Herbrand disjunctions \cite{ToDo}, linguistic implicatures \cite{ToDo} \ldots
+
+Although current automated deduction tools are very efficient at finding proofs, they do not necessarily find the best proofs. {\skeptik} efficiently finds and eliminates redundancies in proofs, thus compressing and improving them according to various metrics (\url{http://github.com/Paradoxika/Skeptik/}).
 
 \paragraph{Related Work:} \texttt{CERes} (\url{http://www.logic.at/ceres}) \cite{ToDo} is another proof transformation system, especialized in cut-elimination for classical first-order sequent calculus. It was replaced by \texttt{GAPT} (\url{http://code.google.com/p/gapt/}) \cite{ToDo}, extended with cut-introduction techniques \cite{ToDo}. \texttt{MINLOG} (\url{http://www.mathematik.uni-muenchen.de/~logik/minlog/}) \cite{ToDo} extracts functional programs from proofs, employing a refined A-translation for functional proofs.
 
 
-\newcommand{\com}[1]{\texttt{#1}}
+\newcommand{\com}[1]{[\texttt{#1}]}
 
 \section{Installation}
 
-{\skeptik} is implemented in Scala and runs on the java virtual machine (JVM). Therefore, Java\footnote{\url{https://www.java.com/}} must be installed. The easiest way to download {\skeptik} is via \texttt{git}\footnote{\url{http://git-scm.com/}}, by executing \com{git clone git@github.com:Paradoxika/Skeptik.git} in the folder where {\skeptik} should be downloaded. It is helpful to install \texttt{SBT}\footnote{\url{http://www.scala-sbt.org/}}, a build tool that automatically downloads all compilers and libraries on which {\skeptik} depends. To compile, build and package {\skeptik}, run \com{sbt one-jar} in {\skeptik}'s home folder. This generates a jar file that can be executed like any other Java jar file.
+{\skeptik} is implemented in Scala and runs on the java virtual machine (JVM). Therefore, Java (\url{https://www.java.com/}) must be installed. The easiest way to download {\skeptik} is via \texttt{git} (\url{http://git-scm.com/}), by executing \com{git clone git@github.com:Paradoxika/Skeptik.git} in the folder where {\skeptik} should be downloaded. It is helpful to install \texttt{SBT} (\url{http://www.scala-sbt.org/}), a build tool that automatically downloads all compilers and libraries on which {\skeptik} depends. To compile, build and package {\skeptik}, run \com{sbt one-jar} in {\skeptik}'s home folder. This generates a jar file that can be executed like any other Java jar file.
 
 \texttt{SBT} and Scala programs may need a lot of memory for compilation and execution. If out-of-memory problems occur, the JVM's maximum available memory can be increased by executing \com{export JAVA\_TOOL\_OPTIONS=``-Xmx1024m''} in the terminal.
 
@@ -108,39 +103,23 @@ The command \com{java -jar skeptik.jar --help} displays a help message explainin
 \newcommand{\class}[1]{\texttt{#1}}
 
 
-\section{Usage as a Library}
-
-ToDo
-
 \section{Implementation Details}
 
 In {\skeptik} every logical expression is a simply typed lambda expression, implemented by the abstract class \class{E} with concrete subclasses \class{Var}, \class{App} and \class{Abs} for, respectively, \emph{variables}, \emph{applications} and \emph{abstractions}. Scala's \emph{case classes} are used to make \class{E} behave like an algebraic datatype with (pattern-matchable) constructors \class{Var}, \class{App} and \class{Abs} \`{a} la functional programming.
 
 {\skeptik} is flexible w.r.t. the underlying proof calculus. Every proof node is an instance of the abstract class \class{ProofNode} and must contain a judgment of some subclass \class{J} of \class{Judgment} and a (possibly empty) collection of premises (which are other proof nodes). A proof is a directed acyclic graph of proof nodes; it is implemented as the class \class{Proof}, which provides higher-order methods for traversing proofs. Thanks to Scala's syntax conventions, these methods can be used as an internal domain specific language that integrates harmoniously with the scala language itself.
 
-A proof calculus is a collection of inference rules, implemented as concrete subclasses of \class{ProofNode}. In particular, the main inference rules of the propositional resolution calculus used for representing proofs generated by sat- and smt-solvers are \class{Axiom}, \class{R} (for resolution). They use the class \class{Sequent} (a subclass of \class{Judgment}) to represent clauses.
+A proof calculus is a collection of inference rules, implemented as concrete subclasses of \class{ProofNode}. In particular, the main inference rules of the propositional resolution calculus used for representing proofs generated by sat- and smt-solvers are \class{Axiom} and \class{R} (for resolution). They use a \class{Sequent} class (a subclass of \class{Judgment}) to represent clauses.
 
-The classes for expressions and proof nodes are small and correctness conditions are checked during object construction. Once constructed, they cannot be changed, because they are \emph{immutable}. Hence, guarantees that incorrect expressions and proofs cannot result from the transformations performed by {\skeptik}. Auxiliary functionality is not implemented in the classes but in their homonymous \emph{companion objects}. Therefore, even though {\skeptik} has more than 21000 lines of code, its most critical core data structures are less than a few hundred lines long.
-
-
-
-
-\subsection{Organization of the Code}
-
-ToDo: brief description of the package structure
-
-
-
-
+Classes for expressions and proof nodes are small and correctness conditions are checked during object construction. Once constructed, they cannot be changed, because they are \emph{immutable}. Therefore, incorrect expressions and proofs cannot result from the transformations performed by {\skeptik}. Auxiliary functionality is not implemented in the classes but in their homonymous \emph{companion objects}. Therefore, even though {\skeptik} has more than 21000 lines of code, its most critical core data structures are less than a few hundred lines long.
 
 
 \section{Supported Proof Formats}
 \label{sec:ProofFormats}
 
-Scala's combinator parsing library makes it easy to implement parsers for various proof formats. {\skeptik} uses the extension of a file to  determine its proof format. To export proofs in various formats, {\skeptik} provides many classes in exporters that extend Java's \class{java.io.Writer} class.
+Scala's combinator parsing library makes it easy to implement parsers for various proof formats. {\skeptik} uses the extension of a file to  determine its proof format. To export proofs in various formats, {\skeptik} provides many classes in exporters package that extend Java's \class{java.io.Writer} class.
 
 The currently available proof formats are:
-
 
 \paragraph{The SMT-Lib Proof Format: }
 
