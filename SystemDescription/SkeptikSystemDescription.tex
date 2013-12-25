@@ -165,73 +165,54 @@ keeping track of nodes that have already been lowered and their pivots, it becom
 possible to lower a non-unit node if it is \emph{univalent}: all its literals but one (its so-called \emph{valent} literal) can be resolved against the valent literals of the already lowered nodes. 
 
 
+\paragraph{\algo{LUnivRPI}} \cite{LUniv} is a non-sequential combination of \algo{LUniv} after \algo{RPI} and currently provides one of the best trade-offs between compression time and compression ratio. Non-sequential combinations with \algo{LUniv} are easy to implement, because \algo{LUniv} has been implemented as a replacement for the \algo{fixProof} function used by some algorithms to reconstruct a proof after deletions. 
+%
 
-In \skeptik, \algo{LUniv} has been implemented as a replacement for the \algo{fixProof} function
-used by some algorithms to reconstruct a proof after deletions. Therefore, non-sequential
-combinations of those algorithms with \algo{LUniv} are easy to implement. For instance,
-\algo{LUnivRPI} is a non-sequential combination of \algo{LUniv} after \algo{RPI}. This latter
-algorithm is currently one the best trade-off between compression time and compression ratio
-\cite{LUniv}.
-
-\subsection{RPI[3]LU and RPI[3]LUniv}
-
-\algo{RPI[3]LU} and \algo{RPI[3]LUniv} are non-sequential combinations of \algo{RPI} after \algo{LU}
-and \algo{LUniv}. They consist in three traversals. The first traversal collects subproofs to be
-lowered down the proof. The second traversal computes the sets of safe literals for each node,
-taking into account the subproofs marked for being lowered. The last traversal actualy compress the
-proof by removing redundant branches and lowering subproofs.
-
-These algorithm are optimizations of the corresponding sequential compositions, achieving the
+\paragraph{\algo{RPI[3]LU} and \algo{RPI[3]LUniv}} are non-sequential combinations of \algo{RPI} after \algo{LU}
+and \algo{LUniv}, respectively. They consist of three traversals. The first traversal collects subproofs to be
+lowered. The second traversal computes the sets of safe literals for each node,
+taking into account the subproofs marked for being lowered. The last traversal actually compresses the proof by removing redundant branches and lowering subproofs. These algorithm are optimizations of the corresponding sequential compositions, achieving the
 same compression ratio in less time. 
 
-\subsection{ReduceAndReconstruct}
 
-The \algo{ReduceAndReconstruct} (\algo{RedRec}) approach consists in applying local transformation
-rules to each node. The set of local rules presented in \cite{RedRec} are sufficient to emulate any
-other compression algorithm. Unfortunately, the proposed heuristic only consists in trying to apply
-each rule (with given priorities) to each node in a top-down traversal. For this heuristic to be
-efficient, the process has to be repeated many times. The resulting algorithm can achieve very good
-compression ratio if run long enough.
+\paragraph{Reduce\&Reconstruct} (\algo{RR}) \cite{RedRec} applies local transformation
+rules that either eliminate local redundancies or shuffle the order of resolution steps (similarly to what Gentzen's rank reduction rules for cut-elimination do) in order to gradually transform non-local redundancies into local ones. Although the set of local rules used are sufficient to emulate any
+other compression algorithm, the algorithm may need many traversals to shuffle the order of resolutions steps sufficiently well to eliminate non-local redundancies. This algorithm can achieve very good
+compression ratio, if run for a long enough time.
+%
+The implementation in \skeptik is very modular, allowing convenient experimentation with various alternative local transformation rules, heuristics to apply
+them and termination conditions. There still seems to be plenty of space to improve heuristics and termination conditions for this algorithm.
 
-As this algorithm allows experimentations in the local transformation rules, the heuristic to apply
-them and the termination conditions, its implementation in \skeptik is very modular. Each component
-is defined independently and a convenient framework allows to combine them as desired. A handful of
-alternative local transformation rules and termination conditions have been implemented too.
 
-\subsection{Split}
-
-The Split \cite{CottonSplit} algorithm is a technique to lower pivot variables in a proof.\\
-From a proof with conclusion $C$, two proofs with conclusion $v \vee C$ and $\neg{v} \vee C$ are constructed,  where the variable $v$ is chosen heuristically.\\
+\paragraph{Split} \cite{CottonSplit} lowers pivot variables in a proof.\\
+From a proof with conclusion $C$, two proofs with conclusions $v \vee C$ and $\neg{v} \vee C$ are constructed,  where the variable $v$ is chosen heuristically.\\
 In a first step the positive/negative premises of resolvents with pivot $v$ are removed from the proof.
-Afterwads the proof is fixed, by traversing it top-down and fixing each proof node.
-A proof node is fixed by either replacing it by one of or resolving the fixed premises.\\ %I'm not sure if the end of this sentence is elegant or unreadable
+Afterwards the proof is fixed, by traversing it top-down and fixing each proof node.
+A proof node is fixed by either replacing it by one of its fixed premises or resolving them.
 The roots of the resulting proofs are resolved, using $v$ as pivot, to obtain a new proof of $C$.\\
-The time-complexity of this algorithm is linear in the proof length %this should be true, right? but the original paper doesn't state this
-and it suits very well for repeated application. This can be done iteratively or recursively. Also multiple variables can be chosen in advance. 
-All these variants are implemented into Skeptik.
+The time-complexity of this algorithm is linear in the proof length, but it has to be repeated many times to obtain significant compression. This can be done iteratively or recursively. Also multiple variables can be chosen in advance. 
+All these variants are implemented in {\skeptik}.
 
-\subsection{TautologyElimination}
+\paragraph{Tautology Elimination} (\algo{ET}) eliminates proof nodes containing tautological clauses. Although tautological clauses normally do not occur in proofs generated by sat- and smt-solvers, they may occur in proofs compressed by some of the algorithms described here.
 
-\subsection{StructuralHashing}
 
-\subsection{DAGification}
+\paragraph{DAGification} (\algo{D}) finds proof nodes having equal clauses and replaces each of them by only one of them. 
 
-\subsection{Subsumption}
 
-Subsumption based algorithms use, as the name implies, the subsumption relation on clauses for compressing a proof. A clause $C_1$ subsumes a clause $C_2$ \textit{iff} every literal occuring in $C_1$ also occurs in $C_2$.
-The general goal is to replace a clause $C$ by another clause $D$, used elsewhere in the proof, that are such that $C$ subsumes $D$.
-There are three subsumption based compression algorithms implemented into Skeptik.\\
-\textbf{Top-down Subsumption} searches for subsumed clauses among all clauses visited earlier in a top-down traversal. The time-complexity of this algorithm is worst case quadratic in the number of proof nodes.\\
-\textbf{Bottom-up Subsumption} searches for subsumed clauses among all clauses visited earlier in a bottom-up traversal. A subsumed clause $D$ can only replace a clause $C$, if $D$ is not an ancestor of $C$ in the graph representing the proof. Bottom-up Subsumption has the same time-complexity as Top-down Subsumption, but the additional ancestor-check makes it slower in practise.\\
-\textbf{RecycleUnits} \cite{RP11} is a special case of Bottom-up Subsumption that only searches for subsumed clauses that are unit (i.e. contain only one literal). This algorithm has a worst case time-complexity that is quadratic in the number of unit clauses.
+\paragraph{Subsumption} algorithms generalize DAGification by using the subsumption relation on clauses instead of the equality relation. A clause $C_1$ subsumes a clause $C_2$ iff every literal occurring in $C_1$ also occurs in $C_2$. The goal is to replace a node containing a clause $C_2$ by another node containing a clause $C_1$ if $C_1$ subsumes $C_2$.
+There are three subsumption-based proof compression algorithms implemented in Skeptik. 
+%
+\algo{TopDownSubsumption} (\algo{TDS}) searches for subsumed clauses among all clauses visited earlier in a top-down traversal. The time-complexity of this algorithm is worst case quadratic in the number of proof nodes.
+%
+\algo{BottomUpSubsumption} (\algo{BUS}) searches for subsumed clauses among all clauses visited earlier in a bottom-up traversal. A subsumed clause $D$ can only replace a clause $C$, if $D$ is not an ancestor of $C$ in the graph representing the proof. \algo{BUS} has the same time-complexity as \algo{TDS}, but the additional ancestor-check makes it much slower in practice.
+%
+\algo{RecycleUnits} (\algo{RU}) \cite{RP11} is a special case of \algo{BUS} that only searches for subsuming clauses that are unit (i.e. contain only one literal). Its worst case time-complexity is quadratic in the number of unit clauses.
 
-\subsection{Pebbling}
-
-Pebbling algorithms compress proofs in the \textbf{space measure}, as opposed to the usual length compression. The space measure of a proof indicates how many proof nodes maximally have to be kept in memory, while reading the proof, simultaneously.\\
-This measure is closely related to the \textbf{Black Pebbling Game} \cite{gilbert1980pebbling}, which lends its name to the algorithms described here. A strategy for this game directly corresponds to a topological node ordering, i.e. an ordering of nodes such that every premise of each node is lower than the node itself, combined with deletion information, i.e. extra lines in the proof output indicating that a node can be deleted from memory. An optimal strategy for the Black Pebbling Game would therefore result in optimal space compression of the proof. However, as shown in \cite{gilbert1980pebbling}, finding the optimal solution is PSPACE-complete and therefore not a feasable approach for this program.\\
-To obtain algorithms that have an acceptable runtime greedy heuristics for finding a good node ordering are used.\\
-\textbf{Top-down pebbling} directly corresponds to playing the game with limited information on how the proof looks. At every point there are nodes which can be pebbled (initially these are only the axioms). Using information from these nodes and their children nodes, it is decided which node to pebble next, which can make other nodes pebblable. This is done until the root node is pebbled. Unfortunately the lack of knowledge about the structure of the proof often results in bad space compression.\\
-\textbf{Bottom-up pebbling} constructs a node ordering by visiting proof nodes and their premises recursively, starting from the root node. At every node it is chosen heuristically in what order its premises are visited. After all premises are visited, the node is added to the oder.
+\paragraph{Pebbling} algorithms \cite{ToDo: cite submitted paper} compress proofs w.r.t. their \emph{space}, not their length. The space of a proof is the maximum number of proof nodes that have to be kept in memory simultaneously, while reading and checking the proof.\\
+This measure is closely related to the \textbf{Black Pebbling Game} \cite{gilbert1980pebbling}, which lends its name to the algorithms described here. A strategy for this game is a topological node ordering (i.e. an ordering of nodes such that every premise of each node is lower than the node itself) enriched with deletion information (i.e. extra lines in the proof output indicating that a node can be deleted from memory). An optimal strategy for the Black Pebbling Game would therefore result in optimal space compression of the proof. 
+However, as shown in \cite{gilbert1980pebbling}, finding the optimal solution (TODO: finding solutions is not a decision problem. Therefore, it is an abuse of language to say that it is PSPACE. This has to be improved.) is PSPACE-complete and therefore not a feasible approach for this program. Greedy heuristics are used for finding a good, though not optimal, node ordering.
+\algo{TopDownPebbler} (\algo{TDP}) plays the game in a top-down manner. At every point there are nodes which can be pebbled. Initially only the axioms can be pebbled. Using information from the pebblable nodes and their children, heuristics decide which node to pebble next. If all premises of a node have been pebbled, it becomes pebblable. This is repeated until the root node is pebbled. Unfortunately, \algo{TDP}'s heuristics have very limited knowledge about the local structure of the proof only and is often not able to achieve good compression.
+\algo{BottomUpPebbler} (\algo{BUP}) constructs a node ordering by visiting proof nodes and their premises recursively, starting from the root node. At every node, \algo{BUP} heuristically chooses which subproof rooted in the premises of the node should be pebbled first. After all premises are pebbled, the node itself is pebbled. \algo{BUP} is thus more aware of the global structure of the proof, and achieves much better space compression than \algo{TDP}.
 
 
 
