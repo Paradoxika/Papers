@@ -90,7 +90,7 @@ Although current automated deduction tools are very efficient at finding proofs,
 \section{Installation}
 
 {\skeptik} is implemented in Scala and runs on the java virtual machine (JVM). Therefore, Java (\url{https://www.java.com/}) must be installed. The easiest way to download {\skeptik} is via \texttt{git} (\url{http://git-scm.com/}), by executing \com{git clone git@github.com:Paradoxika/Skeptik.git} in the folder where {\skeptik} should be downloaded. It is helpful to install \texttt{SBT} (\url{http://www.scala-sbt.org/}), a build tool that automatically downloads all compilers and libraries on which {\skeptik} depends. To compile, build and package {\skeptik}, run \com{sbt one-jar} in {\skeptik}'s home folder. This generates a jar file that can be executed like any other Java jar file.
-
+%
 \texttt{SBT} and Scala programs may need a lot of memory for compilation and execution. If out-of-memory problems occur, the JVM's maximum available memory can be increased by executing \com{export JAVA\_TOOL\_OPTIONS=``-Xmx1024m''} in the terminal.
 
 
@@ -117,7 +117,7 @@ Classes for expressions and proof nodes are small and correctness conditions are
 \section{Supported Proof Formats}
 \label{sec:ProofFormats}
 
-Scala's \emph{combinator parsing} library makes it easy to implement parsers for various proof formats. {\skeptik} uses the extension of a file to  determine its proof format. To export proofs in various formats, {\skeptik} provides many classes in exporters package that extend Java's \class{java.io.Writer} class. Available proof formats are:
+Scala's \emph{combinator parsing} library makes it easy to implement parsers for various proof formats. {\skeptik} uses the extension of a file to  determine its proof format. To export proofs in various formats, {\skeptik} provides many exporter classes that extend Java's \class{java.io.Writer} class. Available proof formats are:
 
 
 \paragraph{TraceCheck Format: }
