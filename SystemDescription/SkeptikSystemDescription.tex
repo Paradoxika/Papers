@@ -130,12 +130,41 @@ ToDo
 
 \paragraph{TraceCheck Format: }
 
-ToDo
-
-ToDo: RUP
-
-cite Armin Biere's sat-solver
-
+The TraceCheck \cite{tracecheck} format, for encoding propositional resolution proofs, represents general proofs as a composition of regular proofs. 
+Such proofs can be uniquely reconstructed from its axioms. Therefore auxiliary clauses can be omitted.
+Regular proofs are represented by their conclusion clauses, which can be replaced by a '*' if it is not an input clause, and the clauses they were derived from.
+The format uses non zero integers to refer both to clauses and literals. Zero is used as a delimiter for the single regular proofs as well as the clause and literal part.\\
+This format is used by the PicoSAT solver \cite{Biere_picosatessentials}.
+It is one of the three formats accepted at the Certified UNSAT track of the SAT-Competition.\\
+TraceCheck proofs can automatically be transformed into RUP proofs \cite{van2008verifying}.\\
+Figure \ref{TraceCheckProof} shows a resolution proof in the TraceCheck format and its graphical representation.
+\begin{figure}[h]
+\makebox[\textwidth][c]{
+	\begin{minipage}{.3\textwidth}
+		\begin{tabular}{ccccccc}
+			1 & 1  & 2  & 0 & 0 &   & \\
+			2 & -1 & 2  & 0 & 0 &   &\\
+			3 & -2 & 0  & 0 &   &   &\\
+			4 & 1  & -2 & 0 & 0 &   &\\
+			5 & 2  & 0  & 1 & 2 & 3 & 0 \\
+			6 & -2 & 0  & 3 & 4 & 0 &\\
+			7 & 0  & 5 & 6 &   & & \\ 
+		\end{tabular}
+	\end{minipage}%
+	\begin{minipage}{.3\textwidth}
+		\begin{tikzpicture}
+			\rootnode;
+			\withchildren{root} {r5}{2}  {r6}{-2};
+			\withchildren{r5} {r1}{1,2} {r8}{-1};
+			\withchildren{r8} {r2}{-1,2} {r3}{-2};
+			\proofnode[above right of = r6]{r4} {1,-2};
+			\drawchildren{r6}{r3}{r4};
+		\end{tikzpicture}
+	\end{minipage}%
+	}
+	\caption{Two representations of a proof}
+	\label{TraceCheckProof}
+\end{figure}
 
 \paragraph{{\skeptik}'s Proof Format: }
 
