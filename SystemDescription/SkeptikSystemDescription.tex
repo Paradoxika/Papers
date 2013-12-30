@@ -117,30 +117,34 @@ Classes for expressions and proof nodes are small and correctness conditions are
 \section{Supported Proof Formats}
 \label{sec:ProofFormats}
 
-Scala's \emph{combinator parsing} library makes it easy to implement parsers for various proof formats. {\skeptik} uses the extension of a file to  determine its proof format. To export proofs in various formats, {\skeptik} provides many classes in exporters package that extend Java's \class{java.io.Writer} class.
-
-The currently available proof formats are:
-
-\paragraph{The SMT-Lib Proof Format: }
-
-{\veriT}
-
-ToDo
+Scala's \emph{combinator parsing} library makes it easy to implement parsers for various proof formats. {\skeptik} uses the extension of a file to  determine its proof format. To export proofs in various formats, {\skeptik} provides many classes in exporters package that extend Java's \class{java.io.Writer} class. Available proof formats are:
 
 
 \paragraph{TraceCheck Format: }
 
-The TraceCheck \cite{tracecheck} format, for encoding propositional resolution proofs, represents general proofs as a composition of regular proofs. 
-Such proofs can be uniquely reconstructed from its axioms. Therefore auxiliary clauses can be omitted.
-Regular proofs are represented by their conclusion clauses, which can be replaced by a '*' if it is not an input clause, and the clauses they were derived from.
-The format uses non zero integers to refer both to clauses and literals. Zero is used as a delimiter for the single regular proofs as well as the clause and literal part.\\
-This format is used by the PicoSAT solver \cite{Biere_picosatessentials}.
-It is one of the three formats accepted at the Certified UNSAT track of the SAT-Competition.\\
-TraceCheck proofs can automatically be transformed into RUP proofs \cite{van2008verifying}.\\
-Figure \ref{TraceCheckProof} shows a resolution proof in the TraceCheck format and its graphical representation.
+The TraceCheck \cite{tracecheck} format is one of the three formats accepted at the \emph{Certified Unsat} track of the SAT-Competition and is used by sat-solvers such as \texttt{PicoSAT} \cite{Biere_picosatessentials}. Each line declares a new clause, specifying its name (a fresh positive integer), a space separated list of literals (positive or negative integers, depending on the polarity of the literals), and a list of premises (other clauses, referred to by their names) needed to derive the new clause by regular input resolution. Zero is used as a delimiter. A detailed description can be found at \url{http://fmv.jku.at/tracecheck/}. An example is shown in Figure \ref{TraceCheckProof}.
+
+Other formats accepted at the \emph{Certified Unsat} track are less detailed and hence less convenient to be used by tools that post-process proofs. The omission of premises in the RUP format, for example, throws away information about the DAG structure of the proofs. Nevertheless, there are tools for converting RUP proofs to a resolution format that resembles the trace-check format \cite{van2008verifying}.
+
+%$$
+% \mathbf{line} \quad = \quad \mathbf{clause\_name} \ \mathbf{literal}^* \  \mathrm{0} \ \mathbf{premise}^* \  \mathrm{0}
+%$$
+
 \begin{figure}[h]
 \makebox[\textwidth][c]{
-	\begin{minipage}{.3\textwidth}
+	\qquad\qquad
+	\begin{minipage}{.4\textwidth}
+		\begin{tikzpicture}
+			\rootnode;
+			\withchildren{root} {r5}{2}  {r6}{-2};
+			\withchildren{r5} {r1}{1,2} {r8}{-1};
+			\withchildren{r8} {r2}{-1,2} {r3}{-2};
+			\proofnode[above right of = r6]{r4} {1,-2};
+			\drawchildren{r6}{r3}{r4};
+		\end{tikzpicture}
+	\end{minipage}%
+	\qquad
+	\begin{minipage}{.4\textwidth}
 		\begin{tabular}{ccccccc}
 			1 & 1  & 2  & 0 & 0 &   & \\
 			2 & -1 & 2  & 0 & 0 &   &\\
@@ -151,20 +155,17 @@ Figure \ref{TraceCheckProof} shows a resolution proof in the TraceCheck format a
 			7 & 0  & 5 & 6 &   & & \\ 
 		\end{tabular}
 	\end{minipage}%
-	\begin{minipage}{.3\textwidth}
-		\begin{tikzpicture}
-			\rootnode;
-			\withchildren{root} {r5}{2}  {r6}{-2};
-			\withchildren{r5} {r1}{1,2} {r8}{-1};
-			\withchildren{r8} {r2}{-1,2} {r3}{-2};
-			\proofnode[above right of = r6]{r4} {1,-2};
-			\drawchildren{r6}{r3}{r4};
-		\end{tikzpicture}
-	\end{minipage}%
 	}
-	\caption{Two representations of a proof}
+	\caption{A proof and its representation in the TraceCheck format}
 	\label{TraceCheckProof}
 \end{figure}
+
+\paragraph{The SMT-Lib Proof Format: }
+
+{\veriT}
+
+ToDo
+
 
 \paragraph{{\skeptik}'s Proof Format: }
 
@@ -213,12 +214,12 @@ The implementation in \skeptik is very modular, allowing convenient experimentat
 them and termination conditions. There still seems to be plenty of space to improve heuristics and termination conditions for this algorithm.
 
 
-\paragraph{Split} \cite{CottonSplit} lowers pivot variables in a proof.\\
-From a proof with conclusion $C$, two proofs with conclusions $v \vee C$ and $\neg{v} \vee C$ are constructed,  where the variable $v$ is chosen heuristically.\\
+\paragraph{Split} \cite{CottonSplit} lowers pivot variables in a proof. 
+From a proof with conclusion $C$, two proofs with conclusions $v \vee C$ and $\neg{v} \vee C$ are constructed,  where the variable $v$ is chosen heuristically.
 In a first step the positive/negative premises of resolvents with pivot $v$ are removed from the proof.
 Afterwards the proof is fixed, by traversing it top-down and fixing each proof node.
 A proof node is fixed by either replacing it by one of its fixed premises or resolving them.
-The roots of the resulting proofs are resolved, using $v$ as pivot, to obtain a new proof of $C$.\\
+The roots of the resulting proofs are resolved, using $v$ as pivot, to obtain a new proof of $C$.
 The time-complexity of this algorithm is linear in the proof length, but it has to be repeated many times to obtain significant compression. This can be done iteratively or recursively. Also multiple variables can be chosen in advance. 
 All these variants are implemented in {\skeptik}.
 
