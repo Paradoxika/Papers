@@ -169,23 +169,18 @@ ToDo
 
 \paragraph{{\skeptik}'s Proof Format: }
 
-The Skeptik proof format is an ad hoc sat-proof format meant to be easy to read and write by human
-beings. Proofs are represented as a Unicode text files. Each line describes a named subproof.
-Axioms are represented as sequents surounded by curly braces. The infix resolution operator on
-subproofs is denoted either by the pivot literal surounded by square brackets or by a single dot if
-there is a uniq pivot candidate. The last named subproof is considered to be the whole proof.
+{\skeptik}'s own proof format is a propositional resolution proof format meant to be simple and easy to read and write by humans. Each line either declares a new named subproof or deletes a previously declared subproof. Axioms are represented as sequents surounded by curly braces. The infix resolution operator on
+subproofs is denoted by the pivot literal surounded by square brackets or by a single dot (if there is a single pivot candidate and omitting it is desired). Subproof names and literals can be arbitrary strings of letters and digits. The last named subproof is considered to be the whole proof.
 
 \begin{figure}
   \centering
   \begin{tabular}{ll}
     u &= \{ 2 $\vdash$ \} \\
-    q &= ((\{ $\vdash$ 1, 2\} [1] (\{ 1 $\vdash$ 2 \} [2] u)) . (u . \{ 2 $\vdash$ 1 \}))
+    q &= ((\{ $\vdash$ 1, 2 \} [1] (\{ 1 $\vdash$ 2 \} [2] u)) . (u . \{ 2 $\vdash$ 1 \}))
   \end{tabular}
   \caption{The proof from fig. \ref{TraceCheckProof} represented in the Skeptik format}
   \label{SkeptikProof}
 \end{figure}
-
-ToDo: with deletion
 
 
 \section{Proof Compression Algorithms}
