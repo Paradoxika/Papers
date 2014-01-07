@@ -175,8 +175,8 @@ subproofs is denoted by the pivot literal surounded by square brackets or by a s
 \begin{figure}
   \centering
   \begin{tabular}{ll}
-    u &= \{ 2 $\vdash$ \} \\
-    q &= ((\{ $\vdash$ 1, 2 \} [1] (\{ 1 $\vdash$ 2 \} [2] u)) . (u . \{ 2 $\vdash$ 1 \}))
+    u &= (\{ 1 $\vdash$ 2 \} [2] \{ 2 $\vdash$ \}) \\
+    q &= ((\{ $\vdash$ 1, 2 \} . u) . (u . \{ 2 $\vdash$ 1 \}))
   \end{tabular}
   \caption{The proof from fig. \ref{TraceCheckProof} represented in the Skeptik format}
   \label{SkeptikProof}
