@@ -559,7 +559,7 @@ For Top-down Pebbling, $N$ is the set of pebbleable nodes and for Bottom-Up Pebb
 %A trivial heuristic for Pebbling is to always choose the leftmost available node.
 
 \subsection{Number of Children Heuristic}
-
+\label{sec:children}
 This heuristic uses the number of children nodes of a node $\n$ the deciding characteristic, i.e. $h(\n) = |\Children{\n}{\psi}|$, $H = \mathbb{N}$ and $\prec$ is the natural smaller relation.\\
 The motivation of this heuristic is that nodes with many children, will require many pebbles. Example \ref{example:hardfirst} shows why it is a good idea to process hard subproofs first.
 
@@ -628,7 +628,7 @@ Note that this is a simplified situation with two independent subproofs, for whi
 \end{example}
 
 \subsection{Last Child Heuristic}
-
+\label{sec:lastchild}
 In section \ref{sec:pebbling-game} we explained the implicit unpebbling of a node $\n$ as soon as all of its children have been pebbled.
 More precisely, $\n$ can be unpebbled as soon as the its last child, w.r.t. a topological order $<_T$, is pebbled. 
 The idea of this heuristic is to prefer nodes that are last children of other nodes.\\
@@ -653,7 +653,7 @@ However some nodes are forced to be the last child of another node with more tha
 	\label{fig:forcedLC}
 \end{figure}
 \subsection{Node Distance Heuristic}
-
+\label{sec:distance}
 In section Section \ref{sec:TDvsBU} the issue with non local pebbling was explained.
 %Capturing the full structure of a proof would be inefficient in general, however a limited distance search can help to do local pebbling.
 The Node Distance Heuristic searches for pebbled nodes that are close to the decision node.
@@ -673,7 +673,7 @@ So $H = \mathbb{Z} \times \mathbb{N} \times P$ and the order used is the lexicog
 The spheres $K_r(\n)$ can grow exponentially in $r$. Therefore the maximum sphere calculated has to be limited and if no pebbled node is found in any of the calculated spheres, another heuristic has to be used.
 
 \subsection{Decay Heuristics}
-
+\label{sec:decay}
 Decay Heuristics denote a family of meta heuristics. 
 The idea is to not only use the measure of a single node, but also to include the measures of its premises.
 Such a heuristic has four parameters: a heuristic function $h_u: V \rightarrow H$, a recursion depth $d \in \mathbb{N}$, a decay factor $\gamma \in \mathbb{R}^+ \cup \{0\}$ and a family of combining functions $com: H^n \rightarrow H$ for $n \in \mathbb{N}$.\\
@@ -687,138 +687,155 @@ The resulting heuristic function $h: V \rightarrow H$ is defined with the help o
 
 \section{Experiments} \label{sec:exp}
 
-% {\LowerUnivalents} and {\LUnivRPI} have been implemented in the functional programming
-% language Scala\footnote{\url{http://www.scala-lang.org/}} as part of the \skeptik
-% library\footnote{\url{https://github.com/Paradoxika/Skeptik}}. {\LowerUnivalents} has been implemented as a
-% recursive \FuncSty{delete} improvement.
+All the \texttt{Pebbling Heuristics} mentioned in the last chapter, have been implemented in the functional programming
+language Scala\footnote{\url{http://www.scala-lang.org/}} as part of the \skeptik library\footnote{\url{https://github.com/Paradoxika/Skeptik}}.
 
-% The algorithms have been applied to 5\,059 proofs produced by the SMT-solver
-% {\veriT}\footnote{\url{http://www.verit-solver.org/}} on unsatisfiable benchmarks from the
-% SMT-Lib\footnote{\url{http://www.smtlib.org/}}.  The details on the number of proofs per SMT category
-% are shown in Table \ref{tab:benchmarks}.  The proofs were translated into pure resolution proofs by
-% considering every non-resolution inference as an axiom.
+In order to evaluate the heuristics, experiments were run on two sets of test cases, consisting of proofs produced by the SMT-solver {\veriT}\footnote{\url{http://www.verit-solver.org/}} 
+on unsatisfiable benchmarks from the SMT-Lib\footnote{\url{http://www.smtlib.org/}}.
+The details on the number of proofs per SMT category and their size in proof nodes are shown in Table \ref{tab:benchmarks}.  
+The proofs were translated into pure resolution proofs by considering every non-resolution inference as an axiom.
 
-% \begin{table}[tb]
-%   \caption{Number of proofs per benchmark category}
-%   \label{tab:benchmarks}
-%   \centering
-%   \begin{tabular}{lr}
-%     \toprule
-%     Benchmark~ &  Number \\
-%     Category       & ~of Proofs \\
-%     \midrule
-%     QF\_UF      & 3907 \\
-%     QF\_IDL     &  475 \\
-%     QF\_LIA     &  385 \\
-%     QF\_UFIDL   &  156 \\
-%     QF\_UFLIA   &  106 \\
-%     QF\_RDL     &   30 \\
-%     \bottomrule
-%   \end{tabular}
-% \end{table}
+ \begin{table}[tb]
+   \caption{Proofs benchmarks and statistics}
+   \label{tab:benchmarks}
+   \centering
+   \begin{tabular}{l|r|r}
+     \toprule
+		            &  Set 1 & Set 2 \\
+     Benchmark~ &  Number & Number\\
+     Category   & ~of Proofs	 & ~of Proofs\\
+     \midrule
+     QF\_UF      & 3936 & 199\\
+     QF\_IDL     &  446 & 184\\
+     QF\_LIA     &  587 & 450\\
+     QF\_UFIDL   &  16  & 2\\
+     QF\_UFLIA   &  123 & 78\\
+     QF\_RDL     &   30 & 1\\
+     \midrule
+		 Sum         & 914  & 5138\\
+		 Total number~ & 4926946 & 441244454 \\
+		 of proof nodes & & \\
+		 Average number ~ & 85879 & 5391 \\
+		 of proof nodes & & \\
+		\bottomrule
+   \end{tabular}
+ \end{table}
 
-% The experiment compared the following algorithms:
-% \begin{description}
-%   \item[LU:] the {\LowerUnits} algorithm from \cite{LURPI};
-%   \item[LUniv:] the {\LowerUnivalents} algorithm;
-%   \item[RPILU:] a non-sequential combination of {\RPI} after {\LowerUnits};
-%   \item[RPILUniv:] a non-sequential combination of {\RPI} after {\LowerUnivalents};
-%   \item[LU.RPI:] the sequential composition of {\LowerUnits} after {\RPI};
-%   \item[LUnivRPI:] the non-sequential combination of {\LowerUnivalents} after {\RPI} as described in Sect. \ref{sec:LUnivRPI};
-%   \item[RPI:] the {\RecyclePivotsIntersection} from \cite{LURPI};
-%   \item[Split:] Cotton's \texttt{Split} algorithm (\cite{CottonSplit});
-%   \item[RedRec:] the {\ReduceReconstruct} algorithm from \cite{RedRec};
-%   \item[Best RPILU/LU.RPI:] which performs both \texttt{RPILU} and \texttt{LU.RPI} and chooses the smallest resulting compressed proof;
-%   \item[Best RPILU/LUnivRPI:] which performs \texttt{RPILU} and \texttt{LUnivRPI} and chooses the smallest resulting
-%     compressed proof.
-% \end{description}
+By default \skeptik stores proofs using a topological order that is found in a Bottom-up fashion, by visiting premises in the order they were parsed.
+The compression of space measures of heuristics is compared to this default topological order.
+Note that it is another Bottom-up heuristic, which is referred to as \emph{uncompressed}.
 
 % For each of these algorithms, the time needed to compress the proof along with the number of nodes
 % and the number of axioms (i.e. \emph{unsat core} size) have been measured. Raw data of the
 % experiment can be downloaded from the web\footnote{\url{http://www.matabio.net/skeptik/LUniv/experiments/}}.
 
-% The experiments were executed on the Vienna Scientific Cluster\footnote{\url{http://vsc.ac.at/}}
-% VSC\nobreakdash-2. Each algorithm was executed in a single core and had up to 16 GB of memory available. This amount of memory has been useful to compress the biggest proofs (with more than $10^6$ nodes).
+The experiments were executed on the Vienna Scientific Cluster\footnote{\url{http://vsc.ac.at/}}
+VSC\nobreakdash-2. Each algorithm was executed in a single core and had up to 16 GB of memory available. 
+This amount of memory has been useful to compress the biggest proofs (with more than $10^6$ nodes).
+
+The overall results of the experiments are shown in Table \ref{tab:average1} and \ref{tab:average2}. The compression ratios
+are computed according to the formulas (\ref{eq:compression1}) and (\ref{eq:compression2}), in which $\psi$
+ranges over all the proofs in the corresponding set of test cases and $sp(\psi,heuristic)$ denotes the space measure of $\psi$ w.r.t. the topological order computed by the respective heuristic.
+
+\begin{equation} \label{eq:compression1}
+  \frac{ \sum {sp(\psi,uncompressed)} - \sum{sp(\psi,heuristic)} }{ \sum {sp(\psi,uncompressed)} }
+\end{equation}
+
+\begin{equation} \label{eq:compression2}
+  \frac{\sum{\frac{ sp(\psi,uncompressed) - sp(\psi,heuristic) }{ sp(\psi,uncompressed) }}}{\text{\emph{total number of proofs}}}
+\end{equation}
+
+\subsection{Test set 1}
+
+The following heuristics were evaluated using this test set:
+\begin{description}
+  \item[Childen:] the Bottom-Up version of the Number of Children Heuristic, see \ref{sec:children}
+  \item[LastChild:] the Bottom-Up version of the Last Child Heuristic, see \ref{sec:lastchild}
+	\item[ChildenTD:] \emph{experiments on the Top-down version of the Number of Children Heuristic are still running}
+	\item[LastChildTD:] \emph{experiments on the Top-down version of the Last Child Heuristic are still running}
+\end{description}
+
+ \begin{table}[tb]
+   \caption{Total compression ratios}
+   \label{tab:average1}
+   \centering
+   \begin{tabular}{l|c|c}
+     \toprule
+     Heuristic &  (\ref{eq:compression1}) &  (\ref{eq:compression2})\\
+     \midrule
+     Children                &  -1 \%  &  0,27 \% \\
+     LastChild               &  0,7 \% & 7,8 \% \\
+     \bottomrule
+   \end{tabular}
+ \end{table}
+
+The results suggest, that smaller proofs benefit more from the heuristics.
+This claim is supported by Figure \ref{fig:lastchild}, which compares the proof length in nodes to the achieved compression.
+
+\begin{figure}[tb]
+	\includegraphics[scale=0.7]{Figures/LastChild.jpg}
+	\label{fig:lastchild}
+	\caption{Proof length compared to compression of Last Child Heuristic}
+\end{figure}
+
+\subsection{Test set 2}
+
+The following heuristics were evaluated using this test set:
+
+\begin{description}
+  \item[Childen:] the Bottom-Up version of the Number of Children Heuristic (\ref{sec:children})
+  \item[LastChild:] the Bottom-Up version of the Last Child Heuristic (\ref{sec:lastchild})
+	\item[ChildenTD:] the Top-down version of the Number of Children Heuristic
+  \item[LastChildTD:] the Top-down version of the Last Child Heuristic
+  %\item[Distance1:] the Top-down version of the Node Distance Heuristic with a maximum radius of 1 (\ref{sec:distance})
+	\item[Distance3:] the Bottom-Up version of the Node Distance Heuristic with a maximum radius of 3
+  \item[Distance3TD:] the Top-down version of the Node Distance Heuristic with a maximum radius of 3
+	%\item[Distance5:] the Top-down version of the Node Distance Heuristic with a maximum radius of 5
+	%\item[Distance1BU:] the Bottom-Up version of the Node Distance Heuristic with a maximum radius of 1
+  %\item[Distance5BU:] the Bottom-Up version of the Node Distance Heuristic with a maximum radius of 5
+	%\item[CDllmax:] the Decay Heuristic (\ref{sec:decay}) , using \textbf{Children} as underlying heuristic, with $\gamma = 0.5$, $d = 1$ and $com = max(\ldots)$
+	%\item[CDlhmax:] the Decay Heuristic, using \textbf{Children} as underlying heuristic, with $\gamma = 0.5$, $d = 7$ and $com = max(\ldots)$
+	%\item[CDhlmax:] the Decay Heuristic, using \textbf{Children} as underlying heuristic, with $\gamma = 3$, $d = 1$ and $com = max(\ldots)$
+	%\item[CDhhmax:] the Decay Heuristic, using \textbf{Children} as underlying heuristic, with $\gamma = 3$, $d = 7$ and $com = max(\ldots)$
+	%\item[CDllavg:] the Decay Heuristic, using \textbf{Children} as underlying heuristic, with $\gamma = 0.5$, $d = 1$ and $com = average(\ldots)$
+	%\item[CDlhavg:] the Decay Heuristic, using \textbf{Children} as underlying heuristic, with $\gamma = 0.5$, $d = 7$ and $com = average(\ldots)$
+	%\item[CDhlavg:] the Decay Heuristic, using \textbf{Children} as underlying heuristic, with $\gamma = 3$, $d = 1$ and $com = average(\ldots)$
+	%\item[CDhhavg:] the Decay Heuristic, using \textbf{Children} as underlying heuristic, with $\gamma = 3$, $d = 7$ and $com = average(\ldots)$
+	\item[LCllmax:] the Decay Heuristic, using \textbf{LastChild} as underlying heuristic, with $\gamma = 0.5$, $d = 1$ and $com = max(\ldots)$
+	%\item[LClhmax:] the Decay Heuristic, using \textbf{LastChild} as underlying heuristic, with $\gamma = 0.5$, $d = 7$ and $com = max(\ldots)$
+	%\item[LChlmax:] the Decay Heuristic, using \textbf{LastChild} as underlying heuristic, with $\gamma = 3$, $d = 1$ and $com = max(\ldots)$
+	\item[LChhmax:] the Decay Heuristic, using \textbf{LastChild} as underlying heuristic, with $\gamma = 3$, $d = 7$ and $com = max(\ldots)$
+	\item[LCllavg:] the Decay Heuristic, using \textbf{LastChild} as underlying heuristic, with $\gamma = 0.5$, $d = 1$ and $com = average(\ldots)$
+	%\item[LClhavg:] the Decay Heuristic, using \textbf{LastChild} as underlying heuristic, with $\gamma = 0.5$, $d = 7$ and $com = average(\ldots)$
+	%\item[LChlavg:] the Decay Heuristic, using \textbf{LastChild} as underlying heuristic, with $\gamma = 3$, $d = 1$ and $com = average(\ldots)$
+	\item[LChhavg:] the Decay Heuristic, using \textbf{LastChild} as underlying heuristic, with $\gamma = 3$, $d = 7$ and $com = average(\ldots)$
+\end{description}
 
 
-% The overall results of the experiments are shown in Table \ref{tab:average}. The compression ratios
-% in the second column are computed according to formula (\ref{eq:compression}), in which $\psi$
-% ranges over all the proofs in the benchmark and $\psi'$ ranges over the corresponding compressed
-% proofs.
-% \begin{equation} \label{eq:compression}
-%   1 - \frac{ \sum {|\Vertices{\psi'}|} }{ \sum {|\Vertices{\psi}|} }
-% \end{equation}
-% The unsat core compression ratios are computed in the same way, but using the number of axioms instead of
-% the number of nodes. The speeds on the fourth column are computed according to formula
-% (\ref{eq:speed}) in which $d_{\psi}$ is the duration in milliseconds of $\psi$'s compression by a
-% given algorithm.
-% \begin{equation} \label{eq:speed}
-%   \frac{ \sum {|\Vertices{\psi}|} }{ \sum {d_{\psi}} }
-% \end{equation}
+ \begin{table}[tb]
+   \caption{Total compression ratios}
+   \label{tab:average1}
+   \centering
+   \begin{tabular}{l|c|c}
+     \toprule
+     Heuristic & Compression (\ref{eq:compression1}) & Compression (\ref{eq:compression2})\\
+     \midrule
+     Children                &  8,4 \%  &  8,9 \% \\
+     LastChild               &  25,1 \% & 36 \% \\
+		 ChildenTD               &  -15,8 \% & 0,7  \% \\
+		 LastChildTD             & -16,7 \% & 5,1 \% \\
+		 Distance3             & -0,7 \% & -3,2  \% \\
+		 Distance3TD              & -30,8 \% & -37,6  \% \\
+		 LCllmax                 & 25,4 \% & 36,6  \% \\
+		 LChhmax                 & 26,6 \% & 37,4 \% \\
+		 LCllavg                 & 25,5 \% & 36,7 \% \\ 
+		 LChhavg                 & 25,7 \% & 34,4 \% \\
+     \bottomrule
+   \end{tabular}
+ \end{table}
 
-% For the \texttt{Split} and \texttt{RedRec} algorithms, which must be repeated, a timeout has
-% been fixed so that the speed is about 3 nodes per millisecond. 
-
-
-% \begin{table}[tb]
-%   \caption{Total compression ratios}
-%   \label{tab:average}
-%   \centering
-%   \begin{tabular}{lrrr}
-%     \toprule
-%     \multirow{2}{*}{Algorithm} & \multirow{2}{*}{Compression} & Unsat Core    & \phantom{.........}\multirow{2}{*}{Speed} \\
-%                                              &                                               & \phantom{...}Compression &        \\
-%     \midrule
-%     LU                &  7.5 \% &  0.0 \% & 22.4 n/ms \\
-%     LUniv             &  8.0 \% &  0.8 \% & 20.4 n/ms \\
-%     RPILU             & 22.0 \% &  3.6 \% &  7.4 n/ms \\
-%     RPILUniv          & 22.1 \% &  3.6 \% &  6.5 n/ms \\
-%     LU.RPI            & 21.7 \% &  3.1 \% & 15.1 n/ms \\
-%     LUnivRPI          & 22.0 \% &  3.6 \% & 17.8 n/ms \\
-%     RPI               & 17.8 \% &  3.1 \% & 31.3 n/ms \\
-%     Split             & 21.0 \% &  0.8 \% &  2.9 n/ms \\
-%     RedRec            & 26.4 \% &  0.4 \% &  2.9 n/ms \\
-%     Best RPILU/LU.RPI       & 22.0 \% &  3.7 \% &  5.0 n/ms \\
-%     Best RPILU/LUnivRPI & 22.2 \% &  3.7 \% &  5.2 n/ms \\
-%     \bottomrule
-%   \end{tabular}
-% \end{table}
-
-% \newcommand{\va}[1]{\ensuremath{v_{\text{#1}}}}
-
-% Figure \ref{fig:LU} shows the comparison of {\LowerUnits} with {\LowerUnivalents}. Subfigures (a) and (b) are scatter plots where each dot represents a single benchmark proof. 
-% Subfigure (c) is a histogram showing, in the vertical axis, the proportion of proofs having \emph{(normalized) compression ratio difference} within the intervals showed in the horizontal axis. This difference is computed using formula (\ref{eq:histogram}) with \va{LU}
-% and \va{LUniv} being the compression ratios obtained respectively by {\LowerUnits} and
-% {\LowerUnivalents}.
-% \begin{equation} \label{eq:histogram}
-%   \frac { \va{LU} - \va{LUniv} }{ \frac{\va{LU} + \va{LUniv}}{2} }
-% \end{equation}
-% The number of proofs for which $\va{LU} = \va{LUniv}$ is not displayed in the histogram.
-% The \emph{(normalized) duration differences} in subfigure (d) are computed using the same formula~(\ref{eq:histogram}) but
-% with \va{LU} and \va{LUniv} being the time taken to compress the proof by {\LowerUnits} and
-% {\LowerUnivalents} respectively.
-
-
-
-% As expected, {\LowerUnivalents} always compresses more than {\LowerUnits} (subfigure (a)) at the expense of a longer
-% computation (subfigure (d)). And even if the compression gain is low on average (as noticeable in Table \ref{tab:average}), subfigure (a) shows that {\LowerUnivalents} compresses some proofs significantly more than {\LowerUnits}.
-
-% It has to be noticed that \veriT already does its best to produce compact proofs. In particular,
-% a forward subsumption algorithm is applied, which results in proofs not having two different subproofs
-% with the same conclusion. This results in {\LowerUnits} being unable to reduce unsat core.
-% But as {\LowerUnivalents} lowers non-unit subproofs and performs some partial regularization, it
-% achieves some unsat core reduction, as noticeable in subfigure (b).
-
-% The comparison of the sequential \texttt{LU.RPI} with the non-sequential {\LUnivRPI} shown in Fig.
-% \ref{fig:LUnivRPI} outlines the ability of {\LowerUnivalents} to be efficiently combined with other
-% algorithms. Not only compression ratios are improved but {\LUnivRPI} is faster than the sequential
-% composition for more than 80 \% of the proofs.
-
-
-
-
-
-
+The results of this set imply, that Bottom-up heuristics produce significantly better topological orders than their Top-down pendants.
+Also just like \textbf{Test Set 1} the results presented in Table \ref{tab:average1} show that small proofs benefit more from the heuristics.
 
 \section{Conclusions and Future Work}
 
