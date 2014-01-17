@@ -33,7 +33,7 @@
 \newcommand{\nodedistanceTwo}{1.2cm}
 
 \title{Greedy Pebbling: \\ 
-Towards the Compression of the Space of Proofs}
+Towards the Compression of Proof Space}
 
 \author{
   Andreas Fellner 
@@ -62,9 +62,6 @@ Bruno
 
 \setcounter{footnote}{0}
 
-\section{Introduction}
-
-Bruno
 
 \section{Introduction}
 Bruno
@@ -83,6 +80,9 @@ This measure is closely related to the Black Pebbling Game \cite{kasai1979classe
 A strategy for this game corresponds to a topological ordering of the proof nodes plus deletion information.
 Finding an optimal strategy for the Black Pebbling Game is PSPACE-complete \cite{gilbert1980pebbling} and therefore not a feasible approach to compress big proofs.
 This paper investigates heuristic approaches to the problem.
+
+The motivation of this work is to compress propositional resolution proofs w.r.t. the space measure. 
+However the results can easily be transferred to more general kinds of DAGs.
 
 \section{Propositional Resolution Calculus}
 
@@ -132,30 +132,77 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
 
 \noindent
 If $\psi = \varphi_L \odot_{\ell} \varphi_R$, then $\varphi_L$ and $\varphi_R$ are \emph{direct
-subproofs} of $\psi$ and $\psi$ is a \emph{child} of both $\varphi_L$ and $\varphi_R$. The
+subproofs} of $\psi$ and $\psi$ is a \emph{child} of $\varphi_L$ and $\varphi_R$. The
 transitive closure of the direct subproof relation is the \emph{subproof} relation. A subproof which
 has no direct subproof is an \emph{axiom} of the proof. 
 %
 $\Vertices{\psi}$, $\Edges{\psi}$, $\Axioms{\psi}$ and $\Conclusion{\psi}$
-denote, respectively, the nodes, edges, axioms and proved clause (conclusion) of $\psi$.\\
-Let $\n$ be a node in $\psi$, then $\Premises{\n}{\psi}$ denotes its premises and $\Children{\n}{\psi}$ its children in the corresponding graph.
+denote, respectively, the nodes, edges, axioms and proved clause (conclusion) of $\psi$. $\Premises{\n}{\psi}$ denotes the premises and $\Children{\n}{\psi}$ the children of a node $\n$ in a proof $\psi$. When a proof is represented graphically, the root is drawn at the bottom and the axioms at the top.
+
+
+\section{Pebbling Game}
+\label{sec:pebbling-game}
+
+%There are many pebble games defined in the literature \cite{kasai1979classes,chan2013pebble}. 
+Pebbling games were introduced in the 1970's to model programming language expressivity \cite{paterson1970comparative,Walker1973404} and compiler construction \cite{sethi1975complete}. More recently, pebbling games have been used to investigate various questions in parallel complexity \cite{chan2013pebble} and proof complexity \cite{ben2008short,Esteban200184,nordstrom2009narrow}. They are used to get bounds for space and time requirements and tradeoffs between the two measures \cite{van1979move}.\\
+
+The \emph{pebbling game} from definition \ref{def:pebbling-game} is a slight variation of the Black Pebbling Game presented in \cite{hertel2007black,pippenger1982advances}. ToDo: briefly explain the difference... 
+
+The following neologisms are used: the verbs \textit{pebble} and \textit{unpebble} are abbreviations for, respectively, \textit{put a pebble on} and \textit{remove a pebble from}; 
+the adverb \textit{pebbleable} is used for a node that is not pebbled but can be pebbled.
+
+\begin{definition}[Pebbling Game]
+\label{def:pebbling-game}
+The \emph{Pebbling Game} is played by one player on a DAG $G = (V,E)$ with one distinguished node $s$.
+The goal of the game is to pebble $s$, respecting the following rules:
+\begin{enumerate}
+	\item \label{rule:premises} If all predecessors of a node $\n$ are pebbled, then $\n$ is pebbleable.
+	\item Nodes can be unpebbled at any time.
+	\item \label{rule:onlyonce} Each node can be pebbled only once.
+\end{enumerate}
+As a consequence of rule \ref{rule:premises}, pebbles can be put on nodes without predecessors at any time.\\
+A \emph{pebbling strategy} for $G$ and node $s$ is a sequence of moves in the pebbling game, where the last move is pebbling $s$.\\
+The \emph{pebble number of a pebbling strategy} is the maximum number of pebbles that are placed on nodes simultaneously, following the moves of the strategy.\\
+The \emph{pebble number of a graph $G$ and node $s$} is the minimum pebble number of all pebble strategies, for the pebbling game played on $G$ and $s$.\\
+\qed
+\end{definition}
+
+
+The Black Pebbling Game defined in \cite{hertel2007black,pippenger1982advances} introduces another rule with which a pebble can be moved from a predecessor to the node instead of using a fresh one.
+Including this rule results in strategies that use exactly one pebble less, as shown in \cite{van1979move}.
+Omitting rule \ref{rule:onlyonce} allows pebbling strategies with lower pebbling numbers (\cite{sethi1975complete} has an example on page 1).
+However \cite{van1979move} shows that this possibly has the cost of needing exponentially more moves in the game.
+In \cite{gilbert1980pebbling} it is shown that deciding the question whether the pebbling number of a graph $G$ and node $s$ is smaller than $k$ is PSPACE-complete in the absence of rule \ref{rule:onlyonce}.
+The same question was shown to be NP-complete \cite{sethi1975complete} when rule \ref{rule:onlyonce} is included. %weird paper - weird notation
+
+
+
+\section{Pebbling and Proof Checking}
+
+
+In the version of the game we use and the aim to construct a strategy with a low pebbling number, unpebbling moves can be dropped from the pebbling strategy, because they are given implicitly. 
+A node is unpebbled right after all its successors have been pebbled. 
+It can't be unpebbled earlier, since otherwise its yet unpebbled successors can't be pebbled. 
+Unpebbling it later could increase the pebbling number.
+In the following sections, when constructing a pebbling strategy for a proof $\psi$, the distinguished node $s$, will always be the root node $\raiz{\psi}$. Instead of predecessors and successors, we will speak of premises and children.
+A pebbling strategy with implicit unpebbling moves directly corresponds to a topological order, defined in \ref{def:topological-order}.
 
 \begin{definition}[Topological Order]
 \label{def:topological-order}
 A topological order of a proof $\psi$ is a total order relation $<_T$ on $\Vertices{\psi}$, such that 
-$$
-\text{for all } \n \in \Vertices{\psi} \text{, for all } p \in \Premises{\n}{\psi} \text{ hold }\\
+$
+\text{for all } \n \in \Vertices{\psi} \text{, for all } p \in \Premises{\n}{\psi},
 p <_T v
-$$
+$
 \qed
 \end{definition}
-A topological order $<_T$ can be represented by a sequence of proof nodes $(s_1,\dots,s_n)$, by defining $<_T \defeq \{(s_i,s_j) \mid 1 \leq i < j \leq n\}$.\\
-Note that there are proofs, for which exponentially many different topological orders exists:\\
-Consider a perfect binary tree with $m$ axioms and $n=2m-1$ nodes. It is easy to see that there is a proof corresponding to this graph.
+A topological order $<_T$ can be represented by a sequence $(s_1,\dots,s_n)$ of proof nodes, by defining $<_T \defeq \{(s_i,s_j) \mid 1 \leq i < j \leq n\}$.
+
+Note that there are proofs, for which a large number of different topological orders exist: consider a perfect binary tree with $m$ axioms and $n=2m-1$ nodes. It is easy to see that there is a proof corresponding to this graph.
 There is at least one topological order $(s_1,\ldots,s_n)$, which for example can be constructed using one of the algorithms described in section \ref{section:algorithms}. 
 Let $\Axioms{\psi} = \{s_{k_1},\ldots,s_{k_m}\}$, then $(s_{k_1},\ldots,s_{k_m},s_{l_1},\ldots,s_{l_{n-m}})$, where $(l_1,\ldots,l_{n-m}) = (1,\ldots,n) \setminus (k_1,\ldots,k_m)$, is a topological order. 
-Likewise $(s_{\pi({k_1})},\ldots,s_{\pi({k_m})},s_{l_1},\ldots,s_{l_{n-m}})$ is a topological order, for every permutation $\pi$ of $\{k_1,\ldots,k_m\}$. There are $m!$ such permutations, so the overall number of topological orders is at least exponential in $m$ and therefore also in $n$.\\
-This means that when looking for a good topological order w.r.t. any characteristic, enumeration is not a feasible option.\\
+Likewise $(s_{\pi({k_1})},\ldots,s_{\pi({k_m})},s_{l_1},\ldots,s_{l_{n-m}})$ is a topological order, for every permutation $\pi$ of $\{k_1,\ldots,k_m\}$. There are $m!$ such permutations, so the overall number of topological orders is at least exponential in $m$ and therefore also in $n$.
+This means that when looking for a good topological order w.r.t. any characteristic, enumeration is not a feasible option.
 
 \noindent 
 By loading nodes into memory, following a topological order, proofs can be traversed in a top-down fashion, for example to check the correctness or manipulate the proof.\\
@@ -168,51 +215,11 @@ of a proof $\psi$ is the maximum number of nodes that have to be kept in memory 
 \qed
 \end{definition}
 
-\section{Pebbling Game}
-\label{sec:pebbling-game}
-%There are many pebble games defined in the literature \cite{kasai1979classes,chan2013pebble}. 
-Pebbling games were first formulated in the 70's and were used to model the expressivity of programming languages \cite{paterson1970comparative,Walker1973404} and compiler construction \cite{sethi1975complete}.
-More recently, pebbling games have been used to investigate various questions in parallel complexity \cite{chan2013pebble} and in proof complexity \cite{ben2008short,Esteban200184,nordstrom2009narrow}. They are used to get bounds for space and time requirements and tradeoffs between the two measures \cite{van1979move}.\\
-The motivation of this work is to compress propositional resolution proofs w.r.t. the space measure. 
-However the results can easily be transferred to more general kinds of DAGs.
-For our purposes we use a slight variation of the Black Pebbling Game presented in \cite{hertel2007black,pippenger1982advances} and since we don't consider any other pebbling game in this work, we will omit the \textit{Black}.\\
-In the following, we use the verbs \textit{pebble} and \textit{unpebble} as abbreviations for \textit{put a pebble on} and \textit{remove a pebble from}.\\
-A node is said to be \textit{pebbleable}, if all its predecessors are pebbled.
 
-\begin{definition}[Pebbling Game]
-\label{def:pebbling-game}
-The \emph{Pebbling Game} is played by one player on a DAG $G = (V,E)$ with one distinguished node $s$.
-The goal of the game is to pebble $s$. Pebbles are put on nodes according to the following rules:
-\begin{enumerate}
-	\item \label{rule:premises} If all predecessors of a node $\n$ are pebbled, then $\n$ can be pebbled.
-	\item Nodes can be unpebbled at any time.
-	\item \label{rule:onlyonce} Each node can be pebbled only once.
-\end{enumerate}
-As a consequence of rule \ref{rule:premises}, pebbles can be put on nodes without predecessors at any time.\\
-A \emph{pebbling strategy} for $G$ and node $s$ is a sequence of moves in the pebbling game, where the last move is pebbling $s$.\\
-The \emph{pebble number of a pebbling strategy} is the maximum number of pebbles, that are placed on nodes simultaneously, following the moves of the strategy.\\
-The \emph{pebble number of a graph $G$ and node $s$} is the minimum pebble number of all pebble strategies, for the pebbling game played on $G$ and $s$.\\
-\qed
-\end{definition}
+\section{Optimal Pebbling as a Satisfiability Problem}
 
-
-The Black Pebbling Game defined in \cite{hertel2007black,pippenger1982advances} introduces another rule with which a pebble can be moved from a predecessor to the node instead of using a fresh one.
-Including this rule results in strategies that use exactly one pebble less, as shown in \cite{van1979move}.\\
-Omitting rule \ref{rule:onlyonce} allows for pebbling strategies with lower pebbling numbers (\cite{sethi1975complete} has an example on page 1).
-However \cite{van1979move} shows that this possibly has the cost of needing exponentially more moves in the game.\\
-In \cite{gilbert1980pebbling} it is shown, that deciding the question, weather the pebbling number of a graph $G$ and node $s$ is smaller than $k$, is PSPACE-complete. 
-The same question has shown to be NP-complete \cite{sethi1975complete} when rule \ref{rule:onlyonce} is included.\\ %weird paper - weird notation
-In the version of the game we use and the aim to construct a strategy with a low pebbling number, unpebbling moves can be dropped from the pebbling strategy, because they are given implicitly. 
-A node is unpebbled right after all its successors have been pebbled. 
-It can't be unpebbled earlier, since otherwise its yet unpebbled successors can't be pebbled. 
-Unpebbling it later could increase the pebbling number.\\
-In the following sections, when constructing a pebbling strategy for a proof $\psi$, the distinguished node $s$, will always be the root node $\Conclusion{\psi}$. Instead of predecessors and successors, we will speak of premises and children.
-A pebbling strategy with implicit unpebbling moves directly corresponds to a topological order, defined in \ref{def:topological-order}.
-
-\subsection{SAT encoding}
-
-To find the pebbling number of a proof, the question weather this proof can be pebbled using no more than $k$ pebbles, can be translated into a propositional satisfiability problem.\\
-Let $\psi$ be a proof with nodes $\n_1,\ldots,\n_n$ and let $\n_n = \Conclusion{\psi}$. It is assumed that the strategy contains of exactly $n$ pebbling moves.
+To find the pebbling number of a proof, the question whether this proof can be pebbled using no more than $k$ pebbles, can be encoded as a propositional satisfiability problem.
+Let $\psi$ be a proof with nodes $\n_1,\ldots,\n_n$ and let $\n_n = \raiz{\psi}$. It is assumed that the strategy contains exactly $n$ pebbling moves.
 This assumption directly reflects rule \ref{rule:onlyonce} of the pebbling game, defined above.
 \subsubsection*{Variables}
 For every $x \in \{1,\ldots,k\}$, every $j \in \{1,\ldots,n\}$ and every $t \in \{1,\ldots,n\}$ there is a propositional variable $p_{x,j,t}$, denoting if true that pebble $x$ is placed on node $v_j$ at move $t$.
@@ -252,7 +259,7 @@ They are called Top-down and Bottom-up Pebbling. Their names reflect the travers
 
 \subsection{Top-down Pebbling}
 
-Algorithm \ref{algo:TDpebbling} displays Top-down Pebbling, which constructs a topological order of a proof $\psi$ by traversing it from one axiom to its root node $\Conclusion{\psi}$.
+Algorithm \ref{algo:TDpebbling} displays Top-down Pebbling, which constructs a topological order of a proof $\psi$ by traversing it from one axiom to its root node $\raiz{\psi}$.
 This approach closely corresponds to how a human would play the pebbling game. 
 A human would look at the nodes that are available for pebbling at a given state, choose one of them to pebble and remove pebbles if possible.\\
 Similarly the algorithm keeps track of pebblable nodes in form of a set $P$, initialized as $\Axioms{\psi}$.
@@ -286,7 +293,7 @@ Since $\psi$ is a DAG, $P$ being empty implies that all nodes have been pebbled 
 
 \subsection{Bottom-up Pebbling}
 
-Algorithm \ref{algo:BUpebbling} and \ref{algo:visit} display Bottom-up Pebbling, which constructs a topological order of a proof $\psi$ by traversing it from its root node $\Conclusion{\psi}$ to one of its axioms.\\
+Algorithm \ref{algo:BUpebbling} and \ref{algo:visit} display Bottom-up Pebbling, which constructs a topological order of a proof $\psi$ by traversing it from its root node $\raiz{\psi}$ to one of its axioms.\\
 The algorithm constructs the order by visiting nodes and their premises recursively. 
 At every node it is decided heuristically in what order the premises are visited.
 After visiting its premises, the node itself is added to the current sequence of nodes.
