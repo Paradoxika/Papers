@@ -287,27 +287,23 @@ This encoding is polynomial, both in $n$ and $k$. However constraint \ref{c:pebb
 \section{Greedy Pebbling Algorithms}
 \label{section:algorithms}
 
-Theorem \ref{theorem:enumeration} and \ref{sec:PebblingAsSat}.
+Theorem \ref{theorem:enumeration} and the remarks in the end of section \ref{sec:PebblingAsSat} indicate that obtaining an optimal topological order either by enumerating topological orders or by encoding the problem as a satisfiability problem is impractical. This section presents two greedy algorithms that aim at finding a better though not necessarily optimal topological order. They are both parameterized by the same heuristics described in Section \ref{sec:heuristics}, but differ from each other in the traversal direction in which the algorithms operate on proofs.
 
-In this section we present two different approaches for constructing pebbling strategies using heuristics.
-They are called Top-down and Bottom-up Pebbling. Their names reflect the traversal direction in which the algorithms operate on proofs.
+\subsection{Top-Down Pebbling}
 
-\subsection{Top-down Pebbling}
-
-Algorithm \ref{algo:TDpebbling} displays Top-down Pebbling, which constructs a topological order of a proof $\psi$ by traversing it from one axiom to its root node $\raiz{\psi}$.
+Top-Down Pebbling (Algorithm \ref{algo:TDpebbling}) constructs a topological order of a proof $\psi$ by traversing it from the axioms to the root node $\raiz{\psi}$.
 This approach closely corresponds to how a human would play the pebbling game. 
-A human would look at the nodes that are available for pebbling at a given state, choose one of them to pebble and remove pebbles if possible.\\
-Similarly the algorithm keeps track of pebblable nodes in form of a set $P$, initialized as $\Axioms{\psi}$.
-When pebbling a node $\n$, it is removed from $P$ and added to the sequence representing the topological order. 
-For all its children it is checked, weather they are now available for pebbling and if so they are added to $P$.\\
-Since $\psi$ is a DAG, $P$ being empty implies that all nodes have been pebbled and a topological order has been found.
+A human would look at the nodes that are available for pebbling at a given state, choose one of them to pebble and remove pebbles if possible.
+Similarly the algorithm keeps track of pebblable nodes in a set $P$, initialized as $\Axioms{\psi}$.
+When a node $\n$ is pebbled, it is removed from $P$ and added to the sequence representing the topological order. The children of $\n$ that become pebbleable are added to $P$.
+When $P$ becomes empty, all nodes have been pebbled once and a topological order has been found.
 
 
 \begin{algorithm}[h]
   \KwIn{a proof $\psi$}
   \KwOut{a topological order $<_T$ of $\psi$ represented by a sequence of nodes}
 	
-	$S$ is the empty sequence\;
+	$S = ()$; // the empty sequence \\
 	$P = \Axioms{\psi}$;
 	
   \While{$P$ is not empty}{
@@ -317,86 +313,24 @@ Since $\psi$ is a DAG, $P$ being empty implies that all nodes have been pebbled 
 					{$P = P \cup \{c\}$\;}
 					}
 		$P = P \setminus \{\n\}$\;
-		$S = S \oplus \n$\ //$\oplus$ is the concatenation of sequences;
+		$S = S ::: (\n)$; // $:::$ is the concatenation of sequences
   }
 	
 	\Return $S$\;
 	
-  \caption[.]{\FuncSty{Top-down Pebbling}}
+  \caption[.]{\FuncSty{Top-Down Pebbling}}
   \label{algo:TDpebbling}
 \end{algorithm}
 
-\subsection{Bottom-up Pebbling}
-
-Algorithm \ref{algo:BUpebbling} and \ref{algo:visit} display Bottom-up Pebbling, which constructs a topological order of a proof $\psi$ by traversing it from its root node $\raiz{\psi}$ to one of its axioms.\\
-The algorithm constructs the order by visiting nodes and their premises recursively. 
-At every node it is decided heuristically in what order the premises are visited.
-After visiting its premises, the node itself is added to the current sequence of nodes.
-Since axioms don't have any premises, there is no recursive call for axioms and these nodes are simply added to the sequence.
-The recursion is started by a call to visit the root.
-Since all proof nodes are recursive premises of the root, after the root has been visited a topological order is found.
-As opposed to Top-down Pebbling, this is more of a structural approach, instead of actually playing the pebbling game.
-
-\SetKwFunction{KwVisit}{visit}
-
-\begin{algorithm}[h]
-  \KwIn{a proof $\psi$}
-  \KwOut{a topological order $<_T$ of $\psi$ represented by a sequence of nodes}
-  \BlankLine
-
-	$S$ is the empty sequence\;
-	$V = \emptyset$\;
-	\Return \KwVisit{$\psi$,$\Conclusion{\psi}$,$V$,$S$}\;
-
-  \caption[.]{\FuncSty{Bottom-up Pebbling}}
-  \label{algo:BUpebbling}
-\end{algorithm}
-
-\begin{algorithm}[h]
-  \KwIn{a proof $\psi$}
-	\KwIn{a node $\n$}
-	\KwIn{a set of visited nodes $V$} 
-	\KwIn{initial sequence of nodes $S$}
-  \KwOut{a sequence of nodes}
-	
-	$V_1 = V \cup \{\n\}$\;
-	$D = \Premises{\n}{\psi} \setminus V$\;
-	$S_1 = S$
-	
-  \While{$D$ is not empty}{
-    choose $p \in D$ heuristically\;
-		$D = D \setminus \n$\;
-		$S_1 = S_1 \oplus visit(\psi,\n,V,S)$\ //$\oplus$ is the concatenation of sequences;
-  }
-	
-	\Return $S_1 \oplus \n$\;
-	
-  \caption[.]{\FuncSty{visit}}
-  \label{algo:visit}
-\end{algorithm}
-
-\subsection{Top-down vs Bottom-up Pebbling} %or: Which way to go?
-
-\label{sec:TDvsBU}
-
-In principle every topological order of a given proof can be constructed using Top-down or Bottom-up Pebbling.
-Both algorithms have linear run-time in the proof size (given that the heuristic choice only requires constant time). 
-The question relevant for this paper is, which approach behaves better for constructing orders, that produce small space measures.
-It turns out Bottom-up Pebbling wins the race.\\
-The reason is that Top-down Pebbling often encounters situations, where it pebbles nodes that are far away from the previously pebbled nodes.
-Far away here is meant with respect to the amount of undirected edges between nodes in the graph. Example \ref{example:TDPIssue} displays this issue.\\
-Bottom-up Pebbling does not suffer from this unlocality issue that much, because queuing up the processing of premises enforces local pebbling, which is shown in example \ref{example:BUP}.
-
 \begin{example}
 \label{example:TDP}
-Consider the graph shown in figure \ref{fig:TDP} and the initial sequence of nodes $(1,2,3)$, which was found by some heuristic. 
-For a greedy heuristic, that only has information about pebbled nodes, their premises and children, all nodes marked with '$4?$' are considered equally worthy to pebble next.\\
-Suppose the node marked with '$4$' in the middle graph is pebbled next.
-The subsequent pebbling moves are reasonable and can be found by a greedy heuristic. Pebbling '$5$' opens up the possibility to remove a pebble in the next move, which is done by pebbling '$6$'.
-After that only '$7$' and '$8$' are pebbleable. In this situation, it does not matter which is pebbled first.
-After pebbling '$7$' and '$8$', four pebbles are used, which is one more than what an optimal strategy needs.\\
-Pebbling '$7$' after '$3$' can be done with a heuristic that measures the number of edges between pebbled and pebbleable nodes. However for every $d$, one can easily construct a similar example in which '$7$' and '$3$' have $d + 1$ edges between them. Computing $d$-Spheres w.r.t. this measure can be exponential in $d$. 
-Therefore only relatively small spheres can be used, in order not to slow down the whole process too much.
+It is easy to see how top-down pebbling may end up finding a sup-optimal pebbling strategy. Consider the graph shown in figure \ref{fig:TDP} and suppose that top-down pebbling has already pebbled the initial sequence of nodes $(1,2,3)$. 
+For a greedy heuristic that only has information about pebbled nodes, their premises and children, all nodes marked with `$4?$' are considered equally worthy to pebble next.
+Suppose the node marked with `$4$' in the middle graph is chosen and pebbled next.
+Subsequently, pebbling `$5$' opens up the possibility to remove a pebble in the next move, which is done by pebbling `$6$'.
+After that only `$7$' and `$8$' are pebbleable. In this situation, it does not matter which is pebbled first.
+After pebbling `$7$' and `$8$', four pebbles are used, which is one more than what an optimal strategy needs.
+
 
 \begin{figure}[h]
 	\makebox[\textwidth][c]{
@@ -475,21 +409,63 @@ Therefore only relatively small spheres can be used, in order not to slow down t
 		\end{tikzpicture}
 	\end{minipage}%
 	}
-	\caption{Top-down Pebbling issue}
+	\caption{Top-Down Pebbling}
 	\label{fig:TDP}
 \end{figure}
 \label{example:TDPIssue}
 \end{example}
 
+
+\subsection{Bottom-Up Pebbling}
+
+Bottom-Up Pebbling (Algorithms \ref{algo:BUpebbling} and \ref{algo:visit}) constructs a topological order of a proof $\psi$ while traversing it from its root node $\raiz{\psi}$ to its axioms. The algorithm constructs the order by visiting nodes and their premises recursively. At every node $\n$ the order in which the premises of $\n$ are visited is decided heuristically. After visiting the premises, $n$ is added to the current sequence of nodes.
+Since axioms do not have any premises, there is no recursive call for axioms and these nodes are simply added to the sequence. The recursion is started by a call to visit the root.
+Since all proof nodes are ancestors of the root, the recursive calls will eventually visit all nodes once and a topological total order will be found.
+
+
+\SetKwFunction{KwVisit}{visit}
+
+\begin{algorithm}[h]
+  \KwIn{a proof $\psi$}
+  \KwOut{a topological order $<_T$ of $\psi$ represented by a sequence of nodes}
+  \BlankLine
+
+	$S = ()$; // the empty sequence \\
+	$V = \emptyset$\;
+	\Return \KwVisit{$\psi$,$\raiz{\psi}$,$V$,$S$}\;
+
+  \caption[.]{\FuncSty{Bottom-Up Pebbling}}
+  \label{algo:BUpebbling}
+\end{algorithm}
+
+\begin{algorithm}[h]
+  \KwIn{a proof $\psi$}
+	\KwIn{a node $\n$}
+	\KwIn{a set of visited nodes $V$} 
+	\KwIn{initial sequence of nodes $S$}
+  \KwOut{a sequence of nodes}
+	
+	$V_1 = V \cup \{\n\}$\;
+	$D = \Premises{\n}{\psi} \setminus V$\;
+	$S_1 = S$
+	
+  \While{$D$ is not empty}{
+    choose $p \in D$ heuristically\;
+		$D = D \setminus p$\;
+		$S_1 = S_1 ::: visit(\psi,p,V,S)$; // $:::$ is the concatenation of sequences
+  }
+	
+	\Return $S_1 ::: (\n)$\;
+	
+  \caption[.]{\FuncSty{visit}}
+  \label{algo:visit}
+\end{algorithm}
+
 %\newcommand{\nodedistance2}{0.6cm}
 \begin{example}
-Figure \ref{fig:BUP} shows a possible computation of Bottom-Up Pebbling on the same graph as presented in Figure \ref{fig:TDP}.
-The hatched nodes were chosen by the heuristic to be processed before the respective other premise.
-Similar to the Top-down Pebbling scenario, this results in the initial sequence $(1,2,3)$.
-However the choice where to go next is predefined by the hatched nodes. 
-Since one of its premises ($3$) is completely processed, the other premise is visited next.
-The result is that node '$7$' can be pebbled early and at no point more than 3 pebbles will be used for pebbling the root node.\\
-Note that this result is independent of the heuristic choices.
+Figure \ref{fig:BUP} shows part of an execution of Bottom-Up Pebbling on the same graph of Figure \ref{fig:TDP}.
+Nodes chosen by the heuristic, during the bottom-up traversal, to be processed before the respective other premise are marked in gray. Similarly to the Top-down Pebbling scenario, nodes have been chosen in such a way that the initial pebbling sequence is $(1,2,3)$.
+However, the choice of where to go next is predefined by the gray nodes. Consider the gray child of node `$3$'. Since `$3$' has been completely processed and pebbled, the other premise of its gray child is visited next. The result is that node `$7$' is pebbled earlier and at no point more than 3 pebbles will be used for pebbling the root node. This is so independently of the heuristic choices.
 
 \begin{figure}
 	\makebox[\textwidth][c]{
@@ -586,14 +562,28 @@ Note that this result is independent of the heuristic choices.
 		\end{tikzpicture}
 		\end{minipage}%
 			}
-		\caption{Example \ref{example:TDP} with Bottom-Up Pebbling}
+		\caption{Bottom-Up Pebbling}
 		\label{fig:BUP}
 \end{figure}
 \label{example:BUP}
 \end{example}
 
+
+
+\subsection{Remarks about Top-Down and Bottom-Up Pebbling} %or: Which way to go?
+\label{sec:TDvsBU}
+
+In principle every topological order of a given proof can be constructed using Top-down or Bottom-up Pebbling. Both algorithms traverse the proof only once and have linear run-time in the proof length (assuming that the heuristic choice requires constant time). Example \ref{example:TDPIssue} shows a situation where Top-Down Pebbling may pebble a node that is far away from the previously pebbled nodes. This results in a sub-optimal pebbling strategy.
+As discussed in Example \ref{example:BUP}, Bottom-Up Pebbling is more immune to this non-locality issue, because queuing up the processing of premises enforces local pebbling. This suggests that Bottom-Up is better than Top-Down, which is confirmed by the experiments in Section \ref{sec:exp}.
+
+
+\BWP{Theoretically, can we prove that BUP is always better than TDP if they both use the same heuristics? Experimentally, does it ever happen that TDP is better than BUP? We could make a scatter plot with compression ratios of TDP and BUP on the y and x axis to investigate this...}
+
+
 \section{Heuristics}
 \label{sec:heuristics}
+
+
 Pebbling heuristics for a proof $\psi$ are defined by a function $h: \Vertices{\psi} \rightarrow H$, where $(H,\prec)$ is a totally ordered set. 
 Top-down-, as well as Bottom-Up-, Pebbling select one node $\n$ out of a set of nodes $N \subseteq \Vertices{\psi}$ where $\n = max_{n \in N} h(n)$ using the order $\prec$.
 For Top-down Pebbling, $N$ is the set of pebbleable nodes and for Bottom-Up Pebbling, $N$ is the set of premises of a node.
@@ -714,6 +704,11 @@ where $<_P$ denotes the total order on the initial sequence of pebbled nodes $P$
 So $H = \mathbb{Z} \times \mathbb{N} \times P$ and the order used is the lexicographic order of two times the natural smaller relation and $<_P$.
 The spheres $K_r(\n)$ can grow exponentially in $r$. Therefore the maximum sphere calculated has to be limited and if no pebbled node is found in any of the calculated spheres, another heuristic has to be used.
 
+Copied from example:
+Pebbling '$7$' after '$3$' can be done with a heuristic that measures the number of edges between pebbled and pebbleable nodes. However for every $d$, one can easily construct a similar example in which '$7$' and '$3$' have $d + 1$ edges between them. Computing $d$-Spheres w.r.t. this measure can be exponential in $d$. 
+Therefore only relatively small spheres can be used, in order not to slow down the whole process too much.
+
+
 \subsection{Decay Heuristics}
 \label{sec:decay}
 Decay Heuristics denote a family of meta heuristics. 
@@ -727,7 +722,8 @@ The resulting heuristic function $h: V \rightarrow H$ is defined with the help o
 	h(\n) &\defeq rec(\n,d) &
 \end{align*}
 
-\section{Experiments} \label{sec:exp}
+\section{Experiments} 
+\label{sec:exp}
 
 All the \texttt{Pebbling Heuristics} mentioned in the last chapter, have been implemented in the functional programming
 language Scala\footnote{\url{http://www.scala-lang.org/}} as part of the \skeptik library\footnote{\url{https://github.com/Paradoxika/Skeptik}}.
