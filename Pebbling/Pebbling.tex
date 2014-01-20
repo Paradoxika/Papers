@@ -172,6 +172,7 @@ Deciding the question whether the pebbling number of a graph $G$ and node $s$ is
 
 
 \section{Pebbling and Proof Checking}
+\label{sec:pebblingchecking}
 
 The problem of checking the correctness of a proof while minimizing the memory consumption is analogous to the problem of playing the pebbling game on the proof while minimizing the number of pebbles. Checking the correctness of a node and storing it in memory corresponds to pebbling it. In order to check the correctness of a node $v$, its premises must have been checked before and must still be stored in memory (rule \ref{rule:premises} of the pebbling game). A node that has already been checked can be removed from memory at any time (rule \ref{rule:unpebbling}). The correctness of a node should be checked only once (rule \ref{rule:onlyonce}).
 
@@ -585,24 +586,21 @@ As discussed in Example \ref{example:BUP}, Bottom-Up Pebbling is more immune to 
 
 
 Pebbling heuristics for a proof $\psi$ are defined by a function $h: \Vertices{\psi} \rightarrow H$, where $(H,\prec)$ is a totally ordered set. 
-Top-down-, as well as Bottom-Up-, Pebbling select one node $\n$ out of a set of nodes $N \subseteq \Vertices{\psi}$ where $\n = max_{n \in N} h(n)$ using the order $\prec$.
-For Top-down Pebbling, $N$ is the set of pebbleable nodes and for Bottom-Up Pebbling, $N$ is the set of premises of a node.
+The pebbling algorithms select a node $\n$ out of a set of nodes $N \subseteq \Vertices{\psi}$ where $\n = max_{n \in N} h(n)$ using the order $\prec$.
+For Top-Down Pebbling, $N$ is the set of pebbleable nodes and for Bottom-Up Pebbling, $N$ is the set of premises of a node.
 %\subsection{Left to Right}
 %A trivial heuristic for Pebbling is to always choose the leftmost available node.
 
 \subsection{Number of Children Heuristic}
 \label{sec:children}
-This heuristic uses the number of children nodes of a node $\n$ the deciding characteristic, i.e. $h(\n) = |\Children{\n}{\psi}|$, $H = \mathbb{N}$ and $\prec$ is the natural smaller relation.\\
-The motivation of this heuristic is that nodes with many children, will require many pebbles. Example \ref{example:hardfirst} shows why it is a good idea to process hard subproofs first.
+This heuristic uses the number of children of a node $\n$: $h(\n) = |\Children{\n}{\psi}|$, $H = \mathbb{N}$ and $\prec$ is the \emph{smaller than} relation on $\mathbb{N}$.\\
+The intuitive motivation for this heuristic is that nodes with many children will require many pebbles. Example \ref{example:hardfirst} shows why it is a good idea to process hard subproofs first.
 
 \begin{example}
-Figure \ref{example:hardfirst} shows a simple proof with two subproofs. 
-The numbers in the subproofs denote the pebbling number, after it has been pebbled. 
-The left, easy subproof needs 4 pebbles and the right, hard subproof requires 5 pebbles. 
-After pebbling one of them, the pebble on its root node has to be kept there until the other is pebbled fully. 
-This increases the pebbling number of the other subproof by one.
-So pebbling the easy subproof first increases the overall pebbling number to 6, while pebbling the hard one first leaves it at 5.\\
-Note that this is a simplified situation with two independent subproofs, for which pebbling one does not influence the pebbling number of the other, which is not true if they share nodes.
+Figure \ref{example:hardfirst} shows a simple proof $\psi$ with two subproofs $\psi_1$ (``easy'') and $\psi_2$ (``hard''). As shown in the leftmost diagram, assume $\pspace{\psi_1}{<^1_T} = 4$ and $\pspace{\psi_1}{<^2_T} = 5$.
+After pebbling one of the subproofs, the pebble on its root node has to be kept there until the root of the other subproof is also pebbled. Only then $\raiz{\psi}$ can be pebbled. Therefore, $\pspace{\psi}{<_T} = \pspace{\psi_j}{<^j_T} + 1$ where $<_T = <^i_T ::: <^j_T$ and $i$ and $j$ are the indexes of the subproofs pebbled, respectively first and last. 
+Choosing to pebble the easy subproof first results in $\pspace{\psi}{<_T} = 6$, while pebbling the hard one first gives $\pspace{\psi}{<_T} = 5$.
+This is a simplified situation with two subproofs that are independent in the sense that pebbling one of them does not influence the pebble number of the other, which is not true if they share nodes.
 
 \begin{figure}[h]
 	\usetikzlibrary{shapes.geometric}
@@ -655,23 +653,23 @@ Note that this is a simplified situation with two independent subproofs, for whi
 	\caption{Hard subproof first}
 	\label{fig:TDP}
 \end{figure}
-	
+\BWP{The two rightmost diagrams are confusing, because they give the impression that the number of pebbles used in the subproofs increased to 6 and 5, respectively. In fact, 6 and 5 are the number of pebbles used for the whole proof. This has to be improved. Or the the diagrams could simply be removed. The text and the leftmost diagram are sufficient. Perhaps we even don't need any diagram.}
 \label{example:hardfirst}
 \end{example}
 
 \subsection{Last Child Heuristic}
 \label{sec:lastchild}
-In section \ref{sec:pebbling-game} we explained the implicit unpebbling of a node $\n$ as soon as all of its children have been pebbled.
-More precisely, $\n$ can be unpebbled as soon as the its last child, w.r.t. a topological order $<_T$, is pebbled. 
-The idea of this heuristic is to prefer nodes that are last children of other nodes.\\
-Pebbling a node, which allows another one to be unpebbled, is always a good move. 
-It does not increase the pebbling number, it might decrease the current number of pebbles used, if more than one premise can be unpebbled, and it possibly opens up new nodes for pebbling.\\
-For determining the number of premises of which a node is the last children of, it first has to be traversed top-down once, using some topological order $<_T$.
-Before the traversal, $h(\n)$ is set to 0 for every node $\n$. During the traversal $h(\n)$ is increased by 1, if $\n$ is the last child of the current node w.r.t. $<_T$.
-So for this heuristic, just like as the Number of Children Heuristic, $H = \mathbb{N}$ and $\prec$ is the natural smaller relation.\\
-To some extent, this heuristic is a paradox, because pebbling the last child $\n$ of some node early, might results in $\n$ not being the last child anymore.\\
-However some nodes are forced to be the last child of another node with more than one child by the structure of the proof, as shown in figure \ref{fig:forcedLC}, where the bottom node is the last child of the top right node in every topological order.
 
+As discussed in Section \ref{sec:pebblingchecking} in the proof of Theorem \ref{theorem:canonical}, the best moment to unpebble a node $\n$ is as soon as all its last child w.r.t. a topological order $<_T$ is pebbled. 
+This insight can be used for a heuristic that prefers nodes that are last children of other nodes. Pebbling a node that allows another one to be unpebbled is always a good move. 
+The current number of used pebbles (after pebbling the node and unpebbling one of its premises) does not increase; 
+it might even decrease, if more than one premise can be unpebbled.
+For determining the number of premises of which a node is the last child, the proof has to be traversed once, using some topological order $<_T$.
+Before the traversal, $h(\n)$ is set to 0 for every node $\n$. During the traversal $h(\n)$ is increased by 1, if $\n$ is the last child of the current node w.r.t. $<_T$. For this heuristic, $H = \mathbb{N}$ and $\prec$ is the \emph{smaller than} relation on $\mathbb{N}$.
+To some extent, this heuristic is paradoxical: $\n$ may be the last child of a node $\n'$ according to $<_T$, but pebbling it early may result in another topological order $<^*_T$ according to which $\n$ is not the last child of $\n'$. \BWP{This means it might make sense to iterate pebbling with last child heuristic. Does iteration lead to a fixpoint? Or can it oscillate? These are just some interesting questions beyond the scope of this paper.}
+Nevertheless, sometimes the proof structure ensures that some nodes are the last child of another node irrespective of the topological order. An example is shown in figure \ref{fig:forcedLC}, where the bottommost node is the last child of the top right node in every topological order.
+
+\BWP{Any proof corresponding to this DAG has a tautological clause. Are you able to find a better example, where this doesn't happen?}
 \begin{figure}[h]
 	\centering{
 	\begin{tikzpicture}[node distance=1cm]
@@ -681,19 +679,16 @@ However some nodes are forced to be the last child of another node with more tha
 		\drawchildren{n4}{n3}{n2};
 	\end{tikzpicture}
 	}
-	\caption{Forced last child}
+	\caption{Bottommost node as necessary last child of right topmost node}
 	\label{fig:forcedLC}
 \end{figure}
+
+
 \subsection{Node Distance Heuristic}
 \label{sec:distance}
-In section Section \ref{sec:TDvsBU} the issue with non local pebbling was explained.
-%Capturing the full structure of a proof would be inefficient in general, however a limited distance search can help to do local pebbling.
-The Node Distance Heuristic searches for pebbled nodes that are close to the decision node.
-It does this by calculating spheres with a limited radius around nodes.
-A sphere with radius $r$ around the node $\n$ in the graph $G = (V,E)$ is defined in the following way: 
-$$K_r^{G}(\n) \eqdef \{p \in V \mid \text{ there are at most } r \text{ (undirected) edges between } p \text{ and } \n\}$$
-%This can probably be defined nicer, with the notion of paths
-Using these spheres, the characteristic for this heuristic is defined as follows:
+
+In Example \ref{ToDo} and Section \ref{sec:TDvsBU} it has been noted that Top-Down Pebbling may perform badly if nodes that are far apart are selected. The Node Distance Heuristic prefers to pebble nodes that are close to pebbled nodes. It does this by calculating spheres with a limited radius around nodes.
+A sphere $K_r^{G}(\n)$ with radius $r$ around the node $\n$ in the graph $G = (V,E)$ is the set $\{p \in V \mid \text{ there are at most } r \text{ edges between } p \text{ and } \n\}$. The direction of edges is not considered. The heuristic uses the following functions based on the spheres:
 \begin{align*}
 d(\n) &\defeq -min\{r \mid K_r^{G}(\n)\text{ contains a pebbled node}\}\\
 	s(\n) &\defeq |K_{-d(\n)}^G|\\
@@ -701,12 +696,7 @@ d(\n) &\defeq -min\{r \mid K_r^{G}(\n)\text{ contains a pebbled node}\}\\
 	h(\n) &\defeq (d(\n),s(\n),l(\n))
 \end{align*}
 where $<_P$ denotes the total order on the initial sequence of pebbled nodes $P$, i.e. nodes in spheres that were pebbled later are preferred.
-So $H = \mathbb{Z} \times \mathbb{N} \times P$ and the order used is the lexicographic order of two times the natural smaller relation and $<_P$.
-The spheres $K_r(\n)$ can grow exponentially in $r$. Therefore the maximum sphere calculated has to be limited and if no pebbled node is found in any of the calculated spheres, another heuristic has to be used.
-
-Copied from example:
-Pebbling '$7$' after '$3$' can be done with a heuristic that measures the number of edges between pebbled and pebbleable nodes. However for every $d$, one can easily construct a similar example in which '$7$' and '$3$' have $d + 1$ edges between them. Computing $d$-Spheres w.r.t. this measure can be exponential in $d$. 
-Therefore only relatively small spheres can be used, in order not to slow down the whole process too much.
+So $H = \mathbb{Z} \times \mathbb{N} \times P$ and $\prec$ is the lexicographic order using, respectively, the \emph{smaller than} relation on $\mathbb{Z}$ and $\mathbb{N}$ and $<_P$ on $P$. The spheres $K_r(\n)$ can grow exponentially in $r$. Therefore the maximum radius has to be limited and if no pebbled node is found within this radius, another heuristic has to be used.
 
 
 \subsection{Decay Heuristics}
@@ -722,10 +712,12 @@ The resulting heuristic function $h: V \rightarrow H$ is defined with the help o
 	h(\n) &\defeq rec(\n,d) &
 \end{align*}
 
+\BWP{overfull hboxes have to be fixed.}
+
 \section{Experiments} 
 \label{sec:exp}
 
-All the \texttt{Pebbling Heuristics} mentioned in the last chapter, have been implemented in the functional programming
+All the pebbling algorithms and heuristics described in the previous sections have been implemented in the functional programming
 language Scala\footnote{\url{http://www.scala-lang.org/}} as part of the \skeptik library\footnote{\url{https://github.com/Paradoxika/Skeptik}}.
 
 In order to evaluate the heuristics, experiments were run on two sets of test cases, consisting of proofs produced by the SMT-solver {\veriT}\footnote{\url{http://www.verit-solver.org/}} 
@@ -875,8 +867,9 @@ The following heuristics were evaluated using this test set:
 The results of this set imply, that Bottom-up heuristics produce significantly better topological orders than their Top-down pendants.
 Also just like \textbf{Test Set 1} the results presented in Table \ref{tab:average1} show that small proofs benefit more from the heuristics.
 
+\BWP{We could evaluate the effect of RPI and LUV on the space measure}.
 
-\BWP{We could evaluate the effect of RPI and LUV on the space of proofs}.
+\BWP{We could iterate the last child heuristic a few times to see if we get better compression.}
 
 \section{Conclusions and Future Work}
 
