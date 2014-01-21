@@ -255,7 +255,7 @@ Likewise, $(s_{\pi({k_1})},\ldots,s_{\pi({k_m})},s_{l_1},\ldots,s_{l_{n-m}})$ is
 \section{Pebbling as a Satisfiability Problem}
 \label{sec:PebblingAsSat}
 
-To find the pebble number of a proof, the question whether this proof can be pebbled using no more than $k$ pebbles, can be encoded as a propositional satisfiability problem.
+To find the pebble number of a proof, the question whether the proof can be pebbled using no more than $k$ pebbles can be encoded as a propositional satisfiability problem.
 Let $\psi$ be a proof with nodes $\n_1,\ldots,\n_n$ and let $\n_n = \raiz{\psi}$. 
 Due to rule \ref{rule:onlyonce} of the pebbling game, the number of pebbling moves is exactly $n$. For every $x \in \{1,\ldots,k\}$, every $j \in \{1,\ldots,n\}$ and every $t \in \{1,\ldots,n\}$ there is a propositional variable $p_{x,j,t}$, denoting if that pebble $x$ is on node $v_j$ at the time of the pebbling move $t$. The following constraints, combined conjunctively, are satisfiable \textit{iff} there is a pebbling strategy for $\psi$, using at most $k$ pebbles. If satisfiable, a pebbling strategy can be read off from any satisfying assignment.
 
