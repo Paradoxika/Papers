@@ -22,6 +22,8 @@
 \usepackage{mathenvironments}
 \usepackage{drawproof}
 
+\usetikzlibrary{patterns}
+
 \renewcommand{\topfraction}{0.85}
 \renewcommand{\textfraction}{0.1}
 \renewcommand{\floatpagefraction}{0.75}
@@ -144,7 +146,7 @@ denote, respectively, the nodes, edges, axioms and proved clause (conclusion) of
 \label{sec:pebbling-game}
 
 %There are many pebble games defined in the literature \cite{kasai1979classes,chan2013pebble}. 
-Pebbling games were introduced in the 1970's to model programming language expressivity \cite{paterson1970comparative,Walker1973404} and compiler construction \cite{sethi1975complete}. More recently, pebbling games have been used to investigate various questions in parallel complexity \cite{chan2013pebble} and proof complexity \cite{ben2008short,Esteban200184,nordstrom2009narrow}. They are used to get bounds for space and time requirements and tradeoffs between the two measures \cite{van1979move}. The \emph{pebbling game} from definition \ref{def:pebbling-game} is a slight variation of the Black Pebbling Game presented in \cite{hertel2007black,pippenger1982advances}. \BWP{ToDo: briefly explain the difference...} \textit{To pebble} a node is to put a pebble on it; \textit{to unpebble} is to remove a pebble; a node is \textit{pebbleable} if it is not pebbled but can be pebbled.
+Pebbling games were introduced in the 1970's to model programming language expressivity \cite{paterson1970comparative,Walker1973404} and compiler construction \cite{sethi1975complete}. More recently, pebbling games have been used to investigate various questions in parallel complexity \cite{chan2013pebble} and proof complexity \cite{ben2008short,Esteban200184,nordstrom2009narrow}. They are used to get bounds for space and time requirements and tradeoffs between the two measures \cite{van1979move}. The \emph{pebbling game} from definition \ref{def:pebbling-game} is a slight variation of the Black Pebbling Game presented in \cite{hertel2007black}, which does not include rule \ref{rule:onlyonce} and allows pebbles to be slid from predecessors to a node. \textit{To pebble} a node is to put a pebble on it; \textit{to unpebble} is to remove a pebble; a node is \textit{pebbleable} if it is not pebbled but can be pebbled.
 
 \begin{definition}[Pebbling Game]
 \label{def:pebbling-game}
@@ -240,11 +242,10 @@ The problem of compressing the space of a proof $\psi$ and a topological order $
 There is a sequence of proofs $(\psi_1,\ldots,\psi_m,\ldots)$ such that $\plength{\psi_m} \in O(m)$ and $|T(\psi_m)| \in \Omega(m!)$, where $T(\psi_m)$ is the set of possible topological orders for $\psi_m$.
 \end{theorem}
 \begin{proof}
-\BWP{Use $v$ instead of $s$ for nodes here}
 Let $\psi_m$ be a perfect binary tree with $m$ axioms. Clearly, $\plength{\psi_m} = 2m-1$.
-Let $(s_1,\ldots,s_n)$ be a topological order for $\psi_m$. 
-Let $\Axioms{\psi} = \{s_{k_1},\ldots,s_{k_m}\}$, then $(s_{k_1},\ldots,s_{k_m},s_{l_1},\ldots,s_{l_{n-m}})$, where $(l_1,\ldots,l_{n-m}) = (1,\ldots,n) \setminus (k_1,\ldots,k_m)$, is a topological order as well. 
-Likewise, $(s_{\pi({k_1})},\ldots,s_{\pi({k_m})},s_{l_1},\ldots,s_{l_{n-m}})$ is a topological order, for every permutation $\pi$ of $\{k_1,\ldots,k_m\}$. There are $m!$ such permutations, so the overall number of topological orders is at least factorial in $m$ (and also in $n$).
+Let $(\n_1,\ldots,\n_n)$ be a topological order for $\psi_m$. 
+Let $\Axioms{\psi} = \{\n_{k_1},\ldots,\n_{k_m}\}$, then $(\n_{k_1},\ldots,\n_{k_m},\n_{l_1},\ldots,\n_{l_{n-m}})$, where $(l_1,\ldots,l_{n-m}) = (1,\ldots,n) \setminus (k_1,\ldots,k_m)$, is a topological order as well. 
+Likewise, $(\n_{\pi({k_1})},\ldots,\n_{\pi({k_m})},\n_{l_1},\ldots,\n_{l_{n-m}})$ is a topological order, for every permutation $\pi$ of $\{k_1,\ldots,k_m\}$. There are $m!$ such permutations, so the overall number of topological orders is at least factorial in $m$ (and also in $n$).
 \end{proof}
 
 
@@ -273,9 +274,11 @@ Due to rule \ref{rule:onlyonce} of the pebbling game, the number of pebbling mov
 				$$\bigwedge_{x = 1}^k \bigwedge_{j = 1}^n \bigwedge_{t = 1}^n \left( p_{x,j,t} \rightarrow \bigwedge_{i = 1, i \neq j}^n \neg p_{x,i,t} \right)$$ 
 				
 	\item \label{c:pebble} For pebbling a node, its premises have to be pebbled and only one node is pebbled each move\\
-				$$\bigwedge_{x = 1}^k \bigwedge_{j = 1}^n \bigwedge_{t = 1}^n \left( (\neg p_{x,j,t} \wedge p_{x,j,(t+1)} ) \rightarrow 
-					\bigg( \bigwedge_{i \in \Premises{j}{\psi}} \bigvee_{y = 1, y \neq x}^k p_{y,i,t} \bigg) \wedge 
-					\bigg( \bigwedge_{i = 1}^n \bigwedge_{y = 1, y \neq x}^k \neg ( \neg p_{y,i,t} \wedge p_{y,i,(t+1)} ) \bigg) \right)$$
+				\begin{align*}
+					\bigwedge_{x = 1}^k \bigwedge_{j = 1}^n \bigwedge_{t = 1}^n & \Bigg( \left(\neg p_{x,j,t} \wedge p_{x,j,(t+1)} \right)\rightarrow \\
+					&\bigg( \bigwedge_{i \in \Premises{j}{\psi}} \bigvee_{y = 1, y \neq x}^k p_{y,i,t} \bigg) \wedge 
+					\bigg( \bigwedge_{i = 1}^n \bigwedge_{y = 1, y \neq x}^k \neg \left( \neg p_{y,i,t} \wedge p_{y,i,(t+1)} \right) \bigg) \Bigg)
+				\end{align*}
 				
 \end{enumerate}
 
@@ -577,10 +580,6 @@ However, the choice of where to go next is predefined by the gray nodes. Conside
 In principle every topological order of a given proof can be constructed using Top-down or Bottom-up Pebbling. Both algorithms traverse the proof only once and have linear run-time in the proof length (assuming that the heuristic choice requires constant time). Example \ref{example:TDPIssue} shows a situation where Top-Down Pebbling may pebble a node that is far away from the previously pebbled nodes. This results in a sub-optimal pebbling strategy.
 As discussed in Example \ref{example:BUP}, Bottom-Up Pebbling is more immune to this non-locality issue, because queuing up the processing of premises enforces local pebbling. This suggests that Bottom-Up is better than Top-Down, which is confirmed by the experiments in Section \ref{sec:exp}.
 
-
-\BWP{Theoretically, can we prove that BUP is always better than TDP if they both use the same heuristics? Experimentally, does it ever happen that TDP is better than BUP? We could make a scatter plot with compression ratios of TDP and BUP on the y and x axis to investigate this...}
-
-
 \section{Heuristics}
 \label{sec:heuristics}
 
@@ -588,10 +587,12 @@ As discussed in Example \ref{example:BUP}, Bottom-Up Pebbling is more immune to 
 Pebbling heuristics for a proof $\psi$ are defined by a function $h: \Vertices{\psi} \rightarrow H$, where $(H,\prec)$ is a totally ordered set. 
 The pebbling algorithms select a node $\n$ out of a set of nodes $N \subseteq \Vertices{\psi}$ where $\n = max_{n \in N} h(n)$ using the order $\prec$.
 For Top-Down Pebbling, $N$ is the set of pebbleable nodes and for Bottom-Up Pebbling, $N$ is the set of premises of a node.
+The notion $s(\psi,h)$ is defined as $s(\psi,<_T)$ where $h$ is one of the heuristics defined below and $<_T$ is the topological order constructed running $h$ on $\psi$.
+In section \ref{sec:exp} heuristics have the suffix $:BU$ to denote its Bottom-Up and $:TD$ its Top-Down version.
 %\subsection{Left to Right}
 %A trivial heuristic for Pebbling is to always choose the leftmost available node.
 
-\subsection{Number of Children Heuristic}
+\subsection{Number of Children Heuristic (``$Ch$'')}
 \label{sec:children}
 This heuristic uses the number of children of a node $\n$: $h(\n) = |\Children{\n}{\psi}|$, $H = \mathbb{N}$ and $\prec$ is the \emph{smaller than} relation on $\mathbb{N}$.
 The intuitive motivation for this heuristic is that nodes with many children will require many pebbles. Example \ref{example:hardfirst} shows why it is a good idea to process hard subproofs first.
@@ -618,7 +619,7 @@ This is a simplified situation with two subproofs that are independent in the se
 	\makebox[\textwidth][c]{
 	\begin{minipage}{.3\textwidth}
 		\begin{tikzpicture}[node distance=\nodedistanceTwo]
-			\proofnodeBW{root};
+			\node[circle, draw, anchor=mid](root) {?};
 			\addchildrenBW{root}{n1}{n2};
 			\node[triangle, above of = n1, yshift = -4mm]{4};
 			\node[triangle, above of = n2, yshift = -4mm]{5};
@@ -629,10 +630,10 @@ This is a simplified situation with two subproofs that are independent in the se
 	\end{minipage}%
 		\begin{minipage}{.3\textwidth}
 		\begin{tikzpicture}[node distance=\nodedistanceTwo]
-			\proofnodeBW{root};
+			\node[circle, draw, anchor=mid](root) {6};
 			\addchildrenBW{root}{n1}{n2};
 			\node[triangle, above of = n1, yshift = -4mm]{ };
-			\node[triangle, above of = n2, yshift = -4mm]{6};
+			\node[triangle, above of = n2, yshift = -4mm]{5};
 			\blacknode{n1};
 			\whitenode{n2};
 			\drawchildren{root}{n1}{n2};
@@ -640,9 +641,10 @@ This is a simplified situation with two subproofs that are independent in the se
 	\end{minipage}%
 		\begin{minipage}{.3\textwidth}
 		\begin{tikzpicture}[node distance=\nodedistanceTwo]
-			\proofnodeBW{root};
+			%\proofnodeBW{root};
+			\node[circle, draw, anchor=mid](root) {5};
 			\addchildrenBW{root}{n1}{n2};
-			\node[triangle, above of = n1, yshift = -4mm]{5};
+			\node[triangle, above of = n1, yshift = -4mm]{4};
 			\node[triangle, above of = n2, yshift = -4mm]{ };
 			\whitenode{n1};
 			\blacknode{n2};
@@ -653,11 +655,11 @@ This is a simplified situation with two subproofs that are independent in the se
 	\caption{Hard subproof first}
 	\label{fig:TDP}
 \end{figure}
-\BWP{The two rightmost diagrams are confusing, because they give the impression that the number of pebbles used in the subproofs increased to 6 and 5, respectively. In fact, 6 and 5 are the number of pebbles used for the whole proof. This has to be improved. Or the the diagrams could simply be removed. The text and the leftmost diagram are sufficient. Perhaps we even don't need any diagram.}
+\BWP{I changed the diagrams to better show their purpose. I don't know whether they are necessary at all, feel free to delete them.}
 \label{example:hardfirst}
 \end{example}
 
-\subsection{Last Child Heuristic}
+\subsection{Last Child Heuristic (``$Lc$'')}
 \label{sec:lastchild}
 
 As discussed in Section \ref{sec:pebblingchecking} in the proof of Theorem \ref{theorem:canonical}, the best moment to unpebble a node $\n$ is as soon as all its last child w.r.t. a topological order $<_T$ is pebbled. 
@@ -666,17 +668,27 @@ The current number of used pebbles (after pebbling the node and unpebbling one o
 it might even decrease, if more than one premise can be unpebbled.
 For determining the number of premises of which a node is the last child, the proof has to be traversed once, using some topological order $<_T$.
 Before the traversal, $h(\n)$ is set to 0 for every node $\n$. During the traversal $h(\n)$ is increased by 1, if $\n$ is the last child of the current node w.r.t. $<_T$. For this heuristic, $H = \mathbb{N}$ and $\prec$ is the \emph{smaller than} relation on $\mathbb{N}$.
-To some extent, this heuristic is paradoxical: $\n$ may be the last child of a node $\n'$ according to $<_T$, but pebbling it early may result in another topological order $<^*_T$ according to which $\n$ is not the last child of $\n'$. \BWP{This means it might make sense to iterate pebbling with last child heuristic. Does iteration lead to a fixpoint? Or can it oscillate? These are just some interesting questions beyond the scope of this paper.}
-Nevertheless, sometimes the proof structure ensures that some nodes are the last child of another node irrespective of the topological order. An example is shown in figure \ref{fig:forcedLC}, where the bottommost node is the last child of the top right node in every topological order.
+To some extent, this heuristic is paradoxical: $\n$ may be the last child of a node $\n'$ according to $<_T$, but pebbling it early may result in another topological order $<^*_T$ according to which $\n$ is not the last child of $\n'$. \BWP{This means it might make sense to iterate pebbling with last child heuristic. Does iteration lead to a fixpoint? Or can it oscillate? These are just some interesting questions beyond the scope of this paper. $<$ I did not test this, but it's an interesting thought $>$}
+Nevertheless, sometimes the proof structure ensures that some nodes are the last child of another node irrespective of the topological order. An example is shown in figure \ref{fig:forcedLC}, where the dashed line denotes a recursive predecessor relationship and the bottommost node is the last child of the top right node in every topological order.
 
-\BWP{Any proof corresponding to this DAG has a tautological clause. Are you able to find a better example, where this doesn't happen?}
+\BWP{Any proof corresponding to this DAG has a tautological clause. Are you able to find a better example, where this doesn't happen? $<$ is this better now? $>$}
 \begin{figure}[h]
 	\centering{
 	\begin{tikzpicture}[node distance=1cm]
 		\proofnodeBW{n4};
 		\proofnodeBW[above left of = n4]{n3};
-		\withchildrenBW{n3}{n1}{n2};
-		\drawchildren{n4}{n3}{n2};
+		
+		%\proofnodeBW[above left of = n3]{n1};
+		
+		\proofnodeBW[above right of = n3]{n2};
+		%\withchildrenBW{n3}{n1}{n2};
+		%\drawchildren{n4}{n3}{n2};
+		%\node[above left of=n3] (emptynode) {};
+		%\draw[->,thick,cap=round,dashed] (n3) to (emptynode);
+		\draw[->,thick,cap=round,dashed] (n3) to (n2);
+		\draw[->,thick,cap=round] (n4) to (n2);
+		\draw[->,thick,cap=round,dashed] (n4) to (n3);
+		
 	\end{tikzpicture}
 	}
 	\caption{Bottommost node as necessary last child of right topmost node}
@@ -684,10 +696,10 @@ Nevertheless, sometimes the proof structure ensures that some nodes are the last
 \end{figure}
 
 
-\subsection{Node Distance Heuristic}
+\subsection{Node Distance Heuristic (``$Dist(r)$'')}
 \label{sec:distance}
 
-In Example \ref{ToDo} and Section \ref{sec:TDvsBU} it has been noted that Top-Down Pebbling may perform badly if nodes that are far apart are selected. The Node Distance Heuristic prefers to pebble nodes that are close to pebbled nodes. It does this by calculating spheres with a limited radius around nodes.
+In Example \ref{ToDo} and Section \ref{sec:TDvsBU} it has been noted that Top-Down Pebbling may perform badly if nodes that are far apart are selected. The Node Distance Heuristic prefers to pebble nodes that are close to pebbled nodes. It does this by calculating spheres with a radius up to the parameter $r$ around nodes.
 A sphere $K_r^{G}(\n)$ with radius $r$ around the node $\n$ in the graph $G = (V,E)$ is the set $\{p \in V \mid \text{ there are at most } r \text{ edges between } p \text{ and } \n\}$. The direction of edges is not considered. The heuristic uses the following functions based on the spheres:
 \begin{align*}
 d(\n) &\defeq -min\{r \mid K_r^{G}(\n)\text{ contains a pebbled node}\}\\
@@ -699,179 +711,130 @@ where $<_P$ denotes the total order on the initial sequence of pebbled nodes $P$
 So $H = \mathbb{Z} \times \mathbb{N} \times P$ and $\prec$ is the lexicographic order using, respectively, the \emph{smaller than} relation on $\mathbb{Z}$ and $\mathbb{N}$ and $<_P$ on $P$. The spheres $K_r(\n)$ can grow exponentially in $r$. Therefore the maximum radius has to be limited and if no pebbled node is found within this radius, another heuristic has to be used.
 
 
-\subsection{Decay Heuristics}
+\subsection{Decay Heuristics (``$Dc(h_u,\gamma,d,com)$'') }
 \label{sec:decay}
 Decay Heuristics denote a family of meta heuristics. 
 The idea is to not only use the measure of a single node, but also to include the measures of its premises.
-Such a heuristic has four parameters: a heuristic function $h_u: V \rightarrow H$, a recursion depth $d \in \mathbb{N}$, a decay factor $\gamma \in \mathbb{R}^+ \cup \{0\}$ and a family of combining functions $com: H^n \rightarrow H$ for $n \in \mathbb{N}$.\\
+Such a heuristic has four parameters: a heuristic function $h_u: V \rightarrow H$, a decay factor $\gamma \in \mathbb{R}^+ \cup \{0\}$, a recursion depth $d \in \mathbb{N}$ and a family of combining functions $com: H^n \rightarrow H$ for $n \in \mathbb{N}$.\\
 The resulting heuristic function $h: V \rightarrow H$ is defined with the help of the recusive function $rec: (V \times \mathbb{N}) \rightarrow H$:
 \begin{align*}
-	rec(\n,0) &\defeq h_u(\n) &\\
-	rec(\n,k) &\defeq h_u(\n) + com(rec(p_1,k-1),\ldots,rec(p_n,k-1)) * \gamma & \text{ where } \Premises{\n}{\psi} = \{p_1,\ldots,p_n\}\\& & \text{ and } k \in \{1,\ldots,d\} \\
+	rec(\n,0) &\defeq h_u(\n) \\
+	rec(\n,k) &\defeq h_u(\n) + com(rec(p_1,k-1),\ldots,rec(p_n,k-1)) * \gamma\\
+	& \text{ where } \Premises{\n}{\psi} = \{p_1,\ldots,p_n\}\\
+	& \text{ and } k \in \{1,\ldots,d\} \\
 	%rec(\n,k) &\defeq com(h_u(\n), rec(p_1,k-1)*\gamma,\ldots,rec(p_{n-1},k-1) * \gamma)\\ %might be better - I will try this in the experiments
 	h(\n) &\defeq rec(\n,d) &
 \end{align*}
 
-\BWP{overfull hboxes have to be fixed.}
+\BWP{overfull hboxes have to be fixed. $<$ does this look better? it's still a little akward, but I'm not sure where to place it $>$}
 
-\BWP{When talking about TraceCheck proofs in the experimental section, we should mention the RUP format too. The paragraphs I wrote in the IJCAR paper could be reused and adapted.}
+\BWP{When talking about TraceCheck proofs in the experimental section, we should mention the RUP format too. The paragraphs I wrote in the IJCAR paper could be reused and adapted. $<$ do you feel like this one sentence is enough? So far we don't support this proof format anyways.$>$}
 
 \section{Experiments} 
 \label{sec:exp}
 
 All the pebbling algorithms and heuristics described in the previous sections have been implemented in the functional programming
-language Scala\footnote{\url{http://www.scala-lang.org/}} as part of the \skeptik library\footnote{\url{https://github.com/Paradoxika/Skeptik}}.
+language Scala\footnote{\url{http://www.scala-lang.org/}} as part of the \skeptik library\footnote{\url{https://github.com/Paradoxika/Skeptik}} \cite{ToDo:SkeptikSystemDescription}.
+\BWP{Can I already cite the Skeptik system description?}
 
-In order to evaluate the heuristics, experiments were run on two sets of test cases, consisting of proofs produced by the SMT-solver {\veriT}\footnote{\url{http://www.verit-solver.org/}} 
-on unsatisfiable benchmarks from the SMT-Lib\footnote{\url{http://www.smtlib.org/}}.
-The details on the number of proofs per SMT category and their size in proof nodes are shown in Table \ref{tab:benchmarks}.  
-The proofs were translated into pure resolution proofs by considering every non-resolution inference as an axiom.
+In order to evaluate the heuristics, experiments were run on four sets of proof benchmarks.
+Two of which consist of proofs produced by the SMT-solver {\veriT}\footnote{\url{http://www.verit-solver.org/}} 
+on unsatisfiable problems from the SMT-Lib\footnote{\url{http://www.smtlib.org/}}. These proofs are in a format, which is close to SMT-Lib's problem format.\\
+The other two benchmarks consist of proofs produced by the sat-solver \texttt{PicoSAT} \cite{Biere_picosatessentials} on unsatisfiable benchmarks from the SATLIB\footnote{\url{http://www.satlib.org/benchm.html/}} library. These proofs are in the TraceCheck proof format, which is one of the three formats accepted at the \emph{Certified Unsat} track of the SAT-Competition. One other format accepted at this track is the BDRUP format \cite{ToDo:AllenVanGelder,ToDo:MarijnHeule}, which naturally supports deletion information.\\
+The SMT proofs were translated into pure resolution proofs by considering every non-resolution inference as an axiom, while TraceCheck proofs are already of such kind.\\
+\BWP{I left the citation of BDRUP open here, since it has to be inserted into the introduction also}
 
- \begin{table}[tb]
-   \caption{Proofs benchmarks and statistics}
-   \label{tab:benchmarks}
-   \centering
-   \begin{tabular}{l|r|r}
-     \toprule
-		            &  Set 1 & Set 2 \\
-     Benchmark~ &  Number & Number\\
-     Category   & ~of Proofs	 & ~of Proofs\\
-     \midrule
-     QF\_UF      & 3936 & 199\\
-     QF\_IDL     &  446 & 184\\
-     QF\_LIA     &  587 & 450\\
-     QF\_UFIDL   &  16  & 2\\
-     QF\_UFLIA   &  123 & 78\\
-     QF\_RDL     &   30 & 1\\
-     \midrule
-		 Sum         & 914  & 5138\\
-		 Total number~ & 4926946 & 441244454 \\
-		 of proof nodes & & \\
-		 Average number ~ & 85879 & 5391 \\
-		 of proof nodes & & \\
-		\bottomrule
-   \end{tabular}
- \end{table}
+Statistics of the benchmarks are shown in Table \ref{tab:benchmarks}, where sizes are given in number of proof nodes.
 
-By default \skeptik stores proofs using a topological order that is found in a Bottom-up fashion, by visiting premises in the order they were parsed.
-The compression of space measures of heuristics is compared to this default topological order.
-Note that it is another Bottom-up heuristic, which is referred to as \emph{uncompressed}.
 
-% For each of these algorithms, the time needed to compress the proof along with the number of nodes
-% and the number of axioms (i.e. \emph{unsat core} size) have been measured. Raw data of the
-% experiment can be downloaded from the web\footnote{\url{http://www.matabio.net/skeptik/LUniv/experiments/}}.
+\begin{table}[tb]
+	\centering
+	\begin{tabular}{l|c|c|c}
+		\textbf{Name} & \textbf{Number of proofs} & \textbf{Maximum size} & \textbf{Average size} \\ \toprule
+		SMT1 & 5138 & 2241042 & 85879 \\ \hline
+		SMT2 & 914  & 120075  & 5391  \\ \hline
+		TRC1 & 2239 & 90756   & 5423   \\ \hline
+		TRC2 & 215	& 1768249 & 268863     
+	\end{tabular}
+	\caption{Proof benchmarks and statistics}
+	\label{tab:benchmarks}
+\end{table}
 
 The experiments were executed on the Vienna Scientific Cluster\footnote{\url{http://vsc.ac.at/}}
 VSC\nobreakdash-2. Each algorithm was executed in a single core and had up to 16 GB of memory available. 
 This amount of memory has been useful to compress the biggest proofs (with more than $10^6$ nodes).
 
-The overall results of the experiments are shown in Table \ref{tab:average1} and \ref{tab:average2}. The compression ratios
-are computed according to the formulas (\ref{eq:compression1}) and (\ref{eq:compression2}), in which $\psi$
-ranges over all the proofs in the corresponding set of test cases and $sp(\psi,heuristic)$ denotes the space measure of $\psi$ w.r.t. the topological order computed by the respective heuristic.
+The results of the experiments are shown in Table \ref{tab:results}.
+Every heuristic is compared to the others by relating its calculated space measures to the average space measures of all heuristics.
+The formula for calculating this performance measure is given in (\ref{eq:space}).
 
-\begin{equation} \label{eq:compression1}
-  \frac{ \sum {sp(\psi,uncompressed)} - \sum{sp(\psi,heuristic)} }{ \sum {sp(\psi,uncompressed)} }
+\begin{equation} \label{eq:space}
+	1 - \sum_{b \in B(h)}{
+		\frac{
+			\sum_{\phi \in P(b)}{
+				s(\phi,h)
+			} * |b|
+		}{
+			\sum_{g\in H(b)}{
+				\sum_{\phi \in P(b)}{
+					s(\phi,g)
+				}
+			}
+		}
+	}
 \end{equation}
 
-\begin{equation} \label{eq:compression2}
-  \frac{\sum{\frac{ sp(\psi,uncompressed) - sp(\psi,heuristic) }{ sp(\psi,uncompressed) }}}{\text{\emph{total number of proofs}}}
-\end{equation}
+\begin{align*}
+	B(h) &\ldots \text{benchmarks, that h was tested on}\\
+	P(b) &\ldots \text{proofs in benchmark b}\\
+	H(b) &\ldots \text{heuristics tested on benchmark b}
+\end{align*}
 
-\subsection{Test set 1}
+\begin{table}
 
-The following heuristics were evaluated using this test set:
-\begin{description}
-  \item[Childen:] the Bottom-Up version of the Number of Children Heuristic, see \ref{sec:children}
-  \item[LastChild:] the Bottom-Up version of the Last Child Heuristic, see \ref{sec:lastchild}
-	\item[ChildenTD:] \emph{experiments on the Top-down version of the Number of Children Heuristic are still running}
-	\item[LastChildTD:] \emph{experiments on the Top-down version of the Last Child Heuristic are still running}
-\end{description}
+\begin{tabular}{l|c|c|c|c|c|c}
+\textbf{Heuristic} & \textbf{SMT1} & \textbf{SMT2} & \textbf{TRC1} & \textbf{TRC2} & \textbf{Performance in \%} & \textbf{Speed in nodes/ns}\\ 
+                   %&               &               &               &               & \textbf{Formula (\ref{eq:space}) in \%} & in \textbf{nodes/ns} \\
+\toprule
+Ch:BU & \checkmark & & \checkmark & \checkmark & 49,43 & 88,55 \\
+Ch:TD & \checkmark & & \checkmark & \checkmark & -47,80 & 0,30 \\
+Lc:BU & \checkmark & & \checkmark & \checkmark & 50,12 & 84,43 \\
+Lc:TD & \checkmark & & \checkmark & \checkmark & -61,12 & 1,87 \\
+Dist(1):BU & & \checkmark & & & 0,04 & 21,69 \\
+Dist(1):TD & & \checkmark & & & -51,34 & 0,42\\
+Dist(3):BU & & \checkmark & \checkmark & & 20,86 & 0,54\\
+Dist(3):TD & & \checkmark & \checkmark & & -112,85 & 0,08\\
+Dist(5):BU & & \checkmark & & & -9,49 & 0,0171 \\
+Dist(5):TD & & \checkmark & & & -60,56 & 0,0047 \\
+DC(Lc:BU,0.5,1,avg) & & \checkmark & \checkmark & & 27,36 & 47,70\\
+DC(Lc:BU,0.5,7,avg) & & \checkmark & \checkmark & & 27,54 & 14,01 \\
+DC(Lc:BU,3,1,avg) & & \checkmark & \checkmark & & 27,55 & 63,97\\
+DC(Lc:BU,3,7,avg) & & \checkmark & \checkmark & & 27,75 & 15,31 \\
+DC(Lc:BU,0.5,1,max) & & \checkmark & \checkmark & & 27,27 & 47,03 \\
+DC(Lc:BU,0.5,7,max) & & \checkmark & \checkmark & & 27,44 & 15,26 \\
+DC(Lc:BU,3,1,max) & & \checkmark & \checkmark & & 27,32 & 64,43 \\
+DC(Lc:BU,3,7,max) & & \checkmark & \checkmark & & 27,68 & 15,34 \\
+Lc:BU & & \checkmark & \checkmark & & 27,02 & \\
+\bottomrule
+\end{tabular}
+\caption{Experimental results}
+\label{tab:results}
+\end{table}
 
- \begin{table}[tb]
-   \caption{Total compression ratios}
-   \label{tab:average1}
-   \centering
-   \begin{tabular}{l|c|c}
-     \toprule
-     Heuristic &  (\ref{eq:compression1}) &  (\ref{eq:compression2})\\
-     \midrule
-     Children                &  -1 \%  &  0,27 \% \\
-     LastChild               &  0,7 \% & 7,8 \% \\
-     \bottomrule
-   \end{tabular}
- \end{table}
-
-The results suggest, that smaller proofs benefit more from the heuristics.
-This claim is supported by Figure \ref{fig:lastchild}, which compares the proof length in nodes to the achieved compression.
+Table \ref{tab:results} shows that the Bottom-Up heuristics constructs topological orders with much smaller space measures than their Top-Down pendants. 
+This fact is visualized in Figure \ref{fig:BUvsTD}.\\
+Furthermore the results are obtained faster with the Bottom-Up heuristics, as can be seen in the last column of Table \ref{tab:results}.\\
+The Distance Heuristic overall is the slowest heuristic of all, especially when the maximum radius is high.\\
+The Decay Heuristic did improve the results of the underlying heuristic by a little. To demonstrate this, the performance of Lc:BU limited to the benchmarks used for the Decay Pebblers is presented in the last row of the results table.\\
+By far best performances are achieved with the Bottom-Up versions of the Last Child and Number of Children heuristics.
 
 \begin{figure}[tb]
-	\includegraphics[scale=0.7]{Figures/LastChild.jpg}
-	\label{fig:lastchild}
-	\caption{Proof length compared to compression of Last Child Heuristic}
+	\centering
+	\includegraphics[scale=0.5]{Figures/TD_vs_BU-scatter.png}
+	\caption{Average space measures of Bottom-Up and Top-Down heuristics}
+	\label{fig:BUvsTD}
 \end{figure}
 
-\subsection{Test set 2}
-
-The following heuristics were evaluated using this test set:
-
-\begin{description}
-  \item[Childen:] the Bottom-Up version of the Number of Children Heuristic (\ref{sec:children})
-  \item[LastChild:] the Bottom-Up version of the Last Child Heuristic (\ref{sec:lastchild})
-	\item[ChildenTD:] the Top-down version of the Number of Children Heuristic
-  \item[LastChildTD:] the Top-down version of the Last Child Heuristic
-  %\item[Distance1:] the Top-down version of the Node Distance Heuristic with a maximum radius of 1 (\ref{sec:distance})
-	\item[Distance3:] the Bottom-Up version of the Node Distance Heuristic with a maximum radius of 3
-  \item[Distance3TD:] the Top-down version of the Node Distance Heuristic with a maximum radius of 3
-	%\item[Distance5:] the Top-down version of the Node Distance Heuristic with a maximum radius of 5
-	%\item[Distance1BU:] the Bottom-Up version of the Node Distance Heuristic with a maximum radius of 1
-  %\item[Distance5BU:] the Bottom-Up version of the Node Distance Heuristic with a maximum radius of 5
-	%\item[CDllmax:] the Decay Heuristic (\ref{sec:decay}) , using \textbf{Children} as underlying heuristic, with $\gamma = 0.5$, $d = 1$ and $com = max(\ldots)$
-	%\item[CDlhmax:] the Decay Heuristic, using \textbf{Children} as underlying heuristic, with $\gamma = 0.5$, $d = 7$ and $com = max(\ldots)$
-	%\item[CDhlmax:] the Decay Heuristic, using \textbf{Children} as underlying heuristic, with $\gamma = 3$, $d = 1$ and $com = max(\ldots)$
-	%\item[CDhhmax:] the Decay Heuristic, using \textbf{Children} as underlying heuristic, with $\gamma = 3$, $d = 7$ and $com = max(\ldots)$
-	%\item[CDllavg:] the Decay Heuristic, using \textbf{Children} as underlying heuristic, with $\gamma = 0.5$, $d = 1$ and $com = average(\ldots)$
-	%\item[CDlhavg:] the Decay Heuristic, using \textbf{Children} as underlying heuristic, with $\gamma = 0.5$, $d = 7$ and $com = average(\ldots)$
-	%\item[CDhlavg:] the Decay Heuristic, using \textbf{Children} as underlying heuristic, with $\gamma = 3$, $d = 1$ and $com = average(\ldots)$
-	%\item[CDhhavg:] the Decay Heuristic, using \textbf{Children} as underlying heuristic, with $\gamma = 3$, $d = 7$ and $com = average(\ldots)$
-	\item[LCllmax:] the Decay Heuristic, using \textbf{LastChild} as underlying heuristic, with $\gamma = 0.5$, $d = 1$ and $com = max(\ldots)$
-	%\item[LClhmax:] the Decay Heuristic, using \textbf{LastChild} as underlying heuristic, with $\gamma = 0.5$, $d = 7$ and $com = max(\ldots)$
-	%\item[LChlmax:] the Decay Heuristic, using \textbf{LastChild} as underlying heuristic, with $\gamma = 3$, $d = 1$ and $com = max(\ldots)$
-	\item[LChhmax:] the Decay Heuristic, using \textbf{LastChild} as underlying heuristic, with $\gamma = 3$, $d = 7$ and $com = max(\ldots)$
-	\item[LCllavg:] the Decay Heuristic, using \textbf{LastChild} as underlying heuristic, with $\gamma = 0.5$, $d = 1$ and $com = average(\ldots)$
-	%\item[LClhavg:] the Decay Heuristic, using \textbf{LastChild} as underlying heuristic, with $\gamma = 0.5$, $d = 7$ and $com = average(\ldots)$
-	%\item[LChlavg:] the Decay Heuristic, using \textbf{LastChild} as underlying heuristic, with $\gamma = 3$, $d = 1$ and $com = average(\ldots)$
-	\item[LChhavg:] the Decay Heuristic, using \textbf{LastChild} as underlying heuristic, with $\gamma = 3$, $d = 7$ and $com = average(\ldots)$
-\end{description}
-
-
- \begin{table}[tb]
-   \caption{Total compression ratios}
-   \label{tab:average1}
-   \centering
-   \begin{tabular}{l|c|c}
-     \toprule
-     Heuristic & Compression (\ref{eq:compression1}) & Compression (\ref{eq:compression2})\\
-     \midrule
-     Children                &  8,4 \%  &  8,9 \% \\
-     LastChild               &  25,1 \% & 36 \% \\
-		 ChildenTD               &  -15,8 \% & 0,7  \% \\
-		 LastChildTD             & -16,7 \% & 5,1 \% \\
-		 Distance3             & -0,7 \% & -3,2  \% \\
-		 Distance3TD              & -30,8 \% & -37,6  \% \\
-		 LCllmax                 & 25,4 \% & 36,6  \% \\
-		 LChhmax                 & 26,6 \% & 37,4 \% \\
-		 LCllavg                 & 25,5 \% & 36,7 \% \\ 
-		 LChhavg                 & 25,7 \% & 34,4 \% \\
-     \bottomrule
-   \end{tabular}
- \end{table}
-
-The results of this set imply, that Bottom-up heuristics produce significantly better topological orders than their Top-down pendants.
-Also just like \textbf{Test Set 1} the results presented in Table \ref{tab:average1} show that small proofs benefit more from the heuristics.
-
-\BWP{We could evaluate the effect of RPI and LUV on the space measure}.
-
-\BWP{We could iterate the last child heuristic a few times to see if we get better compression.}
 
 \section{Conclusions and Future Work}
 
@@ -880,8 +843,6 @@ Bruno
 
 \vspace{-10pt}
 \paragraph{Acknowledgments:}
-
-
 
 \bibliographystyle{splncs}
 \bibliography{biblio}
