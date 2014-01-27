@@ -821,6 +821,19 @@ The formula for calculating this performance measure is given in (\ref{eq:space}
       s(\psi,h(\psi))
     }{
       \frac{
+        \mathit{avg}_{g\in H(\psi)}{s(\psi,g(\psi))}
+      }{
+        |H(\psi)|
+      }
+    } \right)
+  }
+\end{equation}
+\begin{equation} \label{eq:space}
+  \mathit{performance}(h) = \frac{1}{|P(h)|} * \sum_{\psi \in P(h)}{\left( 1 -
+    \frac{
+      s(\psi,h(\psi))
+    }{
+      \frac{
         \mathit{max}_{g\in H(\psi)}{s(\psi,g(\psi))}
       }{
         |H(\psi)|
