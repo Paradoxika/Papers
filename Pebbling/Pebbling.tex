@@ -731,10 +731,10 @@ The resulting heuristic function $h: V \rightarrow H$ is defined with the help o
 All the pebbling algorithms and heuristics described in the previous sections have been implemented in the hybrid functional and object-oriented programming
 language Scala (\url{www.scala-lang.org}) as part of the \skeptik library for proof compression (\url{github.com/Paradoxika/Skeptik}) \cite{ToDo:SkeptikSystemDescription}.
 
-In order to evaluate the heuristics, experiments were run on four sets of proof benchmarks. Two of them contain proofs produced by the sat-solver \texttt{PicoSAT} \cite{Biere_picosatessentials} on unsatisfiable benchmarks from the SATLIB (\url{www.satlib.org/benchm.html}) library. These proofs are in the TraceCheck format for propositional resolution rules, which is one of the three formats accepted at the \emph{Certified Unsat} track of the SAT-Competition. 
+In order to evaluate the heuristics, experiments were run on four sets of proof benchmarks. Two of them contain proofs produced by the sat-solver \texttt{PicoSAT} \cite{Biere_picosatessentials} on unsatisfiable benchmarks from the SATLIB (\url{www.satlib.org/benchm.html}) library. The proofs (\url{www.logic.at/people/bruno/Experiments/2014/Pebbling/tc-proofs.zip}) are in the TraceCheck format for propositional resolution rules, which is one of the three formats accepted at the \emph{Certified Unsat} track of the SAT-Competition. 
 %Another format accepted at this track is the BDRUP format \cite{ToDo:AllenVanGelder,ToDo:MarijnHeule}, which naturally supports deletion information.
 The other two benchmark sets contain proofs produced by the SMT-solver {\veriT} (\url{www.verit-solver.org}) 
-on unsatisfiable problems from the SMT-Lib (\url{www.smtlib.org}). These proofs are in a proof format that resembles SMT-Lib's problem format.
+on unsatisfiable problems from the SMT-Lib (\url{www.smtlib.org}). These proofs (\url{www.logic.at/people/bruno/Experiments/2014/Pebbling/smt-proofs.zip}) are in a proof format that resembles SMT-Lib's problem format.
 The SMT proofs were translated into pure resolution proofs by considering every non-resolution inference as an axiom.
 %
 Statistics of the benchmarks are shown in Table \ref{tab:benchmarks}, where proof lengths are given in number of proof nodes.
@@ -756,7 +756,9 @@ Each algorithm was executed in a single core with 16 GB of memory
 in the Vienna Scientific Cluster VSC\nobreakdash-2 
 (\url{http://vsc.ac.at/}). This amount of memory has been useful to compress the biggest proofs (with more than $10^6$ nodes).
 
-The results of the experiments are shown in Table \ref{tab:results}.
+The results
+\footnote{Raw experimental data: \url{www.logic.at/people/bruno/Experiments/2014/Pebbling/data.zip}}
+of the experiments are shown in Table \ref{tab:results}.
 Every heuristic is compared to the others by relating its calculated space measures to the average space measures of all heuristics.
 The formula for calculating this performance measure is given in (\ref{eq:space}).
 
