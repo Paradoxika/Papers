@@ -580,7 +580,7 @@ As discussed in Example \ref{example:BUP}, Bottom-Up Pebbling is more immune to 
 \section{Heuristics}
 \label{sec:heuristics}
 
-Pebbling heuristics are a mappings $h$ from proofs to topological orders.
+A heuristic pebbling algorithm is a function $h$ from proofs to topological orders.
 The essential part of each heuristic is a mapping $o_h$ from nodes to a totally ordered set $S_h$.
 Both pebbling algorithms have to choose one node $\n$ out of a set $N$ at some point. This node is defined as found as follows: $\n = max_{n \in N} o_h(n)$.
 For Top-Down Pebbling, $N$ is the set of pebbleable nodes and for Bottom-Up Pebbling, $N$ is the set of premises of a node.
