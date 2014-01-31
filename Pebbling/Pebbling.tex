@@ -32,6 +32,7 @@
 \newcommand{\eqdef}{\mathrel{\mathop=}:}
 
 \newcommand{\nodedistance}{0.55cm}
+\newcommand{\nodedistanceThree}{0.6cm}
 \newcommand{\nodedistanceTwo}{1.2cm}
 
 \title{Greedy Pebbling: \\ 
@@ -470,13 +471,13 @@ However, the choice of where to go next is predefined by the gray nodes. Conside
 
 \begin{figure}
 	\makebox[\textwidth][c]{
-		\begin{minipage}{0.25\textwidth}
-			\begin{tikzpicture}[node distance=\nodedistance]
+		\begin{minipage}{0.4\textwidth}
+			\begin{tikzpicture}[node distance=\nodedistanceThree]
 				\proofnodeBW{root};
-				\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
-				\proofnodeBW[above right of = n7,xshift=\nodedistance]{n6};
+				\proofnodeBW[above left of = root,xshift=-\nodedistanceThree]{n7};
+				\proofnodeBW[above right of = n7,xshift=\nodedistanceThree]{n6};
 				\proofnodeBW[above left of = n7]{n3};
-				\proofnodeBW[above right of = root,xshift=\nodedistance]{n12};
+				\proofnodeBW[above right of = root,xshift=\nodedistanceThree]{n12};
 				\proofnodeBW[above right of = n12]{n10};
 				\withchildrenBW{n3}{n1}{n2};
 				\withchildrenBW{n6}{n4}{n5};
@@ -490,13 +491,13 @@ However, the choice of where to go next is predefined by the gray nodes. Conside
 				\waitingnode{root};
 			\end{tikzpicture}
 		\end{minipage}%
-		\begin{minipage}{0.25\textwidth}
-			\begin{tikzpicture}[node distance=\nodedistance]
+		\begin{minipage}{0.4\textwidth}
+			\begin{tikzpicture}[node distance=\nodedistanceThree]
 				\proofnodeBW{root};
-				\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
-				\proofnodeBW[above right of = n7,xshift=\nodedistance]{n6};
+				\proofnodeBW[above left of = root,xshift=-\nodedistanceThree]{n7};
+				\proofnodeBW[above right of = n7,xshift=\nodedistanceThree]{n6};
 				\proofnodeBW[above left of = n7]{n3};
-				\proofnodeBW[above right of = root,xshift=\nodedistance]{n12};
+				\proofnodeBW[above right of = root,xshift=\nodedistanceThree]{n12};
 				\proofnodeBW[above right of = n12]{n10};
 				\withchildrenBW{n3}{n1}{n2};
 				\withchildrenBW{n6}{n4}{n5};
@@ -514,13 +515,13 @@ However, the choice of where to go next is predefined by the gray nodes. Conside
 		\end{minipage}%
 		}
 		\makebox[\textwidth][c]{
-		\begin{minipage}{0.25\textwidth}
+		\begin{minipage}{0.4\textwidth}
 			\begin{tikzpicture}[node distance=\nodedistance]
 				\proofnodeBW{root};
-				\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
-				\proofnodeBW[above right of = n7,xshift=\nodedistance]{n6};
+				\proofnodeBW[above left of = root,xshift=-\nodedistanceThree]{n7};
+				\proofnodeBW[above right of = n7,xshift=\nodedistanceThree]{n6};
 				\proofnodeBW[above left of = n7]{n3};
-				\proofnodeBW[above right of = root,xshift=\nodedistance]{n12};
+				\proofnodeBW[above right of = root,xshift=\nodedistanceThree]{n12};
 				\proofnodeBW[above right of = n12]{n10};
 				\withchildrenBW{n3}{n1}{n2};
 				\withchildrenBW{n6}{n4}{n5};
@@ -538,12 +539,12 @@ However, the choice of where to go next is predefined by the gray nodes. Conside
 			\end{tikzpicture}
 			\end{minipage}%
 			\begin{minipage}{0.4\textwidth}
-			\begin{tikzpicture}[node distance=\nodedistance]
+			\begin{tikzpicture}[node distance=\nodedistanceThree]
 			\proofnodeBW{root};
-			\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
-			\proofnodeBW[above right of = n7,xshift=\nodedistance]{n6};
+			\proofnodeBW[above left of = root,xshift=-\nodedistanceThree]{n7};
+			\proofnodeBW[above right of = n7,xshift=\nodedistanceThree]{n6};
 			\proofnodeBW[above left of = n7]{n3};
-			\proofnodeBW[above right of = root,xshift=\nodedistance]{n12};
+			\proofnodeBW[above right of = root,xshift=\nodedistanceThree]{n12};
 			\proofnodeBW[above right of = n12]{n10};
 			\withchildrenBW{n3}{n1}{n2};
 			\withchildrenBW{n6}{n4}{n5};
