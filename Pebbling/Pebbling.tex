@@ -31,7 +31,7 @@
 \newcommand{\defeq}{\mathrel{\mathop:}=}
 \newcommand{\eqdef}{\mathrel{\mathop=}:}
 
-\newcommand{\nodedistance}{0.6cm}
+\newcommand{\nodedistance}{0.55cm}
 \newcommand{\nodedistanceTwo}{1.2cm}
 
 \title{Greedy Pebbling: \\ 
@@ -335,7 +335,7 @@ After pebbling `$7$' and `$8$', four pebbles are used, which is one more than wh
 
 \begin{figure}[h]
 	\makebox[\textwidth][c]{
-	\begin{minipage}{.4\textwidth}
+	\begin{minipage}{.33\textwidth}
 		\begin{tikzpicture}[node distance=\nodedistance]
 			\proofnodeBW{root};
 			\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
@@ -359,7 +359,7 @@ After pebbling `$7$' and `$8$', four pebbles are used, which is one more than wh
 			\node [yshift = 2mm] (cap7) at (n9.north) {\small{4?}};
 		\end{tikzpicture}
 	\end{minipage}%
-	\begin{minipage}{.4\textwidth}
+	\begin{minipage}{.33\textwidth}
 		\begin{tikzpicture}[node distance=\nodedistance]
 			\proofnodeBW{root};
 			\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
@@ -381,7 +381,7 @@ After pebbling `$7$' and `$8$', four pebbles are used, which is one more than wh
 			\node [yshift = 2mm] (cap8) at (n8.north) {\small{4}};
 		\end{tikzpicture}
 	\end{minipage}%
-	\begin{minipage}{.4\textwidth}
+	\begin{minipage}{.33\textwidth}
 	\begin{tikzpicture}[node distance=\nodedistance]
 			\proofnodeBW{root};
 			\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
@@ -470,7 +470,7 @@ However, the choice of where to go next is predefined by the gray nodes. Conside
 
 \begin{figure}
 	\makebox[\textwidth][c]{
-		\begin{minipage}{0.4\textwidth}
+		\begin{minipage}{0.25\textwidth}
 			\begin{tikzpicture}[node distance=\nodedistance]
 				\proofnodeBW{root};
 				\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
@@ -490,7 +490,7 @@ However, the choice of where to go next is predefined by the gray nodes. Conside
 				\waitingnode{root};
 			\end{tikzpicture}
 		\end{minipage}%
-		\begin{minipage}{0.4\textwidth}
+		\begin{minipage}{0.25\textwidth}
 			\begin{tikzpicture}[node distance=\nodedistance]
 				\proofnodeBW{root};
 				\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
@@ -514,7 +514,7 @@ However, the choice of where to go next is predefined by the gray nodes. Conside
 		\end{minipage}%
 		}
 		\makebox[\textwidth][c]{
-		\begin{minipage}{0.4\textwidth}
+		\begin{minipage}{0.25\textwidth}
 			\begin{tikzpicture}[node distance=\nodedistance]
 				\proofnodeBW{root};
 				\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
