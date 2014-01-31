@@ -326,6 +326,7 @@ When $N$ becomes empty, all nodes have been pebbled once and a topological order
 \end{algorithm}
 
 \begin{example}
+\label{example:topdown}
 It is easy to see how top-down pebbling may end up finding a sup-optimal pebbling strategy. Consider the graph shown in figure \ref{fig:TDP} and suppose that top-down pebbling has already pebbled the initial sequence of nodes $(1,2,3)$. 
 For a greedy heuristic that only has information about pebbled nodes, their premises and children, all nodes marked with `$4?$' are considered equally worthy to pebble next.
 Suppose the node marked with `$4$' in the middle graph is chosen and pebbled next.
@@ -581,26 +582,19 @@ As discussed in Example \ref{example:BUP}, Bottom-Up Pebbling is more immune to 
 \section{Heuristics}
 \label{sec:heuristics}
 
-Both pebbling algorithms described in the previous section have to choose a node $h(N)$ out of a set $N$ at some point, where $h$ is a \emph{heuristic} function. For Top-Down Pebbling, $N$ is the set of pebbleable nodes, and for Bottom-Up Pebbling, $N$ is the set of premises of a node. Every heuristic $h$ considered here uses an auxiliary \emph{node evaluation} function $o_h$ that maps nodes to elements of a totally ordered set $S_h$. The chosen node $h(N)$ is $\mathit{argmax}_{\n \in N} o_h(\n)$ (i.e. $h(N)$ is a node in $N$ such that for all nodes $\n$ in N, $o_h(h(N)) \geq o(\n)$).
+Both pebbling algorithms described in the previous section have to choose a node $h(N)$ out of a set $N$ at some point, where $h$ is a \emph{heuristic} function. For Top-Down Pebbling, $N$ is the set of pebbleable nodes, and for Bottom-Up Pebbling, $N$ is the set of premises of a node. Every heuristic $h$ considered here uses an auxiliary \emph{node evaluation} function $o_h$ that maps nodes to elements of a totally ordered set $S_h$. The chosen node $h(N)$ is then simply defined as $\mathit{argmax}_{\n \in N} o_h(\n)$ (i.e. $h(N)$ is a node in $N$ such that for all nodes $\n$ in N, $o_h(h(N)) \geq o(\n)$).
 
-
-This node is defined as follows $max_{n \in N} h(n)$, where $o_h$ is a heuristic function from nodes to a totally ordered set $S_h$.  A heuristic pebbling algorithm is a function $h$ from proofs to topological orders.
-The essential part of each heuristic is a mapping 
-
-In section \ref{sec:exp} heuristics have the suffix $:BU$ to denote its Bottom-Up and $:TD$ its Top-Down version.
-%\subsection{Left to Right}
-%A trivial heuristic for Pebbling is to always choose the leftmost available node.
 
 \subsection{Number of Children Heuristic (``$Ch$'')}
 \label{sec:children}
-This heuristic uses the number of children of a node $\n$: $c_h(\n) = |\Children{\n}{\psi}|$, $S_h = \mathbb{N}$ together with the natural smaller relation $<$.
-The intuitive motivation for this heuristic is that nodes with many children will require many pebbles. Example \ref{example:hardfirst} shows why it is a good idea to process hard subproofs first.
+This heuristic uses the number of children of a node $\n$: $o_h(\n) = |\Children{\n}{\psi}|$ and $S_h = \mathbb{N}$.
+The intuitive motivation for this heuristic is that nodes with many children will require many pebbles, and subproofs containing nodes with many children will tend to be more spacious. Example \ref{example:hardfirst} shows why it is a good idea to process spacious subproofs first.
 
 \begin{example}
-Figure \ref{example:hardfirst} shows a simple proof $\psi$ with two subproofs $\psi_1$ (``easy'') and $\psi_2$ (``hard''). As shown in the leftmost diagram, assume $\pspace{\psi_1}{<^1_T} = 4$ and $\pspace{\psi_1}{<^2_T} = 5$.
+Figure \ref{example:hardfirst} shows a simple proof $\psi$ with two subproofs $\psi_1$ (left branch) and $\psi_2$ (right branch). As shown in the leftmost diagram, assume $\pspace{\psi_1}{<^1_T} = 4$ and $\pspace{\psi_2}{<^2_T} = 5$.
 After pebbling one of the subproofs, the pebble on its root node has to be kept there until the root of the other subproof is also pebbled. Only then $\raiz{\psi}$ can be pebbled. Therefore, $\pspace{\psi}{<_T} = \pspace{\psi_j}{<^j_T} + 1$ where $<_T = <^i_T ::: <^j_T$ and $i$ and $j$ are the indexes of the subproofs pebbled, respectively first and last. 
-Choosing to pebble the easy subproof first results in $\pspace{\psi}{<_T} = 6$, while pebbling the hard one first gives $\pspace{\psi}{<_T} = 5$.
-This is a simplified situation with two subproofs that are independent in the sense that pebbling one of them does not influence the pebble number of the other, which is not true if they share nodes.
+Choosing to pebble the least spacious subproof $\psi_1$ first results in $\pspace{\psi}{<_T} = 6$, while pebbling the most spacious one first gives $\pspace{\psi}{<_T} = 5$.
+This is a simplified situation. The two subproofs do not share nodes. Pebbling one of them does not influence the pebble number of the other.
 
 \begin{figure}[h]
 	\usetikzlibrary{shapes.geometric}
@@ -660,12 +654,12 @@ This is a simplified situation with two subproofs that are independent in the se
 \subsection{Last Child Heuristic (``$LC$'')}
 \label{sec:lastchild}
 
-As discussed in Section \ref{sec:pebblingchecking} in the proof of Theorem \ref{theorem:canonical}, the best moment to unpebble a node $\n$ is as soon as all its last child w.r.t. a topological order $<_T$ is pebbled. 
+As discussed in Section \ref{sec:pebblingchecking} in the proof of Theorem \ref{theorem:canonical}, the best moment to unpebble a node $\n$ is as soon as its last child w.r.t. a topological order $<_T$ is pebbled. 
 This insight can be used for a heuristic that prefers nodes that are last children of other nodes. Pebbling a node that allows another one to be unpebbled is always a good move. 
 The current number of used pebbles (after pebbling the node and unpebbling one of its premises) does not increase; 
 it might even decrease, if more than one premise can be unpebbled.
 For determining the number of premises of which a node is the last child, the proof has to be traversed once, using some topological order $<_T$.
-Before the traversal, $o_h(\n)$ is set to 0 for every node $\n$. During the traversal $o_h(\n)$ is increased by 1, if $\n$ is the last child of the current node w.r.t. $<_T$. For this heuristic $S = \mathbb{N}$ together with the natural smaller relation $<$.
+Before the traversal, $o_h(\n)$ is set to 0 for every node $\n$. During the traversal $o_h(\n)$ is increased by 1, if $\n$ is the last child of the current node w.r.t. $<_T$. For this heuristic $S_h = \mathbb{N}$.
 To some extent, this heuristic is paradoxical: $\n$ may be the last child of a node $\n'$ according to $<_T$, but pebbling it early may result in another topological order $<^*_T$ according to which $\n$ is not the last child of $\n'$.
 Nevertheless, sometimes the proof structure ensures that some nodes are the last child of another node irrespective of the topological order. An example is shown in figure \ref{fig:forcedLC}, where the dashed line denotes a recursive predecessor relationship and the bottommost node is the last child of the top right node in every topological order.
 
@@ -696,7 +690,7 @@ Nevertheless, sometimes the proof structure ensures that some nodes are the last
 \subsection{Node Distance Heuristic (``$Dist(r)$'')}
 \label{sec:distance}
 
-In Example \ref{ToDo} and Section \ref{sec:TDvsBU} it has been noted that Top-Down Pebbling may perform badly if nodes that are far apart are selected. The Node Distance Heuristic prefers to pebble nodes that are close to pebbled nodes. It does this by calculating spheres with a radius up to the parameter $r$ around nodes.
+In Example \ref{example:topdown} and Section \ref{sec:TDvsBU} it has been noted that Top-Down Pebbling may perform badly if nodes that are far apart are selected. The Node Distance Heuristic prefers to pebble nodes that are close to pebbled nodes. It does this by calculating spheres with a radius up to the parameter $r$ around nodes.
 A sphere $K_r^{G}(\n)$ with radius $r$ around the node $\n$ in the graph $G = (V,E)$ is the set $\{p \in V \mid \text{ there are at most } r \text{ edges between } p \text{ and } \n\}$. The direction of edges is not considered. The heuristic uses the following functions based on the spheres:
 \begin{align*}
 d(\n) &\defeq -min\{r \mid K_r^{G}(\n)\text{ contains a pebbled node}\}\\
@@ -705,20 +699,20 @@ d(\n) &\defeq -min\{r \mid K_r^{G}(\n)\text{ contains a pebbled node}\}\\
 	o_h(\n) &\defeq (d(\n),s(\n),l(\n))
 \end{align*}
 where $<_N$ denotes the total order on the initial sequence of pebbled nodes $N$, i.e. nodes in spheres that were pebbled later are preferred.
-So $S = \mathbb{Z} \times \mathbb{N} \times P$ together with the lexicographic order using, respectively, the natural smaller relation $<$ on $\mathbb{Z}$ and $\mathbb{N}$ and $<_N$ on $N$. The spheres $K_r(\n)$ can grow exponentially in $r$. Therefore the maximum radius has to be limited and if no pebbled node is found within this radius, another heuristic has to be used.
+So $S_h = \mathbb{Z} \times \mathbb{N} \times P$ together with the lexicographic order using, respectively, the natural smaller relation $<$ on $\mathbb{Z}$ and $\mathbb{N}$ and $<_N$ on $N$. The spheres $K_r(\n)$ can grow exponentially in $r$. Therefore the maximum radius has to be limited and if no pebbled node is found within this radius, another heuristic has to be used.
 
 
 \subsection{Decay Heuristics (``$Dc(o_u,\gamma,d,com)$'') }
 \label{sec:decay}
 Decay Heuristics denote a family of meta heuristics. 
 The idea is to not only use the measure of a single node, but also to include the measures of its premises.
-Such a heuristic has four parameters: a defining heuristic mapping $o_u: V \rightarrow H$, a decay factor $\gamma \in \mathbb{R}^+ \cup \{0\}$, a recursion depth $d \in \mathbb{N}$ and a family of combining functions $com: S^n \rightarrow S$ for $n \in \mathbb{N}$.\\
-The resulting heuristic function $o_h: V \rightarrow S$ is defined with the help of the recusive function $rec: (V \times \mathbb{N}) \rightarrow S$:
+Such a heuristic has four parameters: an underlying mapping $o_u: V \rightarrow S_u$, a decay factor $\gamma \in \mathbb{R}^+ \cup \{0\}$, a recursion depth $d \in \mathbb{N}$ and a combining function $com: S_u^n \rightarrow S_u$ for $n \in \mathbb{N}$.\\
+The resulting heuristic node evaluation function $o_h: V \rightarrow S_u$ is defined with the help of the recursive function $rec: (V \times \mathbb{N}) \rightarrow S_u$:
 \begin{align*}
 	rec(\n,0) &\defeq o_u(\n) \\
 	rec(\n,k) &\defeq o_u(\n) + com(rec(p_1,k-1),\ldots,rec(p_n,k-1)) * \gamma\\
 	& \text{ where } \Premises{\n}{\psi} = \{p_1,\ldots,p_n\}\\
-	& \text{ and } k \in \{1,\ldots,d\} \\
+	% & \text{ and } k \in \{1,\ldots,d\} \\
 	%rec(\n,k) &\defeq com(h_u(\n), rec(p_1,k-1)*\gamma,\ldots,rec(p_{n-1},k-1) * \gamma)\\ %might be better - I will try this in the experiments
 	o_h(\n) &\defeq rec(\n,d) &
 \end{align*}
@@ -727,16 +721,13 @@ The resulting heuristic function $o_h: V \rightarrow S$ is defined with the help
 \section{Experiments} 
 \label{sec:exp}
 
+
 All the pebbling algorithms and heuristics described in the previous sections have been implemented in the hybrid functional and object-oriented programming
-language Scala (\url{www.scala-lang.org}) as part of the \skeptik library for proof compression (\url{github.com/Paradoxika/Skeptik}) \cite{Skeptik}.\\
-\BWP{Is the System description already citeable?}
-In order to evaluate them, experiments were run on four sets of proof benchmarks. Two of them contain proofs produced by the sat-solver \texttt{PicoSAT} \cite{Biere_picosatessentials} on unsatisfiable benchmarks from the SATLIB (\url{www.satlib.org/benchm.html}) library. The proofs (\url{www.logic.at/people/bruno/Experiments/2014/Pebbling/tc-proofs.zip}) are in the TraceCheck format, which is one of the three formats accepted at the \emph{Certified Unsat} track of the SAT-Competition.\\
-%Another format accepted at this track is the BDRUP format \cite{ToDo:AllenVanGelder,ToDo:MarijnHeule}, which naturally supports deletion information.
-The other two benchmarks contain proofs produced by the SMT-solver {\veriT} (\url{www.verit-solver.org}) 
-on unsatisfiable problems from the SMT-Lib (\url{www.smtlib.org}). These proofs (\url{www.logic.at/people/bruno/Experiments/2014/Pebbling/smt-proofs.zip}) are in a proof format that resembles SMT-Lib's problem format.
-The SMT proofs were translated into pure resolution proofs by considering every non-resolution inference as an axiom.\\
-%
-The sizes of the benchmarks are shown in Table \ref{tab:benchmarks}, where proof lengths are given in number of proof nodes.
+language Scala (\url{www.scala-lang.org}) as part of the \skeptik library for proof compression (\url{github.com/Paradoxika/Skeptik}) \cite{Skeptik}.
+In order to evaluate them, experiments were executed\footnote{The Vienna Scientific Cluster VSC\nobreakdash-2 
+(\url{http://vsc.ac.at/}) was used.} on four disjoint sets of proof benchmarks (Table \ref{tab:benchmarks}). Two of them contain proofs produced by the sat-solver \texttt{PicoSAT} \cite{Biere_picosatessentials} on unsatisfiable benchmarks from the SATLIB (\url{www.satlib.org/benchm.html}) library. The proofs\footnote{sat proofs: \url{www.logic.at/people/bruno/Experiments/2014/Pebbling/tc-proofs.zip}} are in the TraceCheck format, which is one of the three formats accepted at the \emph{Certified Unsat} track of the SAT-Competition.
+The other two benchmark sets contain proofs produced by the SMT-solver {\veriT} (\url{www.verit-solver.org}) 
+on unsatisfiable problems from the SMT-Lib (\url{www.smtlib.org}). These proofs\footnote{smt proofs: \url{www.logic.at/people/bruno/Experiments/2014/Pebbling/smt-proofs.zip}} are in a proof format that resembles SMT-Lib's problem format and they were translated into pure resolution proofs by considering every non-resolution inference as an axiom.
 
 \begin{table}[tb]
 	\centering
@@ -747,43 +738,40 @@ The sizes of the benchmarks are shown in Table \ref{tab:benchmarks}, where proof
     SMT1 & 4187 & 2241042 & 103162 \\ \hline
     SMT2 & 914  & 120075  & 5391  \\     
 	\end{tabular}
-	\caption{Proof benchmarks and statistics}
+	\caption{Proof benchmark sets}
 	\label{tab:benchmarks}
 \end{table}
 
-Each algorithm was executed in a single core with 16 GB of memory 
-in the Vienna Scientific Cluster VSC\nobreakdash-2 
-(\url{http://vsc.ac.at/}). This amount of memory has been useful to process the biggest proofs (with more than $10^6$ nodes).
-
-
-The results\footnote{Raw experimental data: \url{www.logic.at/people/bruno/Experiments/2014/Pebbling/data.zip}} of the experiments are shown in Table \ref{tab:results}. In this table, the columns \textbf{SMT1}, \textbf{SMT2}, \textbf{TRC1} and \textbf{TRC2} denote the performance in percentage of the heuristics, calculated according to Formula (\ref{eq:space}), in percentage. This formula relates the space measures produced by each heuristic relatively to the performances of all heuristics on the respective benchmark. Intuitively this measure expresses how much better the result of heuristic was than the average. An empty field means that the heuristic was not tested on this benchmark.\\
-The last column \textbf{speed} shows how many nodes were processed per millisecond on average with the respective heuristic.
+Table \ref{tab:results} shows a summary\footnote{Raw data: \url{www.logic.at/people/bruno/Experiments/2014/Pebbling/data.zip}} of the performance of various pebbling algorithms on each benchmark set. The names of the algorithms indicate the pebbling method (Top-Down (TD) or Bottom-Up (BU)) and heuristic used.
+The \emph{relative performance}, calculated according to Formula (\ref{eq:space}), compares the space measure obtained by an algorithm with the average of the space measures obtained by all other algorithms on the same benchmark set. An empty field means that algorithm was not tested on that benchmark set. The last column shows the traversal speed of the algorithm on all proofs of all benchmark sets on which it was tested.
 %Every heuristic is compared to the others by relating its calculated space measures to the average space measures of all heuristics.
 %The formula for calculating this performance measure is given in (\ref{eq:space}).
 
 \begin{equation} \label{eq:space}
-  \mathit{performance}(h) = \frac{1}{|P(h)|} * \sum_{\psi \in P(h)}{\left( 1 -
+  \mathit{performance}(f) = \frac{1}{|P(f)|} * \sum_{\psi \in P(f)}{\left( 1 -
     \frac{
-      s(\psi,h(\psi))
+      s(\psi,f(\psi))
     }{
         \mathit{avg}_{g\in H(\psi)}{s(\psi,g(\psi))}
     } \right)
   }
 \end{equation}
-
-\begin{align*}
-  P(h) &\ldots \text{proofs on which heuristic} \ h \ \text{was tested}\\
-	H(\psi) &\ldots \text{heuristics tested} \ \psi \\
-	avg & \ldots \text{arithmetic mean value}
-\end{align*}
-\BWP{Dc pebblers use the max function, should this be explained further?}
-\BWP{Ch:BU has a bad performance in SMT2, because it produces bad results on some small proofs. The node - weighted performance is 8.4\%}
+where:
+\begin{itemize}
+  \item $P(f)$ is the set of proofs on which $f$ was tested.
+	\item $H(\psi)$ is the set of algorithms tested on $\psi$.
+	\item $\mathit{avg}$ is the \text{arithmetic mean function}.
+\end{itemize}
+%\BWP{Dc pebblers use the max function, should this be explained further?}
+%\BWP{Ch:BU has a bad performance in SMT2, because it produces bad results on some small proofs. The node - weighted performance is 8.4\%}
 \begin{table}
 \centering
 \setlength{\tabcolsep}{8pt}
-\begin{tabular}{l|c|c|c|c|c|c}
-\textbf{Heuristic} & \textbf{SMT1} & \textbf{SMT2} & \textbf{TRC1} & \textbf{TRC2} & \textbf{Speed}\\ 
-\toprule
+\begin{tabular}{|l|c|c|c|c|c|c}
+\hline
+\textbf{Algorithm} & \multicolumn{4}{c|}{\textbf{Relative Performance} (\%)} & \textbf{Speed}\\ 
+Heuristic:Method & \textbf{SMT1} & \textbf{SMT2} & \textbf{TRC1} & \textbf{TRC2} & (nodes/ms)\\ 
+\hline\hline
 Ch:BU & 19,53 & -15,79 & 20,48 & 88,57 & 88,55 \\ \hline
 Ch:TD & -22,07 & 8,29 & -48,33 & -67,12 & 0,30 \\ \hline
 LC:BU & 23,42 & 36,69 & 21,47 & 88,55 & 84,43 \\ \hline
@@ -792,14 +780,14 @@ Dist(1):BU & & -15,72 & 19,74 & & 21,23 \\ \hline
 Dist(1):TD & & -67,52 & -71,21 & & 0,63 \\ \hline
 Dist(3):BU & & -50,27 & 19,95 & & 0,54\\ \hline
 Dist(3):TD & & -74,90 & -74,09 & & 0,08\\ \hline
-Dc(LC:BU,0.5,1,avg) & & 37,39 & 21,83 &  & 47,70\\ \hline
-Dc(LC:BU,0.5,7,avg) & & 37,78 & 22,05 &  & 14,01 \\ \hline
-Dc(LC:BU,3,1,avg) & & 36,86 & 22,02 &  & 63,97\\ \hline
-Dc(LC:BU,3,7,avg) & & 34,69 & 22,55 &  & 15,31 \\ \hline
-Dc(LC:BU,0.5,1,max) & & 37,31 & 21,76 &  & 47,03 \\ \hline
-Dc(LC:BU,0.5,7,max) & & 37,89 & 21,94 &  & 15,26 \\ \hline
-Dc(LC:BU,3,1,max) & & 37,33 & 21,79 &  & 64,43 \\ \hline
-Dc(LC:BU,3,7,max) & & 37,96 & 22,13 & & 15,34 \\
+Dc(LC,0.5,1,avg):BU & & 37,39 & 21,83 &  & 47,70\\ \hline
+Dc(LC,0.5,7,avg):BU & & 37,78 & 22,05 &  & 14,01 \\ \hline
+Dc(LC,3,1,avg):BU & & 36,86 & 22,02 &  & 63,97\\ \hline
+Dc(LC,3,7,avg):BU & & 34,69 & 22,55 &  & 15,31 \\ \hline
+Dc(LC,0.5,1,max):BU & & 37,31 & 21,76 &  & 47,03 \\ \hline
+Dc(LC,0.5,7,max):BU & & 37,89 & 21,94 &  & 15,26 \\ \hline
+Dc(LC,3,1,max):BU & & 37,33 & 21,79 &  & 64,43 \\ \hline
+Dc(LC,3,7,max):BU & & 37,96 & 22,13 & & 15,34 \\
 \bottomrule
 \end{tabular}
 \caption{Experimental results}
@@ -808,15 +796,13 @@ Dc(LC:BU,3,7,max) & & 37,96 & 22,13 & & 15,34 \\
 
 
 \noindent
-Table \ref{tab:results} shows that the Bottom-Up heuristics constructs topological orders with much smaller space measures than their Top-Down counterparts. This fact is visualized in Figure \ref{fig:BUvsTD}, where each dot represents a proof whose x/y-coordinates are the best results of all Top-Down/Bottom-Up heurstics on that proof.
+Table \ref{tab:results} shows that Bottom-Up algorithms construct topological orders with much smaller space measures than Top-Down algorithms. This fact is visualized in Figure \ref{fig:BUvsTD}, where each dot represents a proof $\psi$ and the $x$ and $y$ coordinates show the space of $\psi$ with the topological orders found by, respectively, the best Top-Down and Bottom-Up algorithms for $\psi$. Some other heuristics (not described in this paper) aimed at improving Top-Down Pebbling were tested on small sets, but none showed promising results.
 
-Furthermore the results are obtained faster with the Bottom-Up heuristics, as can be seen in the last column of Table \ref{tab:results}.
-One reason for this surely are the different amount of comparisons required for every decision. The size of the decision set $N$ described in Section \ref{sec:heuristics} for Top-Down pebbling is the set of currently pebbleable nodes and $|N| \in \Omega(n)$ where $n$ is the proof size (e.g. for a perfect binary tree with $2n -1$ nodes initially $|N| = n$). For Bottom-Up heuristics $N$ is the number of premises of a node and usually $|N| \in O(1)$ (e.g. for a tree-like proof $N = 2$ always). 
-\BWP{You are right with your conjecture. Even though I don't think so, I hope the speed difference does not also come from bad implementation. For distance I fear this could partially be the case. $|N| \in O(1)$ might not always be true and I don't have experimental data to back this up. However $|N| \in O(n)$ seems very unlikely for BUP.}
+Furthermore, Bottom-Up algorithms are also much faster, as can be seen in the last column of Table \ref{tab:results}. This is so because they require fewer comparisons in their heuristic choices. For Bottom-Up algorithms, the set $N$ of possible choices consists of the premises of a single node only, and usually $|N| \in O(1)$ (e.g. for a binary resolution proof, $N \leq 2$ always). On the other hand, the set $N$ of currently pebbleable nodes, from which Top-Down algorithms must choose, is large (e.g. for a perfect binary tree with $2n -1$ nodes, initially $|N| = n$). For some heuristics, Top-Down algorithms could be made more efficient by using, instead of a set, an ordered sequence of pebbleable nodes together with their memorized heuristic evaluations.
 
-The Distance Heuristic overall is the slowest heuristic, and it gets even slower much slower the bigger the maximum radius gets. Some experiments on the Distance Heuristics with radius 5 were done, but they were not included in this paper, because of the poor amount of proofs where it finished computing. Some other heuristics aimed at improving Top-Down Pebbling were tested on small sets, but none showed promising results.
+Using the Distance Heuristic has a severe impact on the speed, which decreases rapidly as the maximum radius increases. With a radius equal to 5, only a few small proofs were processed in a reasonable amount of time.
 
-The Decay Heuristic improves the results of the underlying heuristic, which shows that it is a promising idea to improve results of any heuristic. Note that because of the relative nature of the performance measure used and the poor performance of the Top-Down heuristics, small performance differences can still be significant.
+As expected, the Decay Heuristic does improve the results of the underlying heuristic. Note that because of the relative nature of the performance measure used and the poor performance of the Top-Down heuristics, small performance differences can still be significant. Nevertheless, the performance improvement comes at a high cost in speed.
 
 By far best performances are achieved with the Bottom-Up versions of the Last Child and Number of Children heuristics.
 
