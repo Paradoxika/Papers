@@ -580,17 +580,19 @@ As discussed in Example \ref{example:BUP}, Bottom-Up Pebbling is more immune to 
 \section{Heuristics}
 \label{sec:heuristics}
 
-A heuristic pebbling algorithm is a function $h$ from proofs to topological orders.
-The essential part of each heuristic is a mapping $o_h$ from nodes to a totally ordered set $S_h$.
-Both pebbling algorithms have to choose one node $\n$ out of a set $N$ at some point. This node is defined as found as follows: $\n = max_{n \in N} o_h(n)$.
-For Top-Down Pebbling, $N$ is the set of pebbleable nodes and for Bottom-Up Pebbling, $N$ is the set of premises of a node.
+Both pebbling algorithms described in the previous section have to choose a node $h(N)$ out of a set $N$ at some point, where $h$ is a \emph{heuristic} function. For Top-Down Pebbling, $N$ is the set of pebbleable nodes, and for Bottom-Up Pebbling, $N$ is the set of premises of a node. Every heuristic $h$ considered here uses an auxiliary \emph{node evaluation} function $o_h$ that maps nodes to elements of a totally ordered set $S_h$. The chosen node $h(N)$ is $\mathit{argmax}_{\n \in N} o_h(\n)$ (i.e. $h(N)$ is a node in $N$ such that for all nodes $\n$ in N, $o_h(h(N)) \geq o(\n)$).
+
+
+This node is defined as follows $max_{n \in N} h(n)$, where $o_h$ is a heuristic function from nodes to a totally ordered set $S_h$.  A heuristic pebbling algorithm is a function $h$ from proofs to topological orders.
+The essential part of each heuristic is a mapping 
+
 In section \ref{sec:exp} heuristics have the suffix $:BU$ to denote its Bottom-Up and $:TD$ its Top-Down version.
 %\subsection{Left to Right}
 %A trivial heuristic for Pebbling is to always choose the leftmost available node.
 
 \subsection{Number of Children Heuristic (``$Ch$'')}
 \label{sec:children}
-This heuristic uses the number of children of a node $\n$: $o_h(\n) = |\Children{\n}{\psi}|$, $S = \mathbb{N}$ together with the natural smaller relation $<$.
+This heuristic uses the number of children of a node $\n$: $c_h(\n) = |\Children{\n}{\psi}|$, $S_h = \mathbb{N}$ together with the natural smaller relation $<$.
 The intuitive motivation for this heuristic is that nodes with many children will require many pebbles. Example \ref{example:hardfirst} shows why it is a good idea to process hard subproofs first.
 
 \begin{example}
