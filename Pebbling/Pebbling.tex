@@ -140,8 +140,8 @@ subproofs} of $\psi$ and $\psi$ is a \emph{child} of $\varphi_L$ and $\varphi_R$
 transitive closure of the direct subproof relation is the \emph{subproof} relation. A subproof which
 has no direct subproof is an \emph{axiom} of the proof. 
 %
-$\Vertices{\psi}$, $\Edges{\psi}$, $\Axioms{\psi}$ and $\Conclusion{\psi}$
-denote, respectively, the nodes, edges, axioms and proved clause (conclusion) of $\psi$. $\Premises{\n}{\psi}$ denotes the premises and $\Children{\n}{\psi}$ the children of a node $\n$ in a proof $\psi$. When a proof is represented graphically, the root is drawn at the bottom and the axioms at the top. The \emph{length} of a proof $\psi$ is the number of nodes in $\Vertices{\psi}$ and is denoted $\plength{\psi}$.
+$\Vertices{\psi}$ and $\Axioms{\psi}$
+denote, respectively, the nodes and axioms of $\psi$. $\Premises{\n}{\psi}$ denotes the premises and $\Children{\n}{\psi}$ the children of a node $\n$ in a proof $\psi$. When a proof is represented graphically, the root is drawn at the bottom and the axioms at the top. The \emph{length} of a proof $\psi$ is the number of nodes in $\Vertices{\psi}$ and is denoted $\plength{\psi}$.
 
 
 \section{Pebbling Game}
@@ -327,7 +327,7 @@ When $N$ becomes empty, all nodes have been pebbled once and a topological order
 
 \begin{example}
 \label{example:topdown}
-It is easy to see how top-down pebbling may end up finding a sup-optimal pebbling strategy. Consider the graph shown in figure \ref{fig:TDP} and suppose that top-down pebbling has already pebbled the initial sequence of nodes $(1,2,3)$. 
+It is easy to see how Top-Down Pebbling may end up finding a sup-optimal pebbling strategy. Consider the graph shown in figure \ref{fig:TDP} and suppose that top-down pebbling has already pebbled the initial sequence of nodes $(1,2,3)$. 
 For a greedy heuristic that only has information about pebbled nodes, their premises and children, all nodes marked with `$4?$' are considered equally worthy to pebble next.
 Suppose the node marked with `$4$' in the middle graph is chosen and pebbled next.
 Subsequently, pebbling `$5$' opens up the possibility to remove a pebble in the next move, which is done by pebbling `$6$'.
@@ -466,9 +466,9 @@ Since all proof nodes are ancestors of the root, the recursive calls will eventu
 
 %\newcommand{\nodedistance2}{0.6cm}
 \begin{example}
-Figure \ref{fig:BUP} shows part of an execution of \algo{Bottom-Up} Pebbling on the same graph of Figure \ref{fig:TDP}.
-Nodes chosen by the heuristic, during the bottom-up traversal, to be processed before the respective other premise are marked in gray. Similarly to the Top-down Pebbling scenario, nodes have been chosen in such a way that the initial pebbling sequence is $(1,2,3)$.
-However, the choice of where to go next is predefined by the gray nodes. Consider the gray child of node `$3$'. Since `$3$' has been completely processed and pebbled, the other premise of its gray child is visited next. The result is that node `$7$' is pebbled earlier and at no point more than 3 pebbles will be used for pebbling the root node. This is so independently of the heuristic choices.
+Figure \ref{fig:BUP} shows part of an execution of \algo{Bottom-Up} Pebbling on the graph presented in Figure \ref{fig:TDP}.
+Nodes chosen by the heuristic, during the bottom-up traversal, to be processed before the respective other premise are marked dashed. Similarly to the Top-down Pebbling scenario, nodes have been chosen in such a way that the initial pebbling sequence is $(1,2,3)$.
+However, the choice of where to go next is predefined by the dashed nodes. Consider the dashed child of node `$3$'. Since `$3$' has been completely processed and pebbled, the other premise of its dashed child is visited next. The result is that node `$7$' is pebbled earlier and at no point more than 3 pebbles will be used for pebbling the root node. This is so independently of the heuristic choices.
 
 \begin{figure}
 	\makebox[\textwidth][c]{
@@ -554,6 +554,7 @@ However, the choice of where to go next is predefined by the gray nodes. Conside
 			\drawchildren{n7}{n3}{n6};
 			\drawchildren{n12}{n6}{n10};
 			\blacknode{n7};
+			\blacknode{n6};
 			\waitingnode{root};
 			\node [yshift = 2mm] (cap1) at (n1.north) {\small{1}};
 			\node [yshift = 2mm] (cap2) at (n2.north) {\small{2}};
@@ -582,12 +583,11 @@ As discussed in Example \ref{example:BUP}, \algo{Bottom-Up} Pebbling is more imm
 \section{Heuristics}
 \label{sec:heuristics}
 
-Both pebbling algorithms described in the previous section have to choose a node $h(N)$ out of a set $N$ at some point, where $h$ is a \emph{heuristic} function. For \algo{Top-Down} Pebbling, $N$ is the set of pebbleable nodes, and for \algo{Bottom-Up} Pebbling, $N$ is the set of premises of a node. Every heuristic $h$ considered here uses an auxiliary \emph{node evaluation} function $o_h$ that maps nodes to elements of a totally ordered set $S_h$. The chosen node $h(N)$ is then simply defined as $\mathit{argmax}_{\n \in N} o_h(\n)$ (i.e. $h(N)$ is a node in $N$ such that for all nodes $\n$ in N, $o_h(h(N)) \geq o(\n)$).
-
+Both pebbling algorithms described in the previous section have to choose a node $h(N)$ out of a set $N$ at some point, where $h$ is a \emph{heuristic} function. For \algo{Top-Down} Pebbling, $N$ is the set of pebbleable nodes, and for \algo{Bottom-Up} Pebbling, $N$ is the set of premises of a node. Every heuristic $h$ considered here uses an auxiliary \emph{node evaluation} function $e_h$ that maps nodes to elements of a totally ordered set $S_h$. The chosen node $h(N)$ is then simply defined as $\mathit{argmax}_{\n \in N} e_h(\n)$ (i.e. $h(N)$ is a node in $N$ such that for all nodes $\n$ in N, $e_h(h(N)) \geq e_h(\n)$).
 
 \subsection{Number of Children Heuristic (``$Ch$'')}
 \label{sec:children}
-This heuristic uses the number of children of a node $\n$: $o_h(\n) = |\Children{\n}{\psi}|$ and $S_h = \mathbb{N}$.
+This heuristic uses the number of children of a node $\n$: $e_h(\n) = |\Children{\n}{\psi}|$ and $S_h = \mathbb{N}$.
 The intuitive motivation for this heuristic is that nodes with many children will require many pebbles, and subproofs containing nodes with many children will tend to be more spacious. Example \ref{example:hardfirst} shows why it is a good idea to process spacious subproofs first.
 
 \begin{example}
@@ -659,7 +659,7 @@ This insight can be used for a heuristic that prefers nodes that are last childr
 The current number of used pebbles (after pebbling the node and unpebbling one of its premises) does not increase; 
 it might even decrease, if more than one premise can be unpebbled.
 For determining the number of premises of which a node is the last child, the proof has to be traversed once, using some topological order $<_T$.
-Before the traversal, $o_h(\n)$ is set to 0 for every node $\n$. During the traversal $o_h(\n)$ is increased by 1, if $\n$ is the last child of the current node w.r.t. $<_T$. For this heuristic $S_h = \mathbb{N}$.
+Before the traversal, $e_h(\n)$ is set to 0 for every node $\n$. During the traversal $e_h(\n)$ is increased by 1, if $\n$ is the last child of the currently processed node w.r.t. $<_T$. For this heuristic $S_h = \mathbb{N}$.
 To some extent, this heuristic is paradoxical: $\n$ may be the last child of a node $\n'$ according to $<_T$, but pebbling it early may result in another topological order $<^*_T$ according to which $\n$ is not the last child of $\n'$.
 Nevertheless, sometimes the proof structure ensures that some nodes are the last child of another node irrespective of the topological order. An example is shown in figure \ref{fig:forcedLC}, where the dashed line denotes a recursive predecessor relationship and the bottommost node is the last child of the top right node in every topological order.
 
@@ -696,25 +696,25 @@ A sphere $K_r^{G}(\n)$ with radius $r$ around the node $\n$ in the graph $G = (V
 d(\n) &\defeq -min\{r \mid K_r^{G}(\n)\text{ contains a pebbled node}\}\\
 	s(\n) &\defeq |K_{-d(\n)}^G|\\
 	l(\n) &\defeq max_{<_N}K_{-d(\n)}^G\\
-	o_h(\n) &\defeq (d(\n),s(\n),l(\n))
+	e_h(\n) &\defeq (d(\n),s(\n),l(\n))
 \end{align*}
 where $<_N$ denotes the total order on the initial sequence of pebbled nodes $N$, i.e. nodes in spheres that were pebbled later are preferred.
-So $S_h = \mathbb{Z} \times \mathbb{N} \times P$ together with the lexicographic order using, respectively, the natural smaller relation $<$ on $\mathbb{Z}$ and $\mathbb{N}$ and $<_N$ on $N$. The spheres $K_r(\n)$ can grow exponentially in $r$. Therefore the maximum radius has to be limited and if no pebbled node is found within this radius, another heuristic has to be used.
+So $S_h = \mathbb{Z} \times \mathbb{N} \times P$ together with the lexicographic order using, respectively, the natural smaller relation $<$ on $\mathbb{Z}$ and $\mathbb{N}$ and $<_N$ on $N$. The spheres $K_r(\n)$ can grow exponentially in $r$. Therefore the maximum radius has to be limited and if no pebbled node is found within in any sphere with this radius, another heuristic has to be used.
 
 
-\subsection{Decay Heuristics (``$Dc(o_u,\gamma,d,com)$'') }
+\subsection{Decay Heuristics (``$Dc(e_u,\gamma,d,com)$'') }
 \label{sec:decay}
 \algo{Decay} Heuristics denote a family of meta heuristics. 
-The idea is to not only use the measure of a single node, but also to include the measures of its premises.
-Such a heuristic has four parameters: an underlying mapping $o_u: V \rightarrow S_u$, a decay factor $\gamma \in \mathbb{R}^+ \cup \{0\}$, a recursion depth $d \in \mathbb{N}$ and a combining function $com: S_u^n \rightarrow S_u$ for $n \in \mathbb{N}$.\\
-The resulting heuristic node evaluation function $o_h: V \rightarrow S_u$ is defined with the help of the recursive function $rec: (V \times \mathbb{N}) \rightarrow S_u$:
+The idea is to not only use the evaluation of a single node, but also to include the evaluations of its premises.
+Such a heuristic has four parameters: an underlying evau $e_u: V \rightarrow S_u$, a decay factor $\gamma \in \mathbb{R}^+ \cup \{0\}$, a recursion depth $d \in \mathbb{N}$ and a combining function $com: S_u^n \rightarrow S_u$ for $n \in \mathbb{N}$.\\
+The resulting heuristic node evaluation function $e_h$ is defined with the help of the recursive function $rec$:
 \begin{align*}
-	rec(\n,0) &\defeq o_u(\n) \\
-	rec(\n,k) &\defeq o_u(\n) + com(rec(p_1,k-1),\ldots,rec(p_n,k-1)) * \gamma\\
+	rec(\n,0) &\defeq e_u(\n) \\
+	rec(\n,k) &\defeq e_u(\n) + com(rec(p_1,k-1),\ldots,rec(p_n,k-1)) * \gamma\\
 	& \text{ where } \Premises{\n}{\psi} = \{p_1,\ldots,p_n\}\\
 	% & \text{ and } k \in \{1,\ldots,d\} \\
 	%rec(\n,k) &\defeq com(h_u(\n), rec(p_1,k-1)*\gamma,\ldots,rec(p_{n-1},k-1) * \gamma)\\ %might be better - I will try this in the experiments
-	o_h(\n) &\defeq rec(\n,d) &
+	e_h(\n) &\defeq rec(\n,d) &
 \end{align*}
 
 
