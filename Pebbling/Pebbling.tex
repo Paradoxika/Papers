@@ -294,7 +294,7 @@ Theorem \ref{theorem:enumeration} and the remarks in the end of section \ref{sec
 
 \subsection{Top-Down Pebbling}
 
-Top-Down Pebbling (Algorithm \ref{algo:TDpebbling}) constructs a topological order of a proof $\psi$ by traversing it from the axioms to the root node $\raiz{\psi}$.
+\algo{Top-Down} Pebbling (Algorithm \ref{algo:TDpebbling}) constructs a topological order of a proof $\psi$ by traversing it from the axioms to the root node $\raiz{\psi}$.
 This approach closely corresponds to how a human would play the pebbling game. 
 A human would look at the nodes that are available for pebbling at a given state, choose one of them to pebble and remove pebbles if possible.
 Similarly the algorithm keeps track of pebblable nodes in a set $N$, initialized as $\Axioms{\psi}$.
@@ -421,7 +421,7 @@ After pebbling `$7$' and `$8$', four pebbles are used, which is one more than wh
 
 \subsection{Bottom-Up Pebbling}
 
-Bottom-Up Pebbling (Algorithms \ref{algo:BUpebbling} and \ref{algo:visit}) constructs a topological order of a proof $\psi$ while traversing it from its root node $\raiz{\psi}$ to its axioms. The algorithm constructs the order by visiting nodes and their premises recursively. At every node $\n$ the order in which the premises of $\n$ are visited is decided heuristically. After visiting the premises, $n$ is added to the current sequence of nodes.
+\algo{Bottom-Up} Pebbling (Algorithms \ref{algo:BUpebbling} and \ref{algo:visit}) constructs a topological order of a proof $\psi$ while traversing it from its root node $\raiz{\psi}$ to its axioms. The algorithm constructs the order by visiting nodes and their premises recursively. At every node $\n$ the order in which the premises of $\n$ are visited is decided heuristically. After visiting the premises, $n$ is added to the current sequence of nodes.
 Since axioms do not have any premises, there is no recursive call for axioms and these nodes are simply added to the sequence. The recursion is started by a call to visit the root.
 Since all proof nodes are ancestors of the root, the recursive calls will eventually visit all nodes once and a topological total order will be found.
 
@@ -466,7 +466,7 @@ Since all proof nodes are ancestors of the root, the recursive calls will eventu
 
 %\newcommand{\nodedistance2}{0.6cm}
 \begin{example}
-Figure \ref{fig:BUP} shows part of an execution of Bottom-Up Pebbling on the same graph of Figure \ref{fig:TDP}.
+Figure \ref{fig:BUP} shows part of an execution of \algo{Bottom-Up} Pebbling on the same graph of Figure \ref{fig:TDP}.
 Nodes chosen by the heuristic, during the bottom-up traversal, to be processed before the respective other premise are marked in gray. Similarly to the Top-down Pebbling scenario, nodes have been chosen in such a way that the initial pebbling sequence is $(1,2,3)$.
 However, the choice of where to go next is predefined by the gray nodes. Consider the gray child of node `$3$'. Since `$3$' has been completely processed and pebbled, the other premise of its gray child is visited next. The result is that node `$7$' is pebbled earlier and at no point more than 3 pebbles will be used for pebbling the root node. This is so independently of the heuristic choices.
 
@@ -576,13 +576,13 @@ However, the choice of where to go next is predefined by the gray nodes. Conside
 \subsection{Remarks about Top-Down and Bottom-Up Pebbling} %or: Which way to go?
 \label{sec:TDvsBU}
 
-In principle every topological order of a given proof can be constructed using Top-down or Bottom-up Pebbling. Both algorithms traverse the proof only once and have linear run-time in the proof length (assuming that the heuristic choice requires constant time). Example \ref{example:TDPIssue} shows a situation where Top-Down Pebbling may pebble a node that is far away from the previously pebbled nodes. This results in a sub-optimal pebbling strategy.
-As discussed in Example \ref{example:BUP}, Bottom-Up Pebbling is more immune to this non-locality issue, because queuing up the processing of premises enforces local pebbling. This suggests that Bottom-Up is better than Top-Down, which is confirmed by the experiments in Section \ref{sec:exp}.
+In principle every topological order of a given proof can be constructed using Top-down or Bottom-up Pebbling. Both algorithms traverse the proof only once and have linear run-time in the proof length (assuming that the heuristic choice requires constant time). Example \ref{example:TDPIssue} shows a situation where \algo{Top-Down} Pebbling may pebble a node that is far away from the previously pebbled nodes. This results in a sub-optimal pebbling strategy.
+As discussed in Example \ref{example:BUP}, \algo{Bottom-Up} Pebbling is more immune to this non-locality issue, because queuing up the processing of premises enforces local pebbling. This suggests that \algo{Bottom-Up} is better than \algo{Top-Down}, which is confirmed by the experiments in Section \ref{sec:exp}.
 
 \section{Heuristics}
 \label{sec:heuristics}
 
-Both pebbling algorithms described in the previous section have to choose a node $h(N)$ out of a set $N$ at some point, where $h$ is a \emph{heuristic} function. For Top-Down Pebbling, $N$ is the set of pebbleable nodes, and for Bottom-Up Pebbling, $N$ is the set of premises of a node. Every heuristic $h$ considered here uses an auxiliary \emph{node evaluation} function $o_h$ that maps nodes to elements of a totally ordered set $S_h$. The chosen node $h(N)$ is then simply defined as $\mathit{argmax}_{\n \in N} o_h(\n)$ (i.e. $h(N)$ is a node in $N$ such that for all nodes $\n$ in N, $o_h(h(N)) \geq o(\n)$).
+Both pebbling algorithms described in the previous section have to choose a node $h(N)$ out of a set $N$ at some point, where $h$ is a \emph{heuristic} function. For \algo{Top-Down} Pebbling, $N$ is the set of pebbleable nodes, and for \algo{Bottom-Up} Pebbling, $N$ is the set of premises of a node. Every heuristic $h$ considered here uses an auxiliary \emph{node evaluation} function $o_h$ that maps nodes to elements of a totally ordered set $S_h$. The chosen node $h(N)$ is then simply defined as $\mathit{argmax}_{\n \in N} o_h(\n)$ (i.e. $h(N)$ is a node in $N$ such that for all nodes $\n$ in N, $o_h(h(N)) \geq o(\n)$).
 
 
 \subsection{Number of Children Heuristic (``$Ch$'')}
@@ -591,7 +591,7 @@ This heuristic uses the number of children of a node $\n$: $o_h(\n) = |\Children
 The intuitive motivation for this heuristic is that nodes with many children will require many pebbles, and subproofs containing nodes with many children will tend to be more spacious. Example \ref{example:hardfirst} shows why it is a good idea to process spacious subproofs first.
 
 \begin{example}
-Figure \ref{example:hardfirst} shows a simple proof $\psi$ with two subproofs $\psi_1$ (left branch) and $\psi_2$ (right branch). As shown in the leftmost diagram, assume $\pspace{\psi_1}{<^1_T} = 4$ and $\pspace{\psi_2}{<^2_T} = 5$.
+Figure \ref{fig:SpaciousFirst} shows a simple proof $\psi$ with two subproofs $\psi_1$ (left branch) and $\psi_2$ (right branch). As shown in the leftmost diagram, assume $\pspace{\psi_1}{<^1_T} = 4$ and $\pspace{\psi_2}{<^2_T} = 5$.
 After pebbling one of the subproofs, the pebble on its root node has to be kept there until the root of the other subproof is also pebbled. Only then $\raiz{\psi}$ can be pebbled. Therefore, $\pspace{\psi}{<_T} = \pspace{\psi_j}{<^j_T} + 1$ where $<_T = <^i_T ::: <^j_T$ and $i$ and $j$ are the indexes of the subproofs pebbled, respectively first and last. 
 Choosing to pebble the least spacious subproof $\psi_1$ first results in $\pspace{\psi}{<_T} = 6$, while pebbling the most spacious one first gives $\pspace{\psi}{<_T} = 5$.
 This is a simplified situation. The two subproofs do not share nodes. Pebbling one of them does not influence the pebble number of the other.
@@ -645,8 +645,8 @@ This is a simplified situation. The two subproofs do not share nodes. Pebbling o
 		\end{tikzpicture}
 	\end{minipage}%
 	}
-	\caption{Hard subproof first}
-	\label{fig:TDP}
+	\caption{Spacious subproof first}
+	\label{fig:SpaciousFirst}
 \end{figure}
 \label{example:hardfirst}
 \end{example}
@@ -690,7 +690,7 @@ Nevertheless, sometimes the proof structure ensures that some nodes are the last
 \subsection{Node Distance Heuristic (``$Dist(r)$'')}
 \label{sec:distance}
 
-In Example \ref{example:topdown} and Section \ref{sec:TDvsBU} it has been noted that Top-Down Pebbling may perform badly if nodes that are far apart are selected. The Node Distance Heuristic prefers to pebble nodes that are close to pebbled nodes. It does this by calculating spheres with a radius up to the parameter $r$ around nodes.
+In Example \ref{example:topdown} and Section \ref{sec:TDvsBU} it has been noted that \algo{Top-Down} Pebbling may perform badly if nodes that are far apart are selected. The Node \algo{Distance} Heuristic prefers to pebble nodes that are close to pebbled nodes. It does this by calculating spheres with a radius up to the parameter $r$ around nodes.
 A sphere $K_r^{G}(\n)$ with radius $r$ around the node $\n$ in the graph $G = (V,E)$ is the set $\{p \in V \mid \text{ there are at most } r \text{ edges between } p \text{ and } \n\}$. The direction of edges is not considered. The heuristic uses the following functions based on the spheres:
 \begin{align*}
 d(\n) &\defeq -min\{r \mid K_r^{G}(\n)\text{ contains a pebbled node}\}\\
@@ -704,7 +704,7 @@ So $S_h = \mathbb{Z} \times \mathbb{N} \times P$ together with the lexicographic
 
 \subsection{Decay Heuristics (``$Dc(o_u,\gamma,d,com)$'') }
 \label{sec:decay}
-Decay Heuristics denote a family of meta heuristics. 
+\algo{Decay} Heuristics denote a family of meta heuristics. 
 The idea is to not only use the measure of a single node, but also to include the measures of its premises.
 Such a heuristic has four parameters: an underlying mapping $o_u: V \rightarrow S_u$, a decay factor $\gamma \in \mathbb{R}^+ \cup \{0\}$, a recursion depth $d \in \mathbb{N}$ and a combining function $com: S_u^n \rightarrow S_u$ for $n \in \mathbb{N}$.\\
 The resulting heuristic node evaluation function $o_h: V \rightarrow S_u$ is defined with the help of the recursive function $rec: (V \times \mathbb{N}) \rightarrow S_u$:
@@ -742,26 +742,35 @@ on unsatisfiable problems from the SMT-Lib (\url{www.smtlib.org}). These proofs\
 	\label{tab:benchmarks}
 \end{table}
 
-Table \ref{tab:results} shows a summary\footnote{Raw data: \url{www.logic.at/people/bruno/Experiments/2014/Pebbling/data.zip}} of the performance of various pebbling algorithms on each benchmark set. The names of the algorithms indicate the pebbling method (Top-Down (TD) or Bottom-Up (BU)) and heuristic used.
-The \emph{relative performance}, calculated according to Formula (\ref{eq:space}), compares the space measure obtained by an algorithm with the average of the space measures obtained by all other algorithms on the same benchmark set. An empty field means that algorithm was not tested on that benchmark set. The last column shows the traversal speed of the algorithm on all proofs of all benchmark sets on which it was tested.
+Table \ref{tab:results} shows a summary\footnote{Raw data: \url{www.logic.at/people/bruno/Experiments/2014/Pebbling/data.zip}} of the \emph{relative performance} of various pebbling algorithms on each benchmark set. The names of the algorithms indicate the pebbling method (\algo{Top-Down} (TD) or \algo{Bottom-Up} (BU)) and heuristic used.
+The \emph{performance} of an algorithm $f$ \emph{relative} to a set of algorithms $G$ on a set of benchmarks $P$ is calculated according to Formula (\ref{eq:space}). It computes how much better the space measure obtained by $f$ is, in comparison with the average of the space measures obtained by all algorithms in $G$, averaging over all proofs in $P$. In Table \ref{tab:results}, an empty field means that algorithm was not tested on that benchmark set. A filled field shows the performance of a given algorithm (indicated in the header of the row) on the proofs of a given benchmark set (indicated in the header of the column), relative to the set of all algorithms tested on that benchmark. For example, $\mathit{performance}(\textrm{Ch:BU},\{ \textrm{Ch:BU}, \textrm{Ch:TD}, \textrm{LC:BU}, \textrm{LC:TD}\}, \textbf{SMT1}) = \textrm{19,53\%}$. The last column shows the traversal speed of the algorithm on all proofs of all benchmark sets on which it was tested.
 %Every heuristic is compared to the others by relating its calculated space measures to the average space measures of all heuristics.
 %The formula for calculating this performance measure is given in (\ref{eq:space}).
 
 \begin{equation} \label{eq:space}
-  \mathit{performance}(f) = \frac{1}{|P(f)|} * \sum_{\psi \in P(f)}{\left( 1 -
+  \mathit{performance}(f, G, P) = \frac{1}{|P|} * \sum_{\psi \in P}{\left( 1 -
     \frac{
       s(\psi,f(\psi))
     }{
-        \mathit{avg}_{g\in H(\psi)}{s(\psi,g(\psi))}
+        \mathit{avg}_{g\in G}{s(\psi,g(\psi))}
     } \right)
   }
 \end{equation}
-where:
-\begin{itemize}
-  \item $P(f)$ is the set of proofs on which $f$ was tested.
-	\item $H(\psi)$ is the set of algorithms tested on $\psi$.
-	\item $\mathit{avg}$ is the \text{arithmetic mean function}.
-\end{itemize}
+% \begin{equation} \label{eq:space}
+%   \mathit{performance}(f) = \frac{1}{|P(f)|} * \sum_{\psi \in P(f)}{\left( 1 -
+%     \frac{
+%       s(\psi,f(\psi))
+%     }{
+%         \mathit{avg}_{g\in H(\psi)}{s(\psi,g(\psi))}
+%     } \right)
+%   }
+% \end{equation}
+% where:
+% \begin{itemize}
+%   \item $P(f)$ is the set of proofs on which $f$ was tested.
+% 	\item $H(\psi)$ is the set of algorithms tested on $\psi$.
+% 	\item $\mathit{avg}$ is the \text{arithmetic mean function}.
+% \end{itemize}
 %\BWP{Dc pebblers use the max function, should this be explained further?}
 %\BWP{Ch:BU has a bad performance in SMT2, because it produces bad results on some small proofs. The node - weighted performance is 8.4\%}
 \begin{table}
@@ -796,30 +805,30 @@ Dc(LC,3,7,max):BU & & 37,96 & 22,13 & & 15,34 \\
 
 
 \noindent
-Table \ref{tab:results} shows that Bottom-Up algorithms construct topological orders with much smaller space measures than Top-Down algorithms. This fact is visualized in Figure \ref{fig:BUvsTD}, where each dot represents a proof $\psi$ and the $x$ and $y$ coordinates show the space of $\psi$ with the topological orders found by, respectively, the best Top-Down and Bottom-Up algorithms for $\psi$. Some other heuristics (not described in this paper) aimed at improving Top-Down Pebbling were tested on small sets, but none showed promising results.
+Table \ref{tab:results} shows that \algo{Bottom-Up} algorithms construct topological orders with much smaller space measures than \algo{Top-Down} algorithms. This fact is visualized in Figure \ref{fig:BUvsTD}, where each dot represents a proof $\psi$ and the $x$ and $y$ coordinates show the space of $\psi$ with the topological orders found by, respectively, the best \algo{Top-Down} and \algo{Bottom-Up} algorithms for $\psi$. Some other heuristics (not described in this paper) aimed at improving \algo{Top-Down} Pebbling were tested on small benchmark sets, but none showed promising results.
 
-Furthermore, Bottom-Up algorithms are also much faster, as can be seen in the last column of Table \ref{tab:results}. This is so because they require fewer comparisons in their heuristic choices. For Bottom-Up algorithms, the set $N$ of possible choices consists of the premises of a single node only, and usually $|N| \in O(1)$ (e.g. for a binary resolution proof, $N \leq 2$ always). On the other hand, the set $N$ of currently pebbleable nodes, from which Top-Down algorithms must choose, is large (e.g. for a perfect binary tree with $2n -1$ nodes, initially $|N| = n$). For some heuristics, Top-Down algorithms could be made more efficient by using, instead of a set, an ordered sequence of pebbleable nodes together with their memorized heuristic evaluations.
+Furthermore, \algo{Bottom-Up} algorithms are also much faster, as can be seen in the last column of Table \ref{tab:results}. This is so because they require fewer comparisons in their heuristic choices. For \algo{Bottom-Up} algorithms, the set $N$ of possible choices consists of the premises of a single node only, and usually $|N| \in O(1)$ (e.g. for a binary resolution proof, $N \leq 2$ always). On the other hand, the set $N$ of currently pebbleable nodes, from which \algo{Top-Down} algorithms must choose, is large (e.g. for a perfect binary tree with $2n -1$ nodes, initially $|N| = n$). For some heuristics, \algo{Top-Down} algorithms could be made more efficient by using, instead of a set, an ordered sequence of pebbleable nodes together with their memorized heuristic evaluations.
 
-Using the Distance Heuristic has a severe impact on the speed, which decreases rapidly as the maximum radius increases. With a radius equal to 5, only a few small proofs were processed in a reasonable amount of time.
+Using the \algo{Distance} Heuristic has a severe impact on the speed, which decreases rapidly as the maximum radius increases. With a radius equal to 5, only a few small proofs were processed in a reasonable amount of time.
 
-As expected, the Decay Heuristic does improve the results of the underlying heuristic. Note that because of the relative nature of the performance measure used and the poor performance of the Top-Down heuristics, small performance differences can still be significant. Nevertheless, the performance improvement comes at a high cost in speed.
+As expected, the \algo{Decay} Heuristic does improve the results of the underlying heuristic. Note that because of the relative nature of the performance measure and the poor performance of the \algo{Top-Down} algorithms, small performance differences can still be significant. Nevertheless, the performance improvement comes at a high cost in speed.
 
-By far best performances are achieved with the Bottom-Up versions of the Last Child and Number of Children heuristics.
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[scale=0.5]{Figures/TD_vs_BU-scatter_min.png}
-	\caption{Best space measures of Bottom-Up and Top-Down heuristics}
+	\caption{Spaces obtained with best \algo{Bottom-Up} and \algo{Top-Down} heuristics}
 	\label{fig:BUvsTD}
 \end{figure}
 
-\section{Conclusions and Future Work}
+\section{Conclusions}
 
-Bruno
+Several algorithms for compressing proofs with respect to space have been conceived. The experimental evaluation clearly shows that the so-called \algo{Bottom-Up} algorithms are faster and compress more than the more natural, straightforward and simple \algo{Top-Down} algorithms. Both kinds of algorithms are parameterized by a heuristic function for selecting nodes. The best performances are achieved with the simplest heuristics (i.e. \algo{Last Child} and \algo{Number of Children}). More sophisticated heuristics provided little extra compression but cost a high price in execution time. Future work could investigate heuristics that take advantage of the particular shape of proofs generated by analysis of conflict graphs.
 
+\vspace{-5pt}
+\paragraph{Acknowledgments:} We would like to thank Armin Biere for clarifying why resolution chains are not left-associative in the TraceCheck proof format.
 
-\vspace{-10pt}
-\paragraph{Acknowledgments:}
+\vspace{-5pt}
 
 \bibliographystyle{splncs}
 \bibliography{biblio}
