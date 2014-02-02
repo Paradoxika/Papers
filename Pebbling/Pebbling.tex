@@ -702,11 +702,11 @@ where $<_N$ denotes the total order on the initial sequence of pebbled nodes $N$
 So $S_h = \mathbb{Z} \times \mathbb{N} \times P$ together with the lexicographic order using, respectively, the natural smaller relation $<$ on $\mathbb{Z}$ and $\mathbb{N}$ and $<_N$ on $N$. The spheres $K_r(\n)$ can grow exponentially in $r$. Therefore the maximum radius has to be limited and if no pebbled node is found within in any sphere with this radius, another heuristic has to be used.
 
 
-\subsection{Decay Heuristics (``$Dc(e_u,\gamma,d,com)$'') }
+\subsection{Decay Heuristics (``$Dc(h_u,\gamma,d,com)$'') }
 \label{sec:decay}
 \algo{Decay} Heuristics denote a family of meta heuristics. 
 The idea is to not only use the evaluation of a single node, but also to include the evaluations of its premises.
-Such a heuristic has four parameters: an underlying evaluation function $e_u$ together with a well ordered set $S_u$, a decay factor $\gamma \in \mathbb{R}^+ \cup \{0\}$, a recursion depth $d \in \mathbb{N}$ and a combining function $com: S_u^n \rightarrow S_u$ for $n \in \mathbb{N}$.\\
+Such a heuristic has four parameters: an underlying heuristic $h_u$ defined by an evaluation function $e_u$ together with a well ordered set $S_u$, a decay factor $\gamma \in \mathbb{R}^+ \cup \{0\}$, a recursion depth $d \in \mathbb{N}$ and a combining function $com: S_u^n \rightarrow S_u$ for $n \in \mathbb{N}$.\\
 The resulting heuristic node evaluation function $e_h$ is defined with the help of the recursive function $rec$:
 \begin{align*}
 	rec(\n,0) &\defeq e_u(\n) \\
