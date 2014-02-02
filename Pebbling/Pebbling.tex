@@ -706,7 +706,7 @@ So $S_h = \mathbb{Z} \times \mathbb{N} \times P$ together with the lexicographic
 \label{sec:decay}
 \algo{Decay} Heuristics denote a family of meta heuristics. 
 The idea is to not only use the evaluation of a single node, but also to include the evaluations of its premises.
-Such a heuristic has four parameters: an underlying evau $e_u: V \rightarrow S_u$, a decay factor $\gamma \in \mathbb{R}^+ \cup \{0\}$, a recursion depth $d \in \mathbb{N}$ and a combining function $com: S_u^n \rightarrow S_u$ for $n \in \mathbb{N}$.\\
+Such a heuristic has four parameters: an underlying evaluation function $e_u$ together with a well ordered set $S_u$, a decay factor $\gamma \in \mathbb{R}^+ \cup \{0\}$, a recursion depth $d \in \mathbb{N}$ and a combining function $com: S_u^n \rightarrow S_u$ for $n \in \mathbb{N}$.\\
 The resulting heuristic node evaluation function $e_h$ is defined with the help of the recursive function $rec$:
 \begin{align*}
 	rec(\n,0) &\defeq e_u(\n) \\
@@ -731,16 +731,30 @@ on unsatisfiable problems from the SMT-Lib (\url{www.smtlib.org}). These proofs\
 
 \begin{table}[tb]
 	\centering
-	\begin{tabular}{l|c|c|c}
-		\textbf{Name} & \textbf{Number of proofs} & \textbf{Maximum length} & \textbf{Average length} \\ \toprule
+	\setlength{\tabcolsep}{8pt}
+	\begin{tabular}{|l|c|c|c|}
+		\hline
+		\textbf{Name} & \textbf{Number of proofs} & \textbf{Maximum length} & \textbf{Average length} \\ 
+		\hline \hline
 		TRC1 & 2239 & 90756   & 5423   \\ \hline
 		TRC2 & 215	& 1768249 & 268863 \\ \hline
     SMT1 & 4187 & 2241042 & 103162 \\ \hline
-    SMT2 & 914  & 120075  & 5391  \\     
+    SMT2 & 914  & 120075  & 5391  \\ 
+		\hline   
 	\end{tabular}
 	\caption{Proof benchmark sets}
 	\label{tab:benchmarks}
 \end{table}
+
+Figure \ref{fig:SpaceVSLength} relates for each proof the smallest space measure obtained by all algorithms tested on the respective proof and its length in number of nodes. Note that the y-axis, showing the space measures, scale is lower by a factor of 100 than the scale of the x-axis, which displays the proof lengths. On average the smallest space measure of a proof is 44,1 times smaller than its length. This shows the impact that the usage of deletion information together with well constructed topological orders can have. When these techniques are used, on average 44,1 times less memory is required for checking a proof.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[scale=0.5]{Figures/length_vs_space_2.png}
+	\caption{Best space measure compared to proof length}
+	\label{fig:SpaceVSLength}
+\end{figure}
+
 
 Table \ref{tab:results} shows a summary\footnote{Raw data: \url{www.logic.at/people/bruno/Experiments/2014/Pebbling/data.zip}} of the \emph{relative performance} of various pebbling algorithms on each benchmark set. The names of the algorithms indicate the pebbling method (\algo{Top-Down} (TD) or \algo{Bottom-Up} (BU)) and heuristic used.
 The \emph{performance} of an algorithm $f$ \emph{relative} to a set of algorithms $G$ on a set of benchmarks $P$ is calculated according to Formula (\ref{eq:space}). It computes how much better the space measure obtained by $f$ is, in comparison with the average of the space measures obtained by all algorithms in $G$, averaging over all proofs in $P$. In Table \ref{tab:results}, an empty field means that algorithm was not tested on that benchmark set. A filled field shows the performance of a given algorithm (indicated in the header of the row) on the proofs of a given benchmark set (indicated in the header of the column), relative to the set of all algorithms tested on that benchmark. For example, $\mathit{performance}(\textrm{Ch:BU},\{ \textrm{Ch:BU}, \textrm{Ch:TD}, \textrm{LC:BU}, \textrm{LC:TD}\}, \textbf{SMT1}) = \textrm{19,53\%}$. The last column shows the traversal speed of the algorithm on all proofs of all benchmark sets on which it was tested.
@@ -797,7 +811,8 @@ Dc(LC,0.5,1,max):BU & & 37,31 & 21,76 &  & 47,03 \\ \hline
 Dc(LC,0.5,7,max):BU & & 37,89 & 21,94 &  & 15,26 \\ \hline
 Dc(LC,3,1,max):BU & & 37,33 & 21,79 &  & 64,43 \\ \hline
 Dc(LC,3,7,max):BU & & 37,96 & 22,13 & & 15,34 \\
-\bottomrule
+%\bottomrule
+\hline
 \end{tabular}
 \caption{Experimental results}
 \label{tab:results}
