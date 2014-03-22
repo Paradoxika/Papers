@@ -35,6 +35,13 @@
 \newcommand{\nodedistanceThree}{0.6cm}
 \newcommand{\nodedistanceTwo}{1.2cm}
 
+\newcommand{\Vertices}[1]{V_{#1}}
+\newcommand{\Edges}[1]{E_{#1}}
+\newcommand{\Conclusion}[1]{\clause_{#1}}
+\newcommand{\Premises}[2]{P_{#1}^{#2}}
+\newcommand{\Children}[2]{C_{#1}^{#2}}
+\newcommand{\Axioms}[1]{A_{#1}}
+
 \title{Greedy Pebbling: \\ 
 Towards Proof Space Compression}
 
@@ -102,47 +109,33 @@ $\dual{p} = \neg p$ and $\dual{\neg p} = p$). The set of all literals is denoted
 
 \begin{definition}[Proof] 
 \label{def:proof}
-A directed acyclic graph $\langle V, E, \clause \rangle$, where $V$ is a set of nodes and $E$ is a
-set of edges labeled by literals (i.e. $E \subset V \times \mathcal{L} \times V$ and $\n_1
-\xrightarrow{\ell} \n_2$ denotes an edge from node $\n_1$ to node $\n_2$ labeled by $\ell$), is a
-proof of a clause $\clause$ iff it is inductively constructible according to the following cases:
-%
+A \emph{proof} $\varphi$ is a tuple $\langle V,E,\n,\clause \rangle$, 
+such that $\langle V,E \rangle$ is a directed acyclic graph whose edges are labeled with literals $\ell \in \mathcal{L}$, $\n \in V$, $\clause$ is a clause 
+and one of the following holds:
+
 \begin{enumerate}
-  \item If $\Gamma$ is a clause, $\axiom{\Gamma}$ denotes some proof $\langle \{ \n \}, \emptyset ,
-    \Gamma \rangle$, where $\n$ is a new node.
-  \item If $\psi_L$ is a proof $\langle V_L, E_L, \clause_L \rangle$ and
-    $\psi_R$ is a proof $\langle V_R, E_R, \clause_R \rangle$ and $\ell$ is a literal such that
-    $\dual{\ell} \in \clause_L$ and $\ell \in \clause_R$, then
-    $\psi_L \odot_\ell \psi_R$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
-    \begin{align*}
+	\item $V = \{\n\}, E = \emptyset$
+	\item \label{enum:resCase} There are proofs $\varphi_L = \langle V_L, E_L, \n_L,\clause_L \rangle$ and $\varphi_R = \langle V_R, E_R, \n_R, \clause_R \rangle$ such that 
+	    \begin{align*}
+			\n & \text{ is a new node} \\
       V &= V_L \cup V_R \cup \{\n \} \\
       E &= E_L \cup E_R \cup
-                    \left\{ \n \xrightarrow{\dual{\ell}} \raiz{\psi_L}, \n \xrightarrow{\ell} \raiz{\psi_R} \right\} \\
+                    \left\{\n_L \xrightarrow{\dual{\ell}} \n , \n_R \xrightarrow{\ell} \n \right\} \\
      \Gamma &= \left( \clause_L \setminus \left\{ \dual{\ell} \right\} \right) \cup \left( \clause_R
                     \setminus \left\{ \ell \right\} \right)
     \end{align*}
-    where $\n$ is a new node and $\raiz{\varphi}$ denotes the root node of $\varphi$.
+		$\n$ is called the \emph{root} of $\varphi$ and $\clause$ its \emph{conclusion}.\\
+		In case \ref{enum:resCase} $\varphi_L$ and $\varphi_R$ are called \emph{premises} of $\varphi$ and $\varphi$ is called a \emph{child} of both $\varphi_L$ and $\varphi_R$.
+		The transitive closure of the premise relation is the \emph{subproof} relation. A subproof which
+		has no premises is an \emph{axiom} of the respective proof.
+		$\Vertices{\varphi}$ and $\Axioms{\varphi}$ denote, respectively, the set of nodes and axioms of $\varphi$. $\Premises{\n}{\varphi}$ denotes the premises and $\Children{\n}{\varphi}$ the children of the subproof with root $\n$ in a proof $\varphi$. When a proof is represented graphically, the root is drawn at the bottom and the axioms at the top. The \emph{length} of a proof $\varphi$ is the number of nodes in $\Vertices{\varphi}$ and is denoted $\plength{\varphi}$.
   \qed
 \end{enumerate}
+
 \end{definition}
 
-
-\newcommand{\Vertices}[1]{V_{#1}}
-\newcommand{\Edges}[1]{E_{#1}}
-\newcommand{\Conclusion}[1]{\clause_{#1}}
-\newcommand{\Premises}[2]{P_{#1}^{#2}}
-\newcommand{\Children}[2]{C_{#1}^{#2}}
-\newcommand{\Axioms}[1]{A_{#1}}
-
 \noindent
-If $\psi = \varphi_L \odot_{\ell} \varphi_R$, then $\varphi_L$ and $\varphi_R$ are \emph{direct
-subproofs} of $\psi$ and $\psi$ is a \emph{child} of $\varphi_L$ and $\varphi_R$. The
-transitive closure of the direct subproof relation is the \emph{subproof} relation. A subproof which
-has no direct subproof is an \emph{axiom} of the proof. 
-%
-$\Vertices{\psi}$ and $\Axioms{\psi}$
-denote, respectively, the nodes and axioms of $\psi$. $\Premises{\n}{\psi}$ denotes the premises and $\Children{\n}{\psi}$ the children of a node $\n$ in a proof $\psi$. When a proof is represented graphically, the root is drawn at the bottom and the axioms at the top. The \emph{length} of a proof $\psi$ is the number of nodes in $\Vertices{\psi}$ and is denoted $\plength{\psi}$.
-
+Note that in case \ref{enum:resCase} of definition \ref{def:proof} $V_L$ and $V_R$ are not required to be disjunct. Therefore the underlying structure of proofs are DAGs as opposed to simple trees. Modern SAT- and SMT-solvers produce proofs of such kind \cite{BoutonCaminha-B.-de-OliveiraDeharbeFontaine2009veriT:-an-open-trustable-and-efficient-SMT-Solver,marques2009conflict} and the reuse of proof nodes plays a central role in proof compression \cite{fontaine2011compression}.
 
 \section{Pebbling Game}
 \label{sec:pebbling-game}
