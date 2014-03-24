@@ -22,6 +22,12 @@
 \usepackage{mathenvironments}
 \usepackage{drawproof}
 
+\DeclareMathOperator{\pebble}{P}
+\DeclareMathOperator{\unpebble}{U}
+\DeclareMathOperator{\pebbledAt}{pebbledAt}
+
+\newcommand{\indexIn}[3]{\ensuremath{#1 \scriptstyle \in \{#2\ldots #3\} \displaystyle}}
+
 \usetikzlibrary{patterns}
 
 \renewcommand{\topfraction}{0.85}
@@ -129,7 +135,7 @@ and one of the following holds:
 		The transitive closure of the premise relation is the \emph{subproof} relation. A subproof which
 		has no premises is an \emph{axiom} of the respective proof.
 		$\Vertices{\varphi}$ and $\Axioms{\varphi}$ denote, respectively, the set of nodes and axioms of $\varphi$. $\Premises{\n}{\varphi}$ denotes the premises and $\Children{\n}{\varphi}$ the children of the subproof with root $\n$ in a proof $\varphi$. When a proof is represented graphically, the root is drawn at the bottom and the axioms at the top. The \emph{length} of a proof $\varphi$ is the number of nodes in $\Vertices{\varphi}$ and is denoted $\plength{\varphi}$.
-  \qed
+\qed
 \end{enumerate}
 
 \end{definition}
@@ -141,12 +147,13 @@ From hereon, if free from ambiguity, proofs and their underlying DAGs will not b
 \section{Pebbling Game}
 \label{sec:pebbling-game}
 
-%There are many pebble games defined in the literature \cite{kasai1979classes,chan2013pebble}. 
-Pebbling games were introduced in the 1970's to model programming language expressiveness \cite{paterson1970comparative,Walker1973404} and compiler construction \cite{sethi1975complete}. More recently, pebbling games have been used to investigate various questions in parallel complexity \cite{chan2013pebble} and proof complexity \cite{ben2008short,Esteban200184,nordstrom2009narrow}. They are used to obtain bounds for space and time requirements and trade-offs between the two measures \cite{van1979move}. \textit{To pebble} a node is to put a pebble on it; \textit{to unpebble} is to remove a pebble; a node is \textit{pebbleable} if it is not pebbled but can be pebbled.
+%Todo: Discuss relation to resolution space complexity further
+Pebbling games were introduced in the 1970's to model programming language expressiveness \cite{paterson1970comparative,Walker1973404} and compiler construction \cite{sethi1975complete}. More recently, pebbling games have been used to investigate various questions in parallel complexity \cite{chan2013pebble} and proof complexity \cite{ben2008short,Esteban200184,nordstrom2009narrow}. They are used to obtain bounds for space and time requirements and trade-offs between the two measures \cite{van1979move,ben2009size}. In this paper we investigate space requirements when time is fixed.\\
+\textit{To pebble} a node is to put a pebble on it; \textit{to unpebble} is to remove a pebble; a node is \textit{pebbleable} if it is not pebbled but can be pebbled.
 
-\begin{definition}[Pebbling Game]
+\begin{definition}[Static Pebbling Game]
 \label{def:pebbling-game}
-The \emph{Pebbling Game} is played by one player on a DAG $G = (V,E)$ with one distinguished node $s$.
+The \emph{Static Pebbling Game} is played by one player on a DAG $G = (V,E)$ with one distinguished node $s \in V$.
 The goal of the game is to pebble $s$, respecting the following rules:
 \begin{enumerate}
 	\item \label{rule:premises} A node $\n$ is pebbleable \emph{iff} all predecessors of $\n$ in $G$ are pebbled.
@@ -155,16 +162,44 @@ The goal of the game is to pebble $s$, respecting the following rules:
 \end{enumerate}
 \qed
 \end{definition}
-As a consequence of rule \ref{rule:premises}, pebbles can be put on nodes without predecessors at any time.
-A \emph{pebbling strategy} for $G$ and node $s$ is a sequence of moves in the pebbling game, where the last move pebbles $s$.
-The \emph{pebble number of a pebbling strategy} is the maximum number of pebbles that are placed on nodes simultaneously, following the moves of the strategy.
-The \emph{pebble number of a graph $G$ and node $s$} is the minimum pebble number of all pebble strategies, for the pebbling game played on $G$ and $s$.
+
+Note that as a consequence of rule \ref{rule:premises}, pebbles can be put on nodes without predecessors at any time.\\
+Also note that rule \ref{rule:onlyonce} corresponds to fixing the time required to play the game, as with this rule the number of moves will be $O(n)$.
+
+\begin{definition}[Strategy]
+\label{def:strategy}
+A \emph{pebbling strategy} for the Static Pebbling Game, played on a DAG $G = (V,E)$ and distinguished node $s$, is a sequence of moves $(m_1,\ldots,m_n)$, such that the following formula corresponding to the rules and the goal of the game, using the predicates $\pebble(.)$ and $\unpebble(.)$, is true:
+\begin{gather*}
+	m_n = \pebble(s) \enskip \wedge \\
+	\Big( \forall \indexIn{i}{1}{n}: m_i = \pebble(\n) \Rightarrow \\
+																\big( \forall \indexIn{k}{i+1}{n}: m_k \neq \pebble(\n) \wedge \forall o \in \Premises{\n}{G}: \pebbledAt(i,o,m^n_1) \big) \Big) \enskip \wedge\\
+	\big( \forall \indexIn{i}{1}{n}: m_i = \unpebble(\n) \Rightarrow \pebbledAt(i,\n,m^n_1) \big)\\[1ex]
+	\text{where } \pebbledAt(i,\n,m^n_1) := \exists \indexIn{j}{1}{i-1}: \left( m_j = \pebble(\n) \wedge \forall \indexIn{l}{j}{i-1}: m_l \neq \unpebble(\n) \right)
+\end{gather*}
+%\begin{align*}
+	%m_i = \pebble(\n) &\text{ then for all predecessors }p \text{ of }\n there exists a j: 1 \leq j < i, such that m_j = \pebble(p) and for all l: j < l < i	holds m_l \neq \unpebble(s)\\
+	 %& and for all k \in \{i+1,\ldots,n\} holds m_k \neq \pebble(\n)\} \\
+	 %m_n = \pebble(s) & \\
+%\end{align*}
+\end{definition}
+
+In the formula above $\Premises{\n}{G}$ denotes, similarly as defined for proofs, the set of predecessors of $\n$ in $G$.
+The following definition allows to measure how many pebbles are required to play the Static Pebbling Game on a given graph.
+
+\begin{definition}[Pebbling number]
+The \emph{pebbling number of a pebbling strategy} $(m_1,\ldots,m_n)$ is defined as 
+$$
+	max_{\indexIn{i}{1}{n}}(|\{\n \in V \mid \pebbledAt(i,\n,m^n_1)\}|)
+$$
+where $\pebbledAt(i,\n,m^n_1)$ denotes the same formula as in definition \ref{def:strategy}.\\
+The \emph{pebbling number of a DAG $G$ and node $s$} is defined as the minimum pebbling number of all pebbling strategies for $G$ and $s$.
+\end{definition}
+
+Note that the definitions \ref{def:pebbling-game} and \ref{def:strategy} leave freedom when to do unpebbling moves.
+With the aim of finding strategies with low pebbling numbers, there is a canonical way when to do these moves, as will be shown later.
 
 \noindent
-The \emph{pebbling game} from definition \ref{def:pebbling-game} slightly differs from the Black Pebbling Game discussed in \cite{hertel2007black,pippenger1982advances} in two aspects. Firstly, the black pebbling game  does not include rule \ref{rule:onlyonce}. This allows pebbling strategies with lower pebbling numbers (\cite{sethi1975complete} has an example on page 1), but at a possible cost of exponentially more moves \cite{van1979move}. Secondly, when pebbling a node in the black pebbling game, one of its predecessors' pebbles can be used instead of a fresh pebble (i.e. a pebble can be moved). This results in strategies that use exactly one pebble less, as shown in \cite{van1979move}.
-Deciding whether the pebbling number of a graph $G$ and node $s$ is smaller than $k$ is PSPACE-complete in the absence of rule \ref{rule:onlyonce} \cite{gilbert1980pebbling} and NP-complete when rule \ref{rule:onlyonce} is included \cite{sethi1975complete}.
-
-
+The \emph{Static Pebbling Game} from definition \ref{def:pebbling-game} slightly differs from the Black Pebbling Game discussed in \cite{hertel2007black,pippenger1982advances} in two aspects. Firstly, the Black Pebbling Game does not include rule \ref{rule:onlyonce}. Not having this rule allows for pebbling strategies with lower pebbling numbers (\cite{sethi1975complete} has an example on page 1), but at a possible cost of exponentially more moves \cite{van1979move}. Secondly, when pebbling a node in the Black Pebbling Game, one of its predecessors' pebbles can be used instead of a fresh pebble (i.e. a pebble can be moved). The trade-off when allowing to moving pebbles are discussed in \cite{van1979move}. Deciding whether the pebbling number of a graph $G$ and node $s$ is smaller than $k$ is PSPACE-complete in the absence of rule \ref{rule:onlyonce} \cite{gilbert1980pebbling} and NP-complete when rule \ref{rule:onlyonce} is included \cite{sethi1975complete}.
 
 \section{Pebbling and Proof Checking}
 \label{sec:pebblingchecking}
@@ -189,7 +224,7 @@ A topological order $\prec$ can be represented by a sequence $(v_1,\dots,v_n)$ o
 \newcommand{\cstrategy}[3]{S(#1,#2,#3)}
 
 \begin{definition}[Canonical Topological Pebbling Strategy]
-The \emph{canonical topological pebbling strategy} $\cstrategy{\varphi}{\raiz{\varphi}}{\prec}$ for a proof $\varphi$ and node $\raiz{\varphi}$ w.r.t. a topological order $\prec$ represented as a sequence $(v_1,\dots,v_n)$ is defined recursively:
+The \emph{canonical topological pebbling strategy} $\cstrategy{\varphi}{\raiz{\varphi}}{\prec}$ for a proof $\varphi$ and node $\raiz{\varphi}$ w.r.t. a topological order $\prec$, represented as a sequence $(v_1,\dots,v_n)$ is defined recursively:
 $$
 \cstrategy{\varphi}{\raiz{\varphi}}{t} = \left\{\begin{array}{ll}  
                  () & , \mathrm{if } \ t = () \\
@@ -197,7 +232,7 @@ $$
                \end{array}\right.
 $$
 $$
-U(v, \varphi, t) = (\mathit{unpebble}(v_p) \ \  | \ \ v_p \in \Premises{v}{\varphi} \ \mathrm{and} \ v_c \leq_T v \ \mathrm{for all} \ v_c \in \Children{v_p}{\varphi})
+U(v, \varphi, t) = (\mathit{unpebble}(v_p) \ \  | \ \ v_p \in \Premises{v}{\varphi} \ \mathrm{and} \ v_c \prec v \ \mathrm{for all} \ v_c \in \Children{v_p}{\varphi})
 $$
 %
 where $::$ is the \emph{cons} list constructor and $:::$ is the list concatenation operator.
@@ -240,11 +275,6 @@ Let $(\n_1,\ldots,\n_n)$ be a topological order for $\varphi_m$.
 Let $\Axioms{\varphi} = \{\n_{k_1},\ldots,\n_{k_m}\}$, then $(\n_{k_1},\ldots,\n_{k_m},\n_{l_1},\ldots,\n_{l_{n-m}})$, where $(l_1,\ldots,l_{n-m}) = (1,\ldots,n) \setminus (k_1,\ldots,k_m)$, is a topological order as well. 
 Likewise, $(\n_{\pi({k_1})},\ldots,\n_{\pi({k_m})},\n_{l_1},\ldots,\n_{l_{n-m}})$ is a topological order, for every permutation $\pi$ of $\{k_1,\ldots,k_m\}$. There are $m!$ such permutations, so the overall number of topological orders is at least factorial in $m$ (and also in $n$).
 \end{proof}
-
-
-
-
-
 
 \section{Pebbling as a Satisfiability Problem}
 \label{sec:PebblingAsSat}
@@ -725,11 +755,23 @@ on unsatisfiable problems from the SMT-Lib (\url{www.smtlib.org}). These proofs\
 
 Figure \ref{fig:SpaceVSLength} relates for each proof the smallest space measure obtained by all algorithms tested on the respective proof and its length in number of nodes. Note that the y-axis, showing the space measures, scale is lower by a factor of 100 than the scale of the x-axis, which displays the proof lengths. On average the smallest space measure of a proof is 44,1 times smaller than its length. This shows the impact that the usage of deletion information together with well constructed topological orders can have. When these techniques are used, on average 44,1 times less memory is required for checking a proof.
 
-\begin{figure}[tb]
-	\centering
-	\includegraphics[scale=0.5]{Figures/length_vs_space_2.png}
+%TODO: make pictures side by side look better
+\begin{figure}
+\centering
+	\makebox[\textwidth][c]{
+	%\hspace{-1em}
+	\begin{minipage}{0.5\textwidth}
+	\includegraphics[scale=0.4]{Figures/length_vs_space_2.png}
 	\caption{Best space measure compared to proof length}
 	\label{fig:SpaceVSLength}
+\end{minipage}%
+%\hspace{1em}
+\begin{minipage}{.5\textwidth}
+	\includegraphics[scale=0.32]{Figures/TD_vs_BU-scatter_min.png}
+	\caption{Spaces obtained with best \algo{Bottom-Up} and \algo{Top-Down} heuristics}
+	\label{fig:BUvsTD}
+\end{minipage}%
+}
 \end{figure}
 
 
@@ -800,14 +842,6 @@ Furthermore, \algo{Bottom-Up} algorithms are also much faster, as can be seen in
 Using the \algo{Distance} Heuristic has a severe impact on the speed, which decreases rapidly as the maximum radius increases. With a radius equal to 5, only a few small proofs were processed in a reasonable amount of time.
 
 As expected, the \algo{Decay} Heuristic does improve the results of the underlying heuristic. Note that because of the relative nature of the performance measure and the poor performance of the \algo{Top-Down} algorithms, small performance differences can still be significant. Nevertheless, the performance improvement comes at a high cost in speed.
-
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[scale=0.5]{Figures/TD_vs_BU-scatter_min.png}
-	\caption{Spaces obtained with best \algo{Bottom-Up} and \algo{Top-Down} heuristics}
-	\label{fig:BUvsTD}
-\end{figure}
 
 \section{Conclusions}
 
