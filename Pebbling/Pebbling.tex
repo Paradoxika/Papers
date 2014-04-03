@@ -141,7 +141,7 @@ and one of the following holds:
 \end{definition}
 
 \noindent
-Note that in case \ref{enum:resCase} of definition \ref{def:proof} $V_L$ and $V_R$ are not required to be disjunct. Therefore the underlying structure of proofs are DAGs as opposed to simple trees. Modern SAT- and SMT-solvers produce proofs of such kind \cite{BoutonCaminha-B.-de-OliveiraDeharbeFontaine2009veriT:-an-open-trustable-and-efficient-SMT-Solver,marques2009conflict} and the reuse of proof nodes plays a central role in proof compression \cite{fontaine2011compression}.\\
+Note that in case \ref{enum:resCase} of definition \ref{def:proof} $V_L$ and $V_R$ are not required to be disjoint. Therefore the underlying structure of proofs are DAGs as opposed to simple trees. Modern SAT- and SMT-solvers produce proofs of such kind \cite{BoutonCaminha-B.-de-OliveiraDeharbeFontaine2009veriT:-an-open-trustable-and-efficient-SMT-Solver,marques2009conflict} and the reuse of proof nodes plays a central role in proof compression \cite{fontaine2011compression}.\\
 Also note that a DAG corresponding to a proof by definition has exactly one sink, also called its root node.\\
 From hereon, if free from ambiguity, proofs and their underlying DAGs will not be distinguished. For example a node of a proof $\langle V,E,\n,\clause \rangle$ will be meant to be some $s \in V$.
 
