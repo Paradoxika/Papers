@@ -87,9 +87,8 @@ Although current automated deduction tools are very efficient at finding proofs,
 
 
 \paragraph{Related Work:} \texttt{CERes} (\url{http://www.logic.at/ceres})
-%\cite{ToDo} 
-is another proof transformation system, specialized in cut-elimination for sequent calculus. It was replaced by \texttt{GAPT} (\url{http://code.google.com/p/gapt/}), 
-%\cite{ToDo}
+\cite{CERes} 
+is another proof transformation system, specialized in cut-elimination for sequent calculus. It was replaced by \texttt{GAPT} (\url{http://code.google.com/p/gapt/}) \cite{GAPT}, 
 extended with cut-introduction techniques.
 % \cite{ToDo}. 
 \texttt{MINLOG} (\url{http://www.mathematik.uni-muenchen.de/\textasciitilde logik/minlog/}) 
@@ -118,7 +117,7 @@ Scala's \emph{combinator parsing} library makes it easy to implement parsers for
 
 \paragraph{TraceCheck Format (``.tc''): }
 
-The TraceCheck \cite{tracecheck} format is one of the three formats accepted at the \emph{Certified Unsat} track of the SAT-Competition and is used by SAT-solvers such as \texttt{PicoSAT} \cite{Biere_picosatessentials}. Each line declares a new clause, specifying its name (a fresh positive integer), a space separated list of literals (positive or negative integers, depending on the polarity of the literals), and a list of premises (other clauses, referred by their names) needed to derive the new clause by regular input resolution. Zero is used as a delimiter. Figure \ref{TraceCheckProof} shows an example.
+The TraceCheck format is one of the three formats accepted at the \emph{Certified Unsat} track of the SAT-Competition and is used by SAT-solvers such as \texttt{PicoSAT} \cite{Biere_picosatessentials}. Each line declares a new clause, specifying its name (a fresh positive integer), a space separated list of literals (positive or negative integers, depending on the polarity of the literals), and a list of premises (other clauses, referred by their names) needed to derive the new clause by regular input resolution. Zero is used as a delimiter. Figure \ref{TraceCheckProof} shows an example.
 %
 Other formats accepted at the \emph{Certified Unsat} track are less detailed and hence less convenient to be used by tools that post-process proofs. The omission of premises in the RUP format, for example, throws away information about the DAG structure of the proofs. Nevertheless, there are tools for converting RUP proofs to the trace-check format \cite{DRUPTrim}.
 
