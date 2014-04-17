@@ -1,5 +1,6 @@
 \documentclass{llncs}
 
+\usepackage{microtype}
 \usepackage{xcolor}
 \usepackage{enumitem,amsmath,amssymb}
 \usepackage{breakurl}    % used for \url and \burl
@@ -24,8 +25,11 @@
 \renewcommand{\textfraction}{0.1}
 \renewcommand{\floatpagefraction}{0.75}
 
+\newcommand{\com}[1]{[\texttt{#1}]}
+\newcommand{\class}[1]{\texttt{#1}}
+
 \title{ 
-Skeptik [System Description]
+Skeptik: a Proof Compression System
 }
 
 \author{
@@ -61,7 +65,7 @@ Skeptik [System Description]
 
 
 \begin{abstract}
-This paper introduces \skeptik: a system for checking, compressing and improving proofs obtained by sat- and smt-solvers.
+This paper introduces \skeptik: a system for checking, compressing and improving proofs obtained by SAT- and SMT-solvers.
 \end{abstract}
 
 \setcounter{footnote}{0}
@@ -74,13 +78,13 @@ for automated reasoning
 tools to output not only a \emph{yes} or \emph{no} answer to a problem 
 but also \emph{proofs/refutations} or \emph{(counter)models}. 
 %
-Firstly, state-of-the-art tools are complex and heavily optimized. Their code is often long, hard to understand and difficult to automatically verify. Consequently, the \emph{yes/no} answers cannot be fully trusted, unless they are accompanied by proofs or (counter)models that serve as independently checkable certificates of 
+Firstly, state-of-the-art tools are complex and heavily optimized. Their code is often long, hard to understand and difficult to automatically verify. Consequently, \emph{yes/no} answers cannot be fully trusted, unless they are accompanied by proofs or (counter)models that serve as independently checkable certificates of 
 their correctness. 
 
-Furthermore, for most applications, a \emph{yes/no} answer is inherently insufficient. We often already know in advance whether a problem is expected to be satisfiable or unsatisfiable, and we want more than just a confirmation of this expectation. For satisfiable formulas, the desired information is encoded in the model; while for valid formulas, it is contained in the proof. In case the expectation was wrong, refutations and countermodels can be helpful to explain issues in the encoding of the problem, in order to correct and refine it. 
-% Proofs and refutations can been used, for example, to extract unsatisfiable cores \cite{ToDo}, interpolants \cite{ToDo}, Herbrand disjunctions \cite{ToDo}, linguistic implicatures \cite{ToDo} \ldots
+Furthermore, for most applications, a \emph{yes/no} answer is inherently insufficient. We often already know in advance whether a problem is expected to be satisfiable or unsatisfiable, and we want more than just a confirmation of this expectation. For satisfiable formulas, the desired information is encoded in the model; while for valid formulas, it is contained in the proof. In case the expectation was wrong, refutations and countermodels can be helpful to explain issues in the encoding of the problem, in order to correct and refine it. Proofs can been used, for example, to obtain unsat cores, interpolants and Herbrand disjunctions \cite{Paleo2008Herbrand}.
 
-Although current automated deduction tools are very efficient at finding proofs, they do not necessarily find the \emph{best} proofs (e.g. shortest, least spacious, with smallest core\ldots depending on the intended application). The {\skeptik} tool (\url{http://github.com/Paradoxika/Skeptik/}) finds and eliminates redundancies in proofs, in order to improve and compress them according to various metrics.
+Although current automated deduction tools are very efficient at finding proofs, they do not necessarily find the \emph{best} proofs (e.g. shortest, least spacious, with smallest core\ldots depending on the intended application). The {\skeptik} tool (\url{http://github.com/Paradoxika/Skeptik/}) finds and eliminates redundancies in proofs, in order to improve and compress them according to various metrics. It is licensed under a Creative Commons CC-BY-NC-SA License.
+
 
 \paragraph{Related Work:} \texttt{CERes} (\url{http://www.logic.at/ceres})
 %\cite{ToDo} 
@@ -93,47 +97,30 @@ extended with cut-introduction techniques.
 extracts functional programs from proofs, employing a refined A-translation.
 
 
-\newcommand{\com}[1]{[\texttt{#1}]}
-
-\section{Installation}
-
-{\skeptik} is implemented in Scala and runs on the java virtual machine (JVM). Therefore, Java (\url{https://www.java.com/}) must be installed. The easiest way to download {\skeptik} is via \texttt{git} (\url{http://git-scm.com/}), by executing \com{git clone git@github.com:Paradoxika/Skeptik.git} in the folder where {\skeptik} should be downloaded. It is helpful to install \texttt{SBT} (\url{http://www.scala-sbt.org/}), a build tool that automatically downloads all compilers and libraries on which {\skeptik} depends. To compile, build and package {\skeptik}, run \com{sbt one-jar} in {\skeptik}'s home folder. This generates an executable jar file.
-%
-\texttt{SBT} and Scala programs may need a lot of memory for compilation and execution. If out-of-memory problems occur, the JVM's maximum available memory can be increased by executing \com{export JAVA\_TOOL\_OPTIONS=``-Xmx1024m''} in the terminal.
-
-
-\section{Usage}
-
-The command \com{java -jar skeptik.jar --help} displays a help message explaining how to use {\skeptik}. To compress the proof ``eq\_diamond9.smt2'' using the algorithm \texttt{RPI} and write the compressed proof using the `smt2' proof format, for example, the following command should be executed: \com{java -jar skeptik.jar -a RPI -f smt2 examples/proofs/VeriT/eq\_diamond9.smt2}. \\
-{\skeptik} can be called with an arbitrary number of algorithms and proofs. The following command would compress the proofs ``p1.smt2'' and ``p2.smt2'' with two algorithms each (\texttt{RP} and a sequential composition of \texttt{D}, \texttt{RPI} and \texttt{LU}): \\
-\com{java -jar skeptik.jar -a RP -a (D*RPI*LU) p1.smt2 p2.smt2} 
-
-
-\newcommand{\class}[1]{\texttt{#1}}
-
-
 \section{Implementation Details}
 
 In {\skeptik} every logical expression is a simply typed lambda expression, implemented by the abstract class \class{E} with concrete subclasses \class{Var}, \class{App} and \class{Abs} for, respectively, \emph{variables}, \emph{applications} and \emph{abstractions}. Scala's \emph{case classes} are used to make \class{E} behave like an algebraic datatype with (pattern-matchable) constructors \class{Var}, \class{App} and \class{Abs} \`{a} la functional programming.
 
-{\skeptik} is flexible w.r.t. the underlying proof calculus. Every proof node is an instance of the abstract class \class{ProofNode} and must contain a judgment of some concrete subclass of \class{Judgment} and a (possibly empty) collection of premises (which are other proof nodes). A proof is a directed acyclic graph of proof nodes; it is implemented as the class \class{Proof}, which provides higher-order methods for traversing proofs. Thanks to Scala's syntax conventions, these methods can be used as an internal domain specific language that integrates harmoniously with the scala language itself.
+{\skeptik} is flexible w.r.t. the underlying proof calculus. Every proof node is an instance of the abstract class \class{ProofNode} and must contain a judgment of some concrete subclass of \class{Judgment} and a (possibly empty) collection of premises (which are other proof nodes). A proof is a directed acyclic graph of proof nodes; it is implemented as the class \class{Proof}, which provides higher-order methods for traversing proofs. Thanks to Scala's syntax conventions, these methods can be used as an internal domain specific language that integrates harmoniously with the Scala language itself.
+%
+A proof calculus is a collection of inference rules, implemented as concrete subclasses of \class{ProofNode}. In particular, the main inference rules of the propositional resolution calculus used for representing proofs generated by SAT- and SMT-solvers are \class{Axiom} and \class{R} (for resolution). They use a \class{Sequent} class (a subclass of \class{Judgment}) to represent clauses.
 
-A proof calculus is a collection of inference rules, implemented as concrete subclasses of \class{ProofNode}. In particular, the main inference rules of the propositional resolution calculus used for representing proofs generated by sat- and smt-solvers are \class{Axiom} and \class{R} (for resolution). They use a \class{Sequent} class (a subclass of \class{Judgment}) to represent clauses.
+Classes for expressions and proof nodes are small and correctness conditions (e.g. typing conditions for expressions and the existence of a pivot for a resolution inference) are checked during object construction. Once constructed, they cannot be changed, because they are \emph{immutable}. Therefore, incorrect expressions and proofs cannot result from the transformations performed by {\skeptik}. Auxiliary functionality is not implemented in the classes but in their homonymous \emph{companion objects}. Therefore, even though {\skeptik} has more than 21000 lines of code, its most critical core data structures are less than a few hundred lines long.
 
-Classes for expressions and proof nodes are small and correctness conditions are checked during object construction. Once constructed, they cannot be changed, because they are \emph{immutable}. Therefore, incorrect expressions and proofs cannot result from the transformations performed by {\skeptik}. Auxiliary functionality is not implemented in the classes but in their homonymous \emph{companion objects}. Therefore, even though {\skeptik} has more than 21000 lines of code, its most critical core data structures are less than a few hundred lines long.
-
+\vspace{-1pt}
 
 \section{Supported Proof Formats}
 \label{sec:ProofFormats}
 
 Scala's \emph{combinator parsing} library makes it easy to implement parsers for various proof formats. {\skeptik} uses the extension of a file to  determine its proof format. To export proofs in various formats, {\skeptik} provides many exporter classes that extend Java's \class{java.io.Writer} class. Available proof formats are:
 
+\vspace{-4pt}
 
 \paragraph{TraceCheck Format (``.tc''): }
 
-The TraceCheck \cite{tracecheck} format is one of the three formats accepted at the \emph{Certified Unsat} track of the SAT-Competition and is used by sat-solvers such as \texttt{PicoSAT} \cite{Biere_picosatessentials}. Each line declares a new clause, specifying its name (a fresh positive integer), a space separated list of literals (positive or negative integers, depending on the polarity of the literals), and a list of premises (other clauses, referred by their names) needed to derive the new clause by regular input resolution. Zero is used as a delimiter. Figure \ref{TraceCheckProof} shows an example.
-
-Other formats accepted at the \emph{Certified Unsat} track are less detailed and hence less convenient to be used by tools that post-process proofs. The omission of premises in the RUP format, for example, throws away information about the DAG structure of the proofs. Nevertheless, there are tools for converting RUP proofs to a resolution format that resembles the trace-check format \cite{van2008verifying}.
+The TraceCheck \cite{tracecheck} format is one of the three formats accepted at the \emph{Certified Unsat} track of the SAT-Competition and is used by SAT-solvers such as \texttt{PicoSAT} \cite{Biere_picosatessentials}. Each line declares a new clause, specifying its name (a fresh positive integer), a space separated list of literals (positive or negative integers, depending on the polarity of the literals), and a list of premises (other clauses, referred by their names) needed to derive the new clause by regular input resolution. Zero is used as a delimiter. Figure \ref{TraceCheckProof} shows an example.
+%
+Other formats accepted at the \emph{Certified Unsat} track are less detailed and hence less convenient to be used by tools that post-process proofs. The omission of premises in the RUP format, for example, throws away information about the DAG structure of the proofs. Nevertheless, there are tools for converting RUP proofs to the trace-check format \cite{DRUPTrim}.
 
 %$$
 % \mathbf{line} \quad = \quad \mathbf{clause\_name} \ \mathbf{literal}^* \  \mathrm{0} \ \mathbf{premise}^* \  \mathrm{0}
@@ -169,13 +156,16 @@ Other formats accepted at the \emph{Certified Unsat} track are less detailed and
 	\label{TraceCheckProof}
 \end{figure}
 
+\vspace{-40pt}
+
 \paragraph{SMT Proof Format (``.smt2''): } Although there is a well-established format for SMT problems, there is still no agreement on a format for SMT proofs. {\skeptik} supports the format used by {\veriT} \cite{BoutonCaminha-B.-de-OliveiraDeharbeFontaine2009veriT:-an-open-trustable-and-efficient-SMT-Solver}, which is close in style to SMT-Lib's problem format. Other formats could be supported if requested by users. In contrast to the TraceCheck format, in {\veriT}'s format, expressions can be arbitrary first-order terms and formulas and not only propositional variables represented as integers. The proofs are purely resolution-based at the bottom (closer to the root) but may contain theory-related and CNF transformation inferences at the top. This clear separation makes the proofs amenable to propositional resolution proof compression techniques. {\skeptik} currently simply ignores non-resolution inferences, but does keep them in the compressed proof it outputs.
 
+\vspace{-5pt}
 
 \paragraph{{\skeptik}'s Proof Format (``.s''): }
 
-{\skeptik}'s own proof format is a propositional resolution proof format meant to be simple and easy to read and write by humans. Each line either declares a new named subproof or deletes a previously declared subproof. Axioms are represented as sequents surounded by curly braces. The infix resolution operator on
-subproofs is denoted by the pivot literal surounded by square brackets or by a single dot (if there is a single pivot candidate and its omission is desired). Subproof names and literals can be arbitrary strings of letters and digits. The last named subproof is considered to be the whole proof.
+{\skeptik}'s own proof format is a propositional resolution proof format meant to be simple and easy to read and write by humans. Each line either declares a new named subproof or deletes a previously declared subproof. Axioms are represented as sequents surrounded by curly braces. The infix resolution operator on
+subproofs is denoted by the pivot literal surrounded by square brackets or by a single dot (if there is a single pivot candidate and its omission is desired). Subproof names and literals can be arbitrary strings of letters and digits. The last named subproof is considered to be the whole proof.
 
 \vspace{-10pt}
 
@@ -191,29 +181,42 @@ subproofs is denoted by the pivot literal surounded by square brackets or by a s
 
 \vspace{-10pt}
 
+
+\newcommand{\pskip}{\vspace{-3pt}}
+
+\pskip
+
 \section{Proof Compression Algorithms}
 
-Most algorithms for the compression of propositional resolution proofs generated by sat-solvers and smt-solvers described in the literature are available in {\skeptik}. They are shortly described below:
+One of {\skeptik}'s essential design goals is ease of implementation, combination and comparison of proof compression algorithms. This is evidenced by the fact that most algorithms for the compression of propositional resolution proofs described in the literature are available in {\skeptik}. They are shortly described below:
+
+\pskip
 
 \paragraph{RecyclePivots} (\algo{RP}) \cite{RP08,RP11} compresses a proof by partially regularizing it. A proof is \emph{irregular} \cite{Tseitin} if the resolved literal (pivot) of a resolution proof node is resolved again on the path from this node to the root node. \algo{RP} finds irregular nodes efficiently by traversing the proof from the root to the leaves a single time and memorizing which literals were resolved. When it finds an irregular node, it marks one of its premises for deletion. In a second traversal, from the leaves to the root, irregular nodes are replaced by their non-deleted premises. As full regularization can lead to an exponential blow-up in the proof length \cite{Goerdt}, it is important to regularize carefully and only partially. \algo{RP} achieves this by resetting the set of literals for a node to the empty set when it has more than one child (i.e. when it is the premise of more than one node).
 
+\pskip
 
 \paragraph{RecyclePivotsWithIntersection} (\algo{RPI}) \cite{LURPI}
 differs from \algo{RP} in the treatment of a node with more than one child. Instead of resetting its set of literals to the empty set, the intersection of the sets of literals incoming from its children is computed. In this manner, the exponential blow-up is still avoided, but strictly more irregular nodes are detected and regularized.
 
+\pskip
 
 \paragraph{LowerUnits} (\algo{LU}) \cite{LURPI} partially eliminates a kind of redundancy that is almost orthogonal to irregularity. When a node $\node$ appears as premise of many resolutions
 with the same pivot $p$, it is desirable to resolve $\node$ on $p$ only once instead. This is not always possible, unless $\node$ contains a unit clause (a clause with only the literal $p$).
 \algo{LowerUnits} reduces redundancy by lowering all unit nodes. The nodes are removed from their places and reintroduced in the very bottom of the proof, by resolving them (at most once) with the root of the fixed proof. 
 
+\pskip
 
 \paragraph{LowerUnivalents} (\algo{LUV}) \cite{LUniv} generalizes \algo{LowerUnits}. By
 keeping track of nodes that have already been lowered and their pivots, it becomes
 possible to lower a non-unit node if it is \emph{univalent}: all its literals but one (its so-called \emph{valent} literal) can be resolved against the valent literals of the already lowered nodes. 
 
+\pskip
 
-\paragraph{\algo{LUVRPI}} \cite{LUniv} is a non-sequential combination of \algo{LUV} after \algo{RPI} and currently provides one of the best trade-offs between compression time and compression ratio. Non-sequential combinations with \algo{LUV} are easy to implement, because \algo{LUV} has been implemented as a replacement for the \algo{fixProof} function used by some algorithms to reconstruct a proof after deletions. 
+\paragraph{\algo{LUVRPI}} \cite{LUniv} is a non-sequential combination equivalent to the sequential combination of \algo{LUV} after \algo{RPI} and currently provides one of the best trade-offs between compression time and compression ratio. Non-sequential combinations with \algo{LUV} are easy to implement, because \algo{LUV} has been implemented as a replacement for the \algo{fixProof} function used by some algorithms to reconstruct a proof after deletions. 
 %
+
+\pskip
 
 \paragraph{\algo{RPI3LU} and \algo{RPI3LUV}} are non-sequential combinations of \algo{RPI} after \algo{LU}
 and \algo{LUV}, respectively. They consist of three traversals. The first traversal collects subproofs to be
@@ -221,14 +224,16 @@ lowered. The second traversal computes the sets of safe literals for each node,
 taking into account the subproofs marked for being lowered. The last traversal actually compresses the proof by removing redundant branches and lowering subproofs. These algorithm are optimizations of the corresponding sequential compositions, achieving the
 same compression ratio in less time. 
 
+\pskip
 
 \paragraph{Reduce\&Reconstruct} (\algo{RR}) \cite{RedRec} applies local transformation
-rules that either eliminate local redundancies or shuffle the order of resolution steps (similarly to what Gentzen's rank reduction rules for cut-elimination do) in order to gradually transform non-local redundancies into local ones. Although the given set of local rules is sufficient to emulate any
+rules that either eliminate local redundancies or shuffle the order of resolution steps (similarly to what Gentzen's rank reduction rules do) in order to gradually transform non-local redundancies into local ones. Although the given set of local rules is sufficient to emulate any
 other compression algorithm, the algorithm may need many traversals to shuffle the order of resolutions steps sufficiently well to eliminate non-local redundancies. This algorithm can achieve very good
 compression ratio, if executed for long enough.
 %
-The implementation in \skeptik is very modular, allowing convenient experimentation with various alternative local transformation rules, rule application heuristics and termination criteria. There still seems to be plenty of space to improve heuristics and termination criteria for this algorithm.
+The implementation in \skeptik is very modular, allowing convenient experimentation with various alternative local transformation rules, rule application heuristics and termination criteria.
 
+\pskip
 
 \paragraph{Split} \cite{CottonSplit} lowers pivot variables in a proof. 
 From a proof with conclusion $C$, two proofs with conclusions $v \vee C$ and $\neg{v} \vee C$ are constructed,  where the variable $v$ is chosen heuristically.
@@ -239,22 +244,18 @@ The roots of the resulting proofs are resolved, using $v$ as pivot, to obtain a 
 The time-complexity of this algorithm is linear in the proof length, but it has to be repeated many times to obtain significant compression. This can be done iteratively or recursively. Also multiple variables can be chosen in advance. 
 All these variants are implemented in {\skeptik}.
 
-\paragraph{Tautology Elimination} (\algo{ET}) eliminates proof nodes containing tautological clauses. Although tautological clauses normally do not occur in proofs generated by sat- and smt-solvers, they may occur in proofs compressed by some of the algorithms described here.
+\pskip
 
+\paragraph{Tautology Elimination} (\algo{ET}) eliminates proof nodes containing tautological clauses. Although tautological clauses normally do not occur in proofs generated by SAT- and SMT-solvers, they may occur in post-processed proofs.
 
-\paragraph{DAGification} (\algo{D}) finds proof nodes having equal clauses and replaces each of them by only one of them. 
+\pskip
 
-
-\paragraph{Subsumption} algorithms generalize DAGification by using the subsumption relation on clauses instead of the equality relation. 
-%A clause $C_1$ subsumes a clause $C_2$ iff every literal occurring in $C_1$ also occurs in $C_2$. 
-The goal is to replace a node containing a clause $C_2$ by another node containing a clause $C_1$ if $C_1$ subsumes $C_2$.
-There are three subsumption-based proof compression algorithms implemented in Skeptik, all with quadratic worst-case complexity.
+\paragraph{DAGification} (\algo{D}) finds proof nodes having equal clauses and replaces one of them by the other. 
 %
-\algo{TopDownSubsumption} (\algo{TDS}) searches for subsumed clauses among all clauses visited earlier in a top-down traversal. 
+\emph{Subsumption} algorithms generalize DAGification by replacing a node containing a clause $C_2$ by another node containing a clause $C_1$ if $C_1$ subsumes $C_2$.
+There are three subsumption-based proof compression algorithms implemented in Skeptik, \algo{TopDownSubsumption} (\algo{TDS}), \algo{BottomUpSubsumption} (\algo{BUS}) and \algo{RecycleUnits} (\algo{RU}) \cite{RP11}, all with quadratic worst-case complexity.
 %
-\algo{BottomUpSubsumption} (\algo{BUS}) searches for subsumed clauses among all clauses visited earlier in a bottom-up traversal. A subsumed clause $D$ can only replace a clause $C$, if $D$ is not an ancestor of $C$ in the graph representing the proof. This additional ancestor-check makes it much slower in practice.
-%
-\algo{RecycleUnits} (\algo{RU}) \cite{RP11} is a special case of \algo{BUS} that only searches for subsuming clauses that are unit (i.e. contain only one literal).
+\pskip
 
 \paragraph{Pebbling} algorithms 
 %\cite{ToDo: cite submitted paper}
@@ -271,17 +272,27 @@ Minimizing the space measure is analogous to minimizing the number of pebbles us
 % \algo{BottomUpPebbler} (\algo{BUP}) constructs a node ordering by visiting proof nodes and their premises recursively, starting from the root node. At every node, \algo{BUP} heuristically chooses which subproof rooted in the premises of the node should be pebbled first. After all premises are pebbled, the node itself is pebbled. \algo{BUP} is thus more aware of the global structure of the proof, and achieves much better space compression than \algo{TDP}.
 
 
+\section{Installation and Usage}
+
+{\skeptik} is implemented in Scala and runs on the Java virtual machine (JVM). Therefore, Java (\url{https://www.java.com/}) must be installed. The easiest way to download {\skeptik} is via \texttt{git} (\url{http://git-scm.com/}), by executing \com{git clone git@github.com:Paradoxika/Skeptik.git} in the folder where {\skeptik} should be downloaded. It is helpful to install \texttt{SBT} (\url{http://www.scala-sbt.org/}), a build tool that automatically downloads all compilers and libraries on which {\skeptik} depends. To compile, build and package {\skeptik}, run \com{sbt one-jar} in {\skeptik}'s home folder. This generates an executable jar file.
+%
+\texttt{SBT} and Scala programs may need a lot of memory for compilation and execution. If out-of-memory problems occur, the JVM's maximum available memory can be increased by executing \com{export JAVA\_TOOL\_OPTIONS=``-Xmx1024m -Xss4m -XX:MaxPermSize=256m''}.
+
+The command \com{java -jar skeptik.jar --help} displays a help message explaining how to use {\skeptik}. To compress the proof ``eq\_diamond9.smt2'' using the algorithm \texttt{RPI} and write the compressed proof using the `smt2' proof format, for example, the following command should be executed: \com{java -jar skeptik.jar -a RPI -f smt2 examples/proofs/VeriT/eq\_diamond9.smt2}. \\
+{\skeptik} can be called with an arbitrary number of algorithms and proofs. The following command would compress the proofs ``p1.smt2'' and ``p2.smt2'' with two algorithms each (\texttt{RP} and a sequential composition of \texttt{D}, \texttt{RPI} and \texttt{LU}): \\
+\com{java -jar skeptik.jar -a RP -a (D-RPI-LU) p1.smt2 p2.smt2} 
+
+Skeptik can also be used as a library of proof data structures and compression algorithms from within any Java or Scala program. In this manner, communication via proof files can be avoided.
+
 
 \section{Conclusions and Future Work}
 
-{\skeptik}'s development started around March 2012 and since then it has been used internally to compare various proof compression algorithms and develop new ones. Now its wide collection of algorithms is ready to be released to external users interested in improving the proofs they obtain from sat- and smt-solvers. 
-%One particularly successful external use of {\skeptik} was in interpolation-based controller synthesis: a proof with ToDo nodes was compressed by ToDo\% and better interpolants could be extracted from the compressed proof \cite{ToDo}.
+{\skeptik}'s development started around March 2012 and since then it has been used internally to compare various proof compression algorithms and develop new ones. Now its wide collection of algorithms is ready to be released to external users interested in improving the proofs they obtain from SAT- and SMT-solvers. One particularly successful external use of {\skeptik} was in interpolation-based controller synthesis \cite{Hofferek}: proofs with millions of nodes have been compressed by 70\% and better interpolants could be extracted from the compressed proof. Compression ratios varying from 10\% to 70\% (typically around 20\%), depending on the benchmark and on the employed algorithm, have been observed. The performance is acceptable; the conveniences of a high-level language such as Scala outweigh its overheads.
+%
 
-In the near future, parsers for other proof formats for propositional resolution proofs could be easily added if requested by users. Moreover, {\skeptik} was designed to be flexible with respect to the underlying proof system. It is not restricted to propositional resolution. Techniques for compressing natural deduction proofs are currently being investigated and implemented. 
-%\cite{ToDo:LFCS}, 
-Data structures for sequent calculus proofs are partially available, and techniques for compressing them 
-%\cite{ToDo:CutIntro,Herbrand} 
-could be implemented in {\skeptik} as well. Many of the propositional resolution proof compression algorithms could be extended to first- or even higher-order resolution, by taking extra care of unification. 
+In the near future, parsers for other proof formats for propositional resolution proofs could be easily added if requested by users. Moreover, {\skeptik} was designed to be flexible with respect to the underlying proof system. It is not restricted to propositional resolution. Techniques for compressing natural deduction proofs are currently being investigated and implemented \cite{ContextualND}.
+Data structures for sequent calculus proofs are partially available, and techniques for compressing them \cite{CutIntro} 
+could be implemented in {\skeptik} as well. Many of the propositional resolution proof compression algorithms could be extended to first- or even higher-order resolution, by taking extra care of unification. Features such as the extraction of unsat cores and interpolants could be useful additions to {\skeptik} as well.
 
 \vspace{-5pt}
 
