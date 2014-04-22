@@ -83,7 +83,7 @@ their correctness.
 
 Furthermore, for most applications, a \emph{yes/no} answer is inherently insufficient. We often already know in advance whether a problem is expected to be satisfiable or unsatisfiable, and we want more than just a confirmation of this expectation. For satisfiable formulas, the desired information is encoded in the model; while for valid formulas, it is contained in the proof. In case the expectation was wrong, refutations and countermodels can be helpful to explain issues in the encoding of the problem, in order to correct and refine it. Proofs can been used, for example, to obtain unsat cores, interpolants and Herbrand disjunctions \cite{Paleo2008Herbrand}.
 
-Although current automated deduction tools are very efficient at finding proofs, they do not necessarily find the \emph{best} proofs (e.g. shortest, least spacious, with smallest core\ldots depending on the intended application). The {\skeptik} tool (\url{http://github.com/Paradoxika/Skeptik/}) finds and eliminates redundancies in proofs, in order to improve and compress them according to various metrics. It is licensed under a Creative Commons CC-BY-NC-SA License.
+Although current automated deduction tools are very efficient at finding proofs, they do not necessarily find the \emph{best} proofs (e.g. shortest, least spacious, with smallest core\ldots{} depending on the intended application). The {\skeptik} tool (\url{http://github.com/Paradoxika/Skeptik/}) finds and eliminates redundancies in proofs, in order to improve and compress them according to various metrics. It is licensed under a Creative Commons CC-BY-NC-SA License.
 
 
 \paragraph{Related Work:} \texttt{CERes} (\url{http://www.logic.at/ceres})
@@ -291,7 +291,7 @@ Skeptik can also be used as a library of proof data structures and compression a
 
 In the near future, parsers for other proof formats for propositional resolution proofs could be easily added if requested by users. Moreover, {\skeptik} was designed to be flexible with respect to the underlying proof system. It is not restricted to propositional resolution. Techniques for compressing natural deduction proofs are currently being investigated and implemented \cite{ContextualND}.
 Data structures for sequent calculus proofs are partially available, and techniques for compressing them \cite{CutIntro} 
-could be implemented in {\skeptik} as well. Many of the propositional resolution proof compression algorithms could be extended to first- or even higher-order resolution, by taking extra care of unification. Features such as the extraction of unsat cores and interpolants could be useful additions to {\skeptik} as well.
+could be implemented in {\skeptik} as well. Many of the propositional resolution proof compression algorithms could be extended to first or even higher-order resolution, by taking extra care of unification. Features such as the extraction of unsat cores and interpolants could be useful additions to {\skeptik} as well.
 
 \vspace{-5pt}
 
