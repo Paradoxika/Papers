@@ -1,0 +1,54 @@
+\section{Pebbling as a Satisfiability Problem}
+\label{sec:pebblingSAT}
+
+To find the pebble number of a proof, the question whether the proof can be pebbled using no more than $k$ pebbles can be encoded as a propositional satisfiability problem.
+In this section let $\varphi$ be a proof with nodes $\n_1,\ldots,\n_n$ and let $\n_n$ be its root. 
+Due to rule \ref{rule:onlyonce} of the Bounded Pebbling Game, the number of moves that pebble nodes is exactly $n$ and due to Theorem \ref{theorem:canonical}, determining the order of these moves is enough to define a strategy. 
+
+In our SAT encoding, for every $x \in \{1,\ldots,k\}$, every $j \in \{1,\ldots,n\}$ and every $t \in \{0,\ldots,n\}$ there is a propositional variable $p_{x,j,t}$. 
+The variable $p_{x,j,t}$ being mapped to $\top$ by a valuation is interpreted as the fact that in the $t$'th round of the game node $v_j$ is marked with pebble $x$.
+Round $0$ is interpreted as the initial setting of the game before any move has been done.
+
+For pebbling strategies, it is not relevant which of the $k$ pebbles is on a node.
+Therefore one could also think of an encoding where true variables simply mean that a node is pebbled.
+However, such an encoding would require exponentially many clauses (in $k$) when limiting the number of pebbles used in a round.
+
+\begin{definition}[Pebbling SAT encoding]
+%The following constraints, combined conjunctively, are satisfiable \textit{iff} there is a pebbling strategy $\sigma$ for $\varphi$ with pebbling number smaller or equal $k$. 
+%In case the formula is satisfiable, a pebbling strategy can be read off from any satisfying assignment.
+The conjunction of the following four constraints expresses the existence of a pebbling strategy for $\varphi$ with pebbling number smaller or equal $k$.
+
+\begin{enumerate}
+	\item The root is pebbled in the last round
+				$$\Psi_1 = \bigvee_{x = 1}^k p_{x,n,n}$$
+				
+	\item No node is pebbled initially\\
+				$$\Psi_2 = \bigwedge_{x = 1}^k \bigwedge_{j = 1}^n \left(\neg p_{x,j,0} \right)$$
+
+	\item A pebble can only be on one node in one round
+				$$\Psi_3 = \bigwedge_{x = 1}^k \bigwedge_{j = 1}^n \bigwedge_{t = 1}^n \left( p_{x,j,t} \rightarrow \bigwedge_{i = 1, i \neq j}^n \neg p_{x,i,t} \right)$$ 
+				
+	\item \label{c:pebble} For pebbling a node, its premises have to be pebbled the round before and only one node is being pebbled each round.\\
+				\begin{align*}
+					\Psi_4 = \bigwedge_{x = 1}^k \bigwedge_{j = 1}^n \bigwedge_{t = 1}^n & \Bigg( \left(\neg p_{x,j,t} \wedge p_{x,j,(t+1)} \right)\rightarrow \\
+					&\bigg( \bigwedge_{i \in \Premises{j}{\varphi}} \bigvee_{y = 1, y \neq x}^k p_{y,i,t} \bigg) \wedge 
+					\bigg( \bigwedge_{i = 1}^n \bigwedge_{y = 1, y \neq x}^k \neg \left( \neg p_{y,i,t} \wedge p_{y,i,(t+1)} \right) \bigg) \Bigg)
+				\end{align*}
+				
+\end{enumerate}
+
+The sets $\Axioms{\varphi}$ and $\Premises{j}{\varphi}$ are to be understood as sets of indices of the respective nodes.
+
+\end{definition}
+
+\noindent
+This encoding is polynomial, both in $n$ and $k$. However constraint \ref{c:pebble} accounts to $O(n^3*k^2)$ clauses. 
+Even small resolution proofs have more than $1000$ nodes and pebble numbers larger than $100$, which adds up to $10^{13}$ clauses for constraint \ref{c:pebble} alone. 
+Therefore, although theoretically possible to play the pebbling game via SAT-solving, this is practically infeasible for compressing proof space.
+The following theorem states the correctness of the encoding.
+
+\begin{theorem}[Correctness of pebbling SAT encoding]
+
+$\Psi = \Psi_1 \wedge \Psi_2 \wedge \Psi_3 \wedge \Psi_4$ is satisfiable if and only if there exists a pebbling strategy using no more than $k$ pebbles
+
+\end{theorem}
