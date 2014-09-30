@@ -11,7 +11,7 @@ Top-Down Pebbling (Algorithm \ref{algo:TDpebbling}) constructs a topological ord
 This approach closely corresponds to how a human would play the Bounded Pebbling Game. 
 A human would look at the nodes that are available for pebbling in the current round of the game, choose one of them to pebble and remove pebbles if possible.
 Similarly the algorithm keeps track of pebblable nodes in a set $N$, initialized as $\Axioms{\varphi}$.
-When a node $\n$ is pebbled, it is removed from $N$ and added to the sequence representing the topological order. The children of $\n$ that become pebbleable are added to $N$.
+When a node $v$ is pebbled, it is removed from $N$ and added to the sequence representing the topological order. The children of $v$ that become pebbleable are added to $N$.
 When $N$ becomes empty, all nodes have been pebbled once and a topological order has been found.
 
 
@@ -23,10 +23,10 @@ When $N$ becomes empty, all nodes have been pebbled once and a topological order
 	$N = \Axioms{\varphi}$; \tcp*[f]{initialize pebbleable nodes with Axioms}
 	
   \While{$N$ is not empty}{
-    choose $\n \in N$ heuristically\;
-		$S = S ::: (\n)$; \tcp*[f]{$:::$ is the concatenation of sequences}\\
-		$N = N \setminus \{\n\}$\;
-		\For(\tcp*[f]{check whether $c$ is now pebbleable}){\KwSty{each} $c \in \Children{\n}{\varphi}$}{ 
+    choose $v \in N$ heuristically\;
+		$S = S ::: (v)$; \tcp*[f]{$:::$ is the concatenation of sequences}\\
+		$N = N \setminus \{v\}$\;
+		\For(\tcp*[f]{check whether $c$ is now pebbleable}){\KwSty{each} $c \in \Children{v}{\varphi}$}{ 
 			\If{$\forall p \in \Premises{c}{\varphi}: p \in S$}
 					{$N = N \cup \{c\}$\;}
 					}
@@ -38,7 +38,7 @@ When $N$ becomes empty, all nodes have been pebbled once and a topological order
   \label{algo:TDpebbling}
 \end{algorithm}
 
-Unfortunately Top-Down Pebbling often constructs pebbling strategies with high pebbling numbers regardless of the heuristic used.
+Top-Down Pebbling often constructs pebbling strategies with high pebbling numbers regardless of the heuristic used.
 The following example shows such a situation.
 
 \begin{example}
@@ -159,12 +159,12 @@ However the pebbling number of this proof is five.
 
 \subsection{Bottom-Up Pebbling}
 
-Bottom-Up Pebbling (Algorithm \ref{algo:BUpebbling}) constructs a topological order of a proof $\varphi$ while traversing it from its root node $r$ to its axioms. 
+Bottom-Up Pebbling (Algorithm \ref{algo:BUpebbling}) constructs a topological order of a proof $\varphi$ while traversing it from its root node $\n$ to its axioms. 
 The algorithm constructs the order by visiting nodes and their premises recursively. 
-For every node $\n$ the order in which the premises of $\n$ are visited is decided heuristically. 
-After visiting the premises, $n$ is added to the current sequence of nodes.
+For every node $v$ the order in which the premises of $v$ are visited is decided heuristically. 
+After visiting the premises, $v$ is added to the current sequence of nodes.
 Since axioms do not have any premises, there is no recursive call for axioms and these nodes are simply added to the sequence. 
-The recursion is started with the call \texttt{BUpebble($\varphi,r,\emptyset,()$)}.
+The recursion is started with the call \texttt{BUpebble($\varphi,\n,\emptyset,()$)}.
 Since all proof nodes are ancestors of the root, the recursive calls will eventually visit all nodes once and a topological total order will be found.
 Bottom-Up Pebbling corresponds to the apply function $\ap(.)$ defined in Section \ref{sec:resolution} with the addition of a visit order of the premises.
 Also previously visited nodes are not visited again.
@@ -186,13 +186,13 @@ Also previously visited nodes are not visited again.
 
 \begin{algorithm}[h]
   \KwIn{proof $\varphi$}
-	\KwIn{node $\n$}
+	\KwIn{node $v$}
 	\KwIn{set of visited nodes $D$} 
 	\KwIn{initial sequence of nodes $S$}
   \KwOut{sequence of nodes}
 	
-	$D = D \cup \{\n\}$; \\
-	$N = \Premises{\n}{\varphi} \setminus D$; \tcp*[f]{Only unprocessed premises are visited} \\
+	$D = D \cup \{v\}$; \\
+	$N = \Premises{v}{\varphi} \setminus D$; \tcp*[f]{Only unprocessed premises are visited} \\
 	$S_1 = S$\;
 	
   \While{$N$ is not empty}{
@@ -201,7 +201,7 @@ Also previously visited nodes are not visited again.
 		$S_1 = S_1 ::: BUpebble(\varphi,p,D,S)$; \tcp*[f]{$:::$ is the concatenation of sequences}
   }
 	
-	\Return $S_1 ::: (\n)$\;
+	\Return $S_1 ::: (v)$\;
 	
   \caption{BUpebble}
 	\label{algo:BUpebbling}
@@ -362,13 +362,7 @@ At no point more than five pebbles will be used for pebbling the root node, whic
 \subsection{Remarks about Top-Down and Bottom-Up Pebbling} %or: Which way to go?
 \label{sec:TDvsBU}
 
-Every topological order of a given proof can be constructed using Top-down or Bottom-up Pebbling.
-A heuristic that orders nodes according to the desired topological order achieves this goal.
-Of course such a heuristic is not very useful in practice, as we do not know the desired topological order beforehand.
-Both algorithms traverse the proof only once and have linear run-time in the proof length (assuming that the heuristic choice requires constant time).
-Therefore both algorithms are theoretically equally good in constructing topological orders.
-
-The experiments presented in Section \ref{sec:experiments} show that in practice, Bottom-Up Pebbling performs much better.
+The experiments presented in Section \ref{sec:experiments} show that in practice, Bottom-Up Pebbling performs much better than Top-Down.
 Example \ref{example:TDPIssue} shows two principles that result in pebbling strategies with small pebbling numbers and are likely to be violated by the Top-Down Pebbling algorithm.
 
 Firstly, a pebbling strategy should make local choices.

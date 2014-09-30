@@ -18,16 +18,28 @@ $\bot$ denotes the \emph{empty clause}.
 
 A clause represents the propositional logic formula that is the disjunction of its literals.
 A set of clauses represents the formula that is the conjunction of its clauses.
-The propositional resolution calculus operates on propositional formulas in conjunctive normal form, which are formulas that are represented by a set of clauses.
+The propositional resolution calculus derives new clauses using the propositional resolution rule with the aim of deriving the empty clause.
+
+\begin{definition}[Resolvent]
+
+Let $C_1$ and $C_2$ be two different clauses and $\ell$ be a literal, such that $\ell \in C_1$ and $\dual{\ell} \in C_2$.
+The clause $C_1 \setminus \{\ell\} \cup C_2 \setminus \{\dual{\ell}\}$ is called the \emph{resolvent} of $C_1$ and $C_2$ with \emph{pivot} $\ell$.
+
+\end{definition}
+
+The condition of $C_1$ and $C_2$ being different technically is not necessary.
+However if it is possible to resolve a clause with itself, then the clause contains both the positive and negative version of a variable and is therefore tautological (i.e. trivially satisfiable).
+Since the resolution calculus is refutational, i.e. it seeks to show unsatisfiability, such clauses are of no use and therefore we ignore them.
+In case it is possible to produce a resolvent of two clauses w.r.t. two different literals, no matter which literal is chosen, the resulting resolvent will be tautological.
+Therefore we will drop the reference to the literal when speaking about resolvents.
+
 It is usual to present proofs in this calculus as syntactic derivations and refutations, that are sequences of clauses.
 However, in this work, we investigate the graph structure of proofs and therefore present proofs as graphs in the following definition.
 
 \begin{definition}[Proof] 
 \label{def:proof}
-A \emph{proof} $\varphi$ is a labeled directed acyclic graph $\langle V,E,\n,\mathcal{L} \rangle$, such that $\n$ has no incoming edges.
-The labeling function $\mathcal{L}$ maps nodes to clauses.
-The designated node $\n \in V$ is the \emph{root} of the graph, i.e. it is a node without children and every node of the graph is a recursive ancestor of the node.
-Furthermore, a proof has to fulfill one of the following properties:
+A \emph{proof} $\varphi$ is a labeled directed acyclic graph $\langle V,E,\n,\mathcal{L} \rangle$, such that
+$\n$ is a unique root of the graph, that is $\n$ has no incoming edges and every node is reachable from $\n$, $\mathcal{L}$ maps nodes to clauses and one of the following properties is fulfilled:
 
 \begin{enumerate}
 	\item $V = \{\n\}, E = \emptyset$
@@ -39,12 +51,12 @@ Furthermore, a proof has to fulfill one of the following properties:
 		$V = (V_L \cup V_R) \cup \{\n \}$, $E = E_L \cup E_R \cup \{(\n_L,\n) , (\n_R,\n) \}$.
 \end{enumerate}
 
-$\mathcal{L}(\n)$ is the \emph{conclusion} of $\n$.
-In case \ref{enum:resCase}, $\varphi_L$ and $\varphi_R$ are \emph{premises} of $\varphi$ and $\varphi$ is a \emph{child} of $\varphi_L$ and $\varphi_R$.
-A proof $\psi$ is a \emph{subproof} of a proof $\varphi$, if they are related in the transitive closure of the premise relation.
-A subproof $\psi$ of $\varphi$ which has no premises is an \emph{axiom} of $\varphi$.
-$\Axioms{\varphi}$ denotes the set of nodes and axioms of $\varphi$. 
-$\Premises{\n}{\varphi}$ denotes the premises and $\Children{\n}{\varphi}$ the children of the subproof with root $\n$ in a proof $\varphi$.
+For a node $v \in V$, $\mathcal{L}(v)$ is the \emph{conclusion} of $v$.
+In case \ref{enum:resCase} $\n_L$ and $\n_R$ are \emph{premises} of $\n$ and $\n$ is a \emph{child} of $\n_L$ and $\n_R$.
+A proof $\psi$ is a \emph{subproof} of a proof $\varphi$, if the respective roots are related in the transitive closure of the premise relation.
+The root of a subproof $\psi$ of $\varphi$ which has no premises is an \emph{axiom} of $\varphi$.
+$\Axioms{\varphi}$ denotes the set of axioms of $\varphi$. 
+$\Premises{v}{\varphi}$ denotes the premises and $\Children{v}{\varphi}$ the children of a node $v$ in a proof $\varphi$.
 
 \end{definition}
 
@@ -61,10 +73,10 @@ Other common measures of proofs that are not discussed in this work are for exam
 
 \begin{example}
 
-Consider the propositional logic formula $\Phi$ in conjunctive normal form.
-$$\Phi := (x_1 \vee x_2 \vee \neg x_3) \wedge (x_1 \vee x_2) \wedge (x_1 \vee x_3) \wedge (\neg x_1)$$
-In clause notation, this formula is written as $\langle \{x_1, x_2, \neg x_3\}, \{x_1, x_2\}, \{x_1, x_3\}, \{\neg x_1\} \rangle$.
-By resolving the clauses $\{x_1, x_2, \neg x_3\}$ and $\{x_1, x_2\}$, we obtain the clause $\{x_1,\neg x_3\}$, which we can resolve with $\{x_1, x_3\}$ to obtain $\{x_1\}$.
+Consider the unsatisfiable propositional logic formula $\Phi$ in conjunctive normal form.
+$$\Phi := (x_1 \vee x_2 \vee \neg x_3) \wedge (x_1 \vee \neg x_2) \wedge (x_1 \vee x_3) \wedge (\neg x_1)$$
+In clause notation, this formula is written as $\langle \{x_1, x_2, \neg x_3\}, \{x_1, \neg x_2\}, \{x_1, x_3\}, \{\neg x_1\} \rangle$.
+By resolving the clauses $\{x_1, x_2, \neg x_3\}$ and $\{x_1, \neg x_2\}$, we obtain the clause $\{x_1,\neg x_3\}$, which we can resolve with $\{x_1, x_3\}$ to obtain $\{x_1\}$.
 Finally, we obtain the empty clause $\bot$ by resolving $\{x_1\}$ with $\{\neg x_1\}$.
 The resulting proof is displayed in Figure \ref{fig:resolutionexample}.
 
@@ -84,7 +96,7 @@ The resulting proof is displayed in Figure \ref{fig:resolutionexample}.
 
 \end{example}
 
-The aim of this work is to make proof processing easier by minimizing proofs in the two measures space and length.
+The aim of this work is to make proof processing easier by minimizing space requirements of proofs.
 Proof processing could be checking its correctness, manipulating it, as we do in this work extensively, or extracting information, for example interpolants and unsat cores, from it.
 The following definition makes the notion of proof processing formal.
 
@@ -92,18 +104,18 @@ The following definition makes the notion of proof processing formal.
 \label{def:proof-processing}
 
 Let $\varphi = \langle V,E,\n,\mathcal{L} \rangle$ be a proof and $T$ be an arbitrary set.
-A function $f: V \times T \times T \rightarrow T$ is a \emph{processing function} if there is a function $g_f: V \rightarrow T$ such that for every $v \in V$ with $\Premises{v}{\varphi} = \emptyset$ (i.e. $v$ represents an axiom), $g_f(v) = f(v,t_1,t_2)$ for all $\{t_1,t_2\} \subseteq T$.
+A function $f: V \times T \times T \rightarrow T$ is a \emph{processing function} if there is a function $g_f: V \rightarrow T$ such that for every $v \in \Axioms{\varphi}: g_f(v) = f(v,t_1,t_2)$ for all $\{t_1,t_2\} \subseteq T$.
 Let $\mathcal{F}$ be the set of processing functions.
 The \emph{apply function} $\ap: V \times \mathcal{F} \rightarrow T$ is defined recursively as follows.
 $$
-\ap(\n,f) = \Big\{
+\ap(v,f) = \Big\{
 \begin{array}{ll}
-	f(\n,\ap(pr_1,f),\ap(pr_2,f)) &\text{ if } \n \text{ has premises } pr_1 \text{ and } pr_2\\
-	g_f(\n) &\text{ otherwise}\\
+	f(v,\ap(pr_1,f),\ap(pr_2,f)) &\text{ if } v \text{ has premises } pr_1 \text{ and } pr_2\\
+	g_f(v) &\text{ otherwise}\\
 \end{array}
 $$
 
-\emph{Processing a node} $\n$ with some processing function $f$ means computing the value $\ap(\n,f)$.
+\emph{Processing a node} $v$ with some processing function $f$ means computing the value $\ap(v,f)$.
 \emph{Processing a proof} means to process its root node.
 
 \end{definition}
@@ -112,10 +124,10 @@ $$
 
 Checking the correctness of a proof (i.e. checking for the absence of faulty resolution steps) can be done in terms of the following processing function with $T = \{\top,\bot\}$ and $\wedge$ being the usual boolean and-operation.
 $$
-f(\n,w_1,w_2) = \left\{
+f(v,w_1,w_2) = \left\{
 \begin{array}{ll}
-	\top & \text{ if $\n$ has no premises} \\
-	w_1 \wedge w_2 &\text{ if the conclusion of $\n$ is a resolvent}\\
+	\top & \text{ if $v$ has no premises} \\
+	w_1 \wedge w_2 &\text{ if the conclusion of $v$ is a resolvent}\\
 								 &\hspace{0.85em} \text{ of the conclusions of its premises} \\
 	\bot & \text{ otherwise}
 \end{array}

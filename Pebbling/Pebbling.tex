@@ -1,5 +1,7 @@
 \documentclass{llncs}
 
+\usepackage{wrapfig}
+
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
@@ -51,7 +53,7 @@
 \newcommand{\Axioms}[1]{A_{#1}}
 
 \newcommand{\axiom}[1]{\widehat{#1}}
-\newcommand{\n}{v}
+\newcommand{\n}{r}
 \newcommand{\raiz}[1]{\rho(#1)}
 \newcommand{\pspace}[2]{s(#1,#2)}
 
@@ -155,7 +157,7 @@ This paper describes algorithms and heuristics for playing a \emph{Pebbling Game
 
 \input{chapters/pebbling_experiments}
 
-\input{chapters/pebbling_futurework}
+%\input{chapters/pebbling_futurework}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Conclusion %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -165,6 +167,8 @@ This paper describes algorithms and heuristics for playing a \emph{Pebbling Game
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \input{chapters/pebbling_conclusion}
+
+\newpage
 
 \bibliographystyle{splncs}
 \bibliography{jabref_references}

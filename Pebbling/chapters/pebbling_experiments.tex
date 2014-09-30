@@ -3,8 +3,8 @@
 
 The experiments on the space compression algorithm were performed on four disjoint sets of proof benchmarks (Table \ref{tab:benchmarks}). 
 TraceCheck$_1$ and TraceCheck$_2$ contain proofs produced by the SAT-solver PicoSAT \cite{Biere2008} on unsatisfiable benchmarks from the SATLIB. 
-The proofs\footnote{SAT proofs: \url{www.logic.at/people/bruno/Experiments/2014/Pebbling/tc-proofs.zip}} are in the TraceCheck proof format, which is one of the three formats accepted at the \emph{Certified Unsat} track of the SAT-Competition.
-veriT$_1$ and veriT$_2$ contain proofs produced by the SMT-solver VeriT \cite{Bouton2009} on unsatisfiable problems from the SMT-LIB. 
+The proofs\footnote{SAT proofs: \scriptsize{\url{www.logic.at/people/bruno/Experiments/2014/Pebbling/tc-proofs.zip}}} are in the TraceCheck proof format, which is one of the three formats accepted at the \emph{Certified Unsat} track of the SAT-Competition.
+SMT$_1$ and SMT$_2$ contain proofs produced by the SMT-solver VeriT \cite{Bouton2009} on unsatisfiable problems from the SMT-LIB. 
 These proofs\footnote{SMT proofs: \scriptsize{\url{www.logic.at/people/bruno/Experiments/2014/Pebbling/smt-proofs.zip}}} are in a proof format that resembles SMT-LIB's problem format and they were translated into pure resolution proofs by considering every non-resolution inference as an axiom.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -22,8 +22,8 @@ These proofs\footnote{SMT proofs: \scriptsize{\url{www.logic.at/people/bruno/Exp
 		\midrule
 		TraceCheck$_1$ & 2239 & 90756   & 5423   \\
 		TraceCheck$_2$ & 215	& 1768249 & 268863 \\
-    veriT$_1$ & 4187 & 2241042 & 103162 \\
-    veriT$_2$ & 914  & 120075  & 5391  \\ 
+    SMT$_1$ & 4187 & 2241042 & 103162 \\
+    SMT$_2$ & 914  & 120075  & 5391  \\ 
 		\bottomrule   
 	\end{tabular}
 	\caption{Proof Benchmark Sets}
@@ -63,7 +63,7 @@ Distance(3) & \textbf{-74.33} & \textbf{0.1}\\
 \label{tab:results}
 \end{table}
 
-\begin{table}[tb]
+\begin{table}[t]
 \centering
 %\setlength{\tabcolsep}{8pt}
 
@@ -94,7 +94,7 @@ $\gamma$ &$d$ &  $com$ & \textbf{Improvement} (\%) & (nodes/ms)\\
 Table \ref{tab:results} summarizes the main results of the experiments.
 The two presented algorithms are tested in combination with the four presented heuristics.
 The Children and LastChild heuristics were tested on all four benchmark sets.
-The Distance and Decay heuristics were tested on the sets TraceCheck$_2$ and veriT$_2$.
+The Distance and Decay heuristics were tested on the sets TraceCheck$_2$ and SMT$_2$.
 The relative performance is calculated according to Formula \ref{eq:space}, where $f$ is an algorithm with a heuristic, $P$ is the set of proofs the heuristic was tested on and $G$ are all combinations of algorithms and heuristics that were tested on $P$.
 The time used to construct orders is measured in processed nodes per millisecond.
 Both columns show the best and worst result in boldface.
@@ -125,11 +125,6 @@ The performance improvement is calculated using Formula \ref{eq:space} with $G$ 
 The results show, that Decay Heuristics can improve the result, but not by a landslide.
 The improvement comes at the cost of slower speed, especially when the recursion depth is high.
 
-Some additional heuristics, not described in this work, designed specifically for Top-Down Pebbling were tested on small benchmark sets.
-These heuristics aimed at doing local pebbling without having to calculate full spheres.
-For example pebbling nodes that allow other nodes to be unpebbled in the next move can be preferred.
-Unfortunately, none of the additional heuristics showed promising results.
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%% Top-Down vs Bottom-Up figure %%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -142,7 +137,7 @@ Unfortunately, none of the additional heuristics showed promising results.
 \end{figure}
 
 The Bottom-Up algorithm does not only produce better results, it is also much faster, as can be seen in the last column of Table \ref{tab:results}. 
-The reason probably is the number of comparisons that the algorithms make. 
+Most likely, the reason is the number of comparisons made by the algorithms. 
 For Bottom-Up the set $N$ of possible choices consists of the premises of a single node only, i.e. $|N| \in \{0,2\}$.
 For Top-Down the set $N$ is the set of currently pebbleable nodes, which can be large (e.g. for a perfect binary tree with $2n -1$ nodes, initially $|N| = n$). 
 Possibly for some heuristics, Top-Down algorithms could be made more efficient by using, instead of a set, an ordered sequence of pebbleable nodes together with their memorized heuristic evaluations.

@@ -2,7 +2,7 @@
 \label{sec:pebblingSAT}
 
 To find the pebble number of a proof, the question whether the proof can be pebbled using no more than $k$ pebbles can be encoded as a propositional satisfiability problem.
-In this section let $\varphi$ be a proof with nodes $\n_1,\ldots,\n_n$ and let $\n_n$ be its root. 
+In this section let $\varphi$ be a proof with nodes $v_1,\ldots,v_n$ and let $v_n$ be its root. 
 Due to rule \ref{rule:onlyonce} of the Bounded Pebbling Game, the number of moves that pebble nodes is exactly $n$ and due to Theorem \ref{theorem:canonical}, determining the order of these moves is enough to define a strategy. 
 
 In our SAT encoding, for every $x \in \{1,\ldots,k\}$, every $j \in \{1,\ldots,n\}$ and every $t \in \{0,\ldots,n\}$ there is a propositional variable $p_{x,j,t}$. 
@@ -47,8 +47,8 @@ Even small resolution proofs have more than $1000$ nodes and pebble numbers larg
 Therefore, although theoretically possible to play the pebbling game via SAT-solving, this is practically infeasible for compressing proof space.
 The following theorem states the correctness of the encoding.
 
-\begin{theorem}[Correctness of pebbling SAT encoding]
+\begin{proposition}[Correctness of pebbling SAT encoding]
 
-$\Psi = \Psi_1 \wedge \Psi_2 \wedge \Psi_3 \wedge \Psi_4$ is satisfiable if and only if there exists a pebbling strategy using no more than $k$ pebbles
+$\Psi = \Psi_1 \wedge \Psi_2 \wedge \Psi_3 \wedge \Psi_4$ is satisfiable if and only if there exists a pebbling strategy with pebbling number smaller or equal $k$
 
-\end{theorem}
+\end{proposition}
