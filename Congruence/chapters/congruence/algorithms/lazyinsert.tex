@@ -1,0 +1,19 @@
+\begin{algorithm}[t]
+\caption[.]{lazy\_insert}
+  \KwIn{term $s$}
+	\KwIn{term $t$}
+	\KwIn{extended equation $eq$}
+	%\KwGlobal{Queue of tuples of terms $\mathcal{Q}$}
+	%\KwGlobal{Map of tuples of terms to equation $\mathcal{M}$}
+	
+	\eIf{$\mathcal{M}$ is set for $(s,t)$}{
+		\If{$eq \neq \smiley$}{
+			$\mathcal{M}(s,t) \leftarrow (s,t)$
+		}
+	}{
+		$\mathcal{Q} \leftarrow \mathcal{Q}.enqueue(s,t)$ \\
+		$\mathcal{M}(s,t) \leftarrow eq$ 
+	}
+  
+  \label{algo:lazyinsert}
+\end{algorithm}

@@ -1,0 +1,28 @@
+\begin{algorithm}[h]
+\caption[.]{insert (Proof Forest)}
+  \KwIn{term $s$}
+	\KwIn{term $t$}
+	\KwIn{extended equation $eq \in \mathcal{E}$}
+	%\KwIn{proof forest $g$}
+	
+	\If{$s$ is not in the graph}{
+		add tree with single node $s$ %to $g$
+	}
+	\If{$t$ is not in the graph}{
+		add tree with single node $t$ %to $g$
+	}
+	
+	$sSize \leftarrow $ size of tree of $s$ \\ %in $g$ \\
+	$tSize \leftarrow $ size of tree of $t$ %in $g$
+	
+	\eIf{$sSize \leq tSize$}{
+		$(u,v) \leftarrow (s,t)$
+	}{
+		$(u,v) \leftarrow (t,s)$
+	}
+
+	reverse all edges on the path between $u$ and its root node \\
+	insert edge $(v,eq,u)$% into $g$
+
+  \label{algo:insert_pt}
+\end{algorithm}

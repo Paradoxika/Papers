@@ -1,0 +1,43 @@
+\subsection{Proof Processing}
+\label{sec:proofprocessing}
+
+The aim of this work is to make proof processing easier by minimizing proofs in the two measures space and length.
+Proof processing could be checking its correctness, manipulating it, as we do in this work extensively, or extracting information, for example interpolants and unsat cores, from it.
+The following definition makes the notion of proof processing formal.
+
+\begin{definition}[Proof Processing]
+\label{def:proof-processing}
+
+Let $\varphi$ be a proof with nodes $V$ and $T$ be an arbitrary set.
+A function $f: V \times T \times T \rightarrow T$ is a \emph{processing function} if there is a function $g_f: V \rightarrow T$ such that for every $v \in V$ with $\Premises{v}{\varphi} = \emptyset$ (i.e. $v$ represents an axiom), $g_f(v) = f(v,t_1,t_2)$ for all $\{t_1,t_2\} \subseteq T$.
+Let $\mathcal{F}$ be the set of processing functions.
+The \emph{apply function} $\ap: V \times \mathcal{F} \rightarrow T$ is defined recursively as follows.
+$$
+\ap(\n,f) = \Big\{
+\begin{array}{ll}
+	f(\n,\ap(pr_1,f),\ap(pr_2,f)) &\text{ if } \n \text{ has premises } pr_1 \text{ and } pr_2\\
+	g_f(\n) &\text{ otherwise}\\
+\end{array}
+$$
+
+\emph{Processing a node} $\n$ with some processing function $f$ means computing the value $\ap(\n,f)$.
+\emph{Processing a proof} means to process its root node.
+
+\end{definition}
+
+\begin{example}
+
+Checking the correctness of a proof (i.e. checking for the absence of faulty resolution steps) can be done in terms of the following processing function with $T = \{\top,\bot\}$ and $\wedge$ being the usual boolean and-operation.
+$$
+f(\n,w_1,w_2) = \left\{
+\begin{array}{ll}
+	\top & \text{ if $\n$ has no premises} \\
+	w_1 \wedge w_2 &\text{ if the conclusion of $\n$ is a resolvent}\\
+								 &\hspace{0.85em} \text{ of the conclusions of its premises} \\
+	\bot & \text{ otherwise}
+\end{array}
+\right.
+$$
+Processing a proof with processing function $f$ yields $\top$ if and only if the proof is a correct resolution proof.
+\qed
+\end{example}

@@ -1,0 +1,567 @@
+\subsection{Explanation Producing Congruence Closure}
+\label{sec:algorithm}
+%
+In this section we present a congruence closure algorithm that is able to produce explanations.
+The algorithm is a mix of the approaches of the algorithms presented in \cite{Fontaine2004} and \cite{Nieuwenhuis2005,Nieuwenhuis2007}.
+The basic structure of the algorithm is inherited from \cite{Fontaine2004}, which itself inherits its structure from the algorithm of Nelson and Oppen \cite{Nelson1980}.
+The technique to store and deduce equalities of compound terms is inspired by \cite{Nieuwenhuis2005,Nieuwenhuis2007}.
+Additionally the proof forest structure described below was proposed by \cite{Nieuwenhuis2005,Nieuwenhuis2007}.
+
+Before we describe the algorithm, we discuss two technical concepts that are important aspects of our congruence closure algorithm.
+
+\subsubsection*{Curryfication and Abstract Congruence Closure}
+\label{subsec:algorithms_preliminaries}
+
+Our congruence closure algorithm operates on terms in curryfied form.
+Such terms use a single binary function symbol to represent general terms.
+More formally, let $\mathcal{F}$ be a finite set of functions with a designated binary function symbol $f \in \mathcal{F}$ and let every other function symbol in $\mathcal{F}$ be a constant.
+A term w.r.t. a signature of this form is in \emph{curryfied form}.
+
+It is possible to uniquely translate a general set of terms $\mathcal{T}^{\Sigma}$ with signature $\Sigma = \langle \mathcal{F},arity \rangle$ into a set of terms in curryfied form $\mathcal{T'}^{\Sigma'}$.
+The new signature $\Sigma'$ is obtained from $\Sigma$ by setting $arity$ to zero for every function symbol in $\mathcal{F}$ and introducing the designated binary function symbol $f$ to $\mathcal{F}$.
+The translation of a term $t \in \mathcal{T}^{\Sigma}$ is given in terms of the function $curry$.
+
+$$
+curry(t) = \Big\{
+\begin{array}{ll}
+	t & \text{ if } t \text{ is a constant }\\
+	f(\ldots (f(f(g,curry(t_1)),curry(t_2)))\ldots,curry(t_n)) &\text{ if } t = g(t_1,\ldots, t_n)
+\end{array}
+$$
+
+The idea of currying was introduced by M. Sch\"onfinkel \cite{Schoenfinkel1924} in 1924 and independently by Haskell B. Curry \cite{Curry1958} in 1958, who lends his name to the concept.
+Currying is not restricted to terms.
+The general idea is to translate functions of type $A \times B \rightarrow C$ into functions of type $A \rightarrow B \rightarrow C$.
+There is a close relation between currying and lambda calculus \cite{Church1936}.
+In the simplest form of lambda calculus, every function is in curried form.
+For an introduction to lambda calculus, including currying in terms of lambda calculus and its relation to functional programming we refer the reader to \cite{Barendregt1997}.
+
+The benefit of working with terms in curryfied form is an easier and cleaner congruence closure algorithm, while maintaining best known runtime for congruence closure algorithms of $O(n \log(n))$.
+Terms in curryfied form simplify the algorithm, because case distinctions on terms are much simpler.
+Such a term is either a constant or a compound term of the form $f(a,b)$, where $a$ and $b$ are terms in curryfied form.
+In general, terms can have different leading function symbols and their arities (for which possibly there is no known bound) have to be taken into account.
+Cleaner algorithms are not only easier to implement, but should also improve the practical runtime for similar reasons.
+Additionally, working with terms in curryfied form replaces tedious preprocessing steps, for example transformation to a graph of outdegree 2 \cite{Downey1980},that are necessary for other algorithms to achieve the optimal running time.
+
+Recently so called abstract congruence closure algorithms have been proposed and shown to be more efficient than traditional approaches \cite{Bachmair2000}.
+The idea of abstract congruence closure is to introduce new constants for non constant terms.
+Doing so, all equations the algorithm has to take into account are of the form $(c,d)$ and $(c, f(a,b))$, where $a,b,c,d$ are constants.
+
+Our method does not use the idea of abstract congruence closure.
+We found that using currying is enough to obtain an algorithm with optimal running time and no tedious preprocessing steps.
+The reason why we did not go for abstract congruence closure is, that we do not want to have the overhead of introducing and eliminating fresh constants.
+In the context of proof compression, our congruence closure algorithm will be applied to relatively small instances very often.
+We could introduce the extra constants for the whole proof before processing, but would still have to remove them from explanations every time we produce a new subproof.
+It would be interesting to investigate, whether our intuition in that regard is right, or if it pays off to deal with extra constants.
+
+\cite{Nieuwenhuis2005,Nieuwenhuis2007} describes an explanation producing abstract congruence closure algorithm, 
+whereas \cite{Fontaine2004} proposes a traditional algorithm without currying and extra constants.
+By choosing to work with terms in curryfied form, but without extra constants, our algorithm is a middle ground between the two algorithms.
+
+\subsubsection*{Immutable Data Structures}
+
+Most of the data structures presented in the following section are defined in terms of mathematical functions.
+This is not by coincidence and our congruence closure algorithm can easily be translated to an implementation in a functional programming language.
+Furthermore, all data structures can be implemented immutable.
+An immutable data structure is one that never changes its internal state after its creation.
+When alternating the information stored in the data structure, a new object with the new information is constructed.
+The old object remains intact.
+
+A side effect of a method is a modification of an object that is not the returned value of the method.
+Such side effects often lead to bugs, since the method can not be used as a black box anymore.
+An example for a side effect is the modification of the representative of a term in the congruence closure algorithm presented in \cite{Fontaine2004} and its effect on what is called signature table in this work.
+Using immutable data structures prohibits side effects by design.
+Furthermore immutable data structures allow to maintain internal correctness much easier.
+For example, in the Skeptik tool resolution nodes are stored in an immutable fashion.
+Modifying the premise of a node does not have an effect on the node itself, since its premise remains to be the old version.
+Therefore the correctness of a resolution proof, once established when creating a proof is maintained without any further actions.
+Functional programming languages almost exclusively use immutable data structures and often it is not easy or impossible to translate an imperative description of an algorithm into functional programming.
+Sometimes it is possible, but not with the same runtime.
+
+Immutable data structures also have some downsides.
+The impossibility of changing internal structures often makes it hard to maintain certain structures without a lot of extra effort.
+One simple example is that of a linked list.
+Suppose such a linked list is implemented in such a way that every element of the list internally has a pointer to the next element in the list.
+When modifying the first element of the list in some fashion, the pointer of the second element has to be set to the new version of the first one.
+Since this requires to produce a new version of the second element as well, also the pointer of the third element has to be updated and so on. 
+Eventually, every element of the list will have to be updated.
+A mutable linked list would simply alter the internal state of the first element and leave everything else as it is.
+Some algorithms and their optimal runtime depend the runtime of such simple data structures, that are very hard or impossible to achieve in an immutable fashion.
+However, sometimes tricky data structures like the zipper were invented which help to overcome these problems.
+
+\subsubsection*{Congruence structure}
+
+We call the underlying data structure of our congruence closure algorithm a \emph{congruence structure}.
+A congruence structure for set of terms $\mathcal{T}$ is a collection of the following data structures.
+The set $\mathcal{E} = \mathcal{T} \times \mathcal{T} \cup \{\smiley\}$ is the set of \emph{extended equations}.
+The symbol $\smiley$ serves as a placeholder for deduced equalities that have to be explained in terms of input equations.
+
+\begin{itemize}
+	\item Representative $r: \mathcal{T} \rightarrow \mathcal{T}$
+	\item Congruence class $[.]: \mathcal{T} \rightarrow 2^\mathcal{T}$
+	\item Left neighbors $N_l: \mathcal{T} \rightarrow 2^\mathcal{T}$
+	\item Right neighbors $N_r: \mathcal{T} \rightarrow 2^\mathcal{T}$
+	\item Lookup table $l: \mathcal{T} \times \mathcal{T} \rightarrow \mathcal{T}$
+	\item Congruence graph $g$
+	\item Queue $\mathcal{Q}$ of pairs of terms
+	\item Current explanations $\mathcal{M}: \mathcal{T} \times \mathcal{T} \rightarrow \mathcal{E}$
+\end{itemize}
+
+The representative is one particular term of a class of congruent terms.
+It is used to identify whether two terms are in the same congruence class and the data structures ($l, N_l$ and $N_r$) used for detecting deduced equalities are kept updated only for representatives.
+The congruence class structure represents a set of pairwise congruent terms.
+It is used to keep track which representatives have to be updated when merging the classes of two terms.
+The structures left $N_l$ (resp. right $N_r$) neighbor  keeps track of the respective other terms in compound terms.
+The information is only used for representatives (i.e. terms in the target of $r(.)$).
+Furthermore right and left neighbors always only contain one term per congruence class (which is not necessarily the representative of that class).
+The lookup table is used to keep track of all compound terms in the congruence structure and to merge classes of compound terms, which arguments are congruent.
+For example if the terms $f(a,b),f(c,d)$ were inserted and the representatives are such that $r(a) = r(c), r(b) = r(d)$, then $N_r(r(a)) = \{d\}$, $N_l(r(d)) = \{a\}$ and $l(r(a),r(b)) = f(a,b)$.
+The elements in the respective sets serve as pointers to their representatives, therefore it does not matter whether for example $N_r(r(a)) = \{d\}$ or $N_r(r(a)) = \{b\}$.
+In Section \ref{sec:congruenceclosurealgorithm} we explain how these structures are modified and used in detail.
+The congruence graph (explained in detail in Section \ref{sec:congruencegraph}) stores the derived equalities in a structured way, that allows to create explanations for a given pair of terms.
+Edges are added to the graph in a lazy way, meaning that they are buffered and only actually entered into the graph when demanded.
+The queue $\mathcal{Q}$ keeps track of the order in which edges should be added to the graph.
+The function $\mathcal{M}$ stores explanations if they exist for buffered edges.
+The idea will be explained in detail in Section \ref{sec:proofproduction}.
+We call the unique congruence structure for $\mathcal{T} = \emptyset$ the \emph{empty congruence structure}.
+
+\FloatBarrier
+
+\subsubsection*{Congruence closure algorithm}
+\label{sec:congruenceclosurealgorithm}
+In this section we present our explanation producing congruence closure algorithm and state and prove its properties.
+Most importantly we show that the algorithm is sound and complete and has the best known asymptotic running time $O(n \log(n))$, where $n$ is the number of terms in the input.
+Computing the congruence closure of some set of equations $E$ is done by adding all equations to an ever growing congruence structure, which initially is empty.
+Since this has to be done in some order, we will often assume that $E$ is given as a sequence of equations rather than a set.
+The pseudocode of most methods do not include return statements.
+In fact every method implicitly returns a (modified) congruence structure or simply modifies a global variable, which is the current congruence structure.
+Adding an equation to a congruence structure is done with the \texttt{addEquation} method, which is the only method that has to be visible to the user.
+The method adds boths sides of the equation to the current set of terms using the \texttt{addNode} method and afterwards merges the classes of the two terms.
+The \texttt{addNode} method enlarges the set of terms and detects deduced equalities.
+The updates of the set of terms are not outlined explicitly, but are understood to happen implicitly.
+Throughout this chapter we denote this implicit set of terms by $\mathcal{T}$.
+The method \texttt{merge} initializes and guides the merging of congruence classes.
+The actual merging is done by the method \texttt{union} by modifying the data structures.
+The method does not only merge classes, but also searches for and returns deduced equalities.
+The classes of the terms of these extra equalities are merged, if they are not equal yet.
+The congruence classes are kept track of in a graph, maintaining important information for producing explanation and proofs.
+We call such a graph Congruence Graph and explain them in a more detailed fashion in Section \ref{sec:congruencegraph}.
+Edges, that reflect detected equalities, are not inserted into the graph right away, but stored in queue until the insertion is requested.
+The reason for adding edges in a lazy way is to produce shorter explanations and proofs and will be explained and exemplified in Section \ref{sec:proofproduction}.
+
+\input{chapters/congruence/algorithms/addequation}
+
+\input{chapters/congruence/algorithms/addnode}
+
+\input{chapters/congruence/algorithms/merge}
+
+\input{chapters/congruence/algorithms/union}
+
+\input{chapters/congruence/algorithms/lazyinsert}
+
+\input{chapters/congruence/algorithms/lazyupdate}
+
+In the following pages, we will provide some invariants that are essential for proving the properties of the algorithm.
+The invariants hold when initializing the respective data structures and before and after every insertion of an equation via the \texttt{addEquation} method.
+
+\begin{invariant}[Class]
+
+For every $s \in \mathcal{T}$ and every $t \in [r(s)]$, $r(t) = r(s)$.
+
+\label{invar:class}
+\end{invariant}
+%{\color{blue} For all invariants I might need to be more specific as to when exactly they should old.}
+\begin{proof}
+
+Clearly the invariant is true when intializing $[s]$ in line \ref{initclass} of \texttt{addNode}.
+
+The only other point in the code that changes $[s]$ is line \ref{changeclass} of union.
+Suppose the class of $u$ is enlarged by the class of $v$ in union and suppose the invariant holds before the union for those terms.
+Before the update of $[r(u)]$ the representative of every term in $[r(v)]$ is set to $r(u)$.
+Therefore the invariant remains valid after the update.
+
+\end{proof}
+
+\begin{invariant}[Lookup]
+
+The lookup structure $l$ is defined for a pair of terms $(s,t)$ if and only if there is a term $f(a,b) \in \mathcal{T}$ such that $r(a) = r(s)$ and $r(b) = r(t)$.
+
+\end{invariant}
+
+\begin{proof}
+
+Suppose $l$ is defined for some pair of terms $(s,t)$.
+The value of $l(s,t)$ is set either in lines \ref{changel1} or \ref{changel2} of \texttt{union} or in line \ref{line:initl} of \texttt{addNode}.
+In the latter case, $l$ is set to $f(a,b)$ for the tuple $(r(a),r(b))$ and therefore the invariant holds at this point.
+For changes to $r(a)$ or $r(b)$ in union the one implication of the invariant remains valid in case $l$ is defined for the new representatives, or $l$ is set for an additional pair of terms in lines \ref{changel1} or \ref{changel2}.
+In case $l$ is set to $(new\_left,r(u))$ or $(r(u),new\_right)$ in union, there is an $l$-entry $l_v$ for which the invariant held before the union.
+The changes in representatives of $x$ are reflected by $new\_left$ and $new\_right$, while the representative of $v$ is changed to $r(u)$.
+The new entry for $l$ therefore respects the implication of the invariant.
+
+To show the other implication, let $f(a,b) \in \mathcal{T}$.
+The term $f(a,b)$ is entered with the \texttt{addEquation} method and subsequently via the \texttt{addNode} method.
+For compound terms lines \ref{line:ldefined} and \ref{line:initl} assert that $l$ is defined for $(r(a),r(b))$.
+All changes to $r(a)$ or $r(b)$ must happen in \texttt{union} and they are reflected by matching updates to the $l$ structure.
+
+\end{proof}
+
+
+\begin{invariant}[Neighbours]
+
+For every $s \in \mathcal{T}$, every $t_r \in N_r(r(s))$ and $t_l \in N_l(r(s))$, $l$ is defined for $(r(s),r(t_r))$ and $(r(t_l),r(s))$.
+
+\end{invariant}
+
+\begin{proof}
+
+We show the result for the structure $N_r$.
+The result about $N_l$ can be obtained analogously.
+Since $N_r$ is initialized with the empty set in line \ref{initrN} of \texttt{addNode}, the invariant clearly holds initially.
+To show that the invariant always holds, it has to be shown that all modifications of $r$ and $N_r$ preserve the invariant.
+The structure $l$ is not modified after initialization.
+Line \ref{modifyrN} of \texttt{addNode} adds $b$ to $N_r(r(a))$ and the four lines before that addition show that $l$ is defined for $(r(a),r(b))$.
+Union modifies $N_r$ in such a way that it adds all right neighbors of some representative $r(v)$ to $N_r(r(u))$.
+Lines \ref{startrN} to \ref{stoprN} make sure that $l$ is defined for all these right neighbors.
+Updates of $r$ in \ref{changerep} are always followed by corresponding updates to $N_r$.
+
+\end{proof}
+
+A consequence of this invariant is the fact that, that for every term $t \in \mathcal{T}$ of the form $f(a,b)$, $l$ is defined for $(r(a),r(b))$.
+
+\begin{proposition}[Sound- \& Completeness]
+
+Let $r(.)$ be the representative mapping obtained by adding equations $E = \langle (u_1,v_1), \ldots, (u_n,v_n) \rangle $ to the empty congruence structure.
+For every $s,t \in \mathcal{T}_E$: $E \models s \thickapprox t$ if and only if $r(s) = r(t)$.
+
+\end{proposition}
+
+\begin{proof}
+\textbf{Completeness}
+
+\noindent We show that from $E \models s \thickapprox t$ follows $r(s) = r(t)$ by induction on $n$.
+
+\begin{itemize}
+\item \textbf{Induction Base} $n=1$: $E \models s \thickapprox t$ implies either $s = t$ or $\{u_1,v_1\} = \{s,t\}$.
+In the first case $r(s) = r(t)$ is trivial. 
+In the second case, the claim follows from the fact that, when $(u_1,v_1)$ is entered, union is called with arguments $s$ and $t$.
+After this operation $r(s) = r(t)$.
+
+\item \textbf{Induction Hypothesis}: For every sequence of equations $E_n$ with $n$ elements and every $s,t \in \mathcal{T}_{E_n}$: $E_n \models s \thickapprox t$ then $r(s) = r(t)$.
+
+\item \textbf{Induction Step}: Let $E = \langle (u_1,v_1), \ldots, (u_{n+1},v_{n+1}) \rangle$ and $E_n = \langle (u_1,v_1), \ldots, (u_n,v_n) \rangle$.
+There are two cases: $E_n \models s\thickapprox t$ and $E_n \nvDash s\thickapprox t$.
+In the former case, the claim follows from the induction hypothesis, the Invariant class and the fact that union always changes representatives for all elements of a class.
+We still have to show the claim in the latter case.
+We write $E \models_n u \thickapprox v$ as an abbreviation for $E_n \nvDash u \thickapprox v$ and $E \models u \thickapprox v$.
+We show the claim ($r(s) = r(t)$) by induction on the structure of the terms $s$ and $t$.
+
+\begin{itemize}
+\item \textbf{Induction Base} $s$ or $t$ is a constant and therefore transitivity reasoning was used to derive $E \models_n s \thickapprox t$.
+In other words, there are $m$ terms $t_1,\ldots,t_m$ such that $s = t_1$, $t = t_m$ and for all $i = 1,\ldots,m-1: E \models_n t_i \thickapprox t_{i+1}$.
+We prove by yet another induction on $m$ that $r(t_1) = r(t_m)$.
+\begin{itemize}
+\item \textbf{Induction Base} $m = 2$. It has to be the case (up to swapping $u_{n+1}$ with $v_{n+1}$), that $E_n \models s \thickapprox u_{n+1}$ and $E_n \models t \thickapprox v_{n+1}$, and the outmost induction hypothesis implies $r(s) = r(u_{n+1})$ and $r(t) = r(v_{n+1})$.
+Therefore it follows from Invariant Class, that after the call to union for $(u_{n+1},v_{n+1})$ it is the case that $r(t_1) = r(t_2)$.
+
+\item \textbf{Induction Step}: Suppose that the claim holds for all sequences of length $m \in \mathbb{N}$, for $m+1$ the claim follows from a simple application of the transitivity axiom, since $t_1,\ldots,t_m$ and $t_2,\ldots,t_{m+1}$ are both sequences of length $m$.
+\end{itemize}
+\item \textbf{Induction Step}: Suppose that $s = f(a,b)$ and $t = f(c,d)$.
+There are two cases such that $E \models_n s \thickapprox t$ can be derived.
+Using a transitivity chain, the claim can be shown just like in the base case.
+Using the compatibility axiom, it has to be the case that $E \models_n a \thickapprox c$ and $E \models_n b \thickapprox d$ (in fact one of those can also be the case without the $n$ index).
+The terms $a,b,c,d$ are of lower structure than $s$ and $t$.
+Therefore it follows from the induction hypothesis that $r(a) = r(c)$ and $r(b) = r(d)$.
+The Invariants Neighbour and Lookup imply that either $r(s) = r(t)$ or $(s,t)$ is added to $d$ in line \ref{deduceEq1} or line line \ref{deduceEq2} of union.
+Subsequently union is called for $s$ and $t$, after which $r(s) = r(t)$ holds.
+\end{itemize}
+\end{itemize}
+
+\noindent\textbf{Soundness}
+
+\noindent For $s = t$ the claim follows trivially.
+Therefore we show soundness in case $s \neq t$.
+We show that from $r(s) = r(t)$ follows $E \models s \thickapprox t$ by induction on the number $m$ of calls to union induced by adding all equations of $E$ to the empty congruence structure, for all $s$ and $t$ that are arguments of some call to union.
+The original claim then follows from Invariant Class, since only union modifies the $r$ structure and the fact that two terms are in the same class if and only if union was called for some elements in the respective classes.
+%Notice that only union modifies $r$ after initialization.
+%Therefore the proof investigates the changes made by union and the parameters it is called when adding equations to a congruence structure.
+\begin{itemize}
+\item \textbf{Induction Base} $m = 1$: $r(s) = r(t)$ implies $\{u_1,v_1\} = \{s,t\}$ and $E \models s \thickapprox t$ is trivial.
+%Lines \ref{deduceEq1} and \ref{deduceEq2} do not induce any further unions, because no compound terms, that $s$ or $t$ could be a subterm of, are yet inserted in the congruence structure.
+
+%Induction hypothesis: For every sequence of equations $E_n$ with $n$ elements and every $s,t \in \mathcal{T}_{E_n}$: $r(s) = r(t)$ after adding all $n$ equations to the empty congruence structure then $E_n \models s \thickapprox t$.
+
+\item \textbf{Induction Hypothesis}: For every $k < m$, if a set of equations $F$ induces $k$ calls to union, then from $r(s) = r(t)$ follows $F \models s \thickapprox t$ for all terms $s,t$ that are arguments of some call to union.
+
+\item \textbf{Induction Step}: Suppose $E = \langle (u_1,v_1), \ldots, (u_n,v_n) \rangle$ induces $m$ calls to union with arguments $(h_1,g_1),\ldots,(h_m,g_m)$.
+The subsequence $E_n = \langle (u_1,v_1), \ldots, (u_{n-1},v_{n-1}) \rangle$ induced the first $k$ calls to union for some $n-1 \leq k < m$.
+In other words, adding $(u_n,v_n)$ to the congruence structure induces $m-k-1$ calls to union with arguments $(h_{k+1},g_{k+1}),\ldots,(h_m,g_m)$.
+The pair $(h_{k+1},g_{k+1})$ is either an original input equation, or a deduced equality from line \ref{addnodemerge} of \texttt{addNode}.
+In both cases $E \models h_{k+1} \thickapprox g_{k+1}$, which is trivial in the former case.
+In the latter case $h_{k+1} = f(a,b)$ and $g_{k+1} = f(c,d)$ for some terms $a,b,c,d$ and suppose $l(r(a),r(b)) = g_{k+1}$ (the other case that triggers line \ref{addnodemerge} $l(r(c),r(d)) = h_{k+1}$ is symmetric).
+From the invariant Lookup follows $r(a) = r(c)$ and $r(b) = r(d)$.
+Using the induction hypothesis we can see that $E \models h_{k+1} \thickapprox g_{k+1}$.
+
+Let $j \in \{k+2,\ldots,m\}$.
+The pair $(h_j,g_j)$ was inserted to $d$ in line \ref{deduceEq1} or \ref{deduceEq2} of \texttt{union} that was called with arguments $(h_i,g_i)$ with $i \in \{k+1,\ldots,j-1\}$.
+From the Invariant Lookup follows that the terms are such that $h_i$ and $g_i$ are both subterms of $h_j$ or $g_j$.
+Therefore, using induction on the structure of terms, the original induction hypothesis, Invariants Lookup and Neighbour and lines \ref{startlN} to \ref{stoprN} of \texttt{union}, it can be seen that for all pairs $(h_k,g_k)$ and all $k = l+1,\ldots,m$ it is the case that $E \models h_k \thickapprox g_k$.
+
+%
+%We show the induction step by another induction on $k-l$, i.e. the number of unions induced by adding $(u_n,v_n)$ to the congruence structure.
+%Base case $k-l = 1$: Union is called for $(u_n,v_n)$ and the induces no further calls union.
+%After the one call to union $r(u_n) = r(v_n)$ and clearly $E \models u_n \thickapprox v_n$.
+%The fact that lines \ref{deduceEq1} and \ref{deduceEq2} of union do not induce any further calls to the method, together with the induction hypothesis and the invariants Lookup and Neighbour, imply that $E \models_n s \thickapprox t$ if and only if $s,t = \{u_n,v_n\}$.
+%
+%Induction step: Suppose adding $(u_n,v_n)$ induces $m$ calls to union with arguments $(h_{k-m},g_{k-m}),\ldots,(h_k,g_k)$.
+%The last call to union has to be added 
+%
+%Adding the equation $(u_{n+1},v_{n+1})$ to the working congruence structure induces a sequence of $l$ calls to union with parameters $(h_1,g_1),\ldots,(h_l,g_l)$
+
+%After initialization of $r$ only union modifies the structure.
+%Adding $E$ to the empty congruence structure induces a sequence of calls to union with parameters $(u_1,v_1), \ldots , (u_n,v_n)$.
+%We show by induction on $n$, that $E \models v_i \thickapprox u_i$
+\end{itemize}
+\end{proof}
+
+\begin{proposition}[Runtime]
+\label{prop:runtime}
+Let $E$ be a set of equations such that $|\mathcal{T}_E| = n$.
+Computing the congruence closure with our congruence closure algorithm takes worst-case time $O(n \log(n))$.
+
+\end{proposition}
+
+\begin{proof}
+
+There are three loops in the method \texttt{union}, which are nested within the loop of \texttt{merge}.
+These loops are clearly the dominating factor for runtime.
+Lines \ref{reverse1} and \ref{reverse2} of \texttt{union} swap the arguments $s$ and $t$ in such a way, that always the congruence class of $v$ is smaller than the one of $u$.
+Let $k$ be the size of the congruence class of $v$ before the union.
+For every term in the congruence classes of $v$ and $u$ before the union, the size of their new congruence class after the union (set in line \ref{changeclass}) is at least $2*k$.
+Furthermore, only representatives for terms in the old congruence class of $v$ are changed in line \ref{changerep}.
+This implies that for every term, whenever its representative is changed in line \ref{changerep}, its congruence class doubles in the same execution of \texttt{union}.
+The maximum size of a congruence class is $n$.
+Therefore the representative of a single term is changed in line \ref{changerep} maximally $\log(n)$ times.
+There are $n$ terms that can be changed, so line \ref{changerep} of \texttt{union} is executed at most $n \log(n)$ times.
+Let $f(a,b)$ be the result of accessing $l$ in line \ref{accessl1}.
+In the same call of \texttt{union} line \ref{changerep} changes the representative of $b$.
+Since this this happens only $\log(n)$ times and there are at most $m < n$ compound terms, line \ref{accessl1} is executed at most $n \log(n)$ times.
+The same holds for line \ref{accessl2} and all other lines in the respective loops.
+
+\end{proof}
+
+
+\FloatBarrier
+
+\subsubsection*{Congruence Graph}
+\label{sec:congruencegraph}
+The most important feature of our congruence closure algorithm towards proof compression is explanation production.
+For this purpose the input equations and deduced equalities have to be stored in a data structure that supports this feature.
+We present two different such data structures.
+Both structures store equalities in labeled graphs, which we call congruence graphs.
+A node in such a graph represents a term and an edge between two nodes denotes that the represented terms are congruent w.r.t. the set of input equations.
+A path in a congruence graph is a sequence of undirected, unweighted, labeled edges in the underlying graph.
+The set of labels for both types of graphs is the set of extended equations $\mathcal{E}$ (i.e. equations and the placeholder \smiley).
+The method \texttt{merge} adds edges to the graph via the \texttt{lazy\_insert} method, which eventually calls the \texttt{insert} method.
+The \texttt{insert} method is different for the two presented structures.
+After calling \texttt{insert} with arguments $s$ and $t$ it is guaranteed that there is a path in the congruence graph between $s$ and $t$.
+In case they were not connected before the call, then there is an edge between $s$ and $t$ after the call.
+The same can be assumed for \texttt{lazy\_insert} since edges that are added to the queue are never discarded and $s$ and $t$ are connected virtually.
+The methods \texttt{insert} and \texttt{explain} are assumed to be attached to the data structures.
+For example adding an edge to the data structure means adding it to the used congruence graph.
+
+\begin{invariant}[Paths]
+
+For terms $s, t$ holds $r(s) = r(t)$ if and only if there is a path in the congruence graph of the structure between $s$ and $t$.
+
+\end{invariant}
+
+\begin{proof}
+
+In case $s = t$, the claim is trivial.
+Therefore, we show the invariant for $s \neq t$ by an induction on $|[r(s)]|$.
+%We show that there is a path between $s$ and $t$ in the congruence graph induction on $|[r(s)]|$. 
+The proof relies on the invariant Class, which shows the consistency between classes and representatives.
+
+\begin{itemize}
+\item \textbf{Induction Base:} $[r(s)] = \{s\}$, i.e. $r(s) = r(t)$ is false for every term $t \neq s$.
+We have to show that there is no edge $(s,t)$ for $t \neq s$ in the congruence graph.
+Edges are only added to the congruence graph via the \texttt{lazy\_insert} method which is only called in \texttt{merge}.
+Clearly \texttt{merge} does not call \texttt{union} for $s$ and some term $t \neq s$, since otherwise $t \in [r(s)]$.
+Therefore \texttt{merge} also does not add an edge for $s$ and some term $t \neq s$ to the congruence graph.
+
+\item \textbf{Induction Hypothesis:} For every term $s$ such that $|[r(s)]| \leq n$ and for every term $t \neq s$ it is the case that $r(s) = r(t)$ if and only if there is a path between $s$ and $t$ in the congruence graph.
+
+\item \textbf{Induction Step:} Suppose $[r(s)]$ is an arbitrary class with cardinality $n+1$.
+Then there are two terms $u,v \in [r(s)]$ such that \texttt{union} was called for $u$ and $v$.
+Before the union $|[r(u)]|$ and $|[r(v)]|$ both were strictly smaller than $n+1$.
+In case they both belong to the same class before the union, the claim follows trivially by the induction hypothesis, since existing paths are not removed by adding new edges to the graph.
+Suppose $s \in [r(u)]$ and $t \in [r(v)]$, then by induction hypothesis there are paths $p_1$ between $s$ and $u$ and $p_2$ between $t$ and $v$.
+Right after the union of $u$ and $v$, an edge is inserted between them, so $p_1$ concatenated with $(u,v)$ and $p_2$ is a path between $s$ and $t$.
+In case one of the terms did not belong to one of the classes before the union, it does not belong to the merged class after the union.
+Also there was no path between the two terms before and since the only addition paths are between elements of $[r(u)]$ and $[r(v)]$, there is no path between the terms after the union.
+\end{itemize}
+
+\end{proof}
+
+\begin{invariant}[Deduced Edges]
+
+For every edge in a congruence graph between vertices $u,v$ with label $\smiley$, 
+there are $a,b,c,d \in \mathcal{T}$ such that $u = f(a,b)$, $v = f(c,d)$ and
+there are paths in the graph between $a$ and $c$ as well as between $b$ and $d$.
+
+\end{invariant}
+
+\begin{proof}
+
+Edges with label $\smiley$ are added, when \texttt{merge} is called from \texttt{addNode}, or \texttt{union} induces an additional merge.
+In both cases there are subterms with respective congruent representatives.
+The claim follows by using the Invariant Paths.
+
+\end{proof}
+
+The method \texttt{explain} returns a path between its two arguments, if one exists.
+For presentation purposes, the case where \texttt{explain} is called for terms that are not congruent is not outlined explicitly.
+One can assume that the method returns some value representing this situation and that all other methods handle this situation.
+Depending on the actual type of graph used, there can be more than one explanation path between congruent terms.
+The method \texttt{inputEqs} for a path in the congruence graph returns the input equations that were used to derive the equality between the first and the last node of the path.
+For an input equation, this is simply the equation itself.
+For a deduced equality, this is the set of input equations that were used for deduction.
+Combining these two methods, the statement \texttt{inputEqs(explain(s,t))} for input equations $E$ returns an explanation $E' \subseteq E$ such that $E' \models s \thickapprox t$, if there is one.
+
+\input{chapters/congruence/algorithms/inputeqs}
+
+In the following, we describe the two types of congruence graphs we support.
+They differ in the underlying type of graph, how edges are inserted and how explanations are produced.
+
+\subsubsection*{Equation Graph}
+
+An equation graph stores equalities in an edge labeled weighted undirected graph $(V,E)$ with 
+$V \subseteq \mathcal{T}$, $E \subseteq V \times \mathcal{E} \times V \times \mathbb{N}$.
+The weight for an edge is the number of input equations used to derive the equality between its two nodes.
+This number is one for input equalities and the size of the explanation for deduced equalities.
+Edges inserted via the \texttt{insert} method are added to the graph, even if the nodes are already connected.
+Therefore there is a choice which path the \texttt{explain} method returns.
+We look for short explanations and the weights reflect sizes of sub explanation.
+Therefore we want to return the shortest path.
+
+Finding the shortest path between two nodes in a weighted graph is not trivial.
+The single source shortest path problem (SSSP) is a classical graph problem in computer science.
+The task is to find the shortest path in a graph between one designated node, the source, and all other nodes in the graph.
+To our best knowledge, there is no algorithm to find the shortest path between two nodes which has better asymptotic runtime than one to solve SSSP.
+There is a whole variety of algorithms that solve SSSP.
+Classical algorithms for SSSP are those of Dijkstra \cite{Dijkstra1959} and Bellman-Ford \cite{Ford1956,Bellman1956}.
+The algorithms work on different kinds of graphs.
+Our setting is an undirected graph with positive integer weights.
+We chose to use Dijkstra's algorithm, even though the algorithm does not have optimal asymptotic runtime.
+Its worst-case runtime is $O(n \log(n))$ \cite{Cormen1989}, if the priority queue is implemented as a Fibonacci Heap, which is the case in our implementation.
+\cite{Thorup1999} describes a linear time algorithm for the undirected single source shortest path with positive integer weights problem.
+However, the algorithm has a large overhead and needs several precomputations.
+\cite{Cherkassky1996} presents a comparative study of several shortest path algorithms which shows that Dijkstra's algorithm performs well in practice.
+
+Dijkstra's algorithm finds shortest paths to an increasing set of nodes, until every node has been discovered.
+It does so by keeping track of the shortest paths and the distances, being the combined weights of edges on the path, of nodes to the source.
+Initially, the only discovered node is the source itself and the distance to every other node is infinite.
+The algorithm discovers new nodes by selecting the lowest weight outgoing edge of all nodes that have been discovered so far and updates shortest paths and distances while doing so.
+It is a greedy algorithm in the sense that it always locally chooses lowest weight edges and never discards previously made decisions.
+
+The algorithm has been slightly modified to take into account decisions that are edges for deduced equalities.
+These edges represent explanations, which are sets of input equations.
+In the same call to the search algorithm, using such equations again to explain another equality does not increase the size of the overall explanation.
+The modified Dijkstra algorithm temporarily adds an edge with weight 0 for every input equation in the explanation of a deduced equality edge.
+This is done to possibly reduce the size of explanations.
+Since previous decisions are not discarded, it is not guaranteed that the modified algorithm returns the shortest path in the final graph, including the extra edges.
+Example \ref{ex:short_expl} demonstrates that the modified shortest path algorithm does not always produce the shortest explanation, but can produce shorter explanations than the unmodified version in some situations.
+The shortest path algorithm's inability to return shortest explanations is not surprising, since it runs in $O(n \log(n))$ and in Section \ref{sec:npcomplete} it is shown that finding the shortest explanation is NP-complete.
+
+\begin{example}
+Consider the congruence graph shown in Figure \ref{fig:short_expl}, where solid edges are input equation and the dashed edge represents a deduced equality.
+The equality of $f(c_1,e)$ and $f(c_4,e)$ was deduced using the equations $(c_1,c_2),(c_2,c_3),(c_3,c_4)$, which is the shortest path in the graph between $c_1$ and $c_4$, obtained from a previous call to the shortest path algorithm.
+
+Suppose we want to compute an explanation for $a \thickapprox b$.
+Clearly the input equalities $(a,f(c_1,e))$, $(f(c_4,e),c_1)$ and the explanation for $f(c_1,e) \thickapprox f(c_4,e)$ have to be included in the explanation.
+Additionally $c_1 \thickapprox b$ has to be explained.
+For this equality the set $(c_1,d_1),(d_1,d_2),(d_2,b)$ is the shortest explanation in the original graph.
+This sub explanation adds three new equations to the explanation for $a \thickapprox b$.
+When the modified Dijkstra algorithm iterates over the edge $(f(c_1,e),f(c_4,e))$, it can add zero weight edges $(c_1,c_2),(c_2,c_3),(c_3,c_4)$ to the graph.
+By doing so the shortest explanation for $c_1 \thickapprox b$ becomes $(c_1,c_2),(c_2,c_3),(c_3,c_4),(c_4,b)$, which only adds one extra equation $(c_4,b)$ to the global explanation.
+The resulting explanation contains six input equations.
+
+This method is successful in finding the shortest explanation in this example if the search begins in the node $a$.
+Should the search begin in the node $b$, the edges including $d_1$, $d_2$ are added to the shortest path before the edge $(f(c_1,e),f(c_4,e))$ is touched.
+Therefore the undesired long explanation, including eight input equations, is returned.
+
+\begin{figure}[ht]
+\input{chapters/congruence/figures/dijkstra}
+\caption{Short explanation example}
+\label{fig:short_expl}
+\end{figure}
+
+\label{ex:short_expl}
+\end{example}
+
+\input{chapters/congruence/algorithms/insert_dij}
+
+\input{chapters/congruence/algorithms/explain_dij}
+
+\FloatBarrier
+
+\subsubsection*{Proof Forest}
+
+A proof forest is a collection of proof trees.
+A proof tree is a labeled tree with nodes in $\mathcal{T}$ and edge labels in $\mathcal{E}$.
+For every congruence class in a congruence structure, there is one proof tree.
+Inserting an edge between nodes $s$ and $t$ of different proof trees is done by making one the child of the other.
+To maintain a tree structure, all edges between the new child and the root of its old tree are reversed.
+To limit the number of edge reversion steps, the smaller tree is always attached to the larger one.
+This results in $O(n \log(n))$ edge reversion steps, where $n$ is the number terms in the input equation set.
+This bound can be shown using the same argument as in the proof of Proposition \ref{prop:runtime}.
+As stated above, we understand a path as a sequence of undirected edges.
+In case of a proof tree, a path between $s$ and $t$ of the same tree is the combined sequence of edges between the nodes and their nearest common ancestors.
+The structure, up to small changes, was proposed in \cite{Nieuwenhuis2005,Nieuwenhuis2007}.
+Its benefit is the quick access of explanations and good overall runtime.
+Its downside is its inflexibility when it comes to producing alternative explanations.
+In fact the explanation returned is always the first one to occur during edge insertion.
+The authors of \cite{Nieuwenhuis2005,Nieuwenhuis2007} improve the structure for the special case of flattened terms, for which no term has nesting depth greater than one.
+
+\input{chapters/congruence/algorithms/insert_pt}
+
+\input{chapters/congruence/algorithms/explain_pt}
+
+\begin{example}
+
+Consider again the set of equations presented in Figure \ref{fig:short_expl} and Example \ref{ex:short_expl} and suppose that the equations $(c_1,d_1),(d_1,d_2),(d_2,b)$ are inserted into the congruence structure before any other equation.
+After adding these three equations, the proof forest contains of a single proof tree and is displayed in Figure \ref{fig:proof_forest_1}, where the labels are omitted.
+Suppose that now the following equations are inserted: $(a,f(c_1,e)),(f(c_4,e),c_1),(c_1,c_2),(c_2,c_3)$.
+The resulting proof forest contains two proof trees and is shown in Figure \ref{fig:proof_forest_2}.
+Finally the equation $(c_3,c_4)$ is added and the equality $f(c_1,e) \thickapprox f(c_4,e)$ is deduced.
+At this point, the explanation for $c_1 \thickapprox c_4$ in the proof forest is the path $\langle c_1,c_2,c_3,c_4 \rangle$, which is the combined path from $c_1$ and $c_4$ to their nearest common ancestor, which is $c_2$.
+The resulting proof forest is shown in Figure \ref{fig:proof_forest_3}, where the explanation for the edge $(f(c_1,e),f(c_4,e))$ is highlighted in a dotted rectangle.
+The explanation for $a \thickapprox b$ in this graph is the path $\langle b,d_2,d_1,c_1,f(c_4,e),f(c_1,e),a\rangle$ and since the edge $(f(c_1,e),f(c_4,e))$ uses all other equations as explanation, the final explanation includes all eight equations.
+In example \ref{ex:short_expl} we have shown that this is not necessary.
+
+\begin{figure}[ht]
+\input{chapters/congruence/figures/proof_forest_1}
+\caption{Proof Forest including first three equations}
+\label{fig:proof_forest_1}
+\end{figure}
+
+\begin{figure}[ht]
+\input{chapters/congruence/figures/proof_forest_2}
+\caption{Proof Forest before deducing}
+\label{fig:proof_forest_2}
+\end{figure}
+
+\begin{figure}[ht]
+\input{chapters/congruence/figures/proof_forest_3}
+\caption{Final Proof Forest}
+\label{fig:proof_forest_3}
+\end{figure}
+
+\end{example}
+
+%See how BarceLogic ppl prove stuff,
+%-) tree is still tree after inserting
+%-) path to NCA forms explanation
+
+
+\FloatBarrier

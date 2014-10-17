@@ -1,0 +1,26 @@
+\begin{algorithm}[h]
+\caption[.]{fixNode}
+	\KwIn{resolution node $n$}
+  \KwIn{$pr:$ tuple of resolution nodes $(p_1,p_2)$}
+	\KwOut{resolution node}
+	
+	\eIf{($n.premise_1 = p_1$ and $n.premise_2 = p_2$)}{
+		\Return $n$
+	}{
+		\If{$n.pivot \in p_1$ and $n.pivot \in p_2$}{
+			\Return $resolve(p_1,p_2)$
+		}
+		\ElseIf{$n.pivot \in p_1$}{
+			\Return $p_2$
+		}
+		\ElseIf{$n.pivot \in p_2$}{
+			\Return $p_1$
+		}
+		\Else{
+			\Return node with smaller clause
+		}
+	}
+
+  \label{algo:fixnode}
+\end{algorithm}
+

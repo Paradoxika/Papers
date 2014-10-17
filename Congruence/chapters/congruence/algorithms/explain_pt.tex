@@ -1,0 +1,20 @@
+\begin{algorithm}[h]
+\caption[.]{explain (Proof Forest)}
+  \KwIn{term $s$}
+	\KwIn{term $t$}
+	%\KwIn{proof forest $g$}
+	\KwOut{path between $s$ and $t$}
+	
+	%\eIf{$s$ and $t$ are in the same proof tree $P$}{
+		Let $nca$ be the nearest common ancestor of $s$ and $t$ in $P$\\
+		$p1 \leftarrow $ path from $s$ to $nca$ \\
+		$p2 \leftarrow $ path from $nca$ to $s$ \\
+		\Return $p1 :: p2$
+	%}{
+		%\Return the empty path
+	%}
+
+  \label{algo:explain_pt}
+\end{algorithm}
+
+

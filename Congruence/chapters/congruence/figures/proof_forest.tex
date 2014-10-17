@@ -1,0 +1,19 @@
+
+\centering
+\begin{tikzpicture}[node distance=1.5cm]
+
+\node(c1){$c_1$};
+
+\node(d1)[right = of c1]{$d_1$};
+
+\node(d2)[right = of d1]{$d_2$};
+
+\node(b)[right = of d2]{$b$};
+
+\draw [->] (c1) -- (d1);% node [midway, above, sloped] {\small{1}};
+
+\draw [->] (d2) -- (d1);% node [midway, above, sloped] {\small{1}};
+  
+\draw [->] (b) -- (d2);% node (test) [midway, above, sloped] {\small{1}};
+
+\end{tikzpicture}

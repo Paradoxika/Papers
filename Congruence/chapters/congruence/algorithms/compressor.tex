@@ -1,0 +1,26 @@
+\begin{algorithm}[h]
+\caption[.]{compress}
+	\KwGlobal{set of input equations $E$}
+	\KwIn{resolution node $n$}
+  \KwIn{$pr:$ tuple of resolution nodes $(p_1,p_2)$}
+	\KwOut{resolution node}
+
+	$m \leftarrow fixNode(n,(p_1,p_2))$ \\
+	\If{$m$ fulfills criteria \label{criteria}}{
+		$lE \leftarrow \{(a,b) \mid (a \neq b) \in m\}$ \\
+		$rE \leftarrow \{(a,b) \mid (a = b) \in m\}$ \\
+		$con \leftarrow $ empty congruence structure \\
+		\For{$(a,b)$ in $lE$}{
+			$con \leftarrow con.addEquality(a,b)$
+		}
+		\For{$(a,b)$ in $rE$}{
+			$con \leftarrow con.addNode(a).addNode(b)$ \\
+			$proof \leftarrow con.prodProof(s,t)$ \\
+			\If{$proof \neq \emptyset$ and $| proof.conclusion | < | m.conclusion |$}{
+				$m \leftarrow proof$
+			}
+		}
+	}
+	\Return $m$
+  \label{algo:compressor}
+\end{algorithm}

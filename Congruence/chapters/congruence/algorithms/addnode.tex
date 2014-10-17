@@ -1,0 +1,27 @@
+\begin{algorithm}[t]
+	\caption[.]{addNode}
+  \KwIn{term $v$}
+	
+	\If{$r$ is not defined for $v$}
+		{$r(v) \leftarrow v$ \\
+		$[v] \leftarrow \{v\}$ \label{initclass} \\
+		$N_l(v) \leftarrow \emptyset$ \\
+		$N_r(v) \leftarrow \emptyset$ \label{initrN} \\
+		\If{$v$ is of the form $f(a,b)$}{
+			addNode(a) \\
+			addNode(b) \\
+			\eIf{$l$ is defined for $(r(a),r(b))$ and $l(r(a),r(b)) \neq f(a,b)$ \label{line:ldefined}}{
+				merge($l(r(a),r(b)),f(a,b),\smiley$) \label{addnodemerge} 
+			}
+			{
+				$l(r(a),r(b)) \leftarrow f(a,b)$ \label{line:initl} \\ 
+			}
+			$N_l(r(b)) \leftarrow N_l(r(b)) \cup \{a\}$ \\
+			$N_r(r(a)) \leftarrow N_r(r(a)) \cup \{b\}$ \label{modifyrN}\\
+			%\KwAssert{Neighbours \nllabel{invariant:neig_add}} 
+		 }
+	}
+	
+  
+  \label{algo:addNode}
+\end{algorithm}

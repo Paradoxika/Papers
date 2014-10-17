@@ -1,0 +1,37 @@
+
+\centering
+\begin{tikzpicture}[node distance=1cm]
+\node(t1){$f(c_4,e)$};
+
+\node(c1)[below =of t1]{$c_1$};
+
+\node(c2)[below of=c1]{$c_2$};
+
+\node(c3)[below =of c2]{$c_3$};
+
+\node(c4)[below =of c3]{$c_4$};
+
+\node(d1)[below right=of c1]{$d_1$};
+
+\node(d2)[below= of d1]{$d_2$};
+
+\node(b)[below= of d2]{$b$};
+
+\node(t2)[below left=of t1]{$f(c_1,e)$};
+
+\node(a)[below =of t2]{$a$};
+
+\node[rectangle,rounded corners,draw,dotted,fit=(c1) (c2) (c3) (c4)](rect) {};
+
+\draw [->] (c4) -- (c3);
+\draw [->] (c3) -- (c2);
+\draw [->] (d1) -- (c1);
+\draw [->] (c2) -- (c1);
+\draw [->] (d2) -- (d1);
+\draw [->] (b) -- (d2);
+\draw [->] (c1) -- (t1);
+\draw [->] (t2) -- (t1) node [midway, below] (expl) {};
+\draw [->] (a) -- (t2);
+\draw [->,dotted] (expl) -- (rect);
+
+\end{tikzpicture}

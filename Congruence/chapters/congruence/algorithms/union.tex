@@ -1,0 +1,65 @@
+\begin{algorithm}[t]
+\caption[.]{union}
+  \KwIn{term $s$}
+	\KwIn{term $t$}
+	\KwOut{a set of deduced equalities}
+	
+	\eIf{$[r(s)] \geq [r(t)]$}{
+		$(u,v) \leftarrow (s,t)$ \label{reverse1} 
+	}
+	{
+		$(u,v) \leftarrow (t,s)$ \label{reverse2} 
+	}
+	$d \leftarrow \emptyset$ \\
+	\For{every $x \in N_l(r(v))$ \label{startlN}}{
+		$l_v \leftarrow l(r(x),r(v))$ \label{accessl1} \\
+		\eIf{$r(x) = r(v)$}{
+			$new\_left \leftarrow r(u)$
+		}{
+			$new\_left \leftarrow r(x)$
+		}
+		\eIf{$l$ is defined for $(new\_left,r(u))$}{
+			$l_u \leftarrow l(new\_left,r(u))$ \\
+			\eIf{$r(l_u) \neq r(l_v)$}{
+				$d \leftarrow d \cup \{(l_u,l_v)\}$ \label{deduceEq1} 
+			}
+			{
+				$N_l(r(v)) \leftarrow N_l(r(v)) \setminus \{x\}$
+			}
+		}
+		{
+			$l(new\_left,r(u)) \leftarrow l_v$ \label{changel1} 
+		}
+	\label{stoplN}}
+	\For{every $x \in N_r(r(v))$ \label{startrN}}{
+		$l_v \leftarrow l(r(v),r(x))$ \label{accessl2} \\
+		\eIf{$r(x) = r(v)$}{
+			$new\_right \leftarrow r(u)$
+		}{
+			$new\_right \leftarrow r(x)$
+		}
+		\eIf{$l$ is defined for $(r(u),new\_right)$}{
+			$l_u \leftarrow l(r(u),new\_right)$ \\
+			\eIf{$r(l_u) \neq r(l_v)$}{
+				$d \leftarrow d \cup \{(l_u,l_v)\}$ \label{deduceEq2} 
+			}
+			{
+				$N_r(r(v)) \leftarrow N_r(r(v)) \setminus \{x\}$
+			}
+		}
+		{
+			$l(r(u),new\_right) \leftarrow l_v$ \label{changel2}
+		}
+	\label{stoprN}}
+	$[r(u)] \leftarrow [r(u)] \cup [r(v)]$ \label{changeclass} \\
+	\For{every $x \in [r(v)]$}{
+		$r(x) \leftarrow r(u)$ \label{changerep} 
+	}
+	$N_l(r(u)) \leftarrow N_l(r(u)) \cup N_l(r(v))$ \\
+	$N_r(r(u)) \leftarrow N_r(r(u)) \cup N_r(r(v))$ \label{modifyrN2} \\
+	%\KwInvariant{Neighbours \nllabel{invariant:neig_union}} \\
+	%\KwAssert{$r(s) = r(t)$ \nllabel{assertion:union_rep}}
+	\Return $d$
+  \label{algo:union}
+\end{algorithm}
+

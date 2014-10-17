@@ -1,0 +1,15 @@
+\begin{algorithm}[t]
+\caption[.]{lazy\_update}
+	%\KwIn{congruence graph $g$}
+	%\KwGlobal{Queue of tuples of terms $\mathcal{Q}$}
+	%\KwGlobal{Map of tuples of terms to equation $\mathcal{M}$}
+	
+	\While{$\mathcal{Q}$ is not empty}{
+		$(u,v) \leftarrow \mathcal{Q}.dequeue$\\
+		$eq \leftarrow \mathcal{M}(u,v)$ \\
+		$g.insert(u,v,eq)$
+	}
+  
+  \label{algo:lazyupdate}
+\end{algorithm}
+

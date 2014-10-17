@@ -1,0 +1,10 @@
+\centering
+\begin{tikzpicture}[node distance=1.5cm]
+
+	\rootnode;
+	
+	\withchildren{root} {nx1}{$\{\neg x_1\}$} {x1}{$\{x_1\}$};
+	\withchildren{x1}{n3}{$\{x_1,\neg x_3\}$} {n4} {$\{x_1, x_3\}$};
+	\withchildren{n3}{n1}{$\{x_1,\neg x_2,\neg x_3\}$} {n4} {$\{x_1, x_2\}$};
+
+\end{tikzpicture}

@@ -1,0 +1,28 @@
+\subsection{Future Work}
+
+\cite{Bachmair2000} compares the running times of several congruence closure algorithms.
+It would be interesting to do a similar comparison including the congruence closure algorithm presented in Section \ref{sec:algorithm}.
+A comparison to the classic congruence closure algorithms of Nelson and Oppen \cite{Nelson1980}, Downey, Sethi and Tarjan \cite{Downey1980} and Shostak \cite{Shostak1978} and their abstract counterparts, as described in \cite{Bachmair2000}, would show whether our method can compete in terms of computation speed.
+Comparing our method with the explanation producing algorithms presented in \cite{Fontaine2004} and \cite{Nieuwenhuis2005,Nieuwenhuis2007} could be done not only in terms of speed, but also in terms of explanation size.
+
+In Section \ref{sec:npcomplete} it was shown that the problem of finding the shortest explanation is NP-complete.
+Therefore further methods and heuristics to find short explanations could be investigated.
+The idea of using shortest path algorithms for explanation finding is a step in that direction.
+In \ref{sec:algorithm} we describe a modification of Dijkstra's algorithm \cite{Dijkstra1959} to make it sensitive to previously used equations.
+Further modifications, possibly using heuristics, could lead to a short explanation algorithm.
+Furthermore translating the problem into a SAT instance could result in an algorithm to derive shortest explanations in acceptable time.
+
+The congruence closure algorithm could be implemented into a SMT solver.
+Such solvers usually have high requirements regarding computation time.
+It would be interesting to see, whether the method presented in this work can match these requirements.
+
+\cite{Nieuwenhuis2007} extends the congruence closure algorithm to the theory of integer offsets.
+Such an extension to our algorithm would be interesting.
+Not only could more proofs be compressed, but also the compression ratio on the current benchmarks would increase.
+
+In Section \ref{sec:congruence_experiments}, we compare our method only to proofs produced by the solver VeriT.
+Comparing to proofs of other solvers would provide a bigger picture of how well our compression and explanation production algorithms perform.
+
+The use of immutable data structures in the congruence closure algorithm allows to easily keep track of a collection of congruence structures for different sets of input equations.
+When the congruence structure of some set of equations is required, it does not necessarily have to be constructed from scratch, but a previously constructed congruence structure, that has a subset of the input equations inserted, could be extended.
+Using this technique would speed up the whole method.

@@ -1,0 +1,47 @@
+\chapter*{Abstract}
+
+This work presents two methods for compression of formal proofs.
+Formal proofs are of great importance to modern computer science.
+They can be used to combine deductive systems.
+For example SAT solvers \cite{Biere2009} are heavily used for all kinds of computations, because of their efficiency.
+A formal proof is a certificate of the correctness of the output of a SAT solver.
+Furthermore, formal proofs can provide information about the underlying problem.
+For example, Interpolants \cite{McMill2005} and unsat cores can be extracted from proofs, as done in \cite{Hofferek2013}.
+
+Typically problems tackled by automated systems are huge and so are the produced proofs.
+For example, \cite{Konev2014} reports a 13 GB proof of one case of the Erd\H{o}s Discrepancy Conjecture.
+With such proof sizes, computer systems reach their boundaries and that is why it is necessary to compress proofs.
+Our work presents two methods for proof compression.
+
+The first method removes redundancies in the congruence reasoning part of SMT proofs.
+Congruence reasoning deduces equalities from a set of input equations, using the four axioms \emph{reflexivity}, \emph{symmetry}, \emph{transitivity}, and \emph{compatibility}.
+We found that SMT solver often use an unnecessarily large set of input equations to deduce one particular equality.
+We present a novel explanation producing congruence closure algorithm and show that it produces shorter explanations than those we found in the benchmark proofs.
+By replacing long by short explanations, we construct a new, compressed proof.
+Furthermore, we prove that finding the shortest explanation is in general a NP-complete problem.
+
+The second method investigates the memory requirements of proofs.
+During processing a proof, not all parts of the proof have to be kept in memory at all times.
+Subproofs can be loaded into memory when needed and can be removed from memory again when they are not needed anymore.
+The traversal order in which subproofs are visited is essential to the maximum memory consumption during proof processing.
+We construct traversal orders with low memory requirements using two novel algorithms together with a collection of heuristics. 
+
+%This work presents two methods for proof compression and studies their theoretical foundations.
+%Proof compression reduces formal proofs in various measures.
+%
+%The most prominent measure to reduce is length or the number of proof inferences.
+%The method presented in Chapter \ref{ch:congruence} is of such kind.
+%It uses congruence closure to compress the equality reasoning part in proofs of the theory of equality.
+%We present a novel congruence closure algorithm, which key feature is explanation production.
+%An explanation in our sense is a set of equations, such that the equality of two terms can be explained using just these equations.
+%These explanations translate directly to proofs and we try to find short explanations to obtain short proofs.
+%We show that finding the shortest explanation is in general an NP-complete problem.
+%
+%Another measure of proofs that can be reduced is space.
+%The space of a proof is the maximal amount of memory required when processing a proof.
+%Pebbling games are a family of games that model such space requirements.
+%We propose two algorithms together with a collection of heuristics to construct strategies in these games played on proofs.
+%Finding the optimal strategy in the instance of the game is an NP-complete complete problem and we present a SAT encoding for it.
+%
+%Both compression methods were implemented into the proof compression tool Skeptik.
+%Both methods are evaluated on a large number of benchmark proofs from different proof libraries and solvers.

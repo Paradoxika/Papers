@@ -1,0 +1,45 @@
+
+\centering
+\begin{tikzpicture}[node distance=1.5cm]
+
+\node(a){$a$};
+
+\node(f1)[right = .5cm of a]{$f(c_1,e)$};
+
+\node(f2)[right = .5cm of f1]{$f(c_4,e)$};
+
+\node(c1)[right = .5cm of f2]{$c_1$};
+
+\node(c2)[right = .5cm of c1]{$c_2$};
+
+\node(c3)[right = .5cm of c2]{$c_3$};
+
+\node(c4)[right = .5cm of c3]{$c_4$};
+
+\node(b)[right = .5cm of c4]{$b$};
+
+\node(d1)[above = .25cm of c2]{$d_1$};
+
+\node(d2)[above = .25cm of c4]{$d_2$};
+
+\draw (a) -- (f1)  node [midway, above, sloped] {\small{1}};
+
+\draw (f1) -- (f2) [-,dashed] node [midway, above, sloped] {\small{3}};
+
+\draw (f2) -- (c1) node [midway, above, sloped] {\small{1}};
+
+\draw (c1) -- (c2) node [midway, above, sloped] {\small{1}};
+
+\draw (c2) -- (c3) node [midway, above, sloped] {\small{1}};
+
+\draw (c3) -- (c4) node [midway, above, sloped] {\small{1}};
+
+\draw (c4) -- (b) node [midway, above, sloped] {\small{1}};
+
+\draw (c1) -- (d1) node [midway, above, sloped] {\small{1}};
+
+\draw (d1) -- (d2) node [midway, above, sloped] {\small{1}};
+  
+\draw (d2) -- (b) node (test) [midway, above, sloped] {\small{1}};
+
+\end{tikzpicture}

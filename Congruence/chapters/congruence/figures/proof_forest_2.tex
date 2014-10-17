@@ -1,0 +1,32 @@
+
+\centering
+\begin{tikzpicture}[node distance=1cm]
+
+\node(c2){$c_2$};
+
+\node(c3)[below left=of c2]{$c_3$};
+
+\node(c1)[below right=of c2]{$c_1$};
+
+\node(t1)[below left=of c1]{$f(c_4,e)$};
+
+\node(d1)[below right=of c1]{$d_1$};
+
+\node(d2)[below= of d1]{$d_2$};
+
+\node(b)[below= of d2]{$b$};
+
+\node(t2)[right =of c2,xshift=2cm]{$f(c_1,e)$};
+
+\node(a)[below =of t2]{$a$};
+
+\draw [->] (c3) -- (c2);
+\draw [->] (d1) -- (c1);
+\draw [->] (c1) -- (c2);
+\draw [->] (d2) -- (d1);
+\draw [->] (b) -- (d2);
+\draw [->] (t1) -- (c1);
+
+\draw [->] (a) -- (t2);
+
+\end{tikzpicture}

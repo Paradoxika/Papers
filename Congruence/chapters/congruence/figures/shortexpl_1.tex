@@ -1,0 +1,15 @@
+
+\centering
+\begin{tikzpicture}[node distance=2cm]
+	\proofnode{root} {$t_a = t_b$};
+	%\withchildren{root} {n5}{$b \neq f(f(b,a),f(b,b)), f(f(a,b),f(a,a)) = f(f(b,a),f(b,b))$}  {n6}{$b = f(f(b,a),f(b,b))$};
+	%\withchildren{n5}   {n3}{$a\neq b, b \neq f(f(b,a),f(b,b)), f(f(a,b),f(a,a)) = f(f(b,a),f(b,b))$} {n4}{$a = b$};
+	%\withchildren{n3} {n1}{$f(f(a,b),f(a,a)) \neq a, a\neq b, b \neq f(f(b,a),f(b,b)), f(f(a,b),f(a,a)) = f(f(b,a),f(b,b))$} {n2}{$f(f(a,b),f(a,a)) = a$};
+	\withchildren{root} {n5}{$b \neq t_b, t_a = t_b$}  {n6}{$b = t_b$};
+	\withchildren{n5}   {n3}{$a \neq b, b \neq t_b, t_a = t_b$} {n4}{$a = b$};
+	
+	\proofnode[above left  of=n3,xshift=-.5cm]{n1}{$t_a \neq a, a\neq b, b \neq t_b, t_a = t_b$};
+	\proofnode[above right  of=n3,xshift=.5cm]{n2}{$t_a = a$};
+	
+	\drawchildren{n3} {n1}{n2};
+\end{tikzpicture}

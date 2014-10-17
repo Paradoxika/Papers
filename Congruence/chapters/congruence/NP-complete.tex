@@ -1,0 +1,183 @@
+\subsection{NP-completeness of Short Explanation Decision Problem}
+\label{sec:npcomplete}
+In Section \ref{sec:congruencedef} the notion of an explanation is defined and it was mentioned that we want to find short explanations in order to compress proofs.
+In this section we show that one might have to search a while to find the shortest one, by proving that the problem of deciding whether there is an explanation of a given size is NP-complete.
+Our proof of NP-completeness reduces the problem of deciding the satisfiability of a propositional logic formula  in conjunctive normal form (SAT) to the short explanation decision problem.
+For basics about satisfiability of propositional logic formulas and assignments, we refer the reader to \cite{Biere2009}.
+We begin by formally defining the problem.
+
+\begin{definition}[Short explanation decision problem]
+
+Let $E = \{(s_1,t_1),\ldots,(s_n,t_n)\}$ be a set of equations, $k \in \mathbb{N}$ and $(s,t)$ be a target equation.
+The \emph{short explanation decision problem} is the question whether there exists a set $E'$ such that $E' \subseteq E$, $E' \models s \thickapprox t$ and $|E'| \leq k$.
+
+\end{definition}
+
+Our proof of hardness translates propositional formulas into sets of equations and proves properties of the resulting formulas.
+To this end we define a general translation of formulas in conjunctive normal form into sets of equations.
+
+\begin{definition}[Congruence Translation]
+
+Let $\Phi$ be a propositional logic formula in conjunctive normal form with clauses $C_1,\ldots,C_n$ using variables $x_1,\ldots,x_m$.
+%The set of terms $\mathcal{T}$ is constructed using the following constants and function symbols.
+%For every $i= 1,\ldots,n + 1$, there is a constant $\hat{c}_i$ and function symbols $t_i$ and $f_i$.
+%For every $j= 1,\ldots,m$, there are constants $\hat{x}_j$, $\top_j$ and $\bot_j$.
+The congruence translation $E_{\Phi}$ of $\Phi$ is defined as the set of equations $Assignment \cup Pos \cup Neg \cup Connect$, where
+\begin{align*}
+	Assignment &= \{ (\hat{x}_j,\top_j), (\hat{x}_j,\bot_j) \mid 1 \leq j \leq m\} \\
+	Pos &= \{ (\hat{c}_i, t_i(\hat{x}_j)) \mid x_j \text{ appears positively in } C_i\} \\
+	Neg &= \{ (\hat{c}_i, f_i(\hat{x}_j)) \mid x_j \text{ appears negatively in } C_i\} \\
+	Connect &= \{ (t_i(\top_j),\hat{c}_{i+1}),(f_i(\bot_j), \hat{c}_{i+1}) \mid 1 \leq i \leq n, 1 \leq j \leq m\} \\
+%\end{align*}
+&\hspace{-2cm}\text{For presentation purposes we define the following sets for every $i = 1,\ldots, n$ and $j = 1,\ldots, m$}\\
+%\begin{align*}
+T_{ij} &= \{(\hat{c}_i, t_i(\hat{x}_j)), (\hat{x}_j,\top_j), (t_i(\top_j),\hat{c}_{i+1})\} \\
+F_{ij} &= \{(\hat{c}_i, f_i(\hat{x}_j)), (\hat{x}_j,\bot_j), (f_i(\bot_j),\hat{c}_{i+1})\}
+\end{align*}
+
+\end{definition}
+
+The following examples show the congruence translation of a propositional formula and a subset of the translation corresponding to a satisfying assignment.
+We use the standard notion of satisfiability and present variable assignments as sets of those propositional variables being mapped to true.
+
+\begin{example}
+
+Let $\Phi := (x_1 \vee x_2 \vee \neg x_3) \wedge (\neg x_2 \vee x_3) \wedge (\neg x_1 \vee \neg x_2)$. 
+Figures \ref{fig:npexamplebig}, \ref{fig:npassignment} and \ref{fig:npexplanation} present sets of equations graphically, where an edge between two nodes means that the respective set contains an equation between the two nodes.
+Figure \ref{fig:npexamplebig} shows the graphical representation of the equations in $Pos, Neg$ and $Connect$ for the congruence translation $E_{\Phi}$ of $\Phi$.
+Let $\mathcal{I} := \{x_1,x_3\}$. 
+It is easy to see that $\mathcal{I} \models \Phi$.
+Figure \ref{fig:npexplanation} shows a graphical representation of $\mathcal{I}$ in terms of equations.
+This set of equations is an explanation for $(\hat{c}_1,\hat{c}_4)$.
+Note that $\mathcal{I}' := \{x_1\}$ is another satisfying assignment and for the satisfiability of $\Phi$, the truth value of variable $x_3$ is not essential.
+Therefore replacing $\{(\hat{x}_3,\top_3)\}$ by $\{(\hat{x}_2,\top_2)\}$ in the explanation corresponding to $\mathcal{I}$ leads to another explanation of $(\hat{c}_1,\hat{c}_4)$ of equal size.
+However, this set does not uniquely represent an assignment, since it is not clear which truth value $x_2$ has.
+In the proof of Lemma \ref{lemma:nphardness} we exclude such ambiguous sets by introducing additional topological clauses.
+\begin{figure}[ht]
+
+\input{chapters/congruence/figures/npexamplebig}
+\caption{Pos, Neg and Connect for $E_{\Phi}$}
+\label{fig:npexamplebig}
+\end{figure}
+
+
+\begin{figure}[ht]
+
+\input{chapters/congruence/figures/npassignment}
+\caption{Assignment for $E_{\Phi}$}
+\label{fig:npassignment}
+\end{figure}
+
+\begin{figure}[ht]
+
+\input{chapters/congruence/figures/npexplanation}
+\caption{Explanation of $(\hat{c}_1,\hat{c}_4)$}
+\label{fig:npexplanation}
+\end{figure}
+
+\end{example}
+
+
+\begin{lemma}[Characterization of explanations]
+\label{lemma:charexpl}
+
+Let $\Phi$ be a propositional logic formula in conjunctive normal form with $n$ clauses and $m$ variables.
+For every subset $E$ of $E_{\Phi}$, $E \models \hat{c}_1 \thickapprox \hat{c}_{n+1}$ if and only if for every $i = 1,\ldots,n$ there is a $j = 1,\ldots,m$ such that $T_{ij} \subseteq E$ or $F_{ij} \subseteq E$.
+
+\end{lemma}
+
+\begin{proof}
+
+Suppose that for every $i = 1,\ldots,n$ there is a $j = 1,\ldots,m$ such that $T_{ij} \subseteq E$ or $F_{ij} \subseteq E$.
+Clearly $T_{ij} \models \hat{c}_i \thickapprox t_i(\hat{x}_j)$ and $T_{ij} \models t_i(\top_j) \thickapprox \hat{c}_{i+1}$. 
+Since $(\hat{x}_j,\top_j) \in E$, the fact $E \models t_i(\hat{x}_j) \thickapprox t_i(\top_j)$ follows by an application of the compatibility axiom.
+Using the transitivity of congruence relations, it follows that $T_{ij} \models \hat{c}_i \thickapprox \hat{c}_{i+1}$.
+Similarly it can be shown that $F_{ij} \models \hat{c}_i \thickapprox \hat{c}_{i+1}$.
+Therefore it follows from the assumption that $E \models \hat{c}_i \thickapprox \hat{c}_{i+1}$ for every $i = 1,\ldots,n$.
+Using transitivity again, it follows that $E \models \hat{c}_1 \thickapprox \hat{c}_{n+1}$.
+
+\noindent We show the other implication of the equivalence by induction on $n$.
+\begin{paragraph}{Induction Base $n = 1$:}
+
+Suppose that $E \models \hat{c}_1 \thickapprox \hat{c}_{2}$. %, which implies $\hat{c}_2 \in [\hat{c}_1]_E$.
+Since $\hat{c}_1$ is a constant, the compatibility axiom can not be applied to extend the congruence class of $\hat{c}_1$ beyond the singleton $\{\hat{c}_1\}$.
+Therefore in order to satisfy $E \models \hat{c}_1 \thickapprox u$ with $u \neq \hat{c}_1$ there has to be an equation $(\hat{c}_1, u) \in E$ for some term $u$.
+Since $E \subseteq E_{\Phi}$, the only possible such equations are $(\hat{c}_1, t_1(\hat{x}_j))$ and $(\hat{c}_1, f_1(\hat{x}_j))$ for some $j$.
+The only equations in $E$ involving terms with the function symbols $t_1$ and $f_1$ are $(\hat{c}_1, t_1(\hat{x}_j)), (t_1(\top_j),\hat{c}_2)$ and $(\hat{c}_1, f_1(\hat{x}_j)), (f_1(\bot_j),\hat{c}_2)$ for some $j$.
+Therefore in order to satisfy $E \models \hat{c}_1 \thickapprox u$ such that $u$ is neither the constant $\hat{c}_1$, nor some term $t_1(\hat{x}_j), f_1(\hat{x}_j)$, it is necessary that $E \models t_1(\hat{x}_j) \thickapprox t_1(\top_j)$ and $(\hat{c}_1, t_1(\hat{x}_j)) \in E$ or $E \models f_1(\hat{x}_j) \thickapprox f_1(\bot_j)$ and $(f_1(\bot_j),\hat{c}_2) \in E$ for some $j$.
+The conditions can only be satisfied with equations of $E_{\Phi}$ if $\{(\hat{c}_1, t_1(\hat{x}_j)), (\hat{x}_j,\top_j)\} \subseteq E$ or $\{(\hat{c}_1, f_1(\hat{x}_j), (\hat{x}_j,\bot_j)\} \subseteq E$ respectively.
+%Similarly $t \in [\hat{c}_1]_E$ such that $t$ is neither $\hat{c}_1$ nor a term with the function symbol $t_1$ or $f_1$, for some $j$ $(t_1(\top_j),\hat{c}_2) \in E$ and 
+From a similar argumentation about the equations involving $\hat{c_2}$ and $t_1(\top_j)$ or $f_1(\bot_j)$ it follows that either $T_{1j} \subseteq E$ or $F_{1j} \subseteq E$ for some $j$.
+\end{paragraph}
+
+\begin{paragraph}{Induction Hypothesis:} For every subset $E$ of $E_{\Phi}$, $E \models \hat{c}_1 \thickapprox \hat{c}_{n}$ if and only if for every $i = 1,\ldots,n-1$ there is a $j = 1,\ldots,m$ such that $T_{ij} \subseteq E$ or $F_{ij} \subseteq E$.
+\end{paragraph}
+
+\begin{paragraph}{Induction Step:}
+Suppose that $E \models \hat{c}_1 \thickapprox \hat{c}_{n+1}$.\\
+Similarly to the argumentation in the induction base, the only equations in $E_{\Phi}$ involving $\hat{c}_{n+1}$ are of the form $(t_n(\top_j),\hat{c}_{n+1})$ and $(f_n(\bot_j),\hat{c}_{n+1})$.
+The only possibility to enrich the congruence class of $\hat{c}_{n+1}$ with terms other than $\hat{c}_{n+1}$ and those of the form $t_n(\top_j)$ and $f_n(\bot_j)$, 
+is that for some $j$, $(\hat{x}_j,\top_j) \in E$ or $(\hat{x}_j,\bot_j) \in E$ and subsequently also $(\hat{c}_n,t_n(\hat{x}_j)) \in E$ or $(\hat{c}_n,f_n(\hat{x}_j)) \in E$.
+Thus $T_{nj} \subseteq E$ or $F_{nj} \subseteq E$ and as a consequence $E \models \hat{c}_n \thickapprox \hat{c}_{n+1}$.
+Using transitivity $E \models \hat{c}_1 \thickapprox \hat{c}_{n+1}$ and $E \models \hat{c}_n \thickapprox \hat{c}_{n+1}$ imply $E \models \hat{c}_1 \thickapprox \hat{c}_n$ and from the induction hypothesis it follows that  $T_{ij} \subseteq E$ or $F_{ij} \subseteq E$ for every $i = 1,\ldots,n-1$.
+\end{paragraph}
+
+\end{proof}
+
+\begin{lemma}[NP- hardness]
+\label{lemma:nphardness}
+The short explanation decision problem is NP- hard.
+
+\end{lemma}
+
+\begin{proof}
+
+We reduce SAT to the short explanation decision problem.
+SAT is a well known NP-complete problem \cite{Biere2009}.
+Let $\Phi$ be a propositional formula in conjunctive normal form with clauses $C_1,\ldots,C_n$ and variables $x_1,\ldots,x_m$.
+Let $C_{n+1},\ldots,C_{n+m}$ be the tautological clauses $\{x_1, \neg x_1\},\ldots,\{x_m,\neg x_m\}$.
+Clearly $\Phi$ is satisfiable if and only if $\Phi' = \{C_1,\ldots,C_{n+m}\}$ is satisfiable.
+We will show that $\Phi'$ is satisfiable if and only if there exists $E \subseteq E_{\Phi'}$ such that $E \models \hat{c}_1 \thickapprox \hat{c}_{n+m+1}$ and $|E| \leq 2n + 3m$.
+
+\emph{Suppose} $\Phi'$ is satisfiable and let $\mathcal{I}$ be a satisfying assignment.\\
+For every clause $C_i$ there is a literal $\ell_i \in C_i$, such that $\mathcal{I} \models \ell_i$.
+For every $i = 1,\ldots,n+m$ we set $E_i:= T_{ij}$ if $\ell_i = x_j$ and $E_i:= F_{ij}$ if $\ell_i = \neg x_j$.
+From $\ell_i \in C_i$ follows $E_i \subseteq E_{\Phi'}$.
+Let $E = \bigcup_i^n E_i$ then from Lemma \ref{lemma:charexpl} and the transitivity of the congruence relations follows $E \models \hat{c_1} \thickapprox \hat{c_{n+m+1}}$.
+What remains to show is that $|E| \leq 2n + 3m$.
+Since the sets $Pos, Neg$ and $Connect$ in the definition of $E_{\Phi'}$ are pairwise disjoint, for $i \neq j$ $E_i \cap E_j \subseteq \{(\hat{x}_j,\top_j),(\hat{x}_j,\bot_j) \mid j = 1,\ldots,m\}$.
+Therefore $E$ involves exactly $2(n+m)$ equations of $Pos, Neg$ and $Connect$.
+By construction of the sets $E_i$ and the clauses $C_{n+1},\ldots,C_{n+m}$ there is no $j = 1,\ldots,m$ such that $(\hat{x}_j,\top_j) \in E$ and $(\hat{x}_j,\bot_j) \in E$.
+Therefore $E$ involves $m$ equations of set $Assignment$ in the definition of $E_{\Phi'}$.
+Overall we have $|E| = 2n + 3m$.
+
+\emph{Suppose} there exists $E \subseteq E_{\Phi'}$, $E \models \hat{c}_1 \thickapprox \hat{c}_{n+m+1}$ and $|E| \leq 2n + 3m$.\\
+We will show that $\mathcal{I} = \{\hat{x}_j \mid (\hat{x}_j,\top_j) \in E\}$ is a satisfying assignment for $\Phi'$.
+Let $i = 1,\ldots,n+m$ be an arbitrary clause index.
+From $E \models \hat{c}_1 \thickapprox \hat{c}_{n+m+1}$ and Lemma \ref{lemma:charexpl} follows $T_{ij} \subseteq E$ or $F_{ij} \subseteq E$ for some $j=1,\ldots,m$.
+Assume $T_{ij} \subseteq E$ for some $j = 1,\ldots,m$.
+$E \subseteq E_{\Phi'}$ implies that $x_j$ appears positively in $C_i$. 
+By definition of $\mathcal{I}$, $\mathcal{I} \models x_j$ and therefore $\mathcal{I} \models C_i$.
+If $T_{ij} \nsubseteq E$ for all $j = 1,\ldots,m$, then $F_{ij} \subseteq E \subseteq E_{\Phi'}$, which implies that $x_j$ appears negatively in $C_i$, $x_j \notin \mathcal{I}$ and therefore $\mathcal{I} \models C_i$. Since $i$ was arbitrary we conclude $\mathcal{I} \models \Phi'$.
+
+\end{proof}
+
+\begin{lemma}[In NP]
+\label{lemma:innp}
+The short explanation decision problem is in NP.
+
+\end{lemma}
+\begin{proof}
+
+Explanations are subsets of the input equations, therefore they are clearly polynomial in the problem size.
+The congruence of two terms, i.e. verifying that a subset is actually an explanation, can be decided in $O(n \log(n))$ using for example the congruence closure algorithm presented in Section \ref{sec:algorithm}.
+
+\end{proof}
+
+Lemma \ref{lemma:nphardness} and \ref{lemma:innp} establish the main result of this section.
+
+\begin{theorem}[NP - completeness]
+
+The short explanation decision problem is NP- complete.
+
+\end{theorem}

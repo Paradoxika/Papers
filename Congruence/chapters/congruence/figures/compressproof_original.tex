@@ -1,0 +1,26 @@
+
+\centering
+\begin{tikzpicture}[node distance=2.5cm]
+
+	\rootnode;
+	
+	\withchildren{root}{n11}{$t_a = t_b$} {n10}{$t_a \neq t_b$};
+
+	\proofnode[above left of=n11, align=center,font=\small]{n9}{$b \neq t_b$};
+	\proofnode[above right of=n11, align=center,font=\small]{n8}{$O_3$\\$b \neq t_b, t_a = t_b$};
+	\drawchildren{n11}{n9}{n8};
+	\proofnode[above left of=n8, align=center,font=\small]{n5}{$O_2$\\$a \neq b, b\neq t_b, t_a = t_b$};
+	
+	\proofnode[above left of=n5, align=center,font=\small]{n1}{$O_1$\\$t_a \neq a, a\neq b, b \neq t_b, t_a = t_b$};
+	\proofnode[above right of=n5]{n4}{$t_a = a$};
+	\drawchildren{n5}{n1}{n4};
+	\proofnode[above left of=n4]{n2}{$A,t_a = a$};
+	
+	
+	
+	\proofnode[right of =n4]{n7}{$a = b$};
+	\drawchildren{n8}{n5}{n7};
+	\withchildren{n7}{n3}{$\neg A$} {n6}{$A, a = b$};
+	\drawchildren{n4}{n2}{n3};
+\end{tikzpicture}
+

@@ -1,0 +1,27 @@
+
+\centering
+\begin{tikzpicture}[node distance=2.5cm]
+	
+	
+	\rootnode;
+	
+	\withchildren{root}{new9}{$t_a = t_b$} {new10}{$t_a \neq t_b$};
+	
+	\proofnode[above right of=new9,yshift=-1cm,xshift=.5cm]{new8}{$a = b$};
+
+	\proofnode[above left of=new9, align=center,font=\small]{new5} {$N_1$\\$a \neq b, t_a = t_b$};
+	
+	\proofnode[above left of=new5,yshift=.25cm]{n5}{$a \neq b, f(a,a) \neq f(b,b), t_a = t_b$};
+	\proofnode[above right of=new5,yshift=-.25cm]{n7}{$a\neq b, f(a,a) = f(b,b)$};
+
+	\proofnode[above left of=n5,yshift=.25cm]{n3}{$f(a,b) \neq f(b,a), f(a,a) \neq f(b,b), t_a = t_b$};
+	\proofnode[above right of=n5,yshift=-.25cm]{n4}{$a \neq b, f(a,b) = f(b,a)$};
+
+	\drawchildren{new5}{n5}{n7};
+	\drawchildren{n5}{n3}{n4};
+	
+	\drawchildren{new9}{new5}{new8};
+	
+	\withchildren{new8}{new6}{$\neg A$} {new7}{$A,a = b$};
+\end{tikzpicture}
+

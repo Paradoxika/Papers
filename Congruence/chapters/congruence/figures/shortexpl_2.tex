@@ -1,0 +1,22 @@
+
+\centering
+\begin{tikzpicture}[node distance=2.5cm]
+	\proofnode{root} {$t_a = t_b$};
+	
+	\proofnode[above left of=root,yshift=-.5cm]{n5}{$f(a,a) \neq f(b,b), t_a = t_b$};
+	\proofnode[above right of=root]{n7}{$f(a,a) = f(b,b)$};
+	
+	\proofnode[above right of=n7]{n6}{$a\neq b,f(a,a)=f(b,b)$};
+	
+	\proofnode[above left of=n5,yshift=2.5cm,xshift=-1cm]{n3}{$f(a,b) \neq f(b,a), f(a,a) \neq f(b,b), t_a = t_b$};
+	\proofnode[above right of=n5]{n4}{$f(a,b) = f(b,a)$};
+	
+	\proofnode[above left of=n4]{n1}{$a\neq b, f(a,b) = f(b,a)$};
+	\proofnode[above left of=n7,xshift=1cm,yshift=1cm]{n2}{$a = b$};
+	
+	\drawchildren{n7}{n6}{n2};
+	\drawchildren{n4}{n1}{n2};
+	\drawchildren{root}{n5}{n7};
+	\drawchildren{n5}{n3}{n4};
+\end{tikzpicture}
+

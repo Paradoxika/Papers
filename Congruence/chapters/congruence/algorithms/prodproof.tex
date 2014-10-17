@@ -1,0 +1,51 @@
+\begin{algorithm}[t]
+\caption[.]{produceProof}
+  \KwIn{term $s$}
+	\KwIn{term $t$}
+	%\KwIn{congruence graph $g$}
+	\KwOut{Resolution proof for $E \models s \thickapprox t$ or $\emptyset$}
+	
+	$p \leftarrow explain(s,t,g)$ \\
+	$d \leftarrow \emptyset$ \\
+	$e \leftarrow \emptyset$ \\
+	
+	\While{$p$ is not empty}{
+		$(u,l,v) \leftarrow $ first edge of $p$ \\
+		$p \leftarrow p \setminus (u,l,v)$ \\
+		$e \leftarrow e \cup \{u \neq v\}$ \\
+		\If{$l = \smiley$}{
+			$f(a,b) \leftarrow u$ \\
+			$f(c,d) \leftarrow v$ \\
+			$p_1 \leftarrow produceProof(a,c)$ \\
+			$p_2 \leftarrow produceProof(b,d)$ \\
+			$con \leftarrow \{ a \neq c, b\neq d, f(a,b) = f(c,d) \}$ \\
+			$res \leftarrow$ resolve $con$ with non $\emptyset$ roots of $p_1$ and $p_2$ \\
+			%$int_1 \leftarrow$ resolve $con$ with $root(p_1)$ \\
+			%$int_2 \leftarrow$ resolve $int_1$ with $root(p_2)$ \\
+			$d \leftarrow d \cup res$
+		}
+	}
+	
+	\If{$\# e > 1$}{
+		$proof \leftarrow e \cup \{s = t\}$ \\
+		\While{$d$ is not empty}{
+			$int \leftarrow $ some element in $d$ \\
+			$d \leftarrow d \setminus \{int\}$ \\
+			$proof \leftarrow $ resolve $proof$ with $int$
+		}
+		\Return $proof$
+	}
+	\ElseIf{$d = \{ded\}$}{
+		\Return $ded$
+	}
+	\Else{
+		\If{$e = \{(u,l,u)\}$} {
+			\Return $\{u = u\}$
+		}
+		\Else {
+			\Return $\emptyset$
+		}
+	}
+	
+  \label{algo:prodproof}
+\end{algorithm}

@@ -1,0 +1,19 @@
+\begin{algorithm}[t]
+\caption[.]{merge}
+  \KwIn{term $s$}
+	\KwIn{term $t$}
+	\KwIn{extended equation $eq$}
+	
+	\If{$r(s) \neq r(t)$}{
+		$c \leftarrow \{(s,t)\}$ \\
+		$eq \leftarrow (s,t)$ \\
+		\While{$c \neq \emptyset$}{
+			Let $(u,v)$ be some element in $c$ \\
+			$c \leftarrow c \setminus \{(u,v)\} \cup union(u,v)$ \\
+			lazy\_insert$(u,v,eq)$ \label{graphinsert} \\
+			$eq \leftarrow null$
+		}
+	}
+  %\KwAssert{$r(s) = r(t)$ \nllabel{assertion:merge_rep}}
+  \label{algo:merge}
+\end{algorithm}

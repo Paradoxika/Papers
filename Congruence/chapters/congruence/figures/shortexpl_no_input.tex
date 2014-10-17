@@ -1,0 +1,17 @@
+
+\centering
+\begin{tikzpicture}[node distance=2.5cm]
+	\proofnode[align=center]{root} {$a \neq b, t_a = t_b$\\Congruence proof};
+	
+	\proofnode[above left of=root,yshift=.25cm]{n5}{$a \neq b, f(a,a) \neq f(b,b), t_a = t_b$};
+	\proofnode[above right of=root,yshift=-.25cm]{n7}{$a\neq b, f(a,a) = f(b,b)$};
+
+	\proofnode[above left of=n5,yshift=.25cm]{n3}{$f(a,b) \neq f(b,a), f(a,a) \neq f(b,b), t_a = t_b$};
+	\proofnode[above right of=n5,yshift=-.25cm]{n4}{$a \neq b, f(a,b) = f(b,a)$};
+
+	\drawchildren{root}{n5}{n7};
+	\drawchildren{n5}{n3}{n4};
+	
+	\proofnode[right of=root, xshift=2cm, align=center]{root2} {$t_a \neq a, a\neq b, b \neq t_b, t_a = t_b$\\Transitivity proof};
+\end{tikzpicture}
+

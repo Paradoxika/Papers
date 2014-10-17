@@ -1,0 +1,73 @@
+\documentclass[a4paper,11pt,twoside]{article}
+
+\usepackage{amsthm}
+\usepackage{enumitem,amsmath,amssymb}
+\usepackage{url}
+\usepackage[linesnumbered,noend,ruled]{algorithm2e} % Algorithm-Environment
+\SetKwInput{KwGlobal}{Global}
+\SetKw{KwInvariant}{Invariant}
+\SetKw{KwAssert}{Assert}
+
+\usepackage{booktabs}
+
+\usepackage{wasysym}
+
+\usepackage{graphicx}            			% Figures
+\usepackage{verbatim}            			% Code-Environment
+
+\usepackage{tikz}					% tikz graphics
+\usetikzlibrary{arrows,automata,positioning}
+\usetikzlibrary{fit}
+\usepackage{ngerman}
+\usepackage[ngerman]{babel}
+
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{logictools}
+\usepackage{prooftheory}
+\usepackage{comment}
+\usepackage{mathenvironments}
+\usepackage{drawproof}
+
+% Theorem Styles
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{invariant}[theorem]{Invariant}
+\newtheorem{assertion}[theorem]{Assertion}
+% Definition Styles
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\DeclareMathOperator{\ap}{ap}
+
+\newcommand{\Vertices}[1]{V_{#1}}
+\newcommand{\Edges}[1]{E_{#1}}
+\newcommand{\Conclusion}[1]{\clause_{#1}}
+\newcommand{\Premises}[2]{P_{#1}^{#2}}
+\newcommand{\Children}[2]{C_{#1}^{#2}}
+\newcommand{\Axioms}[1]{A_{#1}}
+
+\newcommand{\n}{v}
+
+\begin{document}
+
+\section{Proof Compression}
+\label{sec:proofcompression}
+
+\input{chapters/proofcompression}
+
+\section{Congruence}
+\label{sec:congruence}
+
+\input{chapters/congruence}
+
+\bibliographystyle{plain}
+\bibliography{jabref_references}
+
+\end{document}
+
