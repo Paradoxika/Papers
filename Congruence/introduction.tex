@@ -1,3 +1,12 @@
+\section{Introduction}
+
+Proofs are the central object of this work.
+In this chapter we define the resolution calculus, which is extended to reason about equality in Section \ref{sec:calculus}.
+We define what a proof in this calculus is, measures of proofs and what it means to process a proof.
+Our method is stated so it compresses resolution proofs.
+However, the method is in its core independent of the underlying proof system.
+As long as a proof system is able to express congruence reasoning in a systematic way, we can easily adapt our compression algorithm to that system.
+
 In this chapter we present a method to compress proofs in length.
 The method manipulates SMT proofs of the theory of equality.
 To this end, in Section \ref{sec:calculus} we extend the resolution calculus presented in 
@@ -6,18 +15,4 @@ The proof compression method is based on the idea of replacing long explanations
 In Section \ref{sec:npcomplete} we show that finding the shortest explanation is NP-complete.
 In Section \ref{sec:algorithm} we present our explanation producing congruence closure algorithm, which is applied in the proof compression algorithm presented in Section \ref{sec:proofproduction}.
 Closing this chapter, we give an outlook of possible future work.
-
-\input{chapters/congruence/preliminaries}
-
-\input{chapters/congruence/calculus}
-
-\input{chapters/congruence/NP-complete}
-
-\input{chapters/congruence/algorithm}
-
-\input{chapters/congruence/proof_production}
-
-\input{chapters/congruence/experiments}
-
-\input{chapters/congruence/futurework}
 

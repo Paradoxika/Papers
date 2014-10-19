@@ -1,4 +1,4 @@
-\subsection{Explanation Producing Congruence Closure}
+\section{Explanation Producing Congruence Closure}
 \label{sec:algorithm}
 %
 In this section we present a congruence closure algorithm that is able to produce explanations.
@@ -149,17 +149,17 @@ We call such a graph Congruence Graph and explain them in a more detailed fashio
 Edges, that reflect detected equalities, are not inserted into the graph right away, but stored in queue until the insertion is requested.
 The reason for adding edges in a lazy way is to produce shorter explanations and proofs and will be explained and exemplified in Section \ref{sec:proofproduction}.
 
-\input{chapters/congruence/algorithms/addequation}
+\input{algorithms/addequation}
 
-\input{chapters/congruence/algorithms/addnode}
+\input{algorithms/addnode}
 
-\input{chapters/congruence/algorithms/merge}
+\input{algorithms/merge}
 
-\input{chapters/congruence/algorithms/union}
+\input{algorithms/union}
 
-\input{chapters/congruence/algorithms/lazyinsert}
+\input{algorithms/lazyinsert}
 
-\input{chapters/congruence/algorithms/lazyupdate}
+\input{algorithms/lazyupdate}
 
 In the following pages, we will provide some invariants that are essential for proving the properties of the algorithm.
 The invariants hold when initializing the respective data structures and before and after every insertion of an equation via the \texttt{addEquation} method.
@@ -428,7 +428,7 @@ For an input equation, this is simply the equation itself.
 For a deduced equality, this is the set of input equations that were used for deduction.
 Combining these two methods, the statement \texttt{inputEqs(explain(s,t))} for input equations $E$ returns an explanation $E' \subseteq E$ such that $E' \models s \thickapprox t$, if there is one.
 
-\input{chapters/congruence/algorithms/inputeqs}
+\input{algorithms/inputeqs}
 
 In the following, we describe the two types of congruence graphs we support.
 They differ in the underlying type of graph, how edges are inserted and how explanations are produced.
@@ -491,7 +491,7 @@ Should the search begin in the node $b$, the edges including $d_1$, $d_2$ are ad
 Therefore the undesired long explanation, including eight input equations, is returned.
 
 \begin{figure}[ht]
-\input{chapters/congruence/figures/dijkstra}
+\input{figures/dijkstra}
 \caption{Short explanation example}
 \label{fig:short_expl}
 \end{figure}
@@ -499,9 +499,9 @@ Therefore the undesired long explanation, including eight input equations, is re
 \label{ex:short_expl}
 \end{example}
 
-\input{chapters/congruence/algorithms/insert_dij}
+\input{algorithms/insert_dij}
 
-\input{chapters/congruence/algorithms/explain_dij}
+\input{algorithms/explain_dij}
 
 \FloatBarrier
 
@@ -523,9 +523,9 @@ Its downside is its inflexibility when it comes to producing alternative explana
 In fact the explanation returned is always the first one to occur during edge insertion.
 The authors of \cite{Nieuwenhuis2005,Nieuwenhuis2007} improve the structure for the special case of flattened terms, for which no term has nesting depth greater than one.
 
-\input{chapters/congruence/algorithms/insert_pt}
+\input{algorithms/insert_pt}
 
-\input{chapters/congruence/algorithms/explain_pt}
+\input{algorithms/explain_pt}
 
 \begin{example}
 
@@ -540,19 +540,19 @@ The explanation for $a \thickapprox b$ in this graph is the path $\langle b,d_2,
 In example \ref{ex:short_expl} we have shown that this is not necessary.
 
 \begin{figure}[ht]
-\input{chapters/congruence/figures/proof_forest_1}
+\input{figures/proof_forest_1}
 \caption{Proof Forest including first three equations}
 \label{fig:proof_forest_1}
 \end{figure}
 
 \begin{figure}[ht]
-\input{chapters/congruence/figures/proof_forest_2}
+\input{figures/proof_forest_2}
 \caption{Proof Forest before deducing}
 \label{fig:proof_forest_2}
 \end{figure}
 
 \begin{figure}[ht]
-\input{chapters/congruence/figures/proof_forest_3}
+\input{figures/proof_forest_3}
 \caption{Final Proof Forest}
 \label{fig:proof_forest_3}
 \end{figure}

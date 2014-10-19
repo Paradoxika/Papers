@@ -11,7 +11,7 @@ Since terms can never be equal to their (proper) subterms, the procedure will ev
 The result of this procedure is a resolution proof with a root, such that the equations of the negative literals are an explanation of the target equality or $\emptyset$ to denote that the equality can not be proven.
 Suppose some equality $s \thickapprox t$ can be explained and \texttt{produceProof} returns a proof with root $\rho$, then it is the case that $neg(\rho) \models s \thickapprox t$ and $neg(\rho)$ is a subset of the input equations.
 
-\input{chapters/congruence/algorithms/prodproof}
+\input{algorithms/prodproof}
 
 
 \begin{example}
@@ -24,7 +24,7 @@ Finally, $C_1$ is resolved with $C_5$ to obtain the final clause $C_6$.
 The proof is shown in Figure \ref{fig:proofprod}.
 
 \begin{figure}[!h]
-\input{chapters/congruence/figures/proof_prod}
+\input{figures/proof_prod}
 \caption{Example proof}
 \label{fig:proofprod}
 \end{figure}
@@ -78,7 +78,7 @@ The two resulting proofs are shown in Figure \ref{fig:short_expl_proof}.
 The proof with the longer explanation $E$ is only one proof node, whereas the proof with the singleton explanation has proof length 5.
 
 \begin{figure}[!h]
-\input{chapters/congruence/figures/shortexpl_no_input}
+\input{figures/shortexpl_no_input}
 \caption{Short explanation, long proof}
 \label{fig:short_expl_proof}
 \end{figure}
@@ -119,7 +119,7 @@ Therefore a preliminary traversal is necessary to determine the classification o
 %Experiments have shown that using this criteria speeds up the algorithm a lot, while losing only very little compression.
 Further criteria for deciding whether or not to replace could be size of the subproof or a global metric that tries to predict the global compression achieved by replacement.
 
-\input{chapters/congruence/algorithms/compressor}
+\input{algorithms/compressor}
 
 The compressor (Algorithm \ref{algo:compressor}) uses the method \texttt{fixNode} to maintain a correct proof.
 The method modifies nodes with premises that have earlier been replaced by the compressor. 
@@ -130,7 +130,7 @@ In case both updated premises do not contain the original pivot element, replaci
 Since we are interested in short proofs, we return the one with the shorter clause.
 This method of maintaining a correct proof was proposed in \cite{Bar-Ilan2008} in the context of similar proof compression algorithms.
 
-\input{chapters/congruence/algorithms/fixNode}
+\input{algorithms/fixNode}
 
 \begin{example}
 \label{example:compressproof}
@@ -150,13 +150,13 @@ Note that the clause $\{\neg A\}$ is part of the replaced subproof.
 It is also part of the subproof with conclusion $\{a = b\}$, which remains in the new proof.
 
 \begin{figure}[!h]
-\input{chapters/congruence/figures/compressproof_original}
+\input{figures/compressproof_original}
 \caption{Original Proof}
 \label{fig:compressproof}
 \end{figure}
 
 \begin{figure}[!h]
-\input{chapters/congruence/figures/compressproof_new}
+\input{figures/compressproof_new}
 \caption{Compressed Proof}
 \label{fig:compressproof_2}
 \end{figure}

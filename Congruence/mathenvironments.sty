@@ -1,2 +1,16 @@
 \newenvironment{proofsketch}{\par\noindent\textit{Proof sketch.}\ \ }{\par\medskip\noindent}
 \newcommand{\QED}{\ensuremath{\Box}}
+
+% Theorem Styles
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{invariant}[theorem]{Invariant}
+\newtheorem{assertion}[theorem]{Assertion}
+% Definition Styles
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}[section]
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}

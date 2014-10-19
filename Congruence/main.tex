@@ -23,48 +23,38 @@
 
 \usepackage{float}
 \usepackage{placeins}
+
 \usepackage{logictools}
 \usepackage{prooftheory}
 \usepackage{comment}
 \usepackage{mathenvironments}
 \usepackage{drawproof}
 
-% Theorem Styles
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{invariant}[theorem]{Invariant}
-\newtheorem{assertion}[theorem]{Assertion}
-% Definition Styles
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
-\newtheorem{example}{Example}[section]
-\theoremstyle{remark}
-\newtheorem{remark}{Remark}
-
-\DeclareMathOperator{\ap}{ap}
-
-\newcommand{\Vertices}[1]{V_{#1}}
-\newcommand{\Edges}[1]{E_{#1}}
-\newcommand{\Conclusion}[1]{\clause_{#1}}
-\newcommand{\Premises}[2]{P_{#1}^{#2}}
-\newcommand{\Children}[2]{C_{#1}^{#2}}
-\newcommand{\Axioms}[1]{A_{#1}}
-
-\newcommand{\n}{v}
 
 \begin{document}
 
-\section{Proof Compression}
+
 \label{sec:proofcompression}
 
-\input{chapters/proofcompression}
+\input{introduction}
 
-\section{Congruence}
-\label{sec:congruence}
+\input{resolution}
 
-\input{chapters/congruence}
+\input{proofprocessing}
+
+\input{preliminaries}
+
+\input{calculus}
+
+\input{NP-complete}
+
+\input{algorithm}
+
+\input{proof_production}
+
+\input{experiments}
+
+\input{futurework}
 
 \bibliographystyle{plain}
 \bibliography{jabref_references}
