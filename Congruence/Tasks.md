@@ -1,6 +1,6 @@
 
 Next actions (Deadline on 24th of November):
-============================================
+--------------------------------------------
 
 * mathSAT proofs in VeriT's format (Feasible?) (Georg's Student)
 
@@ -20,7 +20,7 @@ Next actions (Deadline on 24th of November):
 
 
 Discussed on 29th of October, but action postponed:
-===================================================
+---------------------------------------------------
 
 * Source for good benchmarks: Besson, PxTP 2012 http://people.rennes.inria.fr/Frederic.Besson/euf.pdf
 
@@ -41,4 +41,4 @@ removed.
 
 
 Completed Actions:
-==================
+------------------
