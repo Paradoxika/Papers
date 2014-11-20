@@ -1,18 +1,17 @@
 \section{Introduction}
 
-Proofs are the central object of this work.
-In this chapter we define the resolution calculus, which is extended to reason about equality in Section \ref{sec:calculus}.
-We define what a proof in this calculus is, measures of proofs and what it means to process a proof.
-Our method is stated so it compresses resolution proofs.
-However, the method is in its core independent of the underlying proof system.
-As long as a proof system is able to express congruence reasoning in a systematic way, we can easily adapt our compression algorithm to that system.
+ToDo:
+SMT... Equality... Congruence Closure... Interpolation... Applications... Motivation... Proof Compression (Post-Processing)...
 
-In this chapter we present a method to compress proofs in length.
-The method manipulates SMT proofs of the theory of equality.
-To this end, in Section \ref{sec:calculus} we extend the resolution calculus presented in 
-Section \ref{sec:resolution} to handle equality and its axioms.
-The proof compression method is based on the idea of replacing long explanations for the equality of two terms by shorter ones.
-In Section \ref{sec:npcomplete} we show that finding the shortest explanation is NP-complete.
-In Section \ref{sec:algorithm} we present our explanation producing congruence closure algorithm, which is applied in the proof compression algorithm presented in Section \ref{sec:proofproduction}.
-Closing this chapter, we give an outlook of possible future work.
+
+The main contribution of this paper is a novel method for compressing the length of SMT proofs containing equality reasoning based on congruence closure. Previous works \cite{ToDo: all Skeptik publications and others} on the compression of SMT proofs have focused exclusively on the propositional resolution parts of the proofs. Other works \cite{ToDo: Cut-introduction works} on proof compression beyond the propositional level have targeted sequent calculus proofs without special treatment of equality. This is, to the best of our knowledge, the first time that an algorithm for compressing congruence closure proofs is proposed.
+
+The proof compression algorithm proposed here is based on reproving the congruence closure lemmas with a more sophisticated congruence closure algorithm, which improves previous explanation-producing \cite{Nieuwenhuis2005,Nieuwenhuis2007} and proof-producing \cite{Fontaine2004} congruence closure algorithms by using a Dijkstra-inspired algorithm for searching for short paths in the congruence graph. Although this improved algorithm is computationally more expensive, the extra cost is affordable in a post-processing stage, where the number of lemmas in the proof is small in comparison to the number of lemmas considered during proof search.
+
+Another major contribution of this paper is a proof (in Section \ref{sec:npcomplete}) that deciding whether a shorter congruence closure explanation exists is an NP-complete problem. This implies that our Dijkstra-inspired algorithm finds only good explanations, though not optimal ones.
+
+A secondary contribution of this paper is a detailed description of the production of a resolution proof with equality axioms (as described in Sections \ref{sec:resolution} and \ref{sec:calculus}) from the congruence graph. Although this is probably folklore among developers of fine-grained proof-producing SMT-solvers (e.g. VeriT \cite{ToDo}), such a description (in Section \ref{sec:proofproduction}) seemed to be missing in the literature up to now. In \cite{Nieuwenhuis2005,Nieuwenhuis2007}, only the production of lemmas (explanations) is described, and in \cite{Fontaine2004} the described production of proofs uses a special purpose calculus different from resolution. 
+
+Resolution is a desirable proof calculus, because it is already commonly used for the propositional parts of SMT proofs and also for SAT proofs \cite{ToDo:TraceCheckFormatArminBiere}. Simple and efficient proof checkers for resolution are easily implementable. Nevertheless, the methods described here are essentially independent of the underlying proof system. As long as a proof system is able to express congruence reasoning in a systematic way, these methods could be easily adapted to it.
+
 
