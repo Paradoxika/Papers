@@ -1,44 +1,51 @@
+Remaining Tasks:
+----------------
 
-Next actions (Deadline on 24th of November):
---------------------------------------------
+* Test Andreas' clean code (Bruno) [Due: 17/12/14]
 
-* mathSAT proofs in VeriT's format (Feasible?) (Georg's Student)
+* Introduction: story-line (Georg) [Originally Due: 24/11/14; Due: 17/12/14]
 
-* Introduction: separate contributions from state of the start and related work (Bruno)
+* mathSAT proofs in VeriT's format (Feasible?) (Georg's Student) [Originally Due: 24/11/14; Due: TBD]
 
-* Introduction: story-line (Georg)
+* Read, review and compactify paper (Pascal) [Due: 17/12/14]
 
-* clean code (Andreas)
+* find good journals where the paper could be submitted - Is it good enough for JAR? (Pascal) [Due: 17/12/14]
 
-* n. log(n^2) - Downey-Sehti. (Pascal)
-
-* cite the reviewers (Pascal)
-
-* find good journals where the paper could be submitted (Pascal and Georg)
-
-* Setup access to Git repository (Pascal, Georg, Bruno)
+* n. log(n^2) - Downey-Sehti. (Pascal) [Due: 17/12/14]
 
 
-Discussed on 29th of October, but action postponed:
----------------------------------------------------
+Deferred Tasks:
+---------------
 
-* Source for good benchmarks: Besson, PxTP 2012 http://people.rennes.inria.fr/Frederic.Besson/euf.pdf
+* cite the reviewers (Pascal) [Discussed: 29/10/14]
 
-* Testing compressibility by translating to SAT. Is it impractical as in Space compression?
+* Source for good benchmarks: Besson, PxTP 2012 http://people.rennes.inria.fr/Frederic.Besson/euf.pdf [Discussed: 29/10/14]
 
-* Maybe move the basic definitions etc. to a section "Preliminaries".
+* Testing compressibility by translating to SAT. Is it impractical as in Space compression? [Discussed: 29/10/14]
 
-* Move basic proofs, definitions and pseudo-codes to appendix.
+* Maybe move the basic definitions etc. to a section "Preliminaries". [Discussed: 29/10/14]
 
-* Some proofs (which?) might need a little bit more detailed explanation. 
+* Move basic proofs, definitions and pseudo-codes to appendix. [Discussed: 29/10/14]
+
+* Some proofs (which?) might need a little bit more detailed explanation. [Discussed: 29/10/14]
 
 * The pseudo-code for some of the very simple methods can probably be 
-removed. 
+removed. [Discussed: 29/10/14]
 
 * Give more hints toward the intuition behind the more complex methods (which?)  
-(troubles to "reverse-engineer" the intuitive meaning of some data structures.) 
+(troubles to "reverse-engineer" the intuitive meaning of some data structures.) [Discussed: 29/10/14]
 
 
 
-Completed Actions:
-------------------
+Completed Tasks:
+----------------
+
+* Introduction: separate contributions from state of the start and related work (Bruno) [Completed: 24/11/14]
+
+* Clean code (Andreas) [Completed: 01/12/14]
+
+* Setup access to Github repository (Pascal, Georg, Bruno) [Completed: 01/12/14]
+
+* Create git repository in INRIA and give access to everybody (Pascal) [Completed: 01/12/14]
+
+* Push to INRIA repository (Bruno) [Completed: 01/12/14]
