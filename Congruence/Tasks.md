@@ -1,21 +1,27 @@
 Remaining Tasks:
 ----------------
 
-* Test Andreas' clean code (Bruno) [Due: 17/12/14]
+* generate proofs with theory lemmas marked (Pascal) [Due: 24/12/15 ?]
 
-* Introduction: story-line (Georg) [Originally Due: 24/11/14; Due: 17/12/14]
+* implement a variant of Andreas' algorithm that does not generate theory lemma subproofs (Andreas) [Due: TBD]
 
-* mathSAT proofs in VeriT's format (Feasible?) (Georg's Student) [Originally Due: 24/11/14; Due: TBD]
+* re-run experiments without subproofs for theory lemmas () [Due: TBD]
 
-* Read, review and compactify paper (Pascal) [Due: 17/12/14]
+* MathSAT proofs in VeriT format without theory subproofs (Georg) [Due: 24/12/15]
 
-* find good journals where the paper could be submitted - Is it good enough for JAR? (Pascal) [Due: 17/12/14]
+* simplify Section 6: f_i, t_i, leftward edges (Pascal) [Due: 6/01/15]
 
-* n. log(n^2) - Downey-Sehti. (Pascal) [Due: 17/12/14]
+* Test Andreas' clean code (Bruno) [Originally Due: 17/12/14; Due 06/01/15]
+
+* mathSAT proofs in VeriT's format (Feasible?) (Georg's Student) [Originally Due: 24/11/14; Due: 06/01/15]
+
+* sledgehammer min and pascal's incremental approach (Future GSoC student?) [Due: TBD]
 
 
 Deferred Tasks:
 ---------------
+
+* find good journals where the paper could be submitted - Is it good enough for JAR? (Pascal) [Originally Due: 17/12/14]
 
 * cite the reviewers (Pascal) [Discussed: 29/10/14]
 
@@ -39,6 +45,12 @@ removed. [Discussed: 29/10/14]
 
 Completed Tasks:
 ----------------
+
+* n. log(n^2) - Downey-Sehti. (Pascal) [Completed: 17/12/14]
+
+* Read and review paper (Pascal) [Completed: 17/12/14]
+
+* Introduction: story-line (Georg) [Originally Due: 24/11/14; Completed: 17/12/14]
 
 * Introduction: separate contributions from state of the start and related work (Bruno) [Completed: 24/11/14]
 
