@@ -1,25 +1,23 @@
 Remaining Tasks:
 ----------------
 
-* generate proofs with theory lemmas marked (Pascal) [Due: 24/12/15 ?]
+* implement parsers for VeriT's new format (Bruno) [Due: 15/01/15]
 
-* implement a variant of Andreas' algorithm that does not generate theory lemma subproofs (Andreas) [Due: TBD]
+* implement a variant of Andreas' algorithm that does not generate theory lemma subproofs (Andreas) [Due: 23/01/15]
 
-* re-run experiments without subproofs for theory lemmas () [Due: TBD]
+* re-run experiments without subproofs for theory lemmas (Andreas) [Due: 23/01/15]
 
 * MathSAT proofs in VeriT format without theory subproofs (Georg) [Due: 24/12/15]
 
 * simplify Section 6: f_i, t_i, leftward edges (Pascal) [Due: 6/01/15]
 
-* Test Andreas' clean code (Bruno) [Originally Due: 17/12/14; Due 06/01/15]
-
 * mathSAT proofs in VeriT's format (Feasible?) (Georg's Student) [Originally Due: 24/11/14; Due: 06/01/15]
-
-* sledgehammer min and pascal's incremental approach (Future GSoC student?) [Due: TBD]
 
 
 Deferred Tasks:
 ---------------
+
+* sledgehammer min and pascal's incremental approach (Future GSoC student?) [Due: TBD]
 
 * find good journals where the paper could be submitted - Is it good enough for JAR? (Pascal) [Originally Due: 17/12/14]
 
@@ -45,6 +43,10 @@ removed. [Discussed: 29/10/14]
 
 Completed Tasks:
 ----------------
+
+* Test Andreas' clean code (Bruno) [Originally Due: 17/12/14; Completed: 06/01/15]
+
+* generate proofs with theory lemmas marked (Pascal) [Originally Due: 24/12/14; Completed: 06/01/15]
 
 * n. log(n^2) - Downey-Sehti. (Pascal) [Completed: 17/12/14]
 
