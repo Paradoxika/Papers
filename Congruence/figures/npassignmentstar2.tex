@@ -1,0 +1,29 @@
+
+\centering
+\begin{tikzpicture}[node distance=.75cm]
+
+\node (x1) {$\hat{x}_1$};
+\node [below =.5cm of x1] (x2) {$\hat{x}_2$};
+\node [below =.5cm of x2] (x3) {$\hat{x}_3$};
+
+\node [right = of x1] (t1) {$\top_1$};
+\node [left = of x1] (f1) {$\bot_1$};
+
+\draw [-] (x1) to (t1);
+\draw [-] (x1) to (f1);
+
+\node [right = of x2] (t2) {$\top_2$};
+\node [left = of x2] (f2) {$\bot_2$};
+
+\draw [-] (x2) to (t2);
+\draw [-] (x2) to (f2);
+
+\node [right = of x3] (t3) {$\top_3$};
+\node [left = of x3] (f3) {$\bot_3$};
+
+\draw [-] (x3) to (t3);
+\draw [-] (x3) to (f3);
+
+\end{tikzpicture}
+
+
