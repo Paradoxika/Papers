@@ -15,38 +15,38 @@ In this section, we discuss additional requirements for lowering a unit formula 
 
  \begin{example} The following example shows why we must check pair-wise unifiability with the literals resolved against the unit we're trying to lower.
 
-% \begin{tiny}
-% \begin{prooftree}
-% \def\e{\mbox{\ $\vdash$\ }}
-% \AxiomC{$\eta_2$}
-% \AxiomC{$\eta_1$: $p(a)$\e$q(Y),r(Z)$}
-% \AxiomC{$\eta_2$: \e $p(X)$}
-% \BinaryInfC{$\eta_3$: \e$q(Y),r(Z)$}
-% \AxiomC{$\eta_4$: $r(X),p(b)$\e $s(Y)$}
-% \BinaryInfC{$\eta_5$: $p(b)$\e $s(Y),q(Y)$}
-% \AxiomC{$\eta_6$: $s(Y), q(Y)$\e}
-% \BinaryInfC{$\eta_7$: $p(b)$\e}
-% \BinaryInfC{$\psi$: $\bot$}
-% \end{prooftree}
-% \end{tiny}
+\begin{tiny}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_2$}
+\AxiomC{$\eta_1$: $p(a)$\e$q(Y),r(Z)$}
+\AxiomC{$\eta_2$: \e $p(X)$}
+\BinaryInfC{$\eta_3$: \e$q(Y),r(Z)$}
+\AxiomC{$\eta_4$: $r(X),p(b)$\e $s(Y)$}
+\BinaryInfC{$\eta_5$: $p(b)$\e $s(Y),q(Y)$}
+\AxiomC{$\eta_6$: $s(Y), q(Y)$\e}
+\BinaryInfC{$\eta_7$: $p(b)$\e}
+\BinaryInfC{$\psi$: $\bot$}
+\end{prooftree}
+\end{tiny}
  \end{example}
 
 
 %example 3: shows requirement for contraction check
 
  \begin{example} The following shows why the above is not necessarily  enough (we must check the original sources of the aux formulas, and see if those can be contracted), otherwise we might not save anything.
-% \begin{footnotesize}
-% \begin{prooftree}
-% \def\e{\mbox{\ $\vdash$\ }}
-% \AxiomC{$\eta_1$: $r(Y),p(X ~q(Y~b)), p(X~Y)$\e}
-% \AxiomC{$\eta_2$: \e $p(U~V)$}
-% \BinaryInfC{$\eta_3$: $r(V),p(U ~q(V~b))$\e}
-% \AxiomC{$\eta_4$: \e $r(W)$}
-% \BinaryInfC{$\eta_5$: $p(U ~q(W~b))$\e}
-% \AxiomC{$\eta_2$}
-% \BinaryInfC{$\psi$: $\bot$}
-% \end{prooftree}
-% \end{footnotesize}
+\begin{footnotesize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_1$: $r(Y),p(X ~q(Y~b)), p(X~Y)$\e}
+\AxiomC{$\eta_2$: \e $p(U~V)$}
+\BinaryInfC{$\eta_3$: $r(V),p(U ~q(V~b))$\e}
+\AxiomC{$\eta_4$: \e $r(W)$}
+\BinaryInfC{$\eta_5$: $p(U ~q(W~b))$\e}
+\AxiomC{$\eta_2$}
+\BinaryInfC{$\psi$: $\bot$}
+\end{prooftree}
+\end{footnotesize}
  \end{example}
 
 
