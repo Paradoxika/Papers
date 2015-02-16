@@ -35,7 +35,7 @@
 
 \institute{
   University of Victoria, Canada \\
-  \email{joseph.boudou@matabio.net}
+  \email{jgorzny@uvic.ca}
   \and 
   Vienna University of Technology, Austria \\
   \email{bruno@logic.at}
@@ -620,15 +620,21 @@ of $\varphi$ or a valent literal of $\varphi'$.  Therefore, in the second traver
 
 ToDo by Jan
 
-% {\LowerUnivalents} and {\LUnivRPI} have been implemented in the functional programming
-% language Scala\footnote{\url{http://www.scala-lang.org/}} as part of the \skeptik
-% library\footnote{\url{https://github.com/Paradoxika/Skeptik}}. {\LowerUnivalents} has been implemented as a
-% recursive \FuncSty{delete} improvement.
+{\LowerUnits} has been implemented as a prototype\footnote{Source code available at \url{https://github.com/jgorzny/Skeptik}} in the functional programming language Scala\footnote{\url{http://www.scala-lang.org/}} as part of the \skeptik
+ library\footnote{\url{https://github.com/Paradoxika/Skeptik}}. {\LowerUnits} has been implemented as a
+ recursive \FuncSty{delete} improvement.
 
-% The algorithms have been applied to 5\,059 proofs produced by the SMT-solver
-% {\veriT}\footnote{\url{http://www.verit-solver.org/}} on unsatisfiable benchmarks from the
-% SMT-Lib\footnote{\url{http://www.smtlib.org/}}.  The details on the number of proofs per SMT category
-% are shown in Table \ref{tab:benchmarks}.  The proofs were translated into pure resolution proofs by
+%number to change - Jan
+The algorithm has been applied to {\bf 308} proofs produced by the {\SPASS}\footnote{\url{http://www.verit-solver.org/}} theorem prover on unsatisfiable benchmarks from the TPTP Problem Library\footnote{\url{http://www.cs.miami.edu/~tptp/}}. The proofs used were restricted to those which could be solved within 300 seconds by {\SPASS} on the Euler Cluster at the University of Victoria\footnote{\url{https://rcf.uvic.ca/euler.php}} using only the contraction and unifying resolution inference rules.
+
+For each proof $\psi$ (with the result of {\LowerUnits} applied to the proof denoted by $\alpha(\psi)$), the time to compress the proof ($t(\psi)$), the compression ratio ($(|\psi|-|\alpha(\psi)|)/|\psi|$), the resolution compression ratio  ($(|\psi|_R-|\alpha(\psi)|_R)/|\psi|_R$), the compression speed ($(|\psi|-|\alpha(\psi)|)/t(\psi)$), and resolution compression speed ($(|\psi|_R-|\alpha(\psi)|_R)/t(\psi)$) were measured\footnote{The raw data is available at \url{https://docs.google.com/spreadsheets/d/1F1-t2OuhypmTQhLU6yTj42aiZ5CqqaZvhVvOzeFgn0k/edit\#gid=1182923972}}, where $|\psi|_R$ indicates the number of resolution inference rules in the proof $\psi$.
+
+
+The experiments were executed on a laptop (2.8GHz Intel Core i7 processor with 4 GB of RAM (1333MHz DDR3) available to the Java Virtual Machine), and the prototype implementation performed well on this system. Figure \ref{} shows the compression time $t(\psi)$ for each proof, sorted by proof length, and figure \ref{} (respectively figure \ref{}) shows the compression speed (respectively resolution compression speed) for each proof, also sorted by proof length.
+
+
+
+% The details on the number of proofs per SMT category are shown in Table \ref{tab:benchmarks}.  The proofs were translated into pure resolution proofs by
 % considering every non-resolution inference as an axiom.
 
 % \begin{table}[tb]
