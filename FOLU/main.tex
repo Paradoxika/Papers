@@ -16,6 +16,8 @@
 \usepackage{comment}
 \usepackage{mathenvironments}
 \usepackage{drawproof}
+\usepackage{bussproofs}
+
 
 \renewcommand{\topfraction}{0.85}
 \renewcommand{\textfraction}{0.1}
@@ -614,7 +616,56 @@ after {\RPI} can be implemented just by replacing the second traversal of {\RPI}
 {\LowerUnivalents}. After the first traversal of {\RPI}, as all edges labeled by a safe literal have been marked for deletion, the remaining active literals are all valent, because for every edge $\pedge{\varphi}{\ell}{\varphi'}$, $\ell$ is either a safe literal
 of $\varphi$ or a valent literal of $\varphi'$.  Therefore, in the second traversal of the non-sequential combination (deletion enhanced by {\LowerUnivalents}), all univalent subproofs are lowered.
 
+\section{First-Order Requirements}\label{sec:foreq}
 
+TODO by Jan (just writing some ideas so far--not yet final by any means)\\
+{\bf Does this belong here?And is this what you had in mind for interesting examples? And are the proof formatted correctly, or should I change them? aside from the first one going over the margin right now of course}\\ 
+
+In this section, we discuss additional requirements for lowering a unit formula in the first order case that are not required in the propositional case.
+
+%example 1: shows requirement for pair-wise unifiability with unit
+%obvious - skip?
+
+%example 2: shows requirement for pair-wise unifiability within all aux formulas
+
+ \begin{example} The following example shows why we must check pair-wise unifiability with the literals resolved against the unit we're trying to lower.
+
+\begin{footnotesize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_2$}
+\AxiomC{$\eta_1$: $p(a)$\e$q(Y),r(Z)$}
+\AxiomC{$\eta_2$: \e $p(X)$}
+\BinaryInfC{$\eta_3$: \e$q(Y),r(Z)$}
+\AxiomC{$\eta_4$: $r(X),p(b)$\e $s(Y)$}
+\BinaryInfC{$\eta_5$: $p(b)$\e $s(Y),q(Y)$}
+\AxiomC{$\eta_6$: $s(Y), q(Y)$\e}
+\BinaryInfC{$\eta_7$: $p(b)$\e}
+\BinaryInfC{$\psi$: $\bot$}
+\end{prooftree}
+\end{footnotesize}
+\end{example}
+
+
+%example 3: shows requirement for contraction check
+
+\begin{example} The following shows why the above is not necessarily  enough (we must check the original sources of the aux formulas, and see if those can be contracted), otherwise we might not save anything.
+\begin{footnotesize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_1$: $r(Y),p(X ~q(Y~b)), p(X~Y)$\e}
+\AxiomC{$\eta_2$: \e $p(U~V)$}
+\BinaryInfC{$\eta_3$: $r(V),p(U ~q(V~b))$\e}
+\AxiomC{$\eta_4$: \e $r(W)$}
+\BinaryInfC{$\eta_5$: $p(U ~q(W~b))$\e}
+\AxiomC{$\eta_2$}
+\BinaryInfC{$\psi$: $\bot$}
+\end{prooftree}
+\end{footnotesize}
+\end{example}
+
+
+%example 4: requires FOSubstitution, introduces this concept?
 
 \section{Experiments} \label{sec:exp}
 
