@@ -75,7 +75,7 @@ regularization was proposed in \cite{RP08} and improved in \cite{LURPI}. Further
 
 In contrast, for first-order theorem provers, there has been up to now (to the best of our knowledge) no attempt to design and implement an algorithm capable of taking a first-order resolution DAG-proof and efficiently simplifying it, outputting a possibly shorter pure first-order resolution DAG-proof. There are algorithms aimed at simplifying first-order sequent calculus tree-like proofs, based on cut-introduction \cite{BrunoLPAR,Hetzl}, and while in principle resolution DAG-proofs can be translated to sequent-calculus tree-like proofs (and then back), such translations lead to undesirable efficiency overheads. There is also an algorithm \cite{LPARCzech} that looks for terms that occur often in any TSTP \cite{TPTP} proof (including first-order resolution DAG-proofs) and introduces abbreviations for these terms. However, as the definitions of the abbreviations are not part of the output proof, it cannot be checked by a pure first-order resolution proof checker.
 
-In this paper, we initiate the process of lifting propositional proof compression techniques to the first-order case, starting with the simplest known algorithm: {\LowerUnits} (described in Section \ref{sec:todo}). As shown in Section \ref{sec:todo}, even for this simple algorithm, the fact that first-order resolution makes use of unification leads to many challenges that simply do not exist in the propositional case. In Section \ref{sec:todo} we describe a sophisticated algorithm that overcomes these challenges. Furthermore, in Section \ref{sec:todo} we describe a simpler version of this algorithm, which is easier to implement and possibly more efficient, at the cost of compressing less. In Section \ref{sec:exp} we present experimental results obtained by applying the simpler algorithm on hundreds of proofs generated with the {\SPASS} theorem prover \cite{SPASS}. The next section introduces the propositional resolution calculus using notations that are more convenient for describing proof transformation operations.
+In this paper, we initiate the process of lifting propositional proof compression techniques to the first-order case, starting with the simplest known algorithm: {\LowerUnits} (described in Section \ref{sec:PropositionalLU}). As shown in Section \ref{sec:Challenges}, even for this simple algorithm, the fact that first-order resolution makes use of unification leads to many challenges that simply do not exist in the propositional case. In Section \ref{sec:FOLU} we describe a sophisticated algorithm that overcomes these challenges. Furthermore, in Section \ref{sec:SimpleFOLU} we describe a simpler version of this algorithm, which is easier to implement and possibly more efficient, at the cost of compressing less. In Section \ref{sec:exp} we present experimental results obtained by applying the simpler algorithm on hundreds of proofs generated with the {\SPASS} theorem prover \cite{SPASS}. The next section introduces the first-order resolution calculus using notations that are more convenient for describing proof transformation operations.
 
 
 \newcommand{\freevar}[1]{\mathrm{FV}(#1)}
@@ -152,6 +152,10 @@ has no direct subproof is an \emph{axiom} of the proof.
 %
 $\Vertices{\psi}$, $\Edges{\psi}$ and $\Conclusion{\psi}$
 denote, respectively, the nodes, edges and proved clause (conclusion) of $\psi$.
+
+
+\section{The Propositional Lower Units}
+\label{sec:PropositionalLU}
 
 
 \SetKwFunction{Rec}{delete}
@@ -234,9 +238,6 @@ or     $\dn{\psi}{A \cup B} = \dn{\dn{\psi}{A}}{B}$.
 
 
 
-
-\section{LowerUnits} \label{sec:LU}
-
 When a subproof $\varphi$ has more than one child in a proof $\psi$, it may be possible to \emph{factor} all
 the corresponding resolutions: a new proof is
 constructed by removing $\varphi$ from $\psi$ and reintroducing it later. The resulting proof is smaller because $\varphi$ participates in a single resolution inference in it (i.e. it has a single child), while in the original proof it participates in as many resolution inferences as the number of children it had. Such a factorization is called \emph{lowering} of $\varphi$, because its delayed reintroduction makes $\varphi$ appear at the bottom of the resulting proof. 
@@ -278,6 +279,59 @@ top-down traversal. The last for-loop performs the reintroduction of units.
   \caption{\LowerUnits}
   \label{algo:LU}
 \end{algorithm}
+
+
+
+\section{First-Order Challenges}\label{sec:Challenges}
+
+TODO by Jan (just writing some ideas so far--not yet final by any means)\\
+{\bf Does this belong here?And is this what you had in mind for interesting examples? And are the proof formatted correctly, or should I change them? aside from the first one going over the margin right now of course}\\ 
+
+In this section, we discuss additional requirements for lowering a unit formula in the first order case that are not required in the propositional case.
+
+%example 1: shows requirement for pair-wise unifiability with unit
+%obvious - skip?
+
+%example 2: shows requirement for pair-wise unifiability within all aux formulas
+
+ \begin{example} The following example shows why we must check pair-wise unifiability with the literals resolved against the unit we're trying to lower.
+
+% \begin{tiny}
+% \begin{prooftree}
+% \def\e{\mbox{\ $\vdash$\ }}
+% \AxiomC{$\eta_2$}
+% \AxiomC{$\eta_1$: $p(a)$\e$q(Y),r(Z)$}
+% \AxiomC{$\eta_2$: \e $p(X)$}
+% \BinaryInfC{$\eta_3$: \e$q(Y),r(Z)$}
+% \AxiomC{$\eta_4$: $r(X),p(b)$\e $s(Y)$}
+% \BinaryInfC{$\eta_5$: $p(b)$\e $s(Y),q(Y)$}
+% \AxiomC{$\eta_6$: $s(Y), q(Y)$\e}
+% \BinaryInfC{$\eta_7$: $p(b)$\e}
+% \BinaryInfC{$\psi$: $\bot$}
+% \end{prooftree}
+% \end{tiny}
+ \end{example}
+
+
+%example 3: shows requirement for contraction check
+
+ \begin{example} The following shows why the above is not necessarily  enough (we must check the original sources of the aux formulas, and see if those can be contracted), otherwise we might not save anything.
+% \begin{footnotesize}
+% \begin{prooftree}
+% \def\e{\mbox{\ $\vdash$\ }}
+% \AxiomC{$\eta_1$: $r(Y),p(X ~q(Y~b)), p(X~Y)$\e}
+% \AxiomC{$\eta_2$: \e $p(U~V)$}
+% \BinaryInfC{$\eta_3$: $r(V),p(U ~q(V~b))$\e}
+% \AxiomC{$\eta_4$: \e $r(W)$}
+% \BinaryInfC{$\eta_5$: $p(U ~q(W~b))$\e}
+% \AxiomC{$\eta_2$}
+% \BinaryInfC{$\psi$: $\bot$}
+% \end{prooftree}
+% \end{footnotesize}
+ \end{example}
+
+
+%example 4: requires FOSubstitution, introduces this concept?
 
 
 
@@ -558,97 +612,12 @@ compressed proof depends on the order in which the units are collected. For both
 
 
 
-\section{Remarks about Combining {\LowerUnivalents} with {\RPI}} \label{sec:LUnivRPI}
+\section{A Simpler First-Order LowerUnits}
+\label{sec:SimpleFOLU}
 
-\begin{definition}[Regular proof \cite{Tseitin}]
-A proof $\psi$ is \emph{regular} iff on every path from its root to any of its axioms, each literal
-labels at most one edge. Otherwise, $\psi$ is \emph{irregular}.
-\end{definition}
-
-Any irregular proof can be converted into a regular proof having the same axioms and the same
-conclusion. But it has been proved \cite{Goerdt} that such a total regularization might result in a
-proof exponentially bigger than the original. 
-
-Nevertheless, \emph{partial} regularization algorithms, such as {\RecyclePivots} \cite{RP08} and {\RecyclePivotsIntersection} ({\RPI}) \cite{LURPI}, carefully avoid the worst case of total regularization and do efficiently compress proofs.  For
-any subproof $\varphi$ of a proof $\psi$, {\RPI} removes the edge $\raiz{\varphi} \xrightarrow{\ell}
-\n$ if $\ell$ is a safe literal for $\varphi$.
-
-\begin{definition}[Safe literal]
-A literal $\ell$ is \emph{safe} for a subproof $\varphi$ in a proof $\psi$ iff $\ell$ labels at
-least one edge on every path from $\raiz{\psi}$ to $\raiz{\varphi}$.
-\end{definition}
-
-{\RPI} performs two traversals. During the first one, safe literals are collected and edges are
-marked for deletion. The second traversal is the effective deletion similar to the
-$\FuncSty{delete}$ algorithm.
-
-Both sequential compositions of {\LowerUnits} with {\RPI} have been shown to achieve good
-compression ratio \cite{LURPI}. However, the best combination order ({\LowerUnits} after
-{\RPI} (\texttt{LU.RPI}) or {\RPI} after {\LowerUnits} (\texttt{RPI.LU})) depends on the input proof. A reasonable solution is to perform both combinations and then to choose the smallest
-compressed proof, but sequential composition is time consuming. To speed up DAG traversal, it is useful to topologically sort the nodes of the graph first. But in case of sequential composition this costly operation has to be done twice. Moreover, some traversals, like deletion, are identical in both algorithms and might be shared. Whereas implementing a non-sequential combination of {\RPI} after {\LowerUnits} is not difficult, a non-sequential combination of {\LowerUnits} after {\RPI} would be complicated. 
-The difficulty is that {\RPI} could create some new units which would be visible only after the deletion
-phase.  A solution could be to test for units during deletion. But if units are
-effectively lowered during this deletion, their deletion would cause some units to become non-units.
-And postponing deletions of units until a second deletion traversal would prevent the sharing of
-this traversal and would cause one more topological sorting to be performed, because the deletion phase significantly transforms the structure of the DAG.
-
-Apart from having an improved compression ratio, another advantage of {\LowerUnivalents} over
-{\LowerUnits} is that {\LowerUnivalents} can be implemented as an enhanced \FuncSty{delete}
-operation. With such an implementation, a simple non-sequential combination of {\LowerUnivalents}
-after {\RPI} can be implemented just by replacing the second traversal of {\RPI} by
-{\LowerUnivalents}. After the first traversal of {\RPI}, as all edges labeled by a safe literal have been marked for deletion, the remaining active literals are all valent, because for every edge $\pedge{\varphi}{\ell}{\varphi'}$, $\ell$ is either a safe literal
-of $\varphi$ or a valent literal of $\varphi'$.  Therefore, in the second traversal of the non-sequential combination (deletion enhanced by {\LowerUnivalents}), all univalent subproofs are lowered.
-
-\section{First-Order Requirements}\label{sec:foreq}
-
-TODO by Jan (just writing some ideas so far--not yet final by any means)\\
-{\bf Does this belong here?And is this what you had in mind for interesting examples? And are the proof formatted correctly, or should I change them? aside from the first one going over the margin right now of course}\\ 
-
-In this section, we discuss additional requirements for lowering a unit formula in the first order case that are not required in the propositional case.
-
-%example 1: shows requirement for pair-wise unifiability with unit
-%obvious - skip?
-
-%example 2: shows requirement for pair-wise unifiability within all aux formulas
-
- \begin{example} The following example shows why we must check pair-wise unifiability with the literals resolved against the unit we're trying to lower.
-
-% \begin{tiny}
-% \begin{prooftree}
-% \def\e{\mbox{\ $\vdash$\ }}
-% \AxiomC{$\eta_2$}
-% \AxiomC{$\eta_1$: $p(a)$\e$q(Y),r(Z)$}
-% \AxiomC{$\eta_2$: \e $p(X)$}
-% \BinaryInfC{$\eta_3$: \e$q(Y),r(Z)$}
-% \AxiomC{$\eta_4$: $r(X),p(b)$\e $s(Y)$}
-% \BinaryInfC{$\eta_5$: $p(b)$\e $s(Y),q(Y)$}
-% \AxiomC{$\eta_6$: $s(Y), q(Y)$\e}
-% \BinaryInfC{$\eta_7$: $p(b)$\e}
-% \BinaryInfC{$\psi$: $\bot$}
-% \end{prooftree}
-% \end{tiny}
- \end{example}
+ToDo by Jan
 
 
-%example 3: shows requirement for contraction check
-
- \begin{example} The following shows why the above is not necessarily  enough (we must check the original sources of the aux formulas, and see if those can be contracted), otherwise we might not save anything.
-% \begin{footnotesize}
-% \begin{prooftree}
-% \def\e{\mbox{\ $\vdash$\ }}
-% \AxiomC{$\eta_1$: $r(Y),p(X ~q(Y~b)), p(X~Y)$\e}
-% \AxiomC{$\eta_2$: \e $p(U~V)$}
-% \BinaryInfC{$\eta_3$: $r(V),p(U ~q(V~b))$\e}
-% \AxiomC{$\eta_4$: \e $r(W)$}
-% \BinaryInfC{$\eta_5$: $p(U ~q(W~b))$\e}
-% \AxiomC{$\eta_2$}
-% \BinaryInfC{$\psi$: $\bot$}
-% \end{prooftree}
-% \end{footnotesize}
- \end{example}
-
-
-%example 4: requires FOSubstitution, introduces this concept?
 
 \section{Experiments} \label{sec:exp}
 
@@ -666,130 +635,6 @@ For each proof $\psi$ (with the result of {\LowerUnits} applied to the proof den
 
 The experiments were executed on a laptop (2.8GHz Intel Core i7 processor with 4 GB of RAM (1333MHz DDR3) available to the Java Virtual Machine), and the prototype implementation performed well on this system. Figure \ref{} shows the compression time $t(\psi)$ for each proof, sorted by proof length, and figure \ref{} (respectively figure \ref{}) shows the compression speed (respectively resolution compression speed) for each proof, also sorted by proof length.
 
-
-
-% The details on the number of proofs per SMT category are shown in Table \ref{tab:benchmarks}.  The proofs were translated into pure resolution proofs by
-% considering every non-resolution inference as an axiom.
-
-% \begin{table}[tb]
-%   \caption{Number of proofs per benchmark category}
-%   \label{tab:benchmarks}
-%   \centering
-%   \begin{tabular}{lr}
-%     \toprule
-%     Benchmark~ &  Number \\
-%     Category       & ~of Proofs \\
-%     \midrule
-%     QF\_UF      & 3907 \\
-%     QF\_IDL     &  475 \\
-%     QF\_LIA     &  385 \\
-%     QF\_UFIDL   &  156 \\
-%     QF\_UFLIA   &  106 \\
-%     QF\_RDL     &   30 \\
-%     \bottomrule
-%   \end{tabular}
-% \end{table}
-
-% The experiment compared the following algorithms:
-% \begin{description}
-%   \item[LU:] the {\LowerUnits} algorithm from \cite{LURPI};
-%   \item[LUniv:] the {\LowerUnivalents} algorithm;
-%   \item[RPILU:] a non-sequential combination of {\RPI} after {\LowerUnits};
-%   \item[RPILUniv:] a non-sequential combination of {\RPI} after {\LowerUnivalents};
-%   \item[LU.RPI:] the sequential composition of {\LowerUnits} after {\RPI};
-%   \item[LUnivRPI:] the non-sequential combination of {\LowerUnivalents} after {\RPI} as described in Sect. \ref{sec:LUnivRPI};
-%   \item[RPI:] the {\RecyclePivotsIntersection} from \cite{LURPI};
-%   \item[Split:] Cotton's \texttt{Split} algorithm (\cite{CottonSplit});
-%   \item[RedRec:] the {\ReduceReconstruct} algorithm from \cite{RedRec};
-%   \item[Best RPILU/LU.RPI:] which performs both \texttt{RPILU} and \texttt{LU.RPI} and chooses the smallest resulting compressed proof;
-%   \item[Best RPILU/LUnivRPI:] which performs \texttt{RPILU} and \texttt{LUnivRPI} and chooses the smallest resulting
-%     compressed proof.
-% \end{description}
-
-% For each of these algorithms, the time needed to compress the proof along with the number of nodes
-% and the number of axioms (i.e. \emph{unsat core} size) have been measured. Raw data of the
-% experiment can be downloaded from the web\footnote{\url{http://www.matabio.net/skeptik/LUniv/experiments/}}.
-
-% The experiments were executed on the Vienna Scientific Cluster\footnote{\url{http://vsc.ac.at/}}
-% VSC\nobreakdash-2. Each algorithm was executed in a single core and had up to 16 GB of memory available. This amount of memory has been useful to compress the biggest proofs (with more than $10^6$ nodes).
-
-
-% The overall results of the experiments are shown in Table \ref{tab:average}. The compression ratios
-% in the second column are computed according to formula (\ref{eq:compression}), in which $\psi$
-% ranges over all the proofs in the benchmark and $\psi'$ ranges over the corresponding compressed
-% proofs.
-% \begin{equation} \label{eq:compression}
-%   1 - \frac{ \sum {|\Vertices{\psi'}|} }{ \sum {|\Vertices{\psi}|} }
-% \end{equation}
-% The unsat core compression ratios are computed in the same way, but using the number of axioms instead of
-% the number of nodes. The speeds on the fourth column are computed according to formula
-% (\ref{eq:speed}) in which $d_{\psi}$ is the duration in milliseconds of $\psi$'s compression by a
-% given algorithm.
-% \begin{equation} \label{eq:speed}
-%   \frac{ \sum {|\Vertices{\psi}|} }{ \sum {d_{\psi}} }
-% \end{equation}
-
-% For the \texttt{Split} and \texttt{RedRec} algorithms, which must be repeated, a timeout has
-% been fixed so that the speed is about 3 nodes per millisecond. 
-
-
-% \begin{table}[tb]
-%   \caption{Total compression ratios}
-%   \label{tab:average}
-%   \centering
-%   \begin{tabular}{lrrr}
-%     \toprule
-%     \multirow{2}{*}{Algorithm} & \multirow{2}{*}{Compression} & Unsat Core    & \phantom{.........}\multirow{2}{*}{Speed} \\
-%                                              &                                               & \phantom{...}Compression &        \\
-%     \midrule
-%     LU                &  7.5 \% &  0.0 \% & 22.4 n/ms \\
-%     LUniv             &  8.0 \% &  0.8 \% & 20.4 n/ms \\
-%     RPILU             & 22.0 \% &  3.6 \% &  7.4 n/ms \\
-%     RPILUniv          & 22.1 \% &  3.6 \% &  6.5 n/ms \\
-%     LU.RPI            & 21.7 \% &  3.1 \% & 15.1 n/ms \\
-%     LUnivRPI          & 22.0 \% &  3.6 \% & 17.8 n/ms \\
-%     RPI               & 17.8 \% &  3.1 \% & 31.3 n/ms \\
-%     Split             & 21.0 \% &  0.8 \% &  2.9 n/ms \\
-%     RedRec            & 26.4 \% &  0.4 \% &  2.9 n/ms \\
-%     Best RPILU/LU.RPI       & 22.0 \% &  3.7 \% &  5.0 n/ms \\
-%     Best RPILU/LUnivRPI & 22.2 \% &  3.7 \% &  5.2 n/ms \\
-%     \bottomrule
-%   \end{tabular}
-% \end{table}
-
-% \newcommand{\va}[1]{\ensuremath{v_{\text{#1}}}}
-
-% Figure \ref{fig:LU} shows the comparison of {\LowerUnits} with {\LowerUnivalents}. Subfigures (a) and (b) are scatter plots where each dot represents a single benchmark proof. 
-% Subfigure (c) is a histogram showing, in the vertical axis, the proportion of proofs having \emph{(normalized) compression ratio difference} within the intervals showed in the horizontal axis. This difference is computed using formula (\ref{eq:histogram}) with \va{LU}
-% and \va{LUniv} being the compression ratios obtained respectively by {\LowerUnits} and
-% {\LowerUnivalents}.
-% \begin{equation} \label{eq:histogram}
-%   \frac { \va{LU} - \va{LUniv} }{ \frac{\va{LU} + \va{LUniv}}{2} }
-% \end{equation}
-% The number of proofs for which $\va{LU} = \va{LUniv}$ is not displayed in the histogram.
-% The \emph{(normalized) duration differences} in subfigure (d) are computed using the same formula~(\ref{eq:histogram}) but
-% with \va{LU} and \va{LUniv} being the time taken to compress the proof by {\LowerUnits} and
-% {\LowerUnivalents} respectively.
-
-% \input{LU_charts}
-
-% As expected, {\LowerUnivalents} always compresses more than {\LowerUnits} (subfigure (a)) at the expense of a longer
-% computation (subfigure (d)). And even if the compression gain is low on average (as noticeable in Table \ref{tab:average}), subfigure (a) shows that {\LowerUnivalents} compresses some proofs significantly more than {\LowerUnits}.
-
-% It has to be noticed that \veriT already does its best to produce compact proofs. In particular,
-% a forward subsumption algorithm is applied, which results in proofs not having two different subproofs
-% with the same conclusion. This results in {\LowerUnits} being unable to reduce unsat core.
-% But as {\LowerUnivalents} lowers non-unit subproofs and performs some partial regularization, it
-% achieves some unsat core reduction, as noticeable in subfigure (b).
-
-% The comparison of the sequential \texttt{LU.RPI} with the non-sequential {\LUnivRPI} shown in Fig.
-% \ref{fig:LUnivRPI} outlines the ability of {\LowerUnivalents} to be efficiently combined with other
-% algorithms. Not only compression ratios are improved but {\LUnivRPI} is faster than the sequential
-% composition for more than 80 \% of the proofs.
-
-
-
-% \input{LURPI_charts}
 
 
 
