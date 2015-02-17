@@ -1,6 +1,12 @@
 Remaining Tasks:
 ----------------
 
+* Test "(FibC-D-PT)" and "(FibC-D)" on two extreme proofs (one where we saw very high compression and one with very high negative compression) (Andreas) [Due: 24/02/15]
+
+* Why is the coreSize not increasing after theory pruning? (Bruno) [Due: 30/02/15]
+
+* Debug code, if necessary (Bruno and Andreas) [Due: 5/3/2015]
+
 * re-run experiments without subproofs for theory lemmas (Andreas) [Due: 23/01/15]
 
 * MathSAT proofs in VeriT format without theory subproofs (Georg) [Due: 24/12/15]
