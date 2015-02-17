@@ -1,7 +1,21 @@
 \section{The Propositional LowerUnits Algorithm}
 \label{sec:PropositionalLU}
 
-ToDo: by Bruno
+We denote by $\dn{\psi}{\varphi_1, \varphi_2}$ the result of deleting the subproofs $\varphi_1$ and $\varphi_2$ from the proof $\psi$ and fixing it according to Algorithm \ref{algo:del}\footnote{
+  The deletion algorithm is a minor variant of the \textsc{Reconstruct-Proof} algorithm presented in \cite{RP11}.
+  The basic idea is to traverse the proof in a top-down manner, replacing
+  each subproof having one of its premises marked for deletion (i.e. in $D$) by its other direct subproof. For more details, we refer to \ref{Boudou}.
+}. 
+We say that a subproof $\varphi$ in a proof $\psi$ can be lowered 
+if there exists a proof
+$\psi'$ such that $\psi' = \dn{\psi}{\varphi} \odot \varphi$ and
+$\Conclusion{\psi'} \subseteq \Conclusion{\psi}$. If $\varphi$ originally participated in many resolution inferences within $\psi$ (i.e. if $\varphi$ had many children in $\psi$) then lowering $\varphi$ compresses the proof (in number of resolution inferences), because $\dn{\psi}{\varphi} \odot \varphi$ contains a single resolution inference involving $\varphi$.
+
+%
+It has been noted in \cite{LURPI} that, in the propositional case, $\varphi$ can always be lowered if it is a \emph{unit} (i.e. its conclusion clause is unit). This led to the invention of {\LowerUnits} (Algorithm \ref{algo:LU}), which aims at transforming a proof $\psi$ into $(\dn{\psi}{\mu_1,\ldots,\mu_n}) \odot_{\ell_1} \mu_1 \odot \ldots \odot_{\ell_n} \mu_n$, where $(\mu_1,\ldots,\mu_n)$ are all units with more than one child. Units with only one child are ignored merely because no compression is gained by lowering them. The order in which the units are reintroduced is important:
+if a unit $\varphi_2$ is a subproof of a unit
+$\varphi_1$ then $\varphi_2$ has to be reintroduced later than (i.e. below) $\varphi_1$.
+
 
 
 \SetKwFunction{Rec}{delete}
@@ -16,83 +30,34 @@ ToDo: by Bruno
   \newcommand{\fixL}{\ensuremath{\varphi'_L}}
   \newcommand{\fixR}{\ensuremath{\varphi'_R}}
 
-  \uIf{$\varphi \in D$ or $\raiz{\varphi}$ has no premises}{
-    \Return{$\varphi$} \;
-  }
+  \lIf{$\varphi \in D$ or $\raiz{\varphi}$ has no premises}{\Return{$\varphi$}}
   \BlankLine
 
   \Else{
-    \Let{$\varphi_L$, $\varphi_R$ and $\ell$} be such that
-      $\varphi = \varphi_L \odot_\ell \varphi_R$ \;
+    \Let{$\varphi_L$ and $\varphi_R$} be such that
+      $\varphi = \varphi_L \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \varphi_R$ \;
     \Let{$\varphi'_L = $ \Rec{$\varphi_L$,$D$}} \;
     \Let{$\varphi'_R = $ \Rec{$\varphi_R$,$D$}} \;
     \BlankLine
 
-    \uIf{$\varphi'_L \in D$}
-      { \Return{\fixR} \; }
-    \uElseIf{$\varphi'_R \in D$}
-      { \Return{\fixL} \; }
+    \lIf{$\varphi'_L \in D$}{ \Return{\fixR} }
+    \lElseIf{$\varphi'_R \in D$}{ \Return{\fixL} }
     \BlankLine
 
-    \uElseIf{$\dual{\ell} \notin \Conclusion{\fixL}$}
-      { \Return{\fixL} \; }
-    \uElseIf{$\ell \notin \Conclusion{\fixR}$}
-      { \Return{\fixR} \; }
+    \lElseIf{$\dual{\ell} \notin \Conclusion{\fixL}$}{ \Return{\fixL} }
+    \lElseIf{$\ell \notin \Conclusion{\fixR}$}{ \Return{\fixR} }
     \BlankLine
 
-    \Else{ \Return{ \fixL~$\odot_\ell$~\fixR} \; }
+    \lElse{ \Return{ \fixL~$\res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R}$~\fixR} }
   }
 
   \caption[.]{\FuncSty{delete}}
   \label{algo:del}
 \end{algorithm}
 
-The deletion algorithm is a minor variant of the \textsc{Reconstruct-Proof} algorithm presented in
-\cite{RP11}.
-The basic idea is to traverse the proof in a top-down manner, replacing
-each subproof having one of its premises marked for deletion (i.e. in $D$) by its other direct
-subproof. The special case when both $\varphi'_L$ and $\varphi'_R$ belong to $D$ is treated rather
-implicitly and deserves an explanation: in such a case, one might intuitively expect the result
-$\varphi'$ to be undefined and arbitrary. Furthermore, to any child of $\varphi$, $\varphi'$ ought
-to be seen as if it were in $D$, as if the deletion of $\varphi'_L$ and $\varphi'_R$ propagated to
-$\varphi'$ as well. Instead of assigning some arbitrary proof to $\varphi'$ and adding it to $D$,
-the algorithm arbitrarily returns (in line 8) $\varphi'_R$ (which is already in $D$) as the result
-$\varphi'$. In this way, the propagation of deletion is done automatically and implicitly. For
-instance, the following hold:
-\begin{align}
-  \dn{\varphi_1 \odot_\ell \varphi_2}{\varphi_1, \varphi_2} &= \varphi_2 \label{eq:exampledel1} \\
-\dn{\varphi_1 \odot_\ell \varphi_2 \odot_{\ell'} \varphi_3}{\varphi_1, \varphi_2} &=
-  \dn{\varphi_3}{\varphi_1, \varphi_2} \label{eq:exampledel2}
-\end{align}
-A side-effect of this clever implicit propagation of deletion is that the actual result of deletion
-is only meaningful if it is not in $D$. In the example (\ref{eq:exampledel1}), as $\dn{\varphi_1
-\odot_\ell \varphi_2}{\varphi_1, \varphi_2} \in \{\varphi_1, \varphi_2\} $, the actual resulting
-proof is meaningless. Only the information that it is a deleted subproof is relevant, as it suffices
-to obtain meaningful results as shown in (\ref{eq:exampledel2}).
-
-\begin{proposition} \label{prop:del_assoc}
-For any proof $\psi$ and any sets $A$ and $B$ of $\psi$'s subproofs,
-either $\dn{\psi}{A \cup B}  \in A \cup B$
-and    $\dn{\dn{\psi}{A}}{B} \in A \cup B$,
-or     $\dn{\psi}{A \cup B} = \dn{\dn{\psi}{A}}{B}$.
-\end{proposition}
 
 
 
-
-\newcommand{\pedge}[3]{\ensuremath{\raiz{#1} \xrightarrow{#2} \raiz{#3}}}
-
-
-
-When a subproof $\varphi$ has more than one child in a proof $\psi$, it may be possible to \emph{factor} all
-the corresponding resolutions: a new proof is
-constructed by removing $\varphi$ from $\psi$ and reintroducing it later. The resulting proof is smaller because $\varphi$ participates in a single resolution inference in it (i.e. it has a single child), while in the original proof it participates in as many resolution inferences as the number of children it had. Such a factorization is called \emph{lowering} of $\varphi$, because its delayed reintroduction makes $\varphi$ appear at the bottom of the resulting proof. 
-
-Formally, a subproof $\varphi$ in a proof $\psi$ can be lowered if there exists a proof
-$\psi'$ and a literal $\ell$ such that $\psi' = \dn{\psi}{\varphi} \odot_{\ell} \varphi$ and
-$\Conclusion{\psi'} \subseteq \Conclusion{\psi}$. It has been noted in \cite{LURPI} that $\varphi$ can always be lowered if it is a \emph{unit}: its conclusion clause has only one literal. This led to the invention of the {\LowerUnits} algorithm, which lowers every unit with more than one child, taking care to reintroduce units in
-an order corresponding to the subproof relation: if a unit $\varphi_2$ is a subproof of a unit
-$\varphi_1$ then $\varphi_2$ has to be reintroduced later than (i.e. below) $\varphi_1$.
 
 A possible presentation of {\LowerUnits} is shown in Algorithm \ref{algo:LU}. Units are collected
 during a first traversal. As this traversal is bottom-up, units are stored in a queue. The traversal
@@ -119,7 +84,7 @@ top-down traversal. The last for-loop performs the reintroduction of units.
   \For{every unit $\varphi$ in \Units}{
     \Let{$\{\ell\} = \Conclusion{\varphi}$} \;
     \lIf{$\dual{\ell} \in \Conclusion{\psi'}$}{
-    $\psi' \leftarrow \psi' \odot_\ell \varphi$ \;}
+    $\psi' \leftarrow \psi' \odot_\ell \varphi$}
   }
 
   \caption{\LowerUnits}

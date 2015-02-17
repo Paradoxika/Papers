@@ -4,7 +4,7 @@ We assume that there are infinitely many variable symbols (e.g. $X$, $Y$, $Z$, $
 An \emph{atomic formula} (\emph{atom}) is the application of an $n$-ary predicate symbol to $n$ terms. A \emph{literal} is an atom or the negation of an atom. The
 \emph{complement} of a literal $\ell$ is denoted $\dual{\ell}$ (i.e. for any atom $p$,
 $\dual{p} = \neg p$ and $\dual{\neg p} = p$). The set of all literals is denoted $\mathcal{L}$. A
-\emph{clause} is a multiset of literals. $\bot$ denotes the \emph{empty clause}. A \emph{unit clause} is clause with a single literal. Sequent notation is used for clauses (i.e. $p_1,\ldots,p_n \seq q_1,\ldots, q_m$ denotes the clause $\{ \neg p_1,\ldots, \neg p_n, q_1, \ldots, q_m \}$).
+\emph{clause} is a multiset of literals. $\bot$ denotes the \emph{empty clause}. A \emph{unit clause} is a clause with a single literal. Sequent notation is used for clauses (i.e. $p_1,\ldots,p_n \seq q_1,\ldots, q_m$ denotes the clause $\{ \neg p_1,\ldots, \neg p_n, q_1, \ldots, q_m \}$).
 $\freevar{t}$ (resp. $\freevar{\ell}$, $\freevar{\clause}$) denotes the set of variables in the term $t$ (resp. in the literal $\ell$ and in the clause $\clause$).
 A \emph{substitution} $\{ X_1\backslash t_1, X_2 \backslash t_2, \ldots \}$ is a mapping from variables $\{ X_1, X_2, \ldots \}$ to, respectively, terms $\{t_1, t_2, \ldots \}$. The application of a substitution $\sigma$ to a term $t$, a literal $\ell$ or a clause $\clause$ results in, respectively, the term $t \sigma$, the literal $\ell \sigma$ or the clause $\clause \sigma$, obtained from $t$, $\ell$ and $\clause$ by replacing all occurrences of the variables in $\sigma$ by the corresponding terms in $\sigma$. The set of all substitutions is denoted $\mathcal{S}$. A \emph{unifier} of a set of literals is a substitution that makes all literals in the set equal.
 A \emph{resolution proof} is a directed acyclic graph of clauses where the edges correspond to the inference rules of resolution and contraction (as explained in detail in Definition \ref{def:proof}). A \emph{resolution refutation} is a resolution proof with root $\bot$.
@@ -50,10 +50,12 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
 \end{definition}
 
 
-
-
 \noindent
-If $\psi = \varphi_L \odot_{\ell} \varphi_R$, then $\varphi_L$ and $\varphi_R$ are \emph{direct
+The resolution and contraction (factoring) rules described above are the standard rules of the resolution calculus. The presentation of the resolution rule here uses two substitutions, in order to explicitly handle the necessary renaming of variables, which is usually left implicit in many presentations of the resolution calculus.
+
+When the literals and substitutions involved in a resolution or contraction inference are irrelevant or clear from the context, we may write simply $\psi_L \res{}{}{}{} \psi_R$ instead of $\psi_L \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$ and $\con{\psi}{}{}$ instead of $\con{\psi}{\sigma}{\ell}$. When parenthesis are omitted, $\res{}{}{}{}$ is assumed to be left-associative.
+
+If $\psi = \varphi_L \odot \varphi_R$ or $\psi = \con{\varphi}{}{}$, then $\varphi$, $\varphi_L$ and $\varphi_R$ are \emph{direct
 subproofs} of $\psi$ and $\psi$ is a \emph{child} of both $\varphi_L$ and $\varphi_R$. The
 transitive closure of the direct subproof relation is the \emph{subproof} relation. A subproof which
 has no direct subproof is an \emph{axiom} of the proof.

@@ -38,6 +38,9 @@
 \newcommand{\n}{v}
 \newcommand{\raiz}[1]{\rho(#1)}
 
+\newcommand{\pedge}[3]{\ensuremath{\raiz{#1} \xrightarrow{#2} \raiz{#3}}}
+
+
 % Contraction
 \newcommand{\con}[3]{\lfloor #1 \rfloor_{#2}^{#3}}
 
@@ -45,7 +48,7 @@
 %\newcommand{\res}[6]{#1 \tensor[^{#2}_{#3}]{\odot}{^{#4}_{#5}} #6}
 %\newcommand{\res}[6]{#1 \prescript{#2}{#3}{\odot^{#4}_{#5}} #6}
 
-\newcommand{\res}[4]{\mathrel{\operatorname*{\odot}_{#1,#3}^{#2,#4}}}
+\newcommand{\res}[4]{\mathrel{\operatorname*{\odot}_{#1 #3}^{#2 #4}}}
 
 \title{Towards the Compression of First-Order Resolution Proofs by Lowering Unit Clauses}
 
@@ -109,7 +112,7 @@ In this paper, we initiate the process of lifting propositional proof compressio
 \input{sec-Resolution}
 \input{sec-PropositionalLU}
 \input{sec-Challenges}
-%\input{sec-FOLU}
+\input{sec-FOLU}
 \input{sec-SimpleFOLU}
 \input{sec-Exp}
 
