@@ -4,6 +4,7 @@
 \section{First-Order Challenges}\label{sec:Challenges}
 
 TODO by Jan (just writing some ideas so far--not yet final by any means)\\
+{\bf todo: define the notion of set of literals resolved against a unit? might make things clearer}
 
 In this section, we discuss the challenges introduced by adapting {\LowerUnits} to the first-order case. The first example illustrates how to extend {\LowerUnits} to first-order logic in the obvious way. Examples \ref{ex:pairwise} and on illustrate concerns that are introduced by the unification process that must be over come in order to successfully postpone resolution with a unit clause as a result of this extension.
 
@@ -64,12 +65,13 @@ The literals resolved with $u = \eta_2$ are $p(a)$ (in $\eta_1$) and $p(b)$ (in 
  \end{example}
 
 \begin{property}
-Things must be pair-wise unifiable...
+Things must be pair-wise unifiable... TODO: this? Or leave this out and talk about it section 5?
 \end{property}
 
 %example 3: shows requirement for contraction check
 
- \begin{example} The following shows why the above is not necessarily  enough (we must check the original sources of the aux formulas, and see if those can be contracted), otherwise we might not save anything.
+ \begin{example} %The following shows why the above is not necessarily  enough (we must check the original sources of the aux formulas, and see if those can be contracted), otherwise we might not save anything.
+Although pair-wise unifiability of literals is necessary in order to achieve some compression, it is not enough. In the last example, the literals were checked as they appeared when they were to be resolved against a unit $u$ which was to be postponed. However, it may be the case that they appeared this way (had a particular set of variables) because of a series of unifiers $\sigma_1,\ldots,\sigma_n$ were applied to their original form $\ell'$ so that $\ell=\ell'\sigma_1\dots\sigma_n$ was pairwise unifiable (the last property was met) with all other literals, but these unifies $\sigma_i$ would not be applied in the case of postponing resolution with $u$ (or another unit clause). The following proof illustrates this case, where we would consider lowering $u=\eta_2$.
 \begin{footnotesize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
@@ -82,8 +84,13 @@ Things must be pair-wise unifiable...
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{footnotesize}
+
+Note that the formulas resolved against $u$ are $p(X~Y)$ (in $\eta_1$) and $p(U ~q(V~b))$ (in $\eta_3$). These two formulas are unifiable via the substitution $\{X\setminus U, Y\setminus q(V~b) \}$. However, if resolution with $u$ is postponed, we will not apply the unification $\{X\setminus U, Y\setminus V\}$ that is applied to $\eta_1$, and thus the descendants (the original sources) of these two formulas can no longer be unified and contracted. Thus we require descendants of resolved formulas to be pair-wise unifiable, and we call this property 2 below.
  \end{example}
 
+\begin{property}
+Descendants must be pair-wise unifiable... TODO: this? Or leave this out and talk about it section 5?
+\end{property}
 
 %example 4: requires FOSubstitution, introduces this concept
 \begin{example}\label{ex:ambig} Consider the following, which shows the dangers of ambiguous resolution in the first order case:\\
