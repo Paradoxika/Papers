@@ -4,38 +4,37 @@
 \section{First-Order Challenges}\label{sec:Challenges}
 
 TODO by Jan (just writing some ideas so far--not yet final by any means)\\
-{\bf Does this belong here?And is this what you had in mind for interesting examples? And are the proof formatted correctly, or should I change them? aside from the first one going over the margin right now of course}\\ 
 
 In this section, we discuss additional requirements for lowering a unit formula in the first order case that are not required in the propositional case.
 
 %example 1: shows requirement for pair-wise unifiability with unit
  \begin{example} The following example shows why we want to check formula unifiability with the unit we're trying to lower.
 
-\begin{tiny}
+\begin{footnotesize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$p(Y)$\e$q(Z)$}
-\AxiomC{\e$p(Y)$}
-\BinaryInfC{\e$q(Z)$}
-\AxiomC{$p(X),q(Z)$\e}
-\BinaryInfC{$p(X)$\e}
-\AxiomC{\e$p(Y)$}
-\BinaryInfC{$\bot$}
+\AxiomC{$\eta_1$: $p(Y)$\e$q(Z)$}
+\AxiomC{$\eta_2$: \e$p(Y)$}
+\BinaryInfC{$\eta_3$: \e$q(Z)$}
+\AxiomC{$\eta_4$: $p(X),q(Z)$\e}
+\BinaryInfC{$\eta_5$: $p(X)$\e}
+\AxiomC{$\eta_2$}
+\BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
-\end{tiny}
+\end{footnotesize}
 
 which we could compress to
-\begin{tiny}
+\begin{footnotesize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$p(Y)$\e$q(Z)$}
-\AxiomC{$p(X),q(Z)$\e}
-\BinaryInfC{$p(X),p(Y)$\e}
-\UnaryInfC{$p(X)$\e}
-\AxiomC{\e$p(Y)$}
-\BinaryInfC{$\bot$}
+\AxiomC{$\eta_1'$: $p(Y)$\e$q(Z)$}
+\AxiomC{$\eta_2'$: $p(X),q(Z)$\e}
+\BinaryInfC{$\eta_3'$: $p(X),p(Y)$\e}
+\UnaryInfC{$\eta_4'$: $p(X)$\e}
+\AxiomC{$\eta_5'$: \e$p(Y)$}
+\BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
-\end{tiny}
+\end{footnotesize}
  \end{example}
 
 
@@ -83,42 +82,42 @@ which we could compress to
 \begin{tiny}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$p(U),r(U~V),r(V~U),q(V)$\e}
-\AxiomC{\e$p(c)$}
-\BinaryInfC{$r(c~V),r(V~c),q(V)$\e}
-\AxiomC{\e$r(X~c)$}
-\BinaryInfC{$r(c~X),q(X)$\e}
-\AxiomC{\e$r(W~V)$}
-\BinaryInfC{$q(V)$\e}
-\AxiomC{$p(Z)$\e$q(d)$}
-\BinaryInfC{$p(Z)$\e}
-\AxiomC{\e$p(c)$}
-\BinaryInfC{$\bot$}
+\AxiomC{$\eta_1$: $p(U),r(U~V),r(V~U),q(V)$\e}
+\AxiomC{$\eta_2$: \e$p(c)$}
+\BinaryInfC{$\eta_3$: $r(c~V),r(V~c),q(V)$\e}
+\AxiomC{$\eta_4$: \e$r(X~c)$}
+\BinaryInfC{$\eta_5$: $r(c~X),q(X)$\e}
+\AxiomC{$\eta_6$: \e$r(W~V)$}
+\BinaryInfC{$\eta_7$: $q(V)$\e}
+\AxiomC{$\eta_8$: $p(Z)$\e$q(d)$}
+\BinaryInfC{$\eta_9$: $p(Z)$\e}
+\AxiomC{$\eta_{2}$}
+\BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{tiny}
 
-Which if we lower $\vdash p(c)$, we would attempt to resolve  the following two sequents
+Which if we lower $\eta_2$: $\vdash p(c)$, we would attempt to resolve  the following two sequents
 $$p(U),r(U~V),r(V~U),q(V)\vdash$$
 $$\vdash r(X~c)$$
 Where we would have to be careful. If we used $r(U~V)$, then we would use the unifier $U->X, V->C$, which would result in the following:
 $$p(X),r(V~X),q(c)\vdash$$
 but the original proof does not have a method for resolving away $q(c)$, so we would not be able to complete the proof. On the other hand, if we chose $r(V~U)$, we would unify with $V->X, U->c$, with which we could complete the proof:
 
-\begin{footnotesize}
+\begin{tiny}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$p(U),r(U~V),r(V~U),q(V)$\e}
-\AxiomC{\e$r(X~c)$}
-\BinaryInfC{$p(c),r(c~X),q(X)$\e}
-\AxiomC{\e$r(W~V)$}
-\BinaryInfC{$p(c),q(V)$\e}
-\AxiomC{$p(Z)$\e$q(d)$}
-\BinaryInfC{$p(c),p(Z)$\e}
-\UnaryInfC{$p(c)$\e}
-\AxiomC{\e$p(c)$}
-\BinaryInfC{$\bot$}
+\AxiomC{$\eta_1'$: $p(U),r(U~V),r(V~U),q(V)$\e}
+\AxiomC{$\eta_2'$: \e$r(X~c)$}
+\BinaryInfC{$\eta_3'$: $p(c),r(c~X),q(X)$\e}
+\AxiomC{$\eta_4'$: \e$r(W~V)$}
+\BinaryInfC{$\eta_5'$: $p(c),q(V)$\e}
+\AxiomC{$\eta_6'$: $p(Z)$\e$q(d)$}
+\BinaryInfC{$\eta_7'$: $p(c),p(Z)$\e}
+\UnaryInfC{$\eta_8'$: $p(c)$\e}
+\AxiomC{$\eta_9'$: \e$p(c)$}
+\BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
-\end{footnotesize}
+\end{tiny}
 
 A method to avoid this issue is discussed in section \ref{sec:SimpleFOLU}
  \end{example}

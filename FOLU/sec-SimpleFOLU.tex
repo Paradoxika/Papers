@@ -6,22 +6,22 @@ ToDo by Jan
 
 Recall example \ref{ex:ambig}. In order to avoid this, we introduce a proof rule that applies a substitution. So that we would get the following proof
 
-\begin{footnotesize}
+\begin{tiny}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$p(U),r(U~V),r(V~U),q(V)$\e}
-\UnaryInfC{$p(c),r(c~V),r(V~c),q(V)$\e}
-\AxiomC{\e$r(X~c)$}
-\BinaryInfC{$p(c),r(c~X),q(X)$\e}
-\AxiomC{\e$r(W~V)$}
-\BinaryInfC{$p(c),q(V)$\e}
-\AxiomC{$p(Z)$\e$q(d)$}
-\BinaryInfC{$p(c),p(Z)$\e}
-\UnaryInfC{$p(c)$\e}
-\AxiomC{\e$p(c)$}
-\BinaryInfC{$\bot$}
+\AxiomC{$\eta_1$: $p(U),r(U~V),r(V~U),q(V)$\e}
+\UnaryInfC{$\eta_2$: $p(c),r(c~V),r(V~c),q(V)$\e}
+\AxiomC{$\eta_3$: \e$r(X~c)$}
+\BinaryInfC{$\eta_4$: $p(c),r(c~X),q(X)$\e}
+\AxiomC{$\eta_5$: \e$r(W~V)$}
+\BinaryInfC{$\eta_6$: $p(c),q(V)$\e}
+\AxiomC{$\eta_7$: $p(Z)$\e$q(d)$}
+\BinaryInfC{$\eta_8$: $p(c),p(Z)$\e}
+\UnaryInfC{$\eta_9$: $p(c)$\e}
+\AxiomC{$\eta_{10}$: \e$p(c)$}
+\BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
-\end{footnotesize}
+\end{tiny}
 
 Now $r(V, c)$ appears in the first left resolvent, which was the left aux formula in the original proof. Thus, the implementation can find that formula, and choose it in order to resolve the ambiguous resolution, instead of guessing a formula from the left resolvent that unifies with the right resolvent, which might go wrong.\\
 
