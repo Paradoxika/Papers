@@ -75,6 +75,8 @@ Not only the literals, but also the substitutions must change during deletion. W
 \end{algorithm}
 
 
+ToDo: The following paragraph is just a speculation. I still have to check it. I strongly suspect that, in the first-order case, we are not free to collect the units either in top-down or bottom-up traversal, as we were in the propositional case. Only one of them is the correct way (if we want to correctly overcome all challenges). But I still don't know which one.
+
 The second challenge is much harder to overcome. In the propositional case, collecting units and deleting units can be done in two distinct phases (as shown in Algorithm \ref{algo:lu}). In the first-order case, on the other hand, these two phases seem to be so interlaced, that they appear to be in a deadlock: the decision to collect a unit to be lowered depends on what will happen with the proof after deletion, while deletion depends on knowing which units will be lowered. Therefore, there is no hope for a single-traversal first-order {\LowerUnits} algorithm generalizing \ref{algo:optLU}. The collection of units must be done in a bottom-up traversal (as in \ref{algo:LU}), so that when we have to test whether a unit $\eta$ can be lowered (in line 3), we can run the deletion algorithm to see what will happen with the root of the proof when we delete $\eta$ and all other units already collected below $\eta$. This unlocks the apparent deadlock, at the high cost of having to run the deletion algorithm once for every tested unit. The worst-case run-time complexity is, therefore, quadratic in the length of the input proof to be compressed.
 
 \begin{algorithm}[bt]
