@@ -3,3 +3,30 @@
 \label{sec:SimpleFOLU}
 
 ToDo by Jan
+
+Recall example \ref{ex:ambig}. In order to avoid this, we introduce a proof rule that applies a substitution. So that we would get the following proof
+
+\begin{footnotesize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$p(U),r(U~V),r(V~U),q(V)$\e}
+\UnaryInfC{$p(c),r(c~V),r(V~c),q(V)$\e}
+\AxiomC{\e$r(X~c)$}
+\BinaryInfC{$p(c),r(c~X),q(X)$\e}
+\AxiomC{\e$r(W~V)$}
+\BinaryInfC{$p(c),q(V)$\e}
+\AxiomC{$p(Z)$\e$q(d)$}
+\BinaryInfC{$p(c),p(Z)$\e}
+\UnaryInfC{$p(c)$\e}
+\AxiomC{\e$p(c)$}
+\BinaryInfC{$\bot$}
+\end{prooftree}
+\end{footnotesize}
+
+Now $r(V, c)$ appears in the first left resolvent, which was the left aux formula in the original proof. Thus, the implementation can find that formula, and choose it in order to resolve the ambiguous resolution, instead of guessing a formula from the left resolvent that unifies with the right resolvent, which might go wrong.\\
+
+TODO: Explain where the sub came from.\\
+
+TODO: define the rule formally here?\\
+
+TODO: describe when the rule is invoked in the implementation
