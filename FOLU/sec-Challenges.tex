@@ -9,7 +9,35 @@ TODO by Jan (just writing some ideas so far--not yet final by any means)\\
 In this section, we discuss additional requirements for lowering a unit formula in the first order case that are not required in the propositional case.
 
 %example 1: shows requirement for pair-wise unifiability with unit
-%obvious - skip?
+ \begin{example} The following example shows why we want to check formula unifiability with the unit we're trying to lower.
+
+\begin{tiny}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$p(Y)$\e$q(Z)$}
+\AxiomC{\e$p(Y)$}
+\BinaryInfC{\e$q(Z)$}
+\AxiomC{$p(X),q(Z)$\e}
+\BinaryInfC{$p(X)$\e}
+\AxiomC{\e$p(Y)$}
+\BinaryInfC{$\bot$}
+\end{prooftree}
+\end{tiny}
+
+which we could compress to
+\begin{tiny}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$p(Y)$\e$q(Z)$}
+\AxiomC{$p(X),q(Z)$\e}
+\BinaryInfC{$p(X),p(Y)$\e}
+\UnaryInfC{$p(X)$\e}
+\AxiomC{\e$p(Y)$}
+\BinaryInfC{$\bot$}
+\end{prooftree}
+\end{tiny}
+ \end{example}
+
 
 %example 2: shows requirement for pair-wise unifiability within all aux formulas
 
@@ -50,4 +78,47 @@ In this section, we discuss additional requirements for lowering a unit formula 
  \end{example}
 
 
-%example 4: requires FOSubstitution, introduces this concept?
+%example 4: requires FOSubstitution, introduces this concept
+\begin{example} Consider the following, which shows the dangers of ambiguous resolution in the first order case:\\
+\begin{tiny}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$p(U),r(U~V),r(V~U),q(V)$\e}
+\AxiomC{\e$p(c)$}
+\BinaryInfC{$r(c~V),r(V~c),q(V)$\e}
+\AxiomC{\e$r(X~c)$}
+\BinaryInfC{$r(c~X),q(X)$\e}
+\AxiomC{\e$r(W~V)$}
+\BinaryInfC{$q(V)$\e}
+\AxiomC{$p(Z)$\e$q(d)$}
+\BinaryInfC{$p(Z)$\e}
+\AxiomC{\e$p(c)$}
+\BinaryInfC{$\bot$}
+\end{prooftree}
+\end{tiny}
+
+Which if we lower $\vdash p(c)$, we would attempt to resolve  the following two sequents
+$$p(U),r(U~V),r(V~U),q(V)\vdash$$
+$$\vdash r(X~c)$$
+Where we would have to be careful. If we used $r(U~V)$, then we would use the unifier $U->X, V->C$, which would result in the following:
+$$p(X),r(V~X),q(c)\vdash$$
+but the original proof does not have a method for resolving away $q(c)$, so we would not be able to complete the proof. On the other hand, if we chose $r(V~U)$, we would unify with $V->X, U->c$, with which we could complete the proof:
+
+\begin{footnotesize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$p(U),r(U~V),r(V~U),q(V)$\e}
+\AxiomC{\e$r(X~c)$}
+\BinaryInfC{$p(c),r(c~X),q(X)$\e}
+\AxiomC{\e$r(W~V)$}
+\BinaryInfC{$p(c),q(V)$\e}
+\AxiomC{$p(Z)$\e$q(d)$}
+\BinaryInfC{$p(c),p(Z)$\e}
+\UnaryInfC{$p(c)$\e}
+\AxiomC{\e$p(c)$}
+\BinaryInfC{$\bot$}
+\end{prooftree}
+\end{footnotesize}
+
+A method to avoid this issue is discussed in section \ref{sec:SimpleFOLU}
+ \end{example}
