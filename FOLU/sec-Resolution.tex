@@ -37,7 +37,7 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
      \Gamma &= \left( \clause_L \setminus \left\{ \ell_L \right\} \right) \sigma_L \cup \left( \clause_R
                     \setminus \left\{ \ell_R \right\} \right) \sigma_R 
     \end{align*}
-    where $\n$ is a new (resolution) node and $\raiz{\varphi}$ denotes the root node of $\varphi$.
+    where $\n$ is a new (resolution) node and $\raiz{\varphi}$ denotes the root node of $\varphi$. The atom $\ell$ such that $\ell = \ell_L \sigma_L = \dual{\ell_R} \sigma_R$ or $\ell = \dual{\ell_L} \sigma_L = \ell_R \sigma_R$ is called the \emph{resolved atom}.
   \item \textbf{Contraction:} If $\psi'$ is a proof $\langle V', E', \clause' \rangle$ and $\sigma$ is a unifier of $\{\ell_1, \ldots \ell_n\}$ with $\{\ell_1, \ldots \ell_n\} \subseteq \clause'$, then, letting $\ell = \ell_k \sigma$ (for any $k \in \{1,\ldots, n\}$), $\con{\psi}{\sigma}{\ell}$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
     \begin{align*}
       V &= V' \cup \{\n \} \\
@@ -51,9 +51,10 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
 
 
 \noindent
-The resolution and contraction (factoring) rules described above are the standard rules of the resolution calculus. The presentation of the resolution rule here uses two substitutions, in order to explicitly handle the necessary renaming of variables, which is usually left implicit in many presentations of the resolution calculus.
+The resolution and contraction (factoring) rules described above are the standard rules of the resolution calculus, except for the fact that we do not require resolution to use most general unifiers. The presentation of the resolution rule here uses two substitutions, in order to explicitly handle the necessary renaming of variables, which is usually left implicit in many presentations of the resolution calculus.
 
-When the literals and substitutions involved in a resolution or contraction inference are irrelevant or clear from the context, we may write simply $\psi_L \res{}{}{}{} \psi_R$ instead of $\psi_L \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$ and $\con{\psi}{}{}$ instead of $\con{\psi}{\sigma}{\ell}$. When parenthesis are omitted, $\res{}{}{}{}$ is assumed to be left-associative. In the propositional case, we omit contractions (treating clauses essentially as sets instead of multisets) and $\psi_L \res{\ell}{\emptyset}{\dual{\ell}}{\emptyset} \psi_R$ is abbreviated by $\psi_L \odot_{\ell} \psi_R$.
+When the literals and substitutions involved in a resolution or contraction inference are irrelevant or clear from the context, we may write simply $\psi_L \res{}{}{}{} \psi_R$ instead of $\psi_L \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$ and $\con{\psi}{}{}$ instead of $\con{\psi}{\sigma}{\ell}$. When we write $\psi_L \res{\ell_L}{}{\ell_R}{} \psi_R$, we assume that the omitted substitutions are such that the resolved atom is most general.
+When parenthesis are omitted, $\res{}{}{}{}$ is assumed to be left-associative. In the propositional case, we omit contractions (treating clauses essentially as sets instead of multisets) and $\psi_L \res{\ell}{\emptyset}{\dual{\ell}}{\emptyset} \psi_R$ is abbreviated by $\psi_L \odot_{\ell} \psi_R$.
 
 If $\psi = \varphi_L \odot \varphi_R$ or $\psi = \con{\varphi}{}{}$, then $\varphi$, $\varphi_L$ and $\varphi_R$ are \emph{direct
 subproofs} of $\psi$ and $\psi$ is a \emph{child} of both $\varphi_L$ and $\varphi_R$. The
