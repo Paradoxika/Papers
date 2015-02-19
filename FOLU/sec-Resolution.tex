@@ -13,7 +13,7 @@ A \emph{resolution proof} is a directed acyclic graph of clauses where the edges
 \begin{definition}[First-Order Resolution Proof] 
 \label{def:proof} \hfill \\
 A directed acyclic graph $\langle V, E, \clause \rangle$, where $V$ is a set of nodes and $E$ is a
-set of edges labeled by literals and substitutions (i.e. $E \subset V \times \mathcal{L} \times \mathcal{S} \times V$ and $\n_1
+set of edges labeled by literals and substitutions (i.e. $E \subset V \times 2^{\mathcal{L}} \times \mathcal{S} \times V$ and $\n_1
 \xrightarrow[\sigma]{\ell} \n_2$ denotes an edge from node $\n_1$ to node $\n_2$ labeled by the literal $\ell$ and the substitution $\sigma$), is a
 proof of a clause $\clause$ iff it is inductively constructible according to the following cases:
 %
@@ -32,19 +32,19 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
     \begin{align*}
       V &= V_L \cup V_R \cup \{\n \} \\
       E &= E_L \cup E_R \cup
-                    \left\{ \raiz{\psi_L} \xrightarrow[\sigma_L]{\ell_L} \n, 
-                            \raiz{\psi_R} \xrightarrow[\sigma_R]{\ell_R} \n \right\} \\
+                    \left\{ \raiz{\psi_L} \xrightarrow[\sigma_L]{\{\ell_L\} } \n, 
+                            \raiz{\psi_R} \xrightarrow[\sigma_R]{\{\ell_R\} } \n \right\} \\
      \Gamma &= \left( \clause_L \setminus \left\{ \ell_L \right\} \right) \sigma_L \cup \left( \clause_R
                     \setminus \left\{ \ell_R \right\} \right) \sigma_R 
     \end{align*}
-    where $\n$ is a new (resolution) node and $\raiz{\varphi}$ denotes the root node of $\varphi$. The atom $\ell$ such that $\ell = \ell_L \sigma_L = \dual{\ell_R} \sigma_R$ or $\ell = \dual{\ell_L} \sigma_L = \ell_R \sigma_R$ is called the \emph{resolved atom}.
-  \item \textbf{Contraction:} If $\psi'$ is a proof $\langle V', E', \clause' \rangle$ and $\sigma$ is a unifier of $\{\ell_1, \ldots \ell_n\}$ with $\{\ell_1, \ldots \ell_n\} \subseteq \clause'$, then, letting $\ell = \ell_k \sigma$ (for any $k \in \{1,\ldots, n\}$), $\con{\psi}{\sigma}{\ell}$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
+    where $\n$ is a new (resolution) node and $\raiz{\varphi}$ denotes the root node of $\varphi$. The \emph{resolved atom} $\ell$ is such that $\ell = \ell_L \sigma_L = \dual{\ell_R} \sigma_R$ or $\ell = \dual{\ell_L} \sigma_L = \ell_R \sigma_R$.
+  \item \textbf{Contraction:} If $\psi'$ is a proof $\langle V', E', \clause' \rangle$ and $\sigma$ is a unifier of $\{\ell_1, \ldots \ell_n\}$ with $\{\ell_1, \ldots \ell_n\} \subseteq \clause'$, then $\con{\psi}{\{\ell_1, \ldots \ell_n\}}{\sigma}$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
     \begin{align*}
       V &= V' \cup \{\n \} \\
-      E &= E' \cup \{ \raiz{\psi'} \xrightarrow[\sigma]{\ell} \n \} \\
+      E &= E' \cup \{ \raiz{\psi'} \xrightarrow[\sigma]{\{\ell_1, \ldots \ell_n\}} \n \} \\
      \Gamma &= (\clause' \setminus \{ \ell_1, \ldots \ell_n \} ) \sigma \cup \{ \ell \}
     \end{align*}
-    where $\n$ is a new (contraction) node and $\raiz{\varphi}$ denotes the root node of $\varphi$.
+    where $\n$ is a new (contraction) node, $\ell = \ell_k \sigma$ (for any $k \in \{1,\ldots, n\}$) and $\raiz{\varphi}$ denotes the root node of $\varphi$.
   \qed
 \end{itemize}
 \end{definition}
@@ -53,7 +53,7 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
 \noindent
 The resolution and contraction (factoring) rules described above are the standard rules of the resolution calculus, except for the fact that we do not require resolution to use most general unifiers. The presentation of the resolution rule here uses two substitutions, in order to explicitly handle the necessary renaming of variables, which is usually left implicit in many presentations of the resolution calculus.
 
-When the literals and substitutions involved in a resolution or contraction inference are irrelevant or clear from the context, we may write simply $\psi_L \res{}{}{}{} \psi_R$ instead of $\psi_L \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$ and $\con{\psi}{}{}$ instead of $\con{\psi}{\sigma}{\ell}$. When we write $\psi_L \res{\ell_L}{}{\ell_R}{} \psi_R$, we assume that the omitted substitutions are such that the resolved atom is most general.
+When the literals and substitutions involved in a resolution or contraction inference are irrelevant or clear from the context, we may write simply $\psi_L \res{}{}{}{} \psi_R$ instead of $\psi_L \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$ and $\con{\psi}{}{}$ instead of $\con{\psi}{\{\ell_1, \ldots \ell_n\}}{\sigma}$. When we write $\psi_L \res{\ell_L}{}{\ell_R}{} \psi_R$, we assume that the omitted substitutions are such that the resolved atom is most general.
 When parenthesis are omitted, $\res{}{}{}{}$ is assumed to be left-associative. In the propositional case, we omit contractions (treating clauses essentially as sets instead of multisets) and $\psi_L \res{\ell}{\emptyset}{\dual{\ell}}{\emptyset} \psi_R$ is abbreviated by $\psi_L \odot_{\ell} \psi_R$.
 
 If $\psi = \varphi_L \odot \varphi_R$ or $\psi = \con{\varphi}{}{}$, then $\varphi$, $\varphi_L$ and $\varphi_R$ are \emph{direct

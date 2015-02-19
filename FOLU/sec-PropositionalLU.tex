@@ -91,7 +91,7 @@ $\varphi_1$ then $\varphi_2$ has to be reintroduced later than (i.e. below) $\va
   \For{every unit $\varphi$ in \Units}{
     \Let{$\{\ell\} = \Conclusion{\varphi}$} \;
     \lIf{$\dual{\ell} \in \Conclusion{\psi'}$}{
-    $\psi^{\star} \leftarrow \psi^{\star} \odot_\ell \varphi$}
+    $\psi^{\star} \leftarrow \psi^{\star} \odot_\ell \varphi'$}
   }
 
   \caption{\LowerUnits}
@@ -99,7 +99,7 @@ $\varphi_1$ then $\varphi_2$ has to be reintroduced later than (i.e. below) $\va
 \end{algorithm}
 
 In Algorithm \ref{algo:LU}, units are collected in a queue
-during a bottom-up traversal (lines 2-3), then they are deleted from the proof (line 4) and finally reintroduced in the bottom of the proof (lines 5-7). In \cite{Boudou} it has been observed that the two traversals (one for collection and one for deletion) could be merged into a single traversal, if we collect units during deletion. As deletion is a top-down traversal, it is then necesary to collect the units in a stack. This improvement leads to Algorithm \ref{algo:optLU}.
+during a bottom-up traversal (lines 2-3), then they are deleted from the proof (line 4) and finally reintroduced in the bottom of the proof (lines 5-7). In \cite{Boudou} it has been observed that the two traversals (one for collection and one for deletion) could be merged into a single traversal, if we collect units during deletion. As deletion is a top-down traversal, it is then necesary to collect the units in a stack. This improvement leads to Algorithm \ref{algo:optLU}. Both algorithms have a linear run-time complexity with respect to the length of the proof, because they perform a contant number of traversals.
 
 
 \begin{algorithm}[pbt]
@@ -167,5 +167,7 @@ during a bottom-up traversal (lines 2-3), then they are deleted from the proof (
   \caption{Improved {\LowerUnits} (with a single traversal)}
   \label{algo:optLU}
 \end{algorithm}
+
+
 
 \clearpage

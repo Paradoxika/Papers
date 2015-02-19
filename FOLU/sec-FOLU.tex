@@ -13,7 +13,7 @@ The examples shown in the previous section indicate that there are two main chal
 \noindent
 Algorithm \ref{algo:fodel} overcomes the first challenge by keeping an additional map from old literals in the input proof to the corresponding more general changed literals in the output proof unders construction. This is done in lines 6 to 7. The correspondence can be computed by proper bookkeeping during deletion (e.g. by having data structures that preserve the positions of literals or by annotating literals with ids). In cases where, due to previous deletions above in the proof, no corresponding literal is available anymore, the special constant $\none$ is used. 
 
-Not only the literals, but also the substitutions must change during deletion. While it would be in principle possible to keep track of such changes as well, it is simpler to search for new substitutions that result in a most general resolved atom. This is why substitutions are omitted in line 12. As a beneficial side-effect, we get possibly more general literals in the root clause of the output proof.
+Not only the literals, but also the substitutions must change during deletion. While it would be in principle possible to keep track of such changes as well, it is simpler to search for new substitutions that result in a most general resolved atom. This is why substitutions are omitted in line 12. As a beneficial side-effect, we may obtain more general literals in the root clause of the output proof.
 
 
 \clearpage
@@ -39,8 +39,7 @@ Not only the literals, but also the substitutions must change during deletion. W
   \lIf{$\varphi \in D$ or $\raiz{\varphi}$ has no premises}{\Return{$\varphi$}}
   \BlankLine
 
-  \Else{
-    \Let{$\varphi_L \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \varphi_R = \varphi$} \;
+  \ElseIf{$\varphi = \varphi_L \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \varphi_R$}{
     $\varphi'_L \leftarrow $ \Rec{$\varphi_L$,$D$} \;
     $\varphi'_R \leftarrow $ \Rec{$\varphi_R$,$D$} \;
     \BlankLine
@@ -69,15 +68,29 @@ Not only the literals, but also the substitutions must change during deletion. W
       \Return{ \fixL~$\res{\dl{\ell_L}}{}{\dl{\ell_R}}{}$~\fixR}
     }
   }
+  \ElseIf{$\varphi = \con{\varphi_c}{ \{\ell_1,\ldots,\ell_n \} }{\sigma}$}{
+    $\varphi'_c \leftarrow $ \Rec{$\varphi_c$,$D$} \;
+    \BlankLine
+
+    \For{every $\ell$ in $\Conclusion{\varphi_c}$}{
+      $\dl{\ell} \leftarrow$ the literal in $\Conclusion{\varphi'_c}$ corresponding to $\ell$, otherwise $\none$ \;
+    }
+
+    \Return{$\con{\varphi_c}{ \{\dl{\ell_1},\ldots,\dl{\ell_n} \} \backslash \{ \none \}  }{}$};
+  }
 
   \caption[.]{\FuncSty{fo-delete}}
   \label{algo:fodel}
 \end{algorithm}
 
+The second challenge is much harder to overcome. In the propositional case, collecting units and deleting units can be done in two distinct and independent phases (as shown in Algorithm \ref{algo:lu}). In the first-order case, on the other hand, these two phases seem to be so interlaced, that they appear to be in a deadlock: the decision to collect a unit to be lowered depends on what will happen with the proof after deletion, while deletion depends on knowing which units will be lowered.
 
-ToDo: The following paragraph is just a speculation. I still have to check it. I strongly suspect that, in the first-order case, we are not free to collect the units either in top-down or bottom-up traversal, as we were in the propositional case. Only one of them is the correct way (if we want to correctly overcome all challenges). But I still don't know which one.
+A simple way of unlocking this apparent deadlock is depicted in Algorithm \ref{algo:FOLU}. It optimistically assumes that all units with more than one child are lowerable (lines 2-3). Then it deletes the units (line 6) and tries to reintroduce them in the bottom (lines 8-19). If the reintroduction of a unit $\varphi$ fails because the descendants of the literals that had been resolved with $\varphi$'s literal are not unifiable, then $\varphi$ is removed from the queue of collected units (lines 14-16) and the whole process is repeated, inside the \emph{while} loop (lines 5-19), now without $\varphi$ among the collected units. Since in the worst case the deletion algorithm may have to be executed once for every collected unit, and the number of collected units is in the worst case linear in the length of the proof, the overall runtime complexity is in the worst case quadratic with respect to the length of the proof. This is the price paid to disentangle the dependency between unit collection and deletion in a simple way.
 
-The second challenge is much harder to overcome. In the propositional case, collecting units and deleting units can be done in two distinct phases (as shown in Algorithm \ref{algo:lu}). In the first-order case, on the other hand, these two phases seem to be so interlaced, that they appear to be in a deadlock: the decision to collect a unit to be lowered depends on what will happen with the proof after deletion, while deletion depends on knowing which units will be lowered. Therefore, there is no hope for a single-traversal first-order {\LowerUnits} algorithm generalizing \ref{algo:optLU}. The collection of units must be done in a bottom-up traversal (as in \ref{algo:LU}), so that when we have to test whether a unit $\eta$ can be lowered (in line 3), we can run the deletion algorithm to see what will happen with the root of the proof when we delete $\eta$ and all other units already collected below $\eta$. This unlocks the apparent deadlock, at the high cost of having to run the deletion algorithm once for every tested unit. The worst-case run-time complexity is, therefore, quadratic in the length of the input proof to be compressed.
+Alternatively, we could try to lower units incrementally, one at a time, always eagerly deleting the unit and reconstructing the proof immediately after it is collected. The optimistic approach of Algorithm \ref{algo:FOLU}, however, has the potential to save some deletion cycles.
+
+
+
 
 \begin{algorithm}[bt]
   \SetAlgoVlined
@@ -85,11 +98,14 @@ The second challenge is much harder to overcome. In the propositional case, coll
   \KwIn {a proof $\psi$}
   \KwOut{a compressed proof $\psi^{\star}$}
   \KwData{a map $.'$: after line 4, it maps any $\varphi$ to \Del{$\varphi$, $D$}}
+  \KwData{a map $\dl{.}$,mapping literals to changed literals,updated after every deletion}
   \BlankLine
 
-  ToDo \;
-
   \SetKwData{Units}{Units}
+
+  \SetKw{Remove} {remove}
+  \SetKw{Break} {break}
+
   \algolines{\Units $\leftarrow \varnothing$}{queue to store collected units}
   \BlankLine
 
@@ -98,16 +114,35 @@ The second challenge is much harder to overcome. In the propositional case, coll
   }
   \BlankLine
 
-  $\psi' \leftarrow $ \Del{$\psi$,$\Units$} \;
-  \BlankLine
+  \algolines{$s \leftarrow \texttt{false}$}{indicator of successful reintroduction of all units}
 
-  \tcp{Reintroduce units}
-  $\psi^{\star} \leftarrow \psi'$ \;
-  \For{every unit $\varphi$ in \Units}{
-    \Let{$\{\ell\} = \Conclusion{\varphi}$} \;
-    \lIf{$\dual{\ell} \in \Conclusion{\psi'}$}{
-    $\psi^{\star} \leftarrow \psi^{\star} \odot_\ell \varphi$}
+  \While{$\neg s$}{
+    $\psi' \leftarrow $ \Del{$\psi$,$\Units$} \;
+    \BlankLine
+
+    \tcp{Reintroduce units}
+    
+    $s \leftarrow \texttt{true}$ \;
+
+    $\psi^{\star} \leftarrow \psi'$ \;
+    \For{every unit $\varphi$ in \Units}{
+      \Let{$\{\ell\} = \Conclusion{\varphi}$} \;
+      \Let{$\{ \ell_1, \ldots, \ell_n \}$ be the literals resolved against $\ell$ in $\psi$ } \;
+      \Let{$c = \{ \dl{\ell_1},\ldots,\dl{\ell_n} \} \backslash \{ \none \}$} \;
+      \Let{$c^{\downarrow}$ be the descendants of $c$'s literals in $\Conclusion{\psi'}$} \;
+      \If{$c^{\downarrow}$'s literals are not unifiable}{
+        $s \leftarrow \texttt{false}$ \;
+        \Remove{$\varphi$ from \Units} \;
+        \tcp{interrupt the for-loop}
+        \Break \;
+      }
+      \ElseIf{$c^{\downarrow} \neq \emptyset$}{
+        \Let{$\sigma$ be the unifier of $c^{\downarrow}$'s literals and $\ell^c$ the unified literal} \;
+        $\psi^{\star} \leftarrow \con{\psi^{\star}}{c^{\downarrow}}{\sigma} \res{\ell^c}{}{\dl{\ell}}{} \varphi'$ \;
+      }
+    }
   }
+    
 
   \caption{\FOLowerUnits}
   \label{algo:FOLU}
