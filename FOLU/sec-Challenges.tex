@@ -10,7 +10,7 @@ In this section, we discuss the challenges introduced by adapting {\LowerUnits} 
 
 
 %example 1: shows requirement for pair-wise unifiability with unit
- \begin{example} Resolution with a particular unit clause $u$, with literal $\ell$ may be performed with a clause $v$ provided $v$ contains $\dual{\ell}$ and there is some unifier $\sigma$ such that $\ell\sigma$ contains the same variables as $\dual{\ell}$ (or such that $\dual{\ell}\sigma$ contains the same variables as $\ell$). After applying $\sigma$ to the resolvents, the literals match syntactically, and so this behaves like the propositional case. Thus, the notion of looking for unifiable formulas to postpone resolution with $u$ is natural. Consider the following proof of $\psi$, where we will postpone resolution with $\eta_2$:
+ \begin{example} Resolution with a particular unit clause $u$, with literal $\ell$, may be performed with a clause $v$ provided $v$ contains $\dual{\ell}$ and there is some unifier $\sigma$ such that $\ell\sigma$ contains the same variables as $\dual{\ell}$ (or such that $\dual{\ell}\sigma$ contains the same variables as $\ell$). After applying $\sigma$ to the premises, the literals match syntactically, and so this behaves like the propositional case. Thus the notion of looking for unifiable formulas to postpone resolution with $u$ is natural. Consider the following proof of $\psi$, where resolution with $\eta_2$ will be postponed:
 
 \begin{footnotesize}
 \begin{prooftree}
@@ -25,7 +25,7 @@ In this section, we discuss the challenges introduced by adapting {\LowerUnits} 
 \end{prooftree}
 \end{footnotesize}
 
-In order to postpone resolution with $\eta_2$, the formulas $p(Y)$ (in $\eta_1$) and $p(X)$ (in $\eta_4$) will both remain after unifying these two nodes together. Unlike in the propositional case, where we could drop the repeated formula, in order to compress the proof soundly, we must first contract these formulas ($\eta_3'$) into a single literal ($\eta_4'$). Then we can finish the proof by reintroducing our postponed resolution, as in below.
+In order to postpone resolution with $\eta_2$, the formulas $p(Y)$ (in $\eta_1$) and $p(X)$ (in $\eta_4$) will both remain after unifying these two nodes together. Unlike in the propositional case, where we could drop the repeated literal, in order to compress the proof soundly, we must first contract these literal ($\eta_3'$) into a single literal ($\eta_4'$). Then we can finish the proof by reintroducing our postponed unit, as in below.
 
 \begin{footnotesize}
 \begin{prooftree}
@@ -44,7 +44,7 @@ In order to postpone resolution with $\eta_2$, the formulas $p(Y)$ (in $\eta_1$)
 %example 2: shows requirement for pair-wise unifiability within all aux formulas
 
  \begin{example}\label{ex:pairwise} %The following example shows why we must check pair-wise unifiability with the literals resolved against the unit we're trying to lower. 
-When attempting to lower a unit clause in the first order case, additional properties must be satisfied. In addition to the requirement that there is a unifier $\sigma$ that makes the unit clause syntactically equal to the formula it resolves away, we require that all such  unifiers between $u$ behave similarly in some sense. Consider the example below, where we consider postponing $\eta_2$ in the proof of $\psi$. 
+When attempting to lower a unit clause in the first order case, additional properties must be satisfied. In addition to the requirement that there is a unifier $\sigma$ that makes the unit clause syntactically equal to the literal it resolves away, we require that all such  unifiers between $u$ behave similarly in some sense. Consider the example below, where we consider postponing $\eta_2$ in the proof of $\psi$. 
 
 \begin{tiny}
 \begin{prooftree}
@@ -61,17 +61,36 @@ When attempting to lower a unit clause in the first order case, additional prope
 \end{prooftree}
 \end{tiny}
 
-The literals resolved with $u = \eta_2$ are $p(a)$ (in $\eta_1$) and $p(b)$ (in $\eta_7$). If we attempt to postpone resolution, at the contraction step the clause would be $p(a),p(b)$. This clause cannot be contracted, as there is no unifier between these terms that would make their variable sets equal (in fact, there are no variables at all). Thus, it would be a waste of time to attempt to postpone resolution with $u$, and so we require any unit we wish to lower to satisfy the following property.
+The literals resolved with $u = \eta_2$ are $p(a)$ (in $\eta_1$) and $p(b)$ (in $\eta_7$). If we attempt to postpone resolution, at the contraction step the clause would be $p(a),p(b)$. This clause cannot be contracted, as there is no unifier between these terms that would make their variable sets equal (in fact, there are no variables at all). Thus it would be a waste of time to attempt to postpone resolution with $u$, and so we require any unit we wish to lower to satisfy the following property.
  \end{example}
 
 \begin{property}
-Things must be pair-wise unifiable... TODO: this? Or leave this out and talk about it section 5?
+%Things must be pair-wise unifiable... TODO: this? Or leave this out and talk about it section 5?
+Let $u$ be a unit clause with literal $\ell$, let $\dual{\ell}_1,\ldots,\dual{\ell}_n$ contained in clauses $v_1,\ldots,v_n$ be the literals that are unified with $\ell$ during resolution between $v_i$ and $u$ in the original proof. Then for every $\dual{\ell}_i$ and  $\dual{\ell}_j$ for $i\neq j$, there should be a unifier $\sigma_{i,j}$ such that after applying $\sigma_{i,j}$, $\dual{\ell}_i$ and $\dual{\ell}_j$ are syntactically equal.
 \end{property}
 
 %example 3: shows requirement for contraction check
 
  \begin{example} %The following shows why the above is not necessarily  enough (we must check the original sources of the aux formulas, and see if those can be contracted), otherwise we might not save anything.
-Although pair-wise unifiability of literals is necessary in order to achieve some compression, it is not enough. In the last example, the literals were checked as they appeared when they were to be resolved against a unit $u$ which was to be postponed. However, it may be the case that they appeared this way (had a particular set of variables) because of a series of unifiers $\sigma_1,\ldots,\sigma_n$ were applied to their original form $\ell'$ so that $\ell=\ell'\sigma_1\dots\sigma_n$ was pairwise unifiable (the last property was met) with all other literals, but these unifies $\sigma_i$ would not be applied in the case of postponing resolution with $u$ (or another unit clause). The following proof illustrates this case, where we would consider lowering $u=\eta_2$.
+Although pair-wise unifiability of literals is necessary in order to achieve some compression, it is not enough. In the last example, the literals were checked as they appeared when they were to be resolved against a unit $u$ which was to be postponed. However, it may be the case that they appeared this way (had a particular set of variables) because of a series of unifiers $\sigma_1,\ldots,\sigma_n$ were applied to their original form $\ell'$ so that $\ell=\ell'\sigma_1\dots\sigma_n$. For example,
+
+\begin{footnotesize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_1$: $\dual{\ell}',t_1,t_2$ \e}
+\AxiomC{$\eta_2$: \e $u=\ell$}
+\RightLabel{$\sigma_1$}
+\BinaryInfC{$\eta_3$:  $(\dual{\ell}'\sigma_1),(t_1\sigma_1)$ \e}
+\AxiomC{$\eta_2$}
+\RightLabel{$\sigma_2$}
+\BinaryInfC{$\eta_4$:  $\ell=((\dual{\ell}'\sigma_1)\sigma_2)$ \e}
+\AxiomC{$\eta_2$}
+\RightLabel{$\sigma_3$}
+\BinaryInfC{$\psi$: $\bot$}
+\end{prooftree}
+\end{footnotesize}
+
+Even though $\ell$ was pairwise unifiable (the last property was met) with all other literals, these unifiers $\sigma_i$ might not be applied in the case of postponing resolution with $u$ (or more generally, because another unit clause has been postponed). The following proof illustrates this concrete, where resolution $u=\eta_2$ is to be postponed.
 \begin{footnotesize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
@@ -85,15 +104,20 @@ Although pair-wise unifiability of literals is necessary in order to achieve som
 \end{prooftree}
 \end{footnotesize}
 
-Note that the formulas resolved against $u$ are $p(X~Y)$ (in $\eta_1$) and $p(U ~q(V~b))$ (in $\eta_3$). These two formulas are unifiable via the substitution $\{X\setminus U, Y\setminus q(V~b) \}$. However, if resolution with $u$ is postponed, we will not apply the unification $\{X\setminus U, Y\setminus V\}$ that is applied to $\eta_1$, and thus the descendants (the original sources) of these two formulas can no longer be unified and contracted. Thus we require descendants of resolved formulas to be pair-wise unifiable, and we call this property 2 below.
+Note that the literals resolved against $u$ are $p(X~Y)$ (in $\eta_1$) and $p(U ~q(V~b))$ (in $\eta_3$). Note that the latter is $\sigma_1 = \{X\setminus U, Y\setminus V\}$  applied to $p(X ~q(Y~b))$. These two formulas are unifiable via the substitution $\sigma_2 = \{X\setminus U, Y\setminus q(V~b) \}$. However, if resolution with $u$ is postponed, we will not apply the unification $\sigma_1$ that is applied to $\eta_1$, and thus the the original sources of these two formulas, $p(X~Y)$ and $p(X ~q(Y~b))$ can no longer be unified and contracted. Thus we require roots of resolved formulas to be pair-wise unifiable, and we call this property 2 below.
  \end{example}
 
 \begin{property}
-Descendants must be pair-wise unifiable... TODO: this? Or leave this out and talk about it section 5?
+%Descendants must be pair-wise unifiable... TODO: this? Or leave this out and talk about it section 5?
+Let $u$ be a unit clause with literal $\ell$, let $\dual{\ell}_1,\ldots,\dual{\ell}_n$ contained in clauses $v_1,\ldots,v_n$ be the literals that are unified with $\ell$ during resolution between $v_i$ and $u$ in the original proof. Let $\dual{\ell}_1^r$ be the original source of the literal $\dual{\ell}_1$, that is $\dual{\ell}_1^r\in v_{1'}$ such that there is a maximal sequence of unifications $s$ applied to $v_{1'}$ and its children in the proof so that eventually $\dual{\ell}_1=\dual{\ell}_1^r\sigma_1\ldots\sigma_s$.
+Then for every $\dual{\ell}_i^r$ and  $\dual{\ell}_j^r$ for $i\neq j$, there should be a unifier $\sigma_{i,j}$ such that after applying $\sigma_{i,j}$, $\dual{\ell}_i^r$ and $\dual{\ell}_j^r$ are syntactically equal.
 \end{property}
 
 %example 4: requires FOSubstitution, introduces this concept
-\begin{example}\label{ex:ambig} Consider the following, which shows the dangers of ambiguous resolution in the first order case:\\
+\begin{example}\label{ex:ambig} %Consider the following, which shows the dangers of ambiguous resolution in the first order case:\\
+{\bf TODO: check notation}\\
+Lastly, we note that care must be taken when lowering a valid unit in order to ensure that the proof can still be completed. In particular, postponing resolution of a clause $v$ with a unit $u$ may result in a \emph{ambiguous resolution}. A resolution is said to be ambiguous if there are more than one pair of literals $(\ell_l, \ell_r)$ with $\ell_l \in \psi_l$ and $\ell_r \in \psi_r$ such that $(\ell_l, \ell_r)$ are unifiable. %and the conclusion is not known?
+In the case of ambiguous resolution, the compression algorithm must take care to pick the appropriate pair  $(\ell_l, \ell_r)$ since either $\ell_l$ or $\ell_r$ might share variables with other literals in the premise nodes, and attempting to resolve away the wrong pair may ground (or otherwise modify) another literal $\ell'$ in such a way that $\ell'$ can no longer be unified with any other literal in the proof, resulting in the inability to complete the proof. Consider the following proof of $\psi$, where $u=\eta_2$ is the unit we want to postpone resolution with:
 \begin{tiny}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
@@ -111,12 +135,12 @@ Descendants must be pair-wise unifiable... TODO: this? Or leave this out and tal
 \end{prooftree}
 \end{tiny}
 
-Which if we lower $\eta_2$: $\vdash p(c)$, we would attempt to resolve  the following two sequents
-$$p(U),r(U~V),r(V~U),q(V)\vdash$$
-$$\vdash r(X~c)$$
-Where we would have to be careful. If we used $r(U~V)$, then we would use the unifier $U->X, V->C$, which would result in the following:
-$$p(X),r(V~X),q(c)\vdash$$
-but the original proof does not have a method for resolving away $q(c)$, so we would not be able to complete the proof. On the other hand, if we chose $r(V~U)$, we would unify with $V->X, U->c$, with which we could complete the proof:
+If we postpone $\eta_2$: $\vdash p(c)$, the first resolution in the compressed proof would be between the following two clauses:
+$$p(U),r(U~V),r(V~U),q(V)\vdash \inlineeqno$$
+$$\vdash r(X~c) \inlineeqno$$
+Both $r(U~V)$ and $r(V~U)$ are unifiable with the literal in (2), and so this resolution is ambiguous. If we used $(r(U~V),r(X~c))$, then we would use the unifier $\sigma =\{U\setminus X, V\setminus c\}$, which would result in the following resolvent clause:
+$$p(X),r(V~X),q(c)\vdash \inlineeqno$$
+However, the original proof does not have a clause which contains $q(c)$ in the succedent, so it would be impossible to complete the proof. On the other hand, if we chose $(r(V~U),r(X~c))$, we would unify with $\sigma = \{V\setminus X, U\setminus c\}$, with which we could complete the proof:
 
 \begin{tiny}
 \begin{prooftree}
@@ -133,6 +157,6 @@ but the original proof does not have a method for resolving away $q(c)$, so we w
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{tiny}
-
-A method to avoid this issue is discussed in section \ref{sec:SimpleFOLU}
+Note that this issue is not present in the propositional case since there is no unification, and resolution cannot affect any terms in a premise that are not removed during resolution. Several techniques are available to ensure the correct choice of ambiguous resolutions are always made, the simplest of which is described in Section \ref{sec:SimpleFOLU}.
+%A method to avoid this issue is discussed in section \ref{sec:SimpleFOLU}
  \end{example}
