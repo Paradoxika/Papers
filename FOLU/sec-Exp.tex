@@ -8,7 +8,7 @@ ToDo by Jan
  recursive \FuncSty{delete} improvement.
 
 %number to change - Jan
-The algorithm has been applied to {\bf 308} proofs produced by the {\SPASS}\footnote{\url{http://www.verit-solver.org/}} theorem prover on unsatisfiable benchmarks from the TPTP Problem Library\footnote{\url{http://www.cs.miami.edu/~tptp/}}. The proofs used were restricted to those which could be solved within 300 seconds by {\SPASS} on the Euler Cluster at the University of Victoria\footnote{\url{https://rcf.uvic.ca/euler.php}} using only the contraction and unifying resolution inference rules.
+The algorithm has been applied to {\bf 308} proofs produced by the {\SPASS}\footnote{\url{http://www.spass-prover.org/}} theorem prover on unsatisfiable benchmarks from the TPTP Problem Library\footnote{\url{http://www.cs.miami.edu/~tptp/}}. The proofs used were restricted to those which could be solved within 300 seconds by {\SPASS} on the Euler Cluster at the University of Victoria\footnote{\url{https://rcf.uvic.ca/euler.php}} using only the contraction and unifying resolution inference rules.
 
 For each proof $\psi$ (with the result of {\LowerUnits} applied to the proof denoted by $\alpha(\psi)$), the time to compress the proof ($t(\psi)$), the compression ratio ($(|\psi|-|\alpha(\psi)|)/|\psi|$), the resolution compression ratio  ($(|\psi|_R-|\alpha(\psi)|_R)/|\psi|_R$), the compression speed ($(|\psi|-|\alpha(\psi)|)/t(\psi)$), and resolution compression speed ($(|\psi|_R-|\alpha(\psi)|_R)/t(\psi)$) were measured\footnote{The raw data is available at \url{https://docs.google.com/spreadsheets/d/1F1-t2OuhypmTQhLU6yTj42aiZ5CqqaZvhVvOzeFgn0k/edit\#gid=1182923972}}, where $|\psi|_R$ indicates the number of resolution inference rules in the proof $\psi$.
 
