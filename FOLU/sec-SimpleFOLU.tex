@@ -29,4 +29,62 @@ TODO: Explain where the sub came from.\\
 
 TODO: define the rule formally here?\\
 
-TODO: describe when the rule is invoked in the implementation
+TODO: describe when the rule is invoked in the implementation\\
+
+A simple way to decrease the complexity to linear with respect to the length of the proof is to return to the ideas used in the propositional case. In particular, by modifying the two sweeps that propositional lower units performs on a propositional proof, an algorithm that provides some compression for first-order proofs can be obtained in linear time.
+
+\begin{algorithm}[bt]
+  \SetAlgoVlined
+  \SetAlgoShortEnd
+\SetKwFunction{check}{check}
+  \KwIn {a proof $\psi$}
+  \KwOut{a compressed proof $\psi^{\star}$}
+  \KwData{a map $.'$: after line 4, it maps any $\varphi$ to \Del{$\varphi$, $D$}}
+  \KwData{a map $\dl{.}$,mapping literals to changed literals,updated after every deletion}
+  \BlankLine
+
+  \SetKwData{Units}{Units}
+
+  \SetKw{Remove} {remove}
+  \SetKw{Break} {break}
+
+  \algolines{\Units $\leftarrow \varnothing$}{queue to store collected units and literals resolved away by each unit}
+  \BlankLine
+
+  \For{every subproof $\varphi$, in a bottom-up traversal of $\psi$}{
+    \lIf{$\varphi$ is a unit with more than one child}{enqueue $(\varphi, \ell_\varphi)$ in \Units, where $\ell_\varphi$ is the set of literals resolved away by $\varphi$}
+  }
+  \BlankLine
+
+\check{\Units} %don't include? we check 'on-the-fly'
+
+\BlankLine
+
+    $\psi' \leftarrow $ \Del{$\psi$,$\Units$} \;
+    \BlankLine
+
+    \tcp{Reintroduce units}
+    
+
+    $\psi^{\star} \leftarrow \psi'$ \;
+    \For{every unit $\varphi$ in \Units}{
+      \Let{$\{\ell\} = \Conclusion{\varphi}$} \;
+      \Let{$\{ \ell_1, \ldots, \ell_n \}$ be the literals resolved against $\ell$ in $\psi$ } \;
+      \Let{$c = \{ \dl{\ell_1},\ldots,\dl{\ell_n} \} \backslash \{ \none \}$} \;
+      \If{$c$'s literals are not unifiable}{
+        \Return{$\psi$}
+      }
+      \ElseIf{$c \neq \emptyset$}{
+        \Let{$\sigma$ be the unifier of $c$'s literals and $\ell^c$ the unified literal} \;
+        $\psi^{\star} \leftarrow \con{\psi^{\star}}{c}{\sigma} \res{\ell^c}{}{\dl{\ell}}{} \varphi'$ \;
+      }
+    }
+  
+    
+
+  \caption{Simple \FOLowerUnits}
+  \label{algo:simpleFOLU}
+\end{algorithm}
+
+The algorithm, Simple \FOLowerUnits, works similarly to the propositional case as seen in examples 1 and 2 in section 4, and forgoes the check of property 2, by not having any knowledge of the descendants of a literal. As a result, some proofs that can be compressed are not, but those that do not require this additional property can be compressed much more quickly. If a unit requires property two to be checked before lowering, Simple {\FOLowerUnits} will attempt to re-introduce this node and fail. In these cases, Simple \FOLowerUnits will return the original input proof.
+
