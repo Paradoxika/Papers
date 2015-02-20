@@ -4,34 +4,9 @@
 
 ToDo by Jan
 
-Recall example \ref{ex:ambig}. In order to avoid this, we introduce a proof rule that applies a substitution. So that we would get the following proof
+%\input{FOSubExample.tex}
 
-\begin{tiny}
-\begin{prooftree}
-\def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_1$: $p(U),r(U~V),r(V~U),q(V)$\e}
-\UnaryInfC{$\eta_2$: $p(c),r(c~V),r(V~c),q(V)$\e}
-\AxiomC{$\eta_3$: \e$r(X~c)$}
-\BinaryInfC{$\eta_4$: $p(c),r(c~X),q(X)$\e}
-\AxiomC{$\eta_5$: \e$r(W~V)$}
-\BinaryInfC{$\eta_6$: $p(c),q(V)$\e}
-\AxiomC{$\eta_7$: $p(Z)$\e$q(d)$}
-\BinaryInfC{$\eta_8$: $p(c),p(Z)$\e}
-\UnaryInfC{$\eta_9$: $p(c)$\e}
-\AxiomC{$\eta_{10}$: \e$p(c)$}
-\BinaryInfC{$\psi$: $\bot$}
-\end{prooftree}
-\end{tiny}
-
-Now $r(V, c)$ appears in the first left resolvent, which was the left aux formula in the original proof. Thus, the implementation can find that formula, and choose it in order to resolve the ambiguous resolution, instead of guessing a formula from the left resolvent that unifies with the right resolvent, which might go wrong.\\
-
-TODO: Explain where the sub came from.\\
-
-TODO: define the rule formally here?\\
-
-TODO: describe when the rule is invoked in the implementation\\
-
-A simple way to decrease the complexity to linear with respect to the length of the proof is to return to the ideas used in the propositional case. In particular, by modifying the two sweeps that propositional lower units performs on a propositional proof, an algorithm that provides some compression for first-order proofs can be obtained in linear time.
+A simple way to decrease the complexity to linear with respect to the length of the proof is to return to the ideas used in the propositional case. In particular, by modifying the two proof traversals that propositional lower units performs on a propositional proof, an algorithm that provides some compression for first-order proofs can be obtained in linear time.
 
 \begin{algorithm}[bt]
   \SetAlgoVlined
