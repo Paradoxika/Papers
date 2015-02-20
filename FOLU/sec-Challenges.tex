@@ -146,10 +146,16 @@ In the case of ambiguous resolution, the compression algorithm must take care to
 \end{footnotesize}
 
 If we postpone $\eta_2$: $\vdash p(c)$, the first resolution in the compressed proof would be between the following two clauses:
-$$p(U),r(U~V),r(V~U),q(V)\vdash \inlineeqno$$
-$$\vdash r(X~c) \inlineeqno$$
+\begin{equation}
+p(U),r(U~V),r(V~U),q(V)\vdash 
+\end{equation}
+\begin{equation}
+\vdash r(X~c) 
+\end{equation}
 Both $r(U~V)$ and $r(V~U)$ are unifiable with the literal in (2), and so this resolution is ambiguous. If we used $(r(U~V),r(X~c))$, then we would use the unifier $\sigma =\{U\setminus X, V\setminus c\}$, which would result in the following resolvent clause:
-$$p(X),r(V~X),q(c)\vdash \inlineeqno$$
+\begin{equation}
+p(X),r(V~X),q(c)\vdash
+\end{equation}
 However, the original proof does not have a clause which contains $q(c)$ in the succedent, so it would be impossible to complete the proof. On the other hand, if we chose $(r(V~U),r(X~c))$, we would unify with $\sigma = \{V\setminus X, U\setminus c\}$, with which we could complete the proof:
 
 \begin{footnotesize}
