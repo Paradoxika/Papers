@@ -10,7 +10,7 @@ In this section, we discuss the challenges introduced by adapting {\LowerUnits} 
 
 
 %example 1: shows requirement for pair-wise unifiability with unit
- \begin{example} Resolution with a particular unit clause $u$, with literal $\ell$, may be performed with a clause $v$ provided $v$ contains $\dual{\ell}$ and there is some unifier $\sigma$ such that $\ell\sigma$ contains the same variables as $\dual{\ell}$ (or such that $\dual{\ell}\sigma$ contains the same variables as $\ell$). After applying $\sigma$ to the premises, the literals match syntactically, and so this behaves like the propositional case. Thus the notion of looking for unifiable formulas to postpone resolution with $u$ is natural. Consider the following proof of $\psi$, where resolution with $\eta_2$ will be postponed:
+ \begin{example}\label{ex:unif} Resolution with a particular unit clause $u$, with literal $\ell$, may be performed with a clause $v$ provided $v$ contains $\dual{\ell}$ and there is some unifier $\sigma$ such that $\ell\sigma$ contains the same variables as $\dual{\ell}$ (or such that $\dual{\ell}\sigma$ contains the same variables as $\ell$). After applying $\sigma$ to the premises, the literals match syntactically, and so this behaves like the propositional case. Thus the notion of looking for unifiable formulas to postpone resolution with $u$ is natural. Consider the following proof of $\psi$, where resolution with $\eta_2$ will be postponed:
 
 \begin{footnotesize}
 \begin{prooftree}
@@ -65,13 +65,14 @@ The literals resolved with $u = \eta_2$ are $p(a)$ (in $\eta_1$) and $p(b)$ (in 
  \end{example}
 
 \begin{property}
+\label{prop:pair}
 %Things must be pair-wise unifiable... TODO: this? Or leave this out and talk about it section 5?
 Let $u$ be a unit clause with literal $\ell$, let $\dual{\ell}_1,\ldots,\dual{\ell}_n$ contained in clauses $v_1,\ldots,v_n$ be the literals that are unified with $\ell$ during resolution between $v_i$ and $u$ in the original proof. Then for every $\dual{\ell}_i$ and  $\dual{\ell}_j$ for $i\neq j$, there should be a unifier $\sigma_{i,j}$ such that after applying $\sigma_{i,j}$, $\dual{\ell}_i$ and $\dual{\ell}_j$ are syntactically equal.
 \end{property}
 
 %example 3: shows requirement for contraction check
 
- \begin{example} %The following shows why the above is not necessarily  enough (we must check the original sources of the aux formulas, and see if those can be contracted), otherwise we might not save anything.
+ \begin{example}\label{ex:rootpair} %The following shows why the above is not necessarily  enough (we must check the original sources of the aux formulas, and see if those can be contracted), otherwise we might not save anything.
 Although pair-wise unifiability of literals is necessary in order to achieve some compression, it is not enough. In the last example, the literals were checked as they appeared when they were to be resolved against a unit $u$ which was to be postponed. However, it may be the case that they appeared this way (had a particular set of variables) because of a series of unifiers $\sigma_1,\ldots,\sigma_n$ were applied to their original form $\ell'$ so that $\ell=\ell'\sigma_1\dots\sigma_n$. For example,
 
 \begin{footnotesize}
@@ -108,6 +109,7 @@ Note that the literals resolved against $u$ are $p(X~Y)$ (in $\eta_1$) and $p(U 
  \end{example}
 
 \begin{property}
+\label{prop:rootpair}
 %Descendants must be pair-wise unifiable... TODO: this? Or leave this out and talk about it section 5?
 Let $u$ be a unit clause with literal $\ell$, let $\dual{\ell}_1,\ldots,\dual{\ell}_n$ contained in clauses $v_1,\ldots,v_n$ be the literals that are unified with $\ell$ during resolution between $v_i$ and $u$ in the original proof. Let $\dual{\ell}_1^r$ be the original source of the literal $\dual{\ell}_1$, that is $\dual{\ell}_1^r\in v_{1'}$ such that there is a maximal sequence of unifications $s$ applied to $v_{1'}$ and its children in the proof so that eventually $\dual{\ell}_1=\dual{\ell}_1^r\sigma_1\ldots\sigma_s$.
 Then for every $\dual{\ell}_i^r$ and  $\dual{\ell}_j^r$ for $i\neq j$, there should be a unifier $\sigma_{i,j}$ such that after applying $\sigma_{i,j}$, $\dual{\ell}_i^r$ and $\dual{\ell}_j^r$ are syntactically equal.

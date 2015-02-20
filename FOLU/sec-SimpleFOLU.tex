@@ -6,7 +6,7 @@ ToDo by Jan
 
 %\input{FOSubExample.tex}
 
-A simple way to decrease the complexity to linear with respect to the length of the proof is to return to the ideas used in the propositional case. In particular, by modifying the two proof traversals that propositional lower units performs on a propositional proof, an algorithm that provides some compression for first-order proofs can be obtained in linear time.
+A simple way to decrease the complexity to linear with respect to the length of the proof is to return to the ideas used in the propositional case. In particular, by performing a traversal to collect the units of a proof, and then optimistically deleting units, some compression can often be achieved. By ignoring whether or not a unit satisfies Property \ref{prop:rootpair}, we can attempt to lower it, and should compression fail because the resulting proof was too different than the original (i.e. the deletions changed the substitutions to the point where contraction was not possible), we simply return the original proof. 
 
 \begin{algorithm}[bt]
   \SetAlgoVlined
@@ -35,7 +35,7 @@ A simple way to decrease the complexity to linear with respect to the length of 
 
 \BlankLine
 
-    $\psi' \leftarrow $ \Del{$\psi$,$\Units$} \;
+    $\psi' \leftarrow $ \FuncSty{simple-fo-delete}$(\psi,\Units)$ \;
     \BlankLine
 
     \tcp{Reintroduce units}
@@ -57,9 +57,53 @@ A simple way to decrease the complexity to linear with respect to the length of 
   
     
 
-  \caption{Simple \FOLowerUnits}
+  \caption{\SFOLowerUnits}
   \label{algo:simpleFOLU}
 \end{algorithm}
 
-The algorithm, Simple \FOLowerUnits, works similarly to the propositional case as seen in examples 1 and 2 in section 4, and forgoes the check of property 2, by not having any knowledge of the descendants of a literal. As a result, some proofs that can be compressed are not, but those that do not require this additional property can be compressed much more quickly. If a unit requires property two to be checked before lowering, Simple {\FOLowerUnits} will attempt to re-introduce this node and fail. In these cases, Simple \FOLowerUnits will return the original input proof.
+Algorithm \ref{algo:simpleFOLU} thus works similarly to the propositional algorithm.  It first performs a bottom up traversal to collect potential units and the literals that are resolved away from by those units, adding the units to a queue (line 1). As seen in Examples \ref{ex:pairwise} in Section \ref{sec:Challenges}, unification of the resolved away literals is necessary, so it performs a check to make sure these literals satisfy Property \ref{prop:pair} (line 4). If it succeeds, it attempts to re-introduce all the removed units at the bottom of the proof, where it attempts to compress the literals that would be resolved away by each unit (lines 6-15). Note that this requires the implementation to track which literals should be resolved against each unit. In order to avoid traversing the proof to find these again after the deletion of every potential unit (as is done in Algorithm \ref{algo:FOLU}), we use a modify \FuncSty{fo-delete} function, called \FuncSty{simple-fo-delete}, shown in Algorithm \ref{algo:sfodel}.
 
+\FuncSty{simple-fo-delete} is designed to reduce the complexity of tracking literals. \FuncSty{simple-fo-delete} behaves much more closely to the propositional case and requires none of the additional data structures required by \FuncSty{fo-delete}. In this function, when a unit node is returned, instead of returning the opposite node (respectively $\psi_L'$ or $\psi_R'$, line 6) in the resolution (which is done in the propositional case), or tracking the literals (which is done in \FuncSty{fo-delete}), we return the opposite node with $\sigma_L$ (respectively $\sigma_R$) applied to it. In this way, the literals not resolved with the unit will look like they would have in the original proof, and the literal which was not resolved due to the deletion looks like it is syntactically equal with the unit literal at this stage.
+
+However, that by modifying delete in this manner, we can longer guarantee that Property \ref{prop:rootpair} is satisfied.  In particular, \FuncSty{simple-fo-delete} does not guarantee the unifications after deletions are the same as they were in the original proof. \FuncSty{simple-fo-delete} line 7 does not dictate which unifier to use in the case were no deletion is present, and thus a poorly chosen unifier may be used. In particular, this may change the appearance of literals that were to be resolved away from a unit clause, preventing completion of the proof. Thus if a unit fails to satisfy Property \ref{prop:rootpair} postponing resolution, {\SFOLowerUnits} may attempt to re-introduce this node and fail. In these cases, \SFOLowerUnits will return the original input proof (line 12). As a result, some proofs that can be compressed are returned unmodified, but those that do not require this additional property can be compressed much more quickly.
+
+
+
+\begin{algorithm}[bt]
+  \SetAlgoVlined
+  \SetAlgoShortEnd
+  \KwIn{a proof $\varphi$}
+  \KwIn{$D$ a set of subproofs}
+  \KwOut{a proof $\varphi'$ obtained by deleting the subproofs in $D$ from $\varphi$}
+  \BlankLine
+
+  \newcommand{\fixL}{\ensuremath{\varphi'_L}}
+  \newcommand{\fixR}{\ensuremath{\varphi'_R}}
+
+  \lIf{$\varphi \in D$ or $\raiz{\varphi}$ has no premises}{\Return{$\varphi$}}
+  \BlankLine
+
+  \Else{$\varphi = \varphi_L \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \varphi_R$\;
+    $\varphi'_L \leftarrow $ \Rec{$\varphi_L$,$D$} \;
+    $\varphi'_R \leftarrow $ \Rec{$\varphi_R$,$D$} \;
+    \BlankLine
+
+    \lIf{$\varphi'_L \in D$}{ 
+      \Return{$($\fixR $\sigma_R)$} 
+    }
+    \lElseIf{$\varphi'_R \in D$}{ 
+      \Return{$($\fixL $\sigma_R)$}  
+    }
+    \BlankLine
+
+
+    \lElse{ 
+      \Return{ \fixL~$\res{\dl{\ell_L}}{}{\dl{\ell_R}}{}$~\fixR}
+    }
+  }
+
+
+
+  \caption[.]{\FuncSty{simple-fo-delete}}
+  \label{algo:sfodel}
+\end{algorithm}
