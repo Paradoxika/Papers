@@ -61,7 +61,14 @@ A simple way to decrease the complexity to linear with respect to the length of 
   \label{algo:simpleFOLU}
 \end{algorithm}
 
-Algorithm \ref{algo:simpleFOLU} thus works similarly to the propositional algorithm.  It first performs a bottom up traversal to collect potential units and the literals that are resolved away from by those units, adding the units to a queue (line 1). As seen in Examples \ref{ex:pairwise} in Section \ref{sec:Challenges}, unification of the resolved away literals is necessary, so it performs a check to make sure these literals satisfy Property \ref{prop:pair} (line 4). If it succeeds, it attempts to re-introduce all the removed units at the bottom of the proof, where it attempts to compress the literals that would be resolved away by each unit (lines 6-15). Note that this requires the implementation to track which literals should be resolved against each unit. In order to avoid traversing the proof to find these again after the deletion of every potential unit (as is done in Algorithm \ref{algo:FOLU}), we use a modify \FuncSty{fo-delete} function, called \FuncSty{simple-fo-delete}, shown in Algorithm \ref{algo:sfodel}.
+Algorithm \ref{algo:simpleFOLU} works similarly to the propositional algorithm.  It first performs a bottom up traversal to collect potential units and the literals that are resolved away from by those units, adding the units to a queue (line 1). As seen in Examples \ref{ex:pairwise} in Section \ref{sec:Challenges}, unification of the resolved away literals is necessary, so it performs a check to make sure these literals satisfy Property \ref{prop:pair} (line 4). If it succeeds, it attempts to re-introduce all the removed units at the bottom of the proof, where it attempts to compress the literals that would be resolved away by each unit (lines 6-15). Note that this requires the implementation to track which literals should be resolved against each unit. In order to avoid traversing the proof to find these again after the deletion of every potential unit (as is done in Algorithm \ref{algo:FOLU}), we use a modified \FuncSty{delete} function, called \FuncSty{simple-fo-delete}, which is the same as Algorithm \ref{algo:del} except with line 6 changed to the following:
+
+   \lIf{$~\varphi'_L \in D~$}{ 
+     \Return{$(\varphi'_L \sigma_R)$} 
+    }
+    \lElseIf{$\varphi'_R \in D$}{ 
+      \Return{$(\varphi'_R \sigma_R)$}  
+    }
 
 \FuncSty{simple-fo-delete} is designed to reduce the complexity of tracking literals. \FuncSty{simple-fo-delete} behaves much more closely to the propositional case and requires none of the additional data structures required by \FuncSty{fo-delete}. In this function, when a unit node is returned, instead of returning the opposite node (respectively $\psi_L'$ or $\psi_R'$, line 6) in the resolution (which is done in the propositional case), or tracking the literals (which is done in \FuncSty{fo-delete}), we return the opposite node with $\sigma_L$ (respectively $\sigma_R$) applied to it. In this way, the literals not resolved with the unit will look like they would have in the original proof, and the literal which was not resolved due to the deletion looks like it is syntactically equal with the unit literal at this stage. The fact that the other literals look like they did in the original proof is key: now resolution in the compressed proof can use the old literals, which should appear as they before, and not worry about choosing the wrong literal in case of ambiguous resolution.
 
@@ -71,41 +78,6 @@ Additionally, by modifying delete in this manner we can longer guarantee that Pr
 
 
 
-\begin{algorithm}[bt]
-  \SetAlgoVlined
-  \SetAlgoShortEnd
-  \KwIn{a proof $\varphi$}
-  \KwIn{$D$ a set of subproofs}
-  \KwOut{a proof $\varphi'$ obtained by deleting the subproofs in $D$ from $\varphi$}
-  \BlankLine
-
-  \newcommand{\fixL}{\ensuremath{\varphi'_L}}
-  \newcommand{\fixR}{\ensuremath{\varphi'_R}}
-
-  \lIf{$\varphi \in D$ or $\raiz{\varphi}$ has no premises}{\Return{$\varphi$}}
-  \BlankLine
-
-  \Else{$\varphi = \varphi_L \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \varphi_R$\;
-    $\varphi'_L \leftarrow $ \Rec{$\varphi_L$,$D$} \;
-    $\varphi'_R \leftarrow $ \Rec{$\varphi_R$,$D$} \;
-    \BlankLine
-
-    \lIf{$\varphi'_L \in D$}{ 
-      \Return{$($\fixR $\sigma_R)$} 
-    }
-    \lElseIf{$\varphi'_R \in D$}{ 
-      \Return{$($\fixL $\sigma_R)$}  
-    }
-    \BlankLine
+%\input{simple-fo-delete-full}
 
 
-    \lElse{ 
-      \Return{ \fixL~$\res{\ell_L}{}{\ell_R}{}$~\fixR}
-    }
-  }
-
-
-
-  \caption[.]{\FuncSty{simple-fo-delete}}
-  \label{algo:sfodel}
-\end{algorithm}
