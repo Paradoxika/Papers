@@ -119,7 +119,6 @@ Then for every $\dual{\ell}_i^r$ and  $\dual{\ell}_j^r$ for $i\neq j$, there sho
 
 %example 4: requires FOSubstitution, introduces this concept
 \begin{example}\label{ex:ambig} %Consider the following, which shows the dangers of ambiguous resolution in the first order case:\\
-{\bf TODO: check notation}\\
 Lastly, we note that care must be taken when lowering a valid unit in order to ensure that the proof can still be completed. In particular, postponing resolution of a clause $v$ with a unit $u$ may result in a \emph{ambiguous resolution}. A resolution is said to be ambiguous if there are more than one pair of literals $(\ell_l, \ell_r)$ with $\ell_l \in \psi_l$ and $\ell_r \in \psi_r$ such that $(\ell_l, \ell_r)$ are unifiable. %and the conclusion is not known?
 In the case of ambiguous resolution, the compression algorithm must take care to pick the appropriate pair  $(\ell_l, \ell_r)$ since either $\ell_l$ or $\ell_r$ might share variables with other literals in the premise nodes, and attempting to resolve away the wrong pair may ground (or otherwise modify) another literal $\ell'$ in such a way that $\ell'$ can no longer be unified with any other literal in the proof, resulting in the inability to complete the proof. Consider the following proof of $\psi$, where $u=\eta_2$ is the unit we want to postpone resolution with:
 \begin{footnotesize}
