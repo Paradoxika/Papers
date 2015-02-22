@@ -2,11 +2,9 @@
 \section{A Simpler First-Order LowerUnits}
 \label{sec:SimpleFOLU}
 
-ToDo by Jan
-
 %\input{FOSubExample.tex}
 
-A simple way to decrease the complexity to linear with respect to the length of the proof is to return to the ideas used in the propositional case. In particular, by performing a traversal to collect the units of a proof, and then optimistically deleting units, some compression can often be achieved. By ignoring whether or not a unit satisfies Property \ref{prop:rootpair}, we can attempt to lower it, and should compression fail because the resulting proof was too different than the original (i.e. the deletions changed the substitutions to the point where contraction was not possible), we simply return the original proof. 
+A simple way to decrease the complexity to linear with respect to the length of the proof is to return to the ideas used in the propositional case. In particular, by performing a traversal to collect the units of a proof, and then optimistically deleting units, some compression can often be achieved. By ignoring whether or not a unit satisfies Property \ref{prop:rootpair}, we can attempt to lower it, and should compression fail because deletions changed the substitutions to the point where contraction was not possible, we simply return the original proof. 
 
 \begin{algorithm}[bt]
   \SetAlgoVlined
@@ -74,7 +72,7 @@ Algorithm \ref{algo:simpleFOLU} works similarly to the propositional algorithm. 
 
 A negative side-effect of this is that we may end up grounding literals, and having to carry these forms of each literal forward, which may increase the character length of the clause, though not the number of nodes in the proof.
 
-Additionally, by modifying delete in this manner we can longer guarantee that Property \ref{prop:rootpair} is satisfied. This property was simply never checked. In particular, this may change the appearance of literals that were to be resolved away from a unit clause, preventing completion of the proof. Thus if a unit fails to satisfy Property \ref{prop:rootpair} postponing resolution, {\SFOLowerUnits} may attempt to re-introduce this node and fail. In these cases, \SFOLowerUnits will return the original input proof (line 12). As a result, some proofs that can be compressed are returned unmodified, but those that do not require this additional property can be compressed much more quickly.
+Additionally, by modifying delete in this manner we can longer guarantee that Property \ref{prop:rootpair} is satisfied. Property \ref{prop:rootpair} so the appearance of literals that were to be resolved away from a unit clause may have changed, preventing completion of the proof. If this happens {\SFOLowerUnits} will attempt to re-introduce this node and fail, returning the original input proof (line 12). As a result, some proofs that can be compressed are returned unmodified, but those that do not require this additional property can be compressed much more quickly.
 
 
 

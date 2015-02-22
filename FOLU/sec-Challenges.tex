@@ -108,7 +108,7 @@ Even though $\ell$ satisfied the last property, these unifiers $\sigma_i$ might 
 \end{prooftree}
 \end{footnotesize}
 
-Note that the literals resolved against $u$ are $p(X~Y)$ (in $\eta_1$) and $p(U ~q(V~b))$ (in $\eta_3$). Note that the latter is $\sigma_1 = \{X\setminus U, Y\setminus V\}$  applied to $p(X ~q(Y~b))$. These two formulas are unifiable via the substitution $\sigma_2 = \{X\setminus U, Y\setminus q(V~b) \}$. However, if resolution with $u$ is postponed, we will not apply the unification $\sigma_1$ that is applied to $\eta_1$, and thus the the original sources of these two formulas, $p(X~Y)$ and $p(X ~q(Y~b))$ can no longer be unified and contracted. Thus we require roots of resolved formulas to be pair-wise unifiable, and we call this property 2 below.
+Note that the literals resolved against $u$ are $p(X~Y)$ (in $\eta_1$) and $p(U ~q(V~b))$ (in $\eta_3$) and further that the latter is $\sigma_1 = \{X\setminus U, Y\setminus V\}$  applied to $p(X ~q(Y~b))$. These two formulas are unifiable via the substitution $\sigma_2 = \{X\setminus U, Y\setminus q(V~b) \}$. However, if resolution with $u$ is postponed, we will not apply the unification $\sigma_1$ that is applied to $\eta_1$, and thus the the original sources of these two formulas, $p(X~Y)$ and $p(X ~q(Y~b))$ can no longer be unified and contracted. Thus we require roots of resolved formulas to be pair-wise unifiable, and we call this property 2 below.
  \end{example}
 
 \begin{property}
