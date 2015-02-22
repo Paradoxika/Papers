@@ -14,9 +14,9 @@ For each proof $\psi$ (with the result of {\SFOLowerUnits} applied to the proof 
 
 %Figure \ref{} shows the compression time $t(\psi)$ for each proof, sorted by proof length, and figure \ref{} (respectively figure \ref{}) shows the compression speed (respectively resolution compression speed) for each proof, also sorted by proof length
 
-Figure \ref{fig:ex1} shows the average compression ratio sorted by proof length without the uncompressed proofs (left), and the average including the uncompressed proofs (right). Uncompressed proofs are those which had no valid units to lower or for which \SFOLowerUnits returned the original proof (there were 14 such proofs). In the longer proofs, there appear to be more valid units to lower, and these could reduce the number of resolutions in the proof by as much as 20\%.
+Figure \ref{fig:ex} (a) shows the average compression ratio sorted by proof length without the uncompressed proofs, and the average including the uncompressed proofs (b). Uncompressed proofs are those which had no valid units to lower or for which \SFOLowerUnits returned the original proof (there were 14 such proofs). In the longer proofs, there appear to be more valid units to lower, and these could reduce the number of resolutions in the proof by as much as 20\%.
 
-Figure \ref{fig:ex2} shows the number of proofs of each length compressed (left) and the combined number of proof nodes before and after compression. Note that there is a trend that as the length of the proof increases, a higher percentage of proofs can be compressed. This is expected, as larger proofs are more likely to include more valid unit clauses. The total number of proof nodes starts to drop of quickly once these larger proofs are accounted for. Figure \ref{fig:ex2} provides a better look at this behavior on the left; as a result of about the last 20 proofs, over 500 proof nodes are saved. Figure \ref{fig:ex2} shows the original proof length compared against the compressed proof length on the right.
+Figure \ref{fig:ex} (c) shows the number of proofs of each length compressed and the combined number of proof nodes before and after compression (e). Note that there is a trend that as the length of the proof increases, a higher percentage of proofs can be compressed. This is expected, as larger proofs are more likely to include more valid unit clauses. The total number of proof nodes starts to drop of quickly once these larger proofs are accounted for. Figure \ref{fig:ex} (f) provides a better look at this behavior on the left; as a result of about the last 20 proofs, over 500 proof nodes are saved. Figure \ref{fig:ex} (d) shows the original proof length compared against the compressed proof length on the right.
 
 % \begin{figure}
 % \includegraphics[scale=0.5]{images/compress_time_vs_proof_length.pdf}
@@ -44,14 +44,14 @@ Figure \ref{fig:ex2} shows the number of proofs of each length compressed (left)
 
 
 
-\begin{figure}
-\centering
-    \subfloat{{\includegraphics[scale=0.5]{images/compress_ratio_res_vs_proof_length.pdf}
-}}%
-    \subfloat{{\includegraphics[scale=0.5]{images/compress_ratio_res_vs_proof_length_all_proofs.pdf} }}%
-\caption{Compression ratio versus proof length without uncompressed proofs (left) and with with uncompressed proofs (right).}
-\label{fig:ex1}
-\end{figure}
+%\begin{figure}
+%\centering
+%    \subfloat{{\includegraphics[scale=0.5]{images/compress_ratio_res_vs_proof_length.pdf}
+%}}%
+%    \subfloat{{\includegraphics[scale=0.5]{images/compress_ratio_res_vs_proof_length_all_proofs.pdf} }}%
+%\caption{Compression ratio versus proof length without uncompressed proofs (left) and with with uncompressed proofs (right).}
+%\label{fig:ex1}
+%\end{figure}
 
 
 
@@ -68,14 +68,14 @@ Figure \ref{fig:ex2} shows the number of proofs of each length compressed (left)
 %\includegraphics[scale=0.5]{images/num_compressed_stacked.pdf}
 %\end{figure}
 
-\begin{figure}
-\centering
-    \subfloat{{\includegraphics[scale=0.5]{images/num_compressed_stacked.pdf}
-}}%
-    \subfloat{{\includegraphics[scale=0.5]{images/cumulative_res_nodes_no_subs.pdf} }}
-\caption{Number of proofs compressed of each length (left), and total number of nodes before and after compression (right).}
-\label{fig:ex2}
-\end{figure}
+%\begin{figure}
+%\centering
+%    \subfloat{{\includegraphics[scale=0.5]{images/num_compressed_stacked.pdf}
+%}}%
+%    \subfloat{{\includegraphics[scale=0.5]{images/cumulative_res_nodes_no_subs.pdf} }}
+%\caption{Number of proofs compressed of each length (left), and total number of nodes before and after compression (right).}
+%\label{fig:ex2}
+%\end{figure}
 
 
 % \begin{figure}
@@ -99,11 +99,14 @@ Figure \ref{fig:ex2} shows the number of proofs of each length compressed (left)
 
 \begin{figure}
 \centering
-    \subfloat{{\includegraphics[scale=0.5]{images/cumulative_res_nodes_no_subs_top100.pdf}
-}}%
-    \subfloat{{\includegraphics[scale=0.5]{images/compress_length_no_sub_vs_length_all_proofs.pdf} }}%
-\caption{Close up of total number of nodes for the 100 largest proofs (left), and compressed length compared against original proof length (right).}
-\label{fig:ex3}
+    \subfloat[Average compression (only success)]{{\includegraphics[scale=0.5]{images/compress_ratio_res_vs_proof_length.pdf} }}
+    \subfloat[Overall average compression]{{\includegraphics[scale=0.5]{images/compress_ratio_res_vs_proof_length_all_proofs.pdf} }}\hfill
+    \subfloat[Number of proofs of each length compressed]{{\includegraphics[scale=0.5]{images/num_compressed_stacked.pdf}}}
+    \subfloat[Compressed length against input length]{{\includegraphics[scale=0.5]{images/compress_length_no_sub_vs_length_all_proofs.pdf} }}\hfill
+    \subfloat[Total proof nodes]{{\includegraphics[scale=0.5]{images/cumulative_res_nodes_no_subs.pdf} }}
+    \subfloat[Node reduction resulting from 100 largest proofs]{{\includegraphics[scale=0.5]{images/cumulative_res_nodes_no_subs_top100.pdf}}}
+\caption{Empirical evaluation results.}
+\label{fig:ex}
 \end{figure}
 
 
