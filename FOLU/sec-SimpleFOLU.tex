@@ -13,7 +13,6 @@ A simple way to decrease the complexity to linear with respect to the length of 
   \KwIn {a proof $\psi$}
   \KwOut{a compressed proof $\psi^{\star}$}
   \KwData{a map $.'$: after line 4, it maps any $\varphi$ to \Del{$\varphi$, $D$}}
-  \KwData{a map $\dl{.}$,mapping literals to changed literals,updated after every deletion}
   \BlankLine
 
   \SetKwData{Units}{Units}
@@ -42,8 +41,7 @@ A simple way to decrease the complexity to linear with respect to the length of 
     $\psi^{\star} \leftarrow \psi'$ \;
     \For{every unit $\varphi$ in \Units}{
       \Let{$\{\ell\} = \Conclusion{\varphi}$} \;
-      \Let{$\{ \ell_1, \ldots, \ell_n \}$ be the literals resolved against $\ell$ in $\psi$ } \;
-      \Let{$c = \{ \dl{\ell_1},\ldots,\dl{\ell_n} \} \backslash \{ \none \}$} \;
+      \Let{$c=\{ \ell_1, \ldots, \ell_n \}$ be the literals resolved against $\ell$ in $\psi$ } \;
       \If{$c$'s literals are not unifiable}{
         \Return{$\psi$}
       }
