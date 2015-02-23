@@ -6,16 +6,18 @@
 %TODO by Jan (just writing some ideas so far--not yet final by any means)\\
 %{\bf todo: define the notion of set of literals resolved against a unit? might make things clearer}
 
-In this section, we discuss the challenges introduced by adapting {\LowerUnits} to the first-order case. The first example illustrates how to extend {\LowerUnits} to first-order logic in the obvious way. Examples \ref{ex:pairwise} and on illustrate concerns that are introduced by the unification process that must be over come in order to successfully postpone resolution with a unit clause as a result of this extension.
+In this section, we describe challenges that have to be overcome in order to successfully adapt {\LowerUnits} to the first-order case. The first example illustrates the need to take unification into account. The other three examples discuss complex issues that can arise when unification is take into account in a naive way.
 
 
 %example 1: shows requirement for pair-wise unifiability with unit
- \begin{example}\label{ex:unif} Resolution with a unit clause $u$, with literal $\ell$, may be performed with a node $v$ provided $\dual{\ell} \in \Gamma_v$ and there exists a unifier $\sigma$ of $\ell$ and $\dual{\ell}$. After applying $\sigma$ to the premises, the literals match syntactically, and this behaves like the propositional case. Thus the notion of looking for unifiable formulas to postpone resolution with $u$ is natural. Consider the following proof of $\psi$, where resolution with $\eta_2$ will be postponed:
+ \begin{example}\label{ex:unif} 
+ %Resolution with a unit clause $u$, with literal $\ell$, may be performed with a node $v$ provided $\dual{\ell} \in \Gamma_v$ and there exists a unifier $\sigma$ of $\ell$ and $\dual{\ell}$. After applying $\sigma$ to the premises, the literals match syntactically, and this behaves like the propositional case. Thus the notion of looking for unifiable formulas to postpone resolution with $u$ is natural. 
+ Consider the following proof $\psi$, and note that the unit subproof $\eta_2$ is used twice. It is resolved once with $\eta_1$ (against the literal $p(W)$ and producing the child $\eta_3$) and once with $\eta_5$ (against the literal $p(X)$ and producing the root $\psi$).
 
 \begin{footnotesize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_1$: $p(Y)$\e$q(Z)$}
+\AxiomC{$\eta_1$: $p(W)$\e$q(Z)$}
 \AxiomC{$\eta_2$: \e$p(Y)$}
 \BinaryInfC{$\eta_3$: \e$q(Z)$}
 \AxiomC{$\eta_4$: $p(X),q(Z)$\e}
@@ -25,16 +27,29 @@ In this section, we discuss the challenges introduced by adapting {\LowerUnits} 
 \end{prooftree}
 \end{footnotesize}
 
-After postponing resolution with $\eta_2$, the formulas $p(Y) \in \Gamma_{\eta_1}$ and $p(X)\in \Gamma_{\eta_4}$ will both remain as in $\eta_3'$ below. Unlike the propositional case, where repeated literals would be dropped, in order to compress the proof, we must first contract these literals into a single literal, e.g. $p(X) \in \Gamma_{\eta_4'}$. Reintroduction of $u$ completes the proof via resolution with the contracted literal.
+\noindent
+The result of deleting $\eta_2$ from $\psi$ is the proof $\dn{\psi}{\eta_2}$ shown below:
+
 \begin{footnotesize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_1'$: $p(Y)$\e$q(Z)$}
-\AxiomC{$\eta_2'$: $p(X),q(Z)$\e}
-\BinaryInfC{$\eta_3'$: $p(X),p(Y)$\e}
-\UnaryInfC{$\eta_4'$: $p(X)$\e}
-\AxiomC{$\eta_5'$: \e$p(Y)$}
-\BinaryInfC{$\psi$: $\bot$}
+\AxiomC{$\eta'_1$: $p(W)$\e$q(Z)$}
+\AxiomC{$\eta'_4$: $p(X),q(Z)$\e}
+\BinaryInfC{$\eta'_5$ ($\psi'$): $p(W), p(X)$\e}
+\end{prooftree}
+\end{footnotesize}
+
+\noindent
+Unlike the propositional case, where the literals that had been resolved against the unit are all syntactically equal, in the first-order case, this is not necessarily the case. As illustrated above, $p(W)$ and $p(X)$ are not syntactically equal. Nevertheless, they are unifiable. Therefore, in order to reintroduce $\eta'_2$, we may first perform a contraction, as shown below:
+\begin{footnotesize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_1'$: $p(W)$\e$q(Z)$}
+\AxiomC{$\eta_4'$: $p(X),q(Z)$\e}
+\BinaryInfC{$\eta_5'$: $p(X),p(Y)$\e}
+\UnaryInfC{$\con{\eta_5'}{}{}$: $p(U)$\e}
+\AxiomC{$\eta_2'$: \e$p(Y)$}
+\BinaryInfC{$\psi^{\star}$: $\bot$}
 \end{prooftree}
 \end{footnotesize}
  \end{example}
