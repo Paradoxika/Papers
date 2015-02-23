@@ -131,64 +131,64 @@ $\eta$ is said to satisfy the \emph{post-deletion unifiability property} in $\ps
 % \end{definition}
 
 
-\begin{example}\label{ex:ambig} %Consider the following, which shows the dangers of ambiguous resolution in the first order case:\\
-Lastly, we note that care must be taken when lowering a valid unit in order to ensure that the proof can still be completed. In particular, postponing resolution of a node $v$ with a unit $u$ may result in an \emph{ambiguous resolution}. A resolution is said to be ambiguous if there are more than one pair of literals $(\ell, \dual{\ell})$ with $\ell \in \Gamma_{\psi_l}$ and $\dual{\ell} \in \Gamma_{\psi_r}$ such that $(\ell, \dual{\ell})$ are unifiable. %and the conclusion is not known?
-In the case of ambiguous resolution, any compression algorithm must take care to pick the appropriate pair  $(\ell, \dual{\ell})$ since either $\ell$ or $\dual{\ell}$ might share variables with other literals in the premises, and attempting to resolve away the wrong pair may ground (or otherwise modify) another literal $\ell'$ in such a way that $\ell'$ can no longer be unified with any other literal in the proof, resulting in the inability to complete the proof. Consider the following proof of $\psi$, where resolution with $u=\eta_2$ is to be postponed:
-\begin{footnotesize}
-\begin{prooftree}
-\def\e{\mbox{\ $\vdash$\ }}
-\def\defaultHypSeparation{\hskip .05in}
+% \begin{example}\label{ex:ambig} 
+% Lastly, we note that care must be taken when lowering a valid unit in order to ensure that the proof can still be completed. In particular, postponing resolution of a node $v$ with a unit $u$ may result in an \emph{ambiguous resolution}. A resolution is said to be ambiguous if there are more than one pair of literals $(\ell, \dual{\ell})$ with $\ell \in \Gamma_{\psi_l}$ and $\dual{\ell} \in \Gamma_{\psi_r}$ such that $(\ell, \dual{\ell})$ are unifiable. %and the conclusion is not known?
+% In the case of ambiguous resolution, any compression algorithm must take care to pick the appropriate pair  $(\ell, \dual{\ell})$ since either $\ell$ or $\dual{\ell}$ might share variables with other literals in the premises, and attempting to resolve away the wrong pair may ground (or otherwise modify) another literal $\ell'$ in such a way that $\ell'$ can no longer be unified with any other literal in the proof, resulting in the inability to complete the proof. Consider the following proof of $\psi$, where resolution with $u=\eta_2$ is to be postponed:
+% \begin{footnotesize}
+% \begin{prooftree}
+% \def\e{\mbox{\ $\vdash$\ }}
+% \def\defaultHypSeparation{\hskip .05in}
 
-\AxiomC{$\eta_{2}$}
-\AxiomC{$\eta_6$: \e$r(W~V)$}
-\AxiomC{$\eta_4$: \e$r(X~c)$}
-\AxiomC{$\eta_1$: $p(U),r(U~V),r(V~U),q(V)$\e}
-\AxiomC{$\eta_2$: \e$p(c)$}
-\BinaryInfC{$\eta_3$: $r(c~V),r(V~c),q(V)$\e}
-%\AxiomC{$\eta_4$: \e$r(X~c)$}
-\BinaryInfC{$\eta_5$: $r(c~X),q(X)$\e}
-%\AxiomC{$\eta_6$: \e$r(W~V)$}
-\BinaryInfC{$\eta_7$: $q(V)$\e}
-\AxiomC{$\eta_8$: $p(Z)$\e$q(d)$}
-\insertBetweenHyps{\hskip -1.5in}
-\BinaryInfC{$\eta_9$: $p(Z)$\e}
-\insertBetweenHyps{\hskip -0.8in}
-\BinaryInfC{$\psi$: $\bot$}
-\end{prooftree}
-\end{footnotesize}
+% \AxiomC{$\eta_{2}$}
+% \AxiomC{$\eta_6$: \e$r(W~V)$}
+% \AxiomC{$\eta_4$: \e$r(X~c)$}
+% \AxiomC{$\eta_1$: $p(U),r(U~V),r(V~U),q(V)$\e}
+% \AxiomC{$\eta_2$: \e$p(c)$}
+% \BinaryInfC{$\eta_3$: $r(c~V),r(V~c),q(V)$\e}
+% %\AxiomC{$\eta_4$: \e$r(X~c)$}
+% \BinaryInfC{$\eta_5$: $r(c~X),q(X)$\e}
+% %\AxiomC{$\eta_6$: \e$r(W~V)$}
+% \BinaryInfC{$\eta_7$: $q(V)$\e}
+% \AxiomC{$\eta_8$: $p(Z)$\e$q(d)$}
+% \insertBetweenHyps{\hskip -1.5in}
+% \BinaryInfC{$\eta_9$: $p(Z)$\e}
+% \insertBetweenHyps{\hskip -0.8in}
+% \BinaryInfC{$\psi$: $\bot$}
+% \end{prooftree}
+% \end{footnotesize}
 
-If we postpone $\eta_2$: $\vdash p(c)$, the first resolution in the compressed proof would be between the following two clauses:
-\begin{equation}
-\eta_1:~p(U),r(U~V),r(V~U),q(V)\vdash 
-\end{equation}
-\begin{equation}
-\eta_4:~\vdash r(X~c) 
-\end{equation}
-Both $r(U~V)$ and $r(V~U)$ are unifiable with the literal in (2), and so this resolution is ambiguous. If we used $(r(U~V),r(X~c))$, then we would use the unifier $\sigma =\{U\setminus X, V\setminus c\}$, which would result in the following resolvent clause:
-\begin{equation}
-p(X),r(V~X),q(c)\vdash
-\end{equation}
-However, the original proof does not have a clause which contains $q(c)$ in the succedent, so it would be impossible to complete the proof. On the other hand, if we chose $(r(V~U),r(X~c))$, we would unify with $\sigma = \{V\setminus X, U\setminus c\}$, with which we could complete the proof:
+% If we postpone $\eta_2$: $\vdash p(c)$, the first resolution in the compressed proof would be between the following two clauses:
+% \begin{equation}
+% \eta_1:~p(U),r(U~V),r(V~U),q(V)\vdash 
+% \end{equation}
+% \begin{equation}
+% \eta_4:~\vdash r(X~c) 
+% \end{equation}
+% Both $r(U~V)$ and $r(V~U)$ are unifiable with the literal in (2), and so this resolution is ambiguous. If we used $(r(U~V),r(X~c))$, then we would use the unifier $\sigma =\{U\setminus X, V\setminus c\}$, which would result in the following resolvent clause:
+% \begin{equation}
+% p(X),r(V~X),q(c)\vdash
+% \end{equation}
+% However, the original proof does not have a clause which contains $q(c)$ in the succedent, so it would be impossible to complete the proof. On the other hand, if we chose $(r(V~U),r(X~c))$, we would unify with $\sigma = \{V\setminus X, U\setminus c\}$, with which we could complete the proof:
 
-\begin{footnotesize}
-\begin{prooftree}
-\def\defaultHypSeparation{\hskip .05in}
-\def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_9'$: \e$p(c)$}
-\AxiomC{$\eta_6'$: $p(Z)$\e$q(d)$}
+% \begin{footnotesize}
+% \begin{prooftree}
+% \def\defaultHypSeparation{\hskip .05in}
+% \def\e{\mbox{\ $\vdash$\ }}
+% \AxiomC{$\eta_9'$: \e$p(c)$}
+% \AxiomC{$\eta_6'$: $p(Z)$\e$q(d)$}
 
-\AxiomC{$\eta_1'$: $p(U),r(U~V),r(V~U),q(V)$\e}
-\AxiomC{$\eta_2'$: \e$r(X~c)$}
-\BinaryInfC{$\eta_3'$: $p(c),r(c~X),q(X)$\e}
-\AxiomC{$\eta_4'$: \e$r(W~V)$}
-\BinaryInfC{$\eta_5'$: $p(c),q(V)$\e}
-\insertBetweenHyps{\hskip -0.5in}
-\BinaryInfC{$\eta_7'$: $p(c),p(Z)$\e}
-\UnaryInfC{$\eta_8'$: $p(c)$\e}
-\insertBetweenHyps{\hskip -0.8in}
-\BinaryInfC{$\psi$: $\bot$}
-\end{prooftree}
-\end{footnotesize}
-Note that this issue is not present in the propositional case since there is no unification, and resolution cannot affect any terms in a premise that are not removed during resolution. In practice, this issue can be avoided by careful book keeping which would not be necessary in the propositional case. %Several techniques are available to ensure the correct choice of ambiguous resolutions are always made, the simplest of which is described in Section \ref{sec:SimpleFOLU}.
-%A method to avoid this issue is discussed in section \ref{sec:SimpleFOLU}
- \end{example}
+% \AxiomC{$\eta_1'$: $p(U),r(U~V),r(V~U),q(V)$\e}
+% \AxiomC{$\eta_2'$: \e$r(X~c)$}
+% \BinaryInfC{$\eta_3'$: $p(c),r(c~X),q(X)$\e}
+% \AxiomC{$\eta_4'$: \e$r(W~V)$}
+% \BinaryInfC{$\eta_5'$: $p(c),q(V)$\e}
+% \insertBetweenHyps{\hskip -0.5in}
+% \BinaryInfC{$\eta_7'$: $p(c),p(Z)$\e}
+% \UnaryInfC{$\eta_8'$: $p(c)$\e}
+% \insertBetweenHyps{\hskip -0.8in}
+% \BinaryInfC{$\psi$: $\bot$}
+% \end{prooftree}
+% \end{footnotesize}
+% Note that this issue is not present in the propositional case since there is no unification, and resolution cannot affect any terms in a premise that are not removed during resolution. In practice, this issue can be avoided by careful book keeping which would not be necessary in the propositional case. %Several techniques are available to ensure the correct choice of ambiguous resolutions are always made, the simplest of which is described in Section \ref{sec:SimpleFOLU}.
+% %A method to avoid this issue is discussed in section \ref{sec:SimpleFOLU}
+%  \end{example}
