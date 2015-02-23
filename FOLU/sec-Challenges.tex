@@ -1,17 +1,11 @@
 
-
-
 \section{First-Order Challenges}\label{sec:Challenges}
 
-%TODO by Jan (just writing some ideas so far--not yet final by any means)\\
-%{\bf todo: define the notion of set of literals resolved against a unit? might make things clearer}
 
 In this section, we describe challenges that have to be overcome in order to successfully adapt {\LowerUnits} to the first-order case. The first example illustrates the need to take unification into account. The other three examples discuss complex issues that can arise when unification is take into account in a naive way.
 
 
-%example 1: shows requirement for pair-wise unifiability with unit
  \begin{example}\label{ex:unif} 
- %Resolution with a unit clause $u$, with literal $\ell$, may be performed with a node $v$ provided $\dual{\ell} \in \Gamma_v$ and there exists a unifier $\sigma$ of $\ell$ and $\dual{\ell}$. After applying $\sigma$ to the premises, the literals match syntactically, and this behaves like the propositional case. Thus the notion of looking for unifiable formulas to postpone resolution with $u$ is natural. 
  Consider the following proof $\psi$, and note that the unit subproof $\eta_2$ is used twice. It is resolved once with $\eta_1$ (against the literal $p(W)$ and producing the child $\eta_3$) and once with $\eta_5$ (against the literal $p(X)$ and producing the root $\psi$).
 
 \begin{footnotesize}
@@ -40,7 +34,7 @@ The result of deleting $\eta_2$ from $\psi$ is the proof $\dn{\psi}{\eta_2}$ sho
 \end{footnotesize}
 
 \noindent
-Unlike the propositional case, where the literals that had been resolved against the unit are all syntactically equal, in the first-order case, this is not necessarily the case. As illustrated above, $p(W)$ and $p(X)$ are not syntactically equal. Nevertheless, they are unifiable. Therefore, in order to reintroduce $\eta'_2$, we may first perform a contraction, as shown below:
+Unlike in the propositional case, where the literals that had been resolved against the unit are all syntactically equal, in the first-order case, this is not necessarily the case. As illustrated above, $p(W)$ and $p(X)$ are not syntactically equal. Nevertheless, they are unifiable. Therefore, in order to reintroduce $\eta'_2$, we may first perform a contraction, as shown below:
 \begin{footnotesize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
@@ -55,15 +49,9 @@ Unlike the propositional case, where the literals that had been resolved against
  \end{example}
 
 
-%example 2: shows requirement for pair-wise unifiability within all aux formulas
+ \begin{example}\label{ex:pairwise}
 
- \begin{example}\label{ex:pairwise} %The following example shows why we must check pair-wise unifiability with the literals resolved against the unit we're trying to lower. 
-%When attempting to lower a unit clause in the first order case, additional properties must be satisfied. In addition to requiring that each resolved literal is unifiable with the unit literal, we require that all such unifiers between $u$ behave similarly in some sense.
-
-
-Given that a contraction is required to compress the proof, we require that all literals $\dual{\ell}$ be simultaneously unifiable.
-Consider the example below, where resolution with $u=\eta_2$ in the proof of $\psi$ will be postponed. 
-
+There are cases, as shown below, when the literals that had been resolved away are not unifiable, and then a contraction is not possible.
 
 \begin{footnotesize}
 \begin{prooftree}
@@ -82,67 +70,67 @@ Consider the example below, where resolution with $u=\eta_2$ in the proof of $\p
 \end{prooftree}
 \end{footnotesize}
 
-The literals resolved with $u$ are $p(a)\in \Gamma_{\eta_1}$ and $p(b)\in \Gamma_{\eta_7}$. If we attempt to postpone resolution, at the contraction step the clause would be $p(a),p(b)\vdash$; this clause cannot be contracted. Thus it would be a waste of time to attempt to postpone resolution with $u$, and so we require any unit we wish to lower to satisfy this property, which we define formally below.
+\noindent
+If we attempted to postpone the resolution inferences involving the unit $\eta_2$ (i.e. by deleting $\eta_2$ and reintroducing it with a single resolution inference in the bottom of the proof), a contraction of the literals $p(a)$ and $p(b)$ would be needed. Since these literals are not unifiable, the contraction is not possible. Note that, in principle, we could still lower $\eta_2$ if we resolved it not only once but twice when reintroducing it in the bottom of the proof. However, this would lead to no compression of the proof's length.
  \end{example}
 
-\begin{property}
+\noindent
+The observations above lead to the idea of requiring units to satisfy the following property before collecting them to be lowered.
+
+\begin{definition}
 \label{prop:pair}
-%Things must be pair-wise unifiable... TODO: this? Or leave this out and talk about it section 5?
-%Let $u$ be a unit clause with literal $\ell$, let $\dual{\ell}_1,\ldots,\dual{\ell}_n$ contained in clauses $v_1,\ldots,v_n$ be the literals that are unified with $\ell$ during resolution between $v_i$ and $u$ in the original proof. Then for every $\dual{\ell}_i$ and  $\dual{\ell}_j$ for $i\neq j$, there should be a unifier $\sigma_{i,j}$ such that after applying $\sigma_{i,j}$, $\dual{\ell}_i$ and $\dual{\ell}_j$ are syntactically equal.
-Let $u$ be a unit clause with literal $\ell$, and let $\dual{\ell}_1 \in \Gamma_{v_1},\ldots,\dual{\ell}_n \in \Gamma_{v_n}$ be the literals that are unified with $\ell$ during resolution between $v_i$ and $u$ in a proof $\psi$. 
-%Then there should be a unifier $\sigma$ such that for every $\dual{\ell}_i$, there exists a unifier of $\dual{\ell}_i$ and $\ell\sigma$.
-Then there should be a unifier $\sigma$ of  $\{\dual{\ell}_1,\ldots,\dual{\ell}_n,\ell\}$.
-\end{property}
+Let $\eta$ be a unit with literal $\ell$ and let $\eta_1$, \ldots, $\eta_n$ be subproofs that are resolved with $\eta$ in a proof $\psi$, respectively, with resolved literals $\ell_1$, \ldots, $\ell_n$. 
+$\eta$ is said to satisfy the \emph{pre-deletion unifiability property} in $\psi$ if $\ell_1$,\ldots,$\ell_n$, and $\dual{\ell}$ are unifiable.
+\end{definition}
 
-%example 3: shows requirement for contraction check
 
- \begin{example}\label{ex:rootpair} %The following shows why the above is not necessarily  enough (we must check the original sources of the aux formulas, and see if those can be contracted), otherwise we might not save anything.
-Although simultaneous unification of literals is necessary in order to achieve some compression, it may not be enough. In the last example, the literals were checked as they appeared when they were to be resolved against a unit $u$ which was to be postponed. However, it may be the case that they appeared this way (had a particular set of variables) because a series of unifiers $\sigma_1,\ldots,\sigma_n$ were applied to their original form $\dual{\ell'}$ so that $\dual{\ell}=\dual{\ell'}\sigma_1\dots\sigma_n$. For example,
+
+ \begin{example}\label{ex:rootpair}
+Satisfaction of the pre-deletion unifiability property is not enough. Deletion of the units from a proof $\psi$ may actually change the literals that had been resolved away by the units, because fewer substitutions are applied to them. This is exemplified below:
 
 \begin{footnotesize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_1$: $\dual{\ell}',t_1,t_2$ \e}
-\AxiomC{$\eta_2$: \e $\dual{t_2}$}
-\RightLabel{$\sigma_1$}
-\BinaryInfC{$\eta_3$:  $(\dual{\ell}'\sigma_1),(t_1\sigma_1)$ \e}
-\AxiomC{$\eta_4$: \e$\dual{t_1}$}
-\RightLabel{$\sigma_2$}
-\BinaryInfC{$\eta_5$:  $\dual{\ell}=((\dual{\ell}'\sigma_1)\sigma_2)$ \e}
-\AxiomC{$\eta_6$: \e $\ell$}
-\RightLabel{$\sigma_3$}
-\BinaryInfC{$\psi$: $\bot$}
-\end{prooftree}
-\end{footnotesize}
-
-Even if $u$ satisfied Property \ref{prop:pair}, the unifiers $\sigma_1$ and $\sigma_2$ might not be applied in the case of postponing resolution with $u$ (or more generally, because another unit clause has been postponed). The following proof provides a concrete example, where resolution with $u=\eta_2$ is to be postponed.
-\begin{footnotesize}
-\begin{prooftree}
-\def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_1$: $r(Y),p(X ~q(Y~b)), p(X~Y)$\e}
-\AxiomC{$\eta_2$: \e $p(U~V)$}
-\BinaryInfC{$\eta_3$: $r(V),p(U ~q(V~b))$\e}
+\AxiomC{$\eta_1$: $r(Y),p(X, q(Y, b)), p(X, Y)$\e}
+\AxiomC{$\eta_2$: \e $p(U, V)$}
+\BinaryInfC{$\eta_3$: $r(V),p(U, q(V, b))$\e}
 \AxiomC{$\eta_4$: \e $r(W)$}
-\BinaryInfC{$\eta_5$: $p(U ~q(W~b))$\e}
+\BinaryInfC{$\eta_5$: $p(U, q(W, b))$\e}
 \AxiomC{$\eta_2$}
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{footnotesize}
 
-Note that the literals resolved against $u$ are $p(X~Y)\in \Gamma_{\eta_1}$ and $p(U ~q(V~b))\in \Gamma_{\eta_3}$ and further that the latter is $\sigma_1 = \{X\setminus U, Y\setminus V\}$  applied to $p(X ~q(Y~b))$. These two formulas are unifiable via the substitution $\sigma_2 = \{X\setminus U, Y\setminus q(V~b) \}$. However, if resolution with $u$ is postponed, we will not apply the unification $\sigma_1$, and the original sources of these two formulas, $p(X~Y)\in \Gamma_{\eta_1}$ and $p(X ~q(Y~b))\in \Gamma_{\eta_1}$ can not be contracted. Thus we require roots of resolved formulas to be simultaneously unifiable, and we define this property formally below.
- \end{example}
+\noindent
+If $\eta$ is collected for lowering and deleted from $\psi$, we obtain the proof $\dn{\psi}{\eta}$:
 
-\begin{property}
+\begin{footnotesize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta'_1$: $r(Y),p(X, q(Y, b)), p(X, Y)$\e}
+\AxiomC{$\eta'_4$: \e $r(W)$}
+\BinaryInfC{$\eta'_5 (\psi')$: $p(X, q(W, b)), p(X, W)$\e}
+\end{prooftree}
+\end{footnotesize}
+
+\noindent
+Note that, even though $\eta_2$ satisfies the pre-deletion unifiability property (since $p(X, q(Y, b))$ and $p(U, q(W, b))$ are unifiable), $\eta_2$ still cannot be lowered and reintroduced by a single resolution inference, because the corresponding modified post-deletion literals $p(X, q(W, b))$ and $p(X, W)$ are actually not unifiable.
+\end{example}
+
+The observation above leads to the following stronger property:
+
+\begin{definition}
 \label{prop:rootpair}
-%Descendants must be pair-wise unifiable... TODO: this? Or leave this out and talk about it section 5?
-Let $u$ be a unit clause with literal $\ell$, let $\dual{\ell}_1\in\Gamma_{v_1},\ldots,\dual{\ell}_n\in\Gamma_{v_n}$ be the literals that are unified with $\ell$ during resolution between $v_i$ and $u$ in a proof $\psi$. Let $\dual{\ell}_1^r$ be the original source of the literal $\dual{\ell}_1$: $\dual{\ell}_1^r\in v_{1'}$ such that there is a maximal sequence of unifications $s$ applied to $v_{1'}$ and its children in the proof so that eventually $\dual{\ell}_1=\dual{\ell}_1^r\sigma_1\ldots\sigma_s$.
-%Then for every $\dual{\ell}_i^r$ and  $\dual{\ell}_j^r$ for $i\neq j$, there should be a unifier $\sigma_{i,j}$ such that after applying $\sigma_{i,j}$, $\dual{\ell}_i^r$ and $\dual{\ell}_j^r$ are syntactically equal.
-%Then for every $\dual{\ell}_i^r$ and  $\dual{\ell}_j^r$ for $i\neq j$, there should be a unifier $\sigma_{i,j}$ such that after applying $\sigma_{i,j}$, $FV(\dual{\ell}_i^r\sigma_{i,j})=FV(\dual{\ell}_j^r)$ or $FV(\dual{\ell}_i^r)=FV(\dual{\ell}_j^r\sigma_{i,j})$.
-%Then there should be a unifier $\sigma$ such that for every $\dual{\ell}_i^r$, there exists a unifier of $\dual{\ell}_i^r$ and $\ell\sigma$.
-Then there should be a unifier $\sigma$ of $\{\dual{\ell}_1^r, \ldots, \dual{\ell}_n^r, \ell\}$.
-\end{property}
+Let $\eta$ be a unit with literal $\ell_{\eta}$ and let $\eta_1$, \ldots, $\eta_n$ be subproofs that are resolved with $\eta$ in a proof $\psi$, respectively, with resolved literals $\ell_1$, \ldots, $\ell_m$. 
+$\eta$ is said to satisfy the \emph{post-deletion unifiability property} in $\psi$ if $\ell_1^{\dagger\downarrow}$,\ldots,$\ell_m^{\dagger\downarrow}$, and $\dual{\ell_{\eta}^{\dagger}}$ are unifiable, where $\ell^{\dagger}$ is the literal in $\dn{\psi}{\eta}$ corresponding to $\ell$ in $\psi$ and $\ell_k^{\dagger\downarrow}$ is the descendant of $\ell_k^{\dagger}$ in the root of $\dn{\psi}{\eta}$.
+\end{definition}
 
-%example 4: requires FOSubstitution, introduces this concept
+% \begin{definition}
+% Let $\eta$ be a unit with literal $\ell_{\eta}$ and let $\eta_1$, \ldots, $\eta_n$ be subproofs that are resolved with $\eta$ in a proof $\psi$, respectively, with resolved literals $\ell_1$, \ldots, $\ell_m$. 
+% $\eta$ is said to satisfy the \emph{ancestor unifiability property} in $\psi$ if $\ell_1^{\uparrow}$,\ldots,$\ell_m^{\uparrow}$, and $\dual{\ell_{\eta}}$ are unifiable, where $\ell^{\uparrow}$ is the highest ancestor of $\ell$ in $\psi$.
+% \end{definition}
+
+
 \begin{example}\label{ex:ambig} %Consider the following, which shows the dangers of ambiguous resolution in the first order case:\\
 Lastly, we note that care must be taken when lowering a valid unit in order to ensure that the proof can still be completed. In particular, postponing resolution of a node $v$ with a unit $u$ may result in an \emph{ambiguous resolution}. A resolution is said to be ambiguous if there are more than one pair of literals $(\ell, \dual{\ell})$ with $\ell \in \Gamma_{\psi_l}$ and $\dual{\ell} \in \Gamma_{\psi_r}$ such that $(\ell, \dual{\ell})$ are unifiable. %and the conclusion is not known?
 In the case of ambiguous resolution, any compression algorithm must take care to pick the appropriate pair  $(\ell, \dual{\ell})$ since either $\ell$ or $\dual{\ell}$ might share variables with other literals in the premises, and attempting to resolve away the wrong pair may ground (or otherwise modify) another literal $\ell'$ in such a way that $\ell'$ can no longer be unified with any other literal in the proof, resulting in the inability to complete the proof. Consider the following proof of $\psi$, where resolution with $u=\eta_2$ is to be postponed:
