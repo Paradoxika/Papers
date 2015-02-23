@@ -20,17 +20,13 @@ A simple way to decrease the complexity to linear with respect to the length of 
   \SetKw{Remove} {remove}
   \SetKw{Break} {break}
 
-  \algolines{\Units $\leftarrow \varnothing$}{queue to store collected units and literals resolved away by each unit}
+  \algolines{\Units $\leftarrow \varnothing$}{queue to store collected units}
   \BlankLine
 
   \For{every subproof $\varphi$, in a bottom-up traversal of $\psi$}{
-    \lIf{$\varphi$ is a unit with more than one child}{enqueue $(\varphi, \ell_\varphi)$ in \Units, where $\ell_\varphi$ is the set of literals resolved away by $\varphi$}
+    \lIf{$\varphi$ is a unit with more than one child and all literals of $\varphi$ are simultaneously unifiable}{enqueue $\varphi$ in \Units}
   }
   \BlankLine
-
-\check{\Units} %don't include? we check 'on-the-fly'
-
-\BlankLine
 
     $\psi' \leftarrow $ \FuncSty{simple-fo-delete}$(\psi,\Units)$ \;
     \BlankLine
@@ -47,7 +43,7 @@ A simple way to decrease the complexity to linear with respect to the length of 
       }
       \ElseIf{$c \neq \emptyset$}{
         \Let{$\sigma$ be the unifier of $c$'s literals and $\ell^c$ the unified literal} \;
-        $\psi^{\star} \leftarrow \con{\psi^{\star}}{c}{\sigma} \res{\ell^c}{}{\dl{\ell}}{} \varphi'$ \;
+        $\psi^{\star} \leftarrow \con{\psi^{\star}}{c}{\sigma} \res{\ell^c}{}{\ell}{} \varphi'$ \;
       }
     }
   

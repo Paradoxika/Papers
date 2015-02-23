@@ -70,7 +70,7 @@ The literals resolved with $u = \eta_2$ are $p(a)$ (in $\eta_1$) and $p(b)$ (in 
 \label{prop:pair}
 %Things must be pair-wise unifiable... TODO: this? Or leave this out and talk about it section 5?
 %Let $u$ be a unit clause with literal $\ell$, let $\dual{\ell}_1,\ldots,\dual{\ell}_n$ contained in clauses $v_1,\ldots,v_n$ be the literals that are unified with $\ell$ during resolution between $v_i$ and $u$ in the original proof. Then for every $\dual{\ell}_i$ and  $\dual{\ell}_j$ for $i\neq j$, there should be a unifier $\sigma_{i,j}$ such that after applying $\sigma_{i,j}$, $\dual{\ell}_i$ and $\dual{\ell}_j$ are syntactically equal.
-Let $u$ be a unit clause with literal $\ell$, let $\dual{\ell}_1,\ldots,\dual{\ell}_n$ contained in clauses $v_1,\ldots,v_n$ be the literals that are unified with $\ell$ during resolution between $v_i$ and $u$ in the original proof. Then for every $\dual{\ell}_i$ and  $\dual{\ell}_j$ for $i\neq j$, there should be a unifier $\sigma_{i,j}$ such that $FV(\dual{\ell_i}\sigma_{i,j})=FV(\dual{\ell_j})$ or $FV(\dual{\ell_i})=FV(\dual{\ell_j}\sigma_{i,j})$ 
+Let $u$ be a unit clause with literal $\ell$, let $\dual{\ell}_1,\ldots,\dual{\ell}_n$ contained in clauses $v_1,\ldots,v_n$ be the literals that are unified with $\ell$ during resolution between $v_i$ and $u$ in the original proof. Then there should be a unifier $\sigma$ such that for every $\dual{\ell}_i$, there exists a unifier $\sigma_{i}$ such that $\dual{\ell}_i\sigma_i=\ell\sigma$.
 \end{property}
 
 %example 3: shows requirement for contraction check
@@ -116,7 +116,8 @@ Note that the literals resolved against $u$ are $p(X~Y)$ (in $\eta_1$) and $p(U 
 %Descendants must be pair-wise unifiable... TODO: this? Or leave this out and talk about it section 5?
 Let $u$ be a unit clause with literal $\ell$, let $\dual{\ell}_1,\ldots,\dual{\ell}_n$ contained in clauses $v_1,\ldots,v_n$ be the literals that are unified with $\ell$ during resolution between $v_i$ and $u$ in the original proof. Let $\dual{\ell}_1^r$ be the original source of the literal $\dual{\ell}_1$, that is $\dual{\ell}_1^r\in v_{1'}$ such that there is a maximal sequence of unifications $s$ applied to $v_{1'}$ and its children in the proof so that eventually $\dual{\ell}_1=\dual{\ell}_1^r\sigma_1\ldots\sigma_s$.
 %Then for every $\dual{\ell}_i^r$ and  $\dual{\ell}_j^r$ for $i\neq j$, there should be a unifier $\sigma_{i,j}$ such that after applying $\sigma_{i,j}$, $\dual{\ell}_i^r$ and $\dual{\ell}_j^r$ are syntactically equal.
-Then for every $\dual{\ell}_i^r$ and  $\dual{\ell}_j^r$ for $i\neq j$, there should be a unifier $\sigma_{i,j}$ such that after applying $\sigma_{i,j}$, $FV(\dual{\ell}_i^r\sigma_{i,j})=FV(\dual{\ell}_j^r)$ or $FV(\dual{\ell}_i^r)=FV(\dual{\ell}_j^r\sigma_{i,j})$.
+%Then for every $\dual{\ell}_i^r$ and  $\dual{\ell}_j^r$ for $i\neq j$, there should be a unifier $\sigma_{i,j}$ such that after applying $\sigma_{i,j}$, $FV(\dual{\ell}_i^r\sigma_{i,j})=FV(\dual{\ell}_j^r)$ or $FV(\dual{\ell}_i^r)=FV(\dual{\ell}_j^r\sigma_{i,j})$.
+Then there should be a unifier $\sigma$ such that for every $\dual{\ell}_i^r$, there exists a unifier $\sigma_{i}$ such that $\dual{\ell}_i^r\sigma_i=\ell\sigma$.
 \end{property}
 
 %example 4: requires FOSubstitution, introduces this concept
