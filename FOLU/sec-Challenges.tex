@@ -10,7 +10,7 @@ In this section, we discuss the challenges introduced by adapting {\LowerUnits} 
 
 
 %example 1: shows requirement for pair-wise unifiability with unit
- \begin{example}\label{ex:unif} Resolution with a unit clause $u$, with literal $\ell$, may be performed with a node $v$ provided $v$ contains $\dual{\ell}$ and there is some unifier $\sigma$ such that $\ell\sigma)=\dual{\ell}$ (or $\ell=\dual{\ell}\sigma$). After applying $\sigma$ to the premises, the literals match syntactically, and so this behaves like the propositional case. Thus the notion of looking for unifiable formulas to postpone resolution with $u$ is natural. Consider the following proof of $\psi$, where resolution with $\eta_2$ will be postponed:
+ \begin{example}\label{ex:unif} Resolution with a unit clause $u$, with literal $\ell$, may be performed with a node $v$ provided $v$ contains $\dual{\ell}$ and there is some unifier $\sigma$ such that $\ell\sigma=\dual{\ell}$ (or $\ell=\dual{\ell}\sigma$). After applying $\sigma$ to the premises, the literals match syntactically, and so this behaves like the propositional case. Thus the notion of looking for unifiable formulas to postpone resolution with $u$ is natural. Consider the following proof of $\psi$, where resolution with $\eta_2$ will be postponed:
 
 \begin{footnotesize}
 \begin{prooftree}
@@ -25,7 +25,7 @@ In this section, we discuss the challenges introduced by adapting {\LowerUnits} 
 \end{prooftree}
 \end{footnotesize}
 
-After postponing resolution with $\eta_2$, the formulas $p(Y)$ (in $\eta_1$) and $p(X)$ (in $\eta_4$) will both remain as in$\eta_3'$ below. Unlike the propositional case, where repeated literals would be dropped, in order to compress the proof soundly, we must first contract these literals into a single literal $p(X)$ ($\eta_4'$). Reintroduction of $u$ completes the proof via resolution with the contracted literal.
+After postponing resolution with $\eta_2$, the formulas $p(Y)$ (in $\eta_1$) and $p(X)$ (in $\eta_4$) will both remain as in $\eta_3'$ below. Unlike the propositional case, where repeated literals would be dropped, in order to compress the proof soundly, we must first contract these literals into a single literal $p(X)$ ($\eta_4'$). Reintroduction of $u$ completes the proof via resolution with the contracted literal.
 \begin{footnotesize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
@@ -47,7 +47,7 @@ After postponing resolution with $\eta_2$, the formulas $p(Y)$ (in $\eta_1$) and
 
 
 Given that a contraction is required to compress the proof, we require that all literals $\dual{\ell}$ be simultaneously unifiable.
-Consider the example below, where resolution with $\eta_2$ in the proof of $\psi$ will be postponed. 
+Consider the example below, where resolution with $u=\eta_2$ in the proof of $\psi$ will be postponed. 
 
 
 \begin{footnotesize}
@@ -67,7 +67,7 @@ Consider the example below, where resolution with $\eta_2$ in the proof of $\psi
 \end{prooftree}
 \end{footnotesize}
 
-The literals resolved with $u = \eta_2$ are $p(a)$ (in $\eta_1$) and $p(b)$ (in $\eta_7$). If we attempt to postpone resolution, at the contraction step the clause would be $p(a),p(b)\vdash$; this clause cannot be contracted. Thus it would be a waste of time to attempt to postpone resolution with $u$, and so we require any unit we wish to lower to satisfy this property, which we define formally below.
+The literals resolved with $u$ are $p(a)$ (in $\eta_1$) and $p(b)$ (in $\eta_7$). If we attempt to postpone resolution, at the contraction step the clause would be $p(a),p(b)\vdash$; this clause cannot be contracted. Thus it would be a waste of time to attempt to postpone resolution with $u$, and so we require any unit we wish to lower to satisfy this property, which we define formally below.
  \end{example}
 
 \begin{property}
@@ -98,7 +98,7 @@ Although simultaneous unification of literals is necessary in order to achieve s
 \end{prooftree}
 \end{footnotesize}
 
-Even though $\ell$ satisfied the last property, these unifiers $\sigma_i$ might not be applied in the case of postponing resolution with $u$ (or more generally, because another unit clause has been postponed). The following proof provides a concrete example, where resolution with $u=\eta_2$ is to be postponed.
+Even if $\ell$ satisfied the last property, these unifiers $\sigma_i$ might not be applied in the case of postponing resolution with $u$ (or more generally, because another unit clause has been postponed). The following proof provides a concrete example, where resolution with $u=\eta_2$ is to be postponed.
 \begin{footnotesize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
