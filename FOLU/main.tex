@@ -126,31 +126,21 @@ In this paper, we initiate the process of lifting propositional proof compressio
 
 \section{Conclusions and Future Work}
 
-ToDo: by Bruno
+{\SFOLowerUnits} is our first attempt to lift a propositional proof compression algorithm to the first-order case. We consider this algorithm a prototype, useful to evaluate whether this approach is promising. The experimental results discussed in the previous section are encouraging, especially in comparison with existing results for the propositional case. In the near future, we shall seek improvements of this algorithm as well as other ways to overcome the complexity and the bookkeeping difficulties of {\FOLowerUnits}.
 
-{\LowerUnivalents}, the algorithm presented here, has been shown in the previous section to compress
-more than {\LowerUnits}. This is so because, as demonstrated in Proposition \ref{prop:compression}, the
-set of subproofs it lowers is always a superset of the set of subproofs lowered by {\LowerUnits}. It might
-be possible to lower even more subproofs by finding a characterization of (efficiently) lowerable subproofs
-broader than that of univalent subproofs considered here. This direction for future work promises to be challenging, though, as evidenced by the non-triviality of the optimizations discussed in Section \ref{sec:LUniv} for obtaining a linear-time implementation of {\LowerUnivalents}.
+The difficulties related to unit reintroduction suggest that other propositional proof compression algorithms that do not require reintroduction (e.g. {\RecyclePivotsIntersection} \cite{RPILU}) might need less sophisticated bookkeeping when lifted to first-order.
 
-
-
-As discussed in Section \ref{sec:LUnivRPI}, the proposed algorithm can be embedded in the deletion traversal of other algorithms.  As
-an example, it has been shown that the combination of {\LowerUnivalents} with {\RPI}, compared to
-the sequential composition of {\LowerUnits} after {\RPI}, results in a better compression ratio with
-only a small processing time overhead (Figure \ref{fig:LUnivRPI}). Other compression algorithms that also have a subproof
-deletion or reconstruction phase (e.g. \ReduceReconstruct) could probably benefit from being
-combined with {\LowerUnivalents} as well.
+The efficiency and versatility of contemporary automated theorem provers depend on inference rules (e.g. equality rules) and techniques (e.g. splitting) that go beyond the pure resolution calculus. The eventual generalization of the compression algorithms to support such extended calculi will be essential for their usability on a wider range of problems.
 
 %\vspace{-10pt}
 %\paragraph{Acknowledgments:}
 
 
-
-\bibliographystyle{splncs}
+\begin{footnotesize}
+%\bibliographystyle{splncs}
+\bibliographystyle{plain}
 \bibliography{biblio}
-
+\end{footnotesize}
 
 \end{document}
 
