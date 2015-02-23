@@ -65,7 +65,7 @@ Algorithm \ref{algo:simpleFOLU} works similarly to the propositional algorithm. 
 
 However, by modifying delete in this manner we can longer guarantee that Property \ref{prop:rootpair} is satisfied. The appearance of literals that were to be resolved away from a unit clause may have changed, preventing completion of the proof. If this happens {\SFOLowerUnits} will attempt to re-introduce this node and fail, returning the original input proof (line 12).As a result, some proofs that can be compressed are returned unmodified, but those that do not require this additional property can be compressed much more quickly.
 
-Alternatively, if additional unifiers do not modify the literals resolved away by a unit, those literals will still be simultaneously unifiable, and any contraction that reduces the length by as much as possible, such as one in line 7, will reduce these literals to a single literal, which will be unifiable with the unit. 
+Alternatively, if additional unifiers do not modify the literals resolved away by a unit, those literals will still be simultaneously unifiable, and any contraction that reduces the length by as much as possible, such as one found in line 7, will reduce these literals to a single literal, which will be unifiable with the unit. 
 
 
 
