@@ -62,9 +62,12 @@ There are cases, as shown below, when the literals that had been resolved away a
 \AxiomC{$\eta_2$: \e $p(X)$}
 \BinaryInfC{$\eta_3$: \e$q(Y),r(Z)$}
 \BinaryInfC{$\eta_5$: $p(b)$\e $s(Y),q(Y)$}
-\AxiomC{$\eta_6$: $s(Y), q(Y)$\e}
+\AxiomC{$\eta_6$: $s(Y)$\e}
 \insertBetweenHyps{\hskip -0.5in}
-\BinaryInfC{$\eta_7$: $p(b)$\e}
+\BinaryInfC{$\eta_7$: $p(b)$\e$q(Y)$}
+\AxiomC{$\eta_8$: $q(Y)$\e}
+\insertBetweenHyps{\hskip -0.5in}
+\BinaryInfC{$\eta_9$: $p(b)$\e}
 \insertBetweenHyps{\hskip -0.8in}
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
