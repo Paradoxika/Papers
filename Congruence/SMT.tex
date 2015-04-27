@@ -1,6 +1,6 @@
 \documentclass{easychair}
 
-\title{A note on small explanations\\ for congruence closure}
+\title{A note on small explanations\\ for congruence closure\\\small Extended abstract}
 \titlerunning{A note on congruence closure}
 
 \author{Andreas Fellner\inst{1}
@@ -10,7 +10,7 @@
 }
 \institute{ ****
 \and ***
-\and Inria, U. of Lorraine (France)}
+\and Inria, Loria, U. of Lorraine (France)}
 
 \authorrunning{Fellner et al.}
 
@@ -38,18 +38,81 @@ i.e.\ small cores from unsatisfiable sets of input literals.  Decision
 procedures for uninterpreted symbols (i.e.\ congruence closure algorithms) date
 back from the very early days of SMT.  However, to our best knowledge, the
 complexity of small explanation generation for sets of literals with
-uninterpreted symbols (and equalities) has never been properly studied.  It is
-believed that the small explanation problem for uninterpreted symbols is
-NP-complete.  We show here that NP-hardness can indeed be proved using a simple
-reduction from SAT.
+uninterpreted symbols (and equalities) has never been properly studied, but it
+is believed to be NP-complete.  We provide here a NP-hardness proof, using a
+simple reduction from SAT.
 \end{abstract}
 
 
 \section*{Introduction}
 
+~\cite{Nelson2}
+~\cite{Downey1}
+~\cite{Nieuwenhuis3}
+~\cite{Nieuwenhuis6}
+~\cite{Nieuwenhuis8}
+
+Satisfiability Modulo Theory solvers are nowadays based on a cooperation of a
+propositional satisfiability (SAT) solver and a theory reasonner for the
+combination of theories understood by the SMT solver.  The propositional
+structure of the problem is handled by the SAT solver, whereas the theory
+reasonner only has to deal with conjunctions of literals.  Very schematically
+(we refer to~\cite{Barrett14} for more details) the Boolean abstraction of the
+SMT problem is repeatedly refined by adding theory conflict clauses that
+eliminate spurious models of the abstraction, until either unsatisfiability is
+reached, or a model of the SMT formula is found.  Refinements of the abstraction
+can be done by refuting models of the abstraction one at a time.  It is however
+much more productive to refute all propositional models that are spurious for
+the same reason.  A propositional model is spurious if the corresponding set of
+concrete literals is unsatisfiable.  But a conflict clause can be build from any
+unsatisfiable core of this set of literals.  And the smaller the core, the
+better since it will refute more models: a smaller core will correspond to a
+stronger conflict clause.  In this context, an optimal unsatisfiable core is a
+minimal one, that is, an unsatisfiable set of literals such that all its proper
+subsets are satisfiable.  It is thus natural to want to extract the smallest of
+these minimal unsat cores, i.e.\ the minimum unsat core.
+
+Considering the simplest of all SMT theories, that is, the empty theory
+a.k.a. the theory of uninterpreted symbols and equality, it has been common
+knowledge that extracting minimum unsat cores is a difficult problem, whereas
+producing minimal unsat cores is polynomial.  But, to our best knowledge, the
+complexity of small explanation generation for sets of literals with
+uninterpreted symbols (and equalities) has never been properly studied.  It is
+mentionned to be NP-complete in~\cite{Nieuwenhuis8} (with a reference to a
+private communication with Ashish Tiwari), but neither the authors
+of~\cite{Nieuwenhuis8} neither Ashish Tiwari published a written proof of this
+fact.\footnote{We contacted both Ashish Tiwari and the authors
+  of~\cite{Nieuwenhuis8} to know more about it.}
+
+
+In the context of the Skeptic tool --- a software to compress proofs from
+automated provers --- we have been investigating compression of SMT proofs,
+particularly proofs 
+
+
+, simplifications of proofs
+
+
+ (and mentioned as such, and a private communication with Ashish Tiwari is mentioned
+in~\cite{Nieuwenhuis8}
+
+\section*{Notations}
+
+Propositional logic and quantifier-free first order logic with equality
+
+$S \models s=t$
+
+A literal is either a Boolean variable or the negation of a Boolean variable.
+A clause is a (disjunctive) set of literals.  A variable appears positively (negatively) in a clause if it (resp.\ its negation) belongs to the clause.
+
 \section*{Congruence closure}
 
-\section*{NP-completeness of Short Explanation Decision Problem}
+Original congruence closure algorithm~\cite{}
+
+Explanation producing algorithms~\cite{}
+
+
+\section*{NP-completeness of small explanation decision problem}
 \label{sec:npcomplete}
 
 In Section \ref{sec:congruencedef} the notion of explanation is
@@ -65,11 +128,11 @@ propositional logic formulas and assignments, we refer the reader to
 
 
 \begin{definition}[Short explanation problem]
-Let $E = \{(s_1,t_1),\ldots,(s_n,t_n)\}$ be a set of equations, 
-$k \in \mathbb{N}$ and $(s,t)$ be a target equation.  
+Let $E = \{ s_1 = t_1,\ldots, s_n = t_n\}$ be a set of equations, 
+$k \in \mathbb{N}$ and $s = t$ be a target equation.  
 The \emph{short explanation problem} is the problem of finding 
 whether there exists a set $E'$ such that $E' \subseteq E$, 
-$E' \models s \thickapprox t$ and $|E'| \leq k$.
+$E' \models s = t$ and $|E'| \leq k$.
 \end{definition}
 
 \noindent Our proof of hardness is based on a (polynomial) 
@@ -80,7 +143,7 @@ the short explanation decision problem.
 \newcommand{\Clause}{{\it Clause}}
 \newcommand{\Connect}{{\it Connect}}
 
-\begin{definition}[CNF Congruence Translation]
+\begin{definition}[CNF congruence translation]
 
 Let $\mathcal{C}$ be a set of propositional clauses $\{C_1,\ldots C_n\}$ using variables $x_1,\ldots,x_m$.
 %The set of terms $\mathcal{T}$ is constructed using the following constants and function symbols.
@@ -90,13 +153,16 @@ The congruence translation $E_{\mathcal{C}}$ of $\mathcal{C}$ is defined as the 
 \begin{equation*}
 \Connect \cup \bigcup_{1 \leq i \leq n}\Clause_i 
 \end{equation*}
-where
+with
 \begin{eqnarray*}
-	\Connect &=& \{ (\hat{c}_{i}',\hat{c}_{i+1}) \mid 1 \leq i < n\}\\
-        \Clause_i &=& \{ (\hat{c}_i, t_i(\hat{x}_j)) \mid x_j \text{ appears in } C_i \}\\
-           & & \cup\ \{ (t_i(\top_j), \hat{c}_i') \mid x_j \text{ appears positively in } C_i \}\\
-           & & \cup\ \{ (t_i(\bot_j), \hat{c}_i') \mid x_j \text{ appears negatively in } C_i \}
+	\Connect &=& \{ \hat{c}_{i}' = \hat{c}_{i+1} \mid 1 \leq i < n\}\\
+        \Clause_i &=& \{ \hat{c}_i = t_i(\hat{x}_j) \mid x_j \text{ appears in } C_i \}\\
+           & & \cup\ \{ t_i(\top_j) = \hat{c}_i' \mid x_j \text{ appears positively in } C_i \}\\
+           & & \cup\ \{ t_i(\bot_j) = \hat{c}_i' \mid x_j \text{ appears negatively in } C_i \}
 \end{eqnarray*}
+where $\hat{c}_{1},\dots \hat{c}_{n},\hat{c}_{1}', \dots \hat{c}_{n}',
+\hat{x}_1, \dots \hat{x}_m, \top_1, \dots \top_m, \bot_1, \dots \bot_m$ are distinct constants, and $t_1, \dots t_m$ are
+distinct unary functions.
 
 \end{definition}
 
@@ -123,29 +189,29 @@ $\mathcal{C}$.
 \end{example}
 
 Assignments can also be translated to sets of equations:
-\begin{definition}[Assignment Congruence Translation]
+\begin{definition}[Assignment congruence translation]
 Let $\mathcal{I}$ be an assignment on variables $x_1,\ldots,x_m$.
 %The set of terms $\mathcal{T}$ is constructed using the following constants and function symbols.
 %For every $i= 1,\ldots,n + 1$, there is a constant $\hat{c}_i$ and function symbols $t_i$ and $f_i$.
 %For every $j= 1,\ldots,m$, there are constants $\hat{x}_j$, $\top_j$ and $\bot_j$.
 The congruence translation $E_{\mathcal{I}}$ of $\mathcal{I}$ is defined as the set of equations
 \begin{eqnarray*}
-  E_{\mathcal{I}} & = & \phantom{\cup}\ \{ (\hat{x}_j,\top_j) \mid 1 \leq j \leq m \text{ and } \mathcal{I} \models x_j \} \\
-               &   & \cup\ \{ (\hat{x}_j,\bot_j) \mid 1 \leq j \leq m \text{ and } \mathcal{I} \models \neg x_j \}
+  E_{\mathcal{I}} & = & \phantom{\cup}\ \{ \hat{x}_j = \top_j \mid 1 \leq j \leq m \text{ and } \mathcal{I} \models x_j \} \\
+               &   & \cup\ \{ \hat{x}_j = \bot_j \mid 1 \leq j \leq m \text{ and } \mathcal{I} \models \neg x_j \}
 \end{eqnarray*}
 For convenience, we also define the set
 \begin{equation*}
-  \Assignment^\star = \{ (\hat{x}_j,\top_j), (\hat{x}_j,\bot_j) \mid 1 \leq j \leq m\}.
+  \Assignment^\star = \{ \hat{x}_j = \top_j, \hat{x}_j = \bot_j \mid 1 \leq j \leq m\}.
 \end{equation*}
 \end{definition}
 \noindent
-The congruence translation of an assigment is always a subset of the set
+The congruence translation of an assigment is always a subset of
 $\Assignment^\star$.  By abuse of language, a subset of $\Assignment^\star$ is
 said to be an assignment if it is the congruence translation of an assignment,
-that is, if it does not contain both $(\hat{x}_j,\top_j)$ and
-$(\hat{x}_j,\bot_j)$ for some $j$.
+that is, if it does not contain both $\hat{x}_j = \top_j$ and $\hat{x}_j =
+\bot_j$ for some $j$.
 
-\begin{example}\label{ex:np2} (Example~\ref{ex:np1} continued).\\
+\begin{example}\label{ex:np2} (Example~\ref{ex:np1} continued)  
 Consider the model $\mathcal{I} = \{x_1, \neg x_2, x_3\}$ of $\mathcal{C}$.
 Figure~\ref{fig:npassignment} gives a graphical representation of
 $E_{\mathcal{I}}$, whereas $\Assignment^\star$ is described by
@@ -177,7 +243,7 @@ This is actually the aim of the construction.
 \label{lemma:eqv}
 Consider a (partial or total) assignment $\mathcal{I}$ for a set of clauses
 $\mathcal{C}= \{C_1, \dots C_n\}$.  $\mathcal{I} \models \mathcal{C}$ if and only if
-$E_{\mathcal{I}} \cup E_\mathcal{C} \models \hat{c}_1 \thickapprox \hat{c}'_n$.
+$E_{\mathcal{I}} \cup E_\mathcal{C} \models \hat{c}_1 = \hat{c}'_n$.
 \end{lemma}
 \begin{proof}
 The condition is sufficient.  Consider the congruence graph induced by
@@ -192,15 +258,15 @@ The condition is also necessary.  If $\mathcal{I} \models \mathcal{C}$, then
 $\mathcal{I} \models C_i$ for each clause $C_i \in \mathcal{C}$.  Assume
 $\mathcal{I}$ makes true a variable $x_j$, literal of $C_i$ (the case of
 negation of a variable is handled similarly).  Then $E_{\mathcal{I}} \models
-t_i(\hat{x}_j) \thickapprox t_i(\top_j)$, and $E_{\mathcal{I}} \cup \Clause_i
-\models \hat{c}_i \thickapprox \hat{c}_i'$.  This is true for each $i$, and
+t_i(\hat{x}_j) = t_i(\top_j)$, and $E_{\mathcal{I}} \cup \Clause_i
+\models \hat{c}_i = \hat{c}_i'$.  This is true for each $i$, and
 thanks to the equations in \Connect, one can deduce using transitivity that
-$E_{\mathcal{I}} \cup E_\mathcal{C} \models \hat{c}_1 \thickapprox \hat{c}_n'$.
+$E_{\mathcal{I}} \cup E_\mathcal{C} \models \hat{c}_1 = \hat{c}_n'$.
 \end{proof}
 
 \noindent Notice also that, for any model $\mathcal{I}$ of a set of $n$ clauses
 $\mathcal{C}$, every explanation that $E_{\mathcal{I}} \cup E_\mathcal{C}
-\models \hat{c}_1 \thickapprox \hat{c}_n'$ contains at least two equalities in
+\models \hat{c}_1 = \hat{c}_n'$ contains at least two equalities in
 each set $\Clause_i$, since each clause has to be satisfied.  But also, there is
 an explanation that contains exactly two equalities in each set $\Clause_i$.
 Considering again Example~\ref{ex:np2}, and particularly
@@ -213,7 +279,7 @@ and 2 edges from $\Connect$.
 Since every interpretation $\mathcal{I}$ is such that $E_{\mathcal{I}} \subset
 \Assignment^\star$, one can try to relate the propositional satisfiability
 problem for a set of clauses $\mathcal{C}= \{C_1, \dots C_n\}$ to finding an
-explanation of $\hat{c}_1 \thickapprox \hat{c}_n'$ in $\Assignment^\star \cup
+explanation of $\hat{c}_1 = \hat{c}_n'$ in $\Assignment^\star \cup
 E_{\mathcal{C}}$.  However, it is necessary that this explanation does not set
 $\hat{x}_j$ equal both to $\top_j$ and $\bot_j$, i.e.\ at most one of the two
 equations $(\hat{x}_j,\top_j)$ and $(\hat{x}_j,\bot_j)$ should be in the
@@ -228,19 +294,19 @@ explanation.
 \begin{lemma}
 A set of clauses $\mathcal{C}= \{C_1, \dots C_n\}$ using variables $x_1,\dots
 x_m$ is satisfiable if and only if there is a subset $E' \subseteq
-\Assignment^\star \cup E_{\mathcal{C}'}$ such that $E'\models \hat{c}_1
-\thickapprox \hat{c}'_{n+m}$ and $|E'| \leq 3n+4m-1$, where $\mathcal{C}'$ is
-$\mathcal{C}$ augmented with the tautological clauses $c_{n+i} = x_i \vee \neg
-x_i$ for $i=1,\dots m$.
+\Assignment^\star \cup E_{\mathcal{C}'}$ such that $E'\models \hat{c}_1 =
+\hat{c}'_{n+m}$ and $|E'| \leq 3n+4m-1$, where $\mathcal{C}'$ is $\mathcal{C}$
+augmented with the tautological clauses $c_{n+i} = x_i \vee \neg x_i$ for
+$i=1,\dots m$.
 \end{lemma}
 \begin{proof}
 The condition is straightforwardly necessary.  It is also sufficient since an
-explanation of $\hat{c}_1 \thickapprox \hat{c}'_{n+m}$ has to contain $2(n + m)$
+explanation of $\hat{c}_1 = \hat{c}'_{n+m}$ has to contain $2(n + m)$
 equations from $Clause_i$ ($i= 1\dots n + m$) and $n + m - 1$ equations from
 $\Connect$.  Thanks to the tautological clauses, any explanation also has to
 contain at least $(\hat{x}_j,\top_j)$ or $(\hat{x}_j,\bot_j)$ for each
 $j\in\{1\dots m\}$. Therefore, the cardinality constraint requires that the explanation
-contain at most one $(\hat{x}_j,\top_j)$ or $(\hat{x}_j,\bot_j)$ for each
+contains at most one $(\hat{x}_j,\top_j)$ or $(\hat{x}_j,\bot_j)$ for each
 $j\in\{1\dots m\}$.  If such an explanation exists, Lemma~\ref{lemma:eqv}
 guarantees the existence of a model for $\mathcal{C'}$, or equivalently for
 $\mathcal{C}$.
@@ -253,6 +319,10 @@ $\mathcal{C}$.
 \label{lemma:nphardness}
 The short explanation decision problem is NP-hard.
 \end{corollary}
+\begin{proof}
+Propositional satisfiability is NP-hard, and can be reduced in polynomial time
+to the short explanation decision problem.
+\end{proof}
 
 \begin{lemma}[NP]
 \label{lemma:innp}
@@ -260,7 +330,7 @@ The short explanation decision problem is in NP.
 \end{lemma}
 \begin{proof}
 Explanations are subsets of the input equations, therefore they are clearly
-polynomial in the problem size.  The congruence of two terms, i.e. verifying
+polynomial in the problem size.  The congruence of two terms, i.e.\ verifying
 that a subset is actually an explanation, can be decided in polynomial
 time\marginpar{be more precise}\marginpar{bruno:citation needed?} using classical congruence closure algorithms.
 \end{proof}
@@ -273,5 +343,16 @@ The short explanation decision problem is NP-complete.
 
 \section*{Conclusion}
 
+Minimal versus minimum.  Minimal is not complex
+
+Besson PxTP
+
+~\cite{Fontaine1}
+
+We would like to thank Roberto Nieuwenhuis and Ashish Tiwari for the discussion
+and some preliminary ideas that lead us to this proof.
+
+\bibliographystyle{plain}
+\bibliography{biblio}
 
 \end{document}
