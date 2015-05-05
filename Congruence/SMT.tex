@@ -8,8 +8,8 @@
    \and\\ Georg Hofferek
    \and Bruno Woltzenlogel Paleo
 }
-\institute{ ****
-\and ***
+\institute{ IST-Austria, Klosterneuburg (Austria)
+\and Vienna University of Technology (Austria)
 \and Inria, Loria, U. of Lorraine (France)}
 
 \authorrunning{Fellner et al.}
@@ -32,13 +32,13 @@
 \maketitle
 
 \begin{abstract}
-The efficiency of Satisfiability Modulo Theories (SMT) solvers is extremely
+The efficiency of Satisfiability Modulo Theories (SMT) solvers is
 dependent on the capability of theory reasoners to provide small explanations,
-i.e.\ small cores from unsatisfiable sets of input literals.  Decision
+i.e.\ small subsets from unsatisfiable sets of literals. Decision
 procedures for uninterpreted symbols (i.e.\ congruence closure algorithms) date
-back from the very early days of SMT.  However, to our best knowledge, the
+back from the very early days of SMT. Nevertheless, to our best knowledge, the
 complexity of small explanation generation for sets of literals with
-uninterpreted symbols (and equalities) was never been properly studied, but was believed to be NP-complete.  We provide here a NP-hardness proof, using a
+uninterpreted symbols and equalities had not yet been determined, although it was believed to be NP-complete. We provide here an NP-hardness proof, using a
 simple reduction from SAT.
 \end{abstract}
 
@@ -49,52 +49,36 @@ simple reduction from SAT.
 ~\cite{Downey1}
 ~\cite{Nieuwenhuis3}
 ~\cite{Nieuwenhuis6}
-~\cite{Nieuwenhuis8}
 ~\cite{Nieuwenhuis9}
 
 Satisfiability Modulo Theory solvers are nowadays based on a cooperation of a
-propositional satisfiability (SAT) solver and a theory reasonner for the
-combination of theories understood by the SMT solver.  The propositional
+propositional satisfiability (SAT) solver and a theory reasoner for the
+combination of theories understood by the SMT solver. The propositional
 structure of the problem is handled by the SAT solver, whereas the theory
-reasonner only has to deal with conjunctions of literals.  Very schematically
+reasoner only has to deal with conjunctions of literals.  Very schematically
 (we refer to~\cite{Barrett14} for more details) the Boolean abstraction of the
 SMT problem is repeatedly refined by adding theory conflict clauses that
 eliminate spurious models of the abstraction, until either unsatisfiability is
 reached, or a model of the SMT formula is found.  Refinements of the abstraction
-can be done by refuting models of the abstraction one at a time.  It is however
+can be done by refuting models of the abstraction one at a time.  It is, however,
 much more productive to refute all propositional models that are spurious for
-the same reason.  A propositional model is spurious if the corresponding set of
-concrete literals is unsatisfiable.  But a conflict clause can be build from any
-unsatisfiable core of this set of literals.  And the smaller the core, the
-better since it will refute more models: a smaller core will correspond to a
-stronger conflict clause.  In this context, an optimal unsatisfiable core is a
-minimal one, that is, an unsatisfiable set of literals such that all its proper
-subsets are satisfiable.  It is thus natural to want to extract the smallest of
-these minimal unsat cores, i.e.\ the minimum unsat core.
+the same reason.  A propositional model is spurious if the set of
+concrete literals corresponding to the abstracted literals satisfied by the model is unsatisfiable. By taking the disjunction of the negations of any subset of this unsatisfiable set of literals, a conflict clause can be built. By backtracking and asserting the conflict clause, the SAT-solver is prevented from generating the spurious model again. The smaller the clause, the stronger it is and the more spurious models it prevents. Therefore, an optimal conflict clause, corresponding to a minimal unsatisfiable subset of literals (i.e. an such that all its proper subsets are satisfiable) or even a minimum one (i.e. smallest among the minimals) is desirable.
 
-Considering the simplest of all SMT theories, that is, the empty theory
-a.k.a. the theory of uninterpreted symbols and equality, it has been common
-knowledge that extracting minimum unsat cores is a difficult problem, whereas
-producing minimal unsat cores is polynomial.  But, to our best knowledge, the
-complexity of small explanation generation for sets of literals with
-uninterpreted symbols (and equalities) has never been properly studied.  It is
-mentionned to be NP-complete in~\cite{Nieuwenhuis8} (with a reference to a
+For the simplest of all SMT theories, which is the theory of uninterpreted symbols and equality, it has been common
+knowledge that extracting minimum conflict clauses is a difficult problem, whereas
+producing minimal conflict clauses is polynomial (TODO: polynomial w.r.t. what?)~\cite{ToDo}.  But, to our best knowledge, the
+complexity of small conflict clause generation for sets of literals with
+uninterpreted symbols and equalities has never been established. It is
+mentioned to be NP-complete in~\cite{Nieuwenhuis8} (with a reference to
 private communication with Ashish Tiwari), but neither the authors
-of~\cite{Nieuwenhuis8} neither Ashish Tiwari published a written proof of this
-fact.\footnote{We contacted both Ashish Tiwari and the authors
-  of~\cite{Nieuwenhuis8} to know more about it.}
+of~\cite{Nieuwenhuis8} nor Ashish Tiwari published a written proof of this
+fact\footnote{We contacted both Ashish Tiwari and the authors
+  of~\cite{Nieuwenhuis8} to know more about it.}.
+
+Our interest in this problem arose from our work on Skeptik \cite{SkeptikSystemDescription}, a tool for the compression of proofs generated by SAT and SMT solvers. For the sake of moving beyond the purely propositional level, we have developed an algorithm for compressing congruence closure proofs, which consists of regenerating (possibly smaller) congruence closure conflict clauses while traversing the proof. Congruence closure conflict clauses are typically generated from paths in the \emph{congruence graph} maintained by the congruence closure algorithm \cite{ToDo}. During the replay, we use a polynomial-time algorithm for searching for short paths in the congruence graph, which is a modification of Dijkstra's shortest path algorithm \cite{ToDo}. This raised the question whether our algorithm could find the shortest conflict clauses, as Dijkstra's algorithm finds shortest paths. We answered this question negatively by proving that the problem of deciding whether a short conflict clause is NP-hard. The goal of this short note is to present this proof.
 
 
-In the context of the Skeptic tool --- a software to compress proofs from
-automated provers --- we have been investigating compression of SMT proofs,
-particularly proofs 
-
-
-, simplifications of proofs
-
-
- (and mentioned as such, and a private communication with Ashish Tiwari is mentioned
-in~\cite{Nieuwenhuis8}
 
 \section*{Notations}
 
@@ -110,6 +94,9 @@ A clause is a (disjunctive) set of literals.  A variable appears positively (neg
 Original congruence closure algorithm~\cite{}
 
 Explanation producing algorithms~\cite{}
+
+Define ``explanation".
+
 
 
 \section*{NP-completeness of small explanation decision problem}
@@ -350,7 +337,7 @@ Besson PxTP
 ~\cite{Fontaine1}
 
 We would like to thank Roberto Nieuwenhuis and Ashish Tiwari for the discussion
-and some preliminary ideas that lead us to this proof.
+and some preliminary ideas that led us to this proof.
 
 \bibliographystyle{plain}
 \bibliography{biblio}
