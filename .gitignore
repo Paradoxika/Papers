@@ -36,3 +36,4 @@
 *.fls
 *.temp
 *.make
+*Private*
