@@ -1,0 +1,331 @@
+%\documentclass[envcountsame]{llncs}
+\documentclass{llncs}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{graphicx}
+\usepackage{caption}
+%\usepackage{subcaption}
+\usepackage{pdflscape}
+%\usepackage{algorithm2e}
+\usepackage{multicol}
+\usepackage{subfig}
+\usepackage{xspace}
+
+\usepackage{bussproofs}
+\usepackage{proof}
+\usepackage{url}
+
+\usepackage{fancybox}
+\usepackage{fancyvrb}
+
+% Sequent Calculus Proof Settings
+\EnableBpAbbreviations
+\def\fCenter{\mbox{\ $\vdash$\ }}
+\newcommand{\rl}[1]{\RightLabel{#1}}
+
+\usepackage{commands}
+
+\newif\ifcomments
+\commentstrue
+%\commentsfalse   % gobble comments, set for final version
+
+\ifcomments
+  \newcommand{\paf}[1]{\par\noindent{\sf PF: #1}\par\medskip}
+  \newcommand{\dd}[1]{\par\noindent{\sf DD: #1}\par\medskip}
+  \newcommand{\bw}[1]{\par\noindent{\sf BW: #1}\par\medskip}
+  \newcommand{\sm}[1]{\par\noindent{\sf SM: #1}\par\medskip}
+  \newcommand{\PAF}[1]{\marginpar{\footnotesize{\sf PF: #1}}}
+  \newcommand{\DD}[1]{\marginpar{\footnotesize{\sf DD: #1}}}
+  \newcommand{\BW}[1]{\marginpar{\footnotesize{\sf BW: #1}}}
+  \newcommand{\SM}[1]{\marginpar{\footnotesize{\sf SM: #1}}}
+\else
+  \newcommand{\paf}[1]{}
+  \newcommand{\dd}[1]{}
+  \newcommand{\bw}[1]{}
+  \newcommand{\sm}[1]{}
+  \newcommand{\PAF}[1]{}
+  \newcommand{\DD}[1]{}
+  \newcommand{\BW}[1]{}
+  \newcommand{\SM}[1]{}
+\fi
+
+
+\title{
+  Implementation and Evaluation of \\ 
+  Contextual Natural Deduction \\
+  for Minimal Logic
+%  \thanks{Supported by the Austrian Science Foundation (FWF) project P22028.}
+}
+
+\author{
+  Bruno Woltzenlogel Paleo%\inst{1,2}
+}
+
+\authorrunning{
+B.\~Woltzenlogel Paleo}
+
+\institute{
+  Theory and Logic Group \\ 
+  Vienna University of Technology \\ 
+  Vienna, Austria \\
+  \email{bruno@logic.at}
+}
+
+% ===========================================================================
+
+
+
+\newcommand{\RPlong}{\texttt{RecyclePivots}}
+\newcommand{\RPIlong}{\texttt{RecyclePivotsWithIntersection}}
+\newcommand{\LUlong}{\texttt{LowerUnits}}
+
+\newcommand{\RP}{\texttt{RP}}
+\newcommand{\RPI}{\texttt{RPI}}
+\newcommand{\LU}{\texttt{LU}}
+
+\newcommand{\VeriT}{\texttt{VeriT}\xspace}
+\newcommand{\Skeptik}{\texttt{Skeptik}\xspace}
+
+
+\newenvironment{calculus}
+{\begin{center}\begin{Sbox}\begin{minipage}{0.9\textwidth}}
+{\end{minipage}\end{Sbox}\fbox{\TheSbox}\end{center}}
+
+
+\newcommand{\tP}[1]{\xi[#1]}
+\newcommand{\tN}[1]{\zeta[#1]}
+\newcommand{\eS}{\epsilon}
+
+\newcommand{\AtPosition}{\textrm{At}}
+
+\renewcommand{\defEq}{=}
+
+% ===========================================================================
+
+\begin{document}
+
+\maketitle
+
+\newcommand{\ND}{$\textbf{ND}$\xspace}
+\newcommand{\NDd}{$\textbf{ND}^\textbf{c}$\xspace}
+\newcommand{\lc}{\lambda^c}
+
+\begin{abstract}
+The \emph{contextual} natural deduction calculus ({\NDd}) extends the usual natural deduction calculus ({\ND}) by allowing the implication introduction and elimination rules to operate on formulas that occur inside contexts. It has been shown that, asymptotically in the best case, {\NDd}-proofs can be quadratically smaller than the smallest {\ND}-proofs of the same theorems. In this paper we describe the first implementation of a theorem prover for minimal logic based on {\NDd}. Furthermore, we empirically compare it to an equally simple {\ND} theorem prover on thousands of randomly generated conjectures.
+\end{abstract}
+
+
+\section{Introduction}
+
+\emph{Natural deduction} was introduced by Gentzen in \cite{Gentzen1934Untersuchungen-uber-das-logische-Schliesen} and one of its distinguishing features is that the meaning of a logical connective is determined by elimination and introduction rules, and not by axioms. As a result, formal natural deduction proofs are considered to be similar in structure to their informal counterparts and hence more \emph{natural}. This subjective claim is corroborated by the observation that widely used proof assistants\footnote{e.g. Isabelle {\scriptsize (\url{www.cl.cam.ac.uk/research/hvg/Isabelle/})} and Coq {\scriptsize (\url{http://coq.inria.fr})}.} 
+follow a natural deduction style.
+
+However, as exemplified in \cite{NDc}, the inference rules of natural deduction style calculi 
+can be inconvenient, lengthy and ultimately unnatural for formalizing reasoning steps that modify a deeply located subformula of a formula, such as: skolemization, double negation elimination, quantifier shifting, prenexification\ldots  \ Because these deep reasoning steps are commonly used by automated deduction tools during preprocessing of the theorem to be proved, the resulting proofs may contain deep inferences \cite{DeharbeFontaineWoltzenlogel-Paleo2011Quantifier-Inference-Rules-in-the-Proof-Format-of-VeriT}. Therefore, automatically replaying (i.e. reproving) these proofs in proof assistants (e.g. when an automated deduction tool is integrated within a proof assistant \cite{BohmeNipkow2010Sledgehammer:-Judgement-Day}) can be inefficient in terms of proving time and size of the generated shallow proof.
+
+These challenges motivated the invention (in \cite{NDc}) of the \emph{contextual natural deduction calculus} (\NDd), which is a simple extension of the usual natural deduction calculus (here called {\ND}) allowing introduction and elimination rules to operate on formulas occurring inside contexts. The goals in \cite{NDc} were purely theoretical. It was shown that {\NDd} is sound and complete, that proofs can be normalized, and that some proofs can be quadratically smaller than the smallest proofs of the same theorem in the usual natural deduction calculus. In contrast, the main goal of the work reported in the present paper is to evaluate {\NDd} empirically. This is important, because asymptotic proof-complexity results can be misleading when the assymptotic behaviour they describe for particular worst cases or best cases is not observed in cases that occur most often in practice.
+
+{\NDd} can be regarded not only from a theorem proving perspective but also from a \emph{proof compression} point of view: a given {\ND}-proof $\psi$ could be compressed by transforming it to a smaller {\NDd}-proof. Since every {\ND}-proof is also an {\NDd}-proof, a straightforward proof compression algorithm could simply try to reprove $\psi$'s theorem using an {\NDd} theorem prover.
+
+The implementation of prototypical theorem provers based on {\ND} and {\NDd} within the {\Skeptik} framework (\url{github.com/Paradoxika/Skeptik}) %\cite{SkeptikSystemDescription}
+is discussed in Section \ref{sec:Implementation}. These provers are restricted to minimal logic (intuitionistic logic having only the implication connective). Although it would be straightforward to extend the contextual techniques to inference rules for other connectives as well, the restriction to minimal logic implies less implementation effort and is sufficient to estimate how promising the idea of contextual natural deduction might be in practice. An experimental infra-structure, including a random formula generator, also had to be implemented, as briefly described in Section \ref{sec:ExperimentalSetup}. The experimental results are shown and analyzed in Section \ref{sec:Results}.
+
+
+\medskip
+
+\noindent\textbf{Related work:} due to the increasing maturity of automated deduction tools, there has been a lot of recent work on the development of algorithms for simplifying the generated proofs in a post-processing phase. These methods have focused mostly on propositional resolution proofs output by SAT- and SMT-solvers so far, %\cite{RP,RPILU,Luniv,RedRec,Split}, 
+but generalizations to first-order resolution have been proposed as well. %\cite{FOLU}. 
+There are also algorithms aimed at compressing and structuring sequent calculus proofs by eliminating or introducing cuts \cite{Woltzenlogel-Paleo2010Atomic-Cut-Introduction-by-Resolution:-Proof-Structuring-and-Compression,HetzlLeitschWeller2012Towards-Algorithmic-Cut-Introduction} or by extracting Herbrand sequents from proofs.% \cite{HerbrandSequent}. 
+\cite{NDc} is probably the first work considering, from a theoretical perspective, the compressibility of natural deduction proofs, and the present paper reports the first realization of this idea in practice. Contextual inferences have a lot in common with the related idea of \emph{deep inference}, which has been intensively investigated in the last decade, especially for classical logic (e.g. \cite{Brunnler2003Atomic-Cut-Elimination-for-classical-Logic,BruscoliGuglielmiGundersenParigot2010A-Quasipolynomial-Cut-Elimination-Procedure-in-Deep-Inference-via-Atomic-Flows-and-Threshold-Formulae,BruscoliGuglielmi2009On-the-Proof-Complexity-of-Deep-Inference,Guglielmi1999A-System-of-Interaction-and-Structure}) but also for intuitionistic logic \cite{Tiu2006A-Local-System-for-Intuitionistic-Logic,BruennlerMcKinley2008An-Algorithmic-Interpretation-of-a-Deep-Inference-System,Guenot2011Nested-proof-search-as-reduction-in-the-Lambda-calculus}. Despite the technical differences, deep inference calculi were an inspiration for the development of contextual natural deduction.
+
+
+
+\section{Contextual Natural Deduction}
+\label{section:DeepND}
+
+\newcommand{\CurryHoward}{\mathcal{I}}
+\newcommand{\C}{\mathcal{C}}
+
+In this paper a \emph{derivation} is a tree of inferences (instances of the inference rules), operating on sequents of the form $\Gamma \seq t: T$, where $\Gamma$ is a (possibly empty) set of named \emph{hypotheses} $h_1: H_1, \ldots, h_n: H_n$, $t$ is a (contextual) lambda term (whose free variables are among the names in $\Gamma$ and whose bound variables are assumed to have unique names) and $T$ is a minimal logic formula (or equivalently, by the Curry-Howard isomorphism, the type of $t$). A derivation $\psi$ is a \emph{proof} of a theorem $T$ if and only if its leaves are axiom inferences and it ends in $\seq t: T$, for some term $t$. Figure \ref{figure:NDd} shows the inference rules of the \emph{contextual natural deduction calculus} {\NDd} along with a corresponding extension of the lambda calculus. {\NDd} extends {\ND} by allowing the inference rules to operate on subformulas located deeply inside the premises. The notation $\C_{\pi}[F]$ indicates a formula that has the subformula $F$ in position $\pi$. $\C_{\pi}[\_]$ is called the \emph{context} of $F$ in the formula $\C_{\pi}[F]$. A \emph{position} $\pi$ is encoded as a binary string indicating the path from the root of $\C_{\pi}[F]$ to $F$ in the tree structure of $\C_{\pi}[F]$; thus, a subformula at position $\pi$ of a formula $P$, denoted $\AtPosition_{\pi}(P)$, can be retrieved by traversing the formula according to the following inductive definition:
+$$
+\AtPosition_{\eS}(A) \defEq A 
+\qquad
+\AtPosition_{0\pi}(A \imp B) \defEq \AtPosition_{\pi}(B) 
+\qquad
+\AtPosition_{1\pi}(A \imp B) \defEq \AtPosition_{\pi}(A)
+$$
+A position is said to be \emph{positive} (\emph{negative}) if and only if it contains an even (odd) number of digits $1$. In other words, in the tree structure of a formula, a node and its left (right) child always occupy positions with opposite (same) polarities, and the root position is positive. Moreover, a position is \emph{strongly positive} if and only if it does not contain any digit $1$. {\NDd} has two implication elimination rules because the contexts can be combined in two different ways. The usual natural deduction calculus {\ND} can be considered a restriction of {\NDd} enforcing empty contexts. For convenience, the rules of {\ND} are shown in the appendix.
+
+
+\begin{figure}[h!]
+\begin{calculus}
+\begin{center}
+\textbf{Note:} $\pi$, $\pi_1$ and $\pi_2$ must be positive positions.
+\end{center}
+\begin{prooftree}
+\AXC{$ $} \RightLabel{$ $}
+\UIC{$ \Gamma, a: A \seq a: A$}
+\end{prooftree}
+\begin{prooftree}
+\AXC{$ \Gamma, a: A \seq b: \C_{\pi}[B]$} \RightLabel{$\imp_I (\pi)$}
+\UIC{$ \Gamma \seq \lambda_{\pi} a^A. b : \C_{\pi}[A \imp B]$}
+\end{prooftree}
+\vspace{-15pt}
+\begin{center}
+\begin{tiny}
+\textbf{Contextual Soundness Condition:} \\ \vspace{-5pt}
+$a$ is allowed to occur in $b$ only if $\pi$ is strongly positive.
+\end{tiny}
+\end{center}
+\begin{prooftree}
+\AXC{$ \Gamma \seq f: \C^1_{\pi_1}[A \imp B]$}
+		\AXC{$ \Gamma \seq a: \C^2_{\pi_2}[A]$} \RightLabel{$\imp_E^{\rightharpoonup} (\pi_1;\pi_2)$}
+	\BIC{$ \Gamma \seq (f \ a)^{\rightharpoonup}_{(\pi_1;\pi_2)} : \C^1_{\pi_1}[\C^2_{\pi_2}[B]]$}
+\end{prooftree}
+\begin{prooftree}
+\AXC{$ \Gamma \seq f: \C^1_{\pi_1}[A \imp B]$} 
+		\AXC{$ \Gamma \seq a: \C^2_{\pi_2}[A]$}\RightLabel{$\imp_E^{\leftharpoonup} (\pi_1;\pi_2)$}
+	\BIC{$ \Gamma \seq (f \ a)^{\leftharpoonup}_{(\pi_1;\pi_2)} : \C^2_{\pi_2}[\C^1_{\pi_1}[B]]$}
+\end{prooftree}
+\end{calculus}
+\caption{The contextual natural deduction calculus \NDd}
+\label{figure:NDd}
+\end{figure}
+
+
+
+
+% \begin{example}
+% \label{example}
+% \begin{tiny}
+% \begin{prooftree}
+% \AXC{$a: \ldots \seq a: (\neg \neg A \imp B) \imp C $} \RightLabel{$\imp_E$}
+%     \AXC{$c : \ldots \seq c: A \imp B$}
+% 	  \AXC{$ \seq dne: \neg \neg A \imp A$} 
+% 		  \AXC{$d: \ldots \seq d: \neg \neg A$}  \RightLabel{$\imp_E$}
+% 	      \BIC{$ d: \ldots \seq (dne \ d): A$} \RightLabel{$\imp_E$}
+% 	\BIC{$ d: \ldots, c: \ldots \seq (c \ (dne \ d)): B$} \RightLabel{$\imp_I$}
+% 	\UIC{$ c: \ldots \seq \lambda d^{\neg \neg A}.(c \ (dne \ d)): \neg \neg A \imp B$} \RightLabel{$\imp_E$}
+%   \BIC{$ a: \ldots, c: \ldots \seq (a \ \lambda d.(c \ (dne \ d))): C$} \RightLabel{$\imp_I$}
+%   \UIC{$ a: (\neg \neg A \imp B) \imp C \seq \lambda c^{A\imp B}. (a \ \lambda d.(c \ (dne \ d))): (A \imp B) \imp C$}
+% \end{prooftree}
+% \end{tiny}
+% \hfill\QED
+% \end{example}
+
+
+
+
+
+\section{Implementation}
+\label{sec:Implementation}
+
+Implementation was done in \texttt{Scala}, leveraging and extending the {\Skeptik} proof compression library. %\cite{Skeptik}. 
+Although {\Skeptik}'s original focus was on propositional resolution proofs, the addition of data structures for natural deduction was easy and required no refactoring, because {\Skeptik} has always taken advantage of \texttt{Scala}'s object-orientation features to be agnostic with respect to proof systems. 
+
+In {\Skeptik}, inference rules are classes. In order to increase the confidence on the correctness of inference rules, each rule class includes correctness checking code and is kept as small as possible. The 3 classes for the {\ND} rules are only 13 lines long. The single class \texttt{ImpElimC} for the two contextual implication elimination rules has 17 lines and the soundness condition for the \texttt{ImpIntroC} rule is a 10-line long trait. To the extent that these few lines of code are trusted, any proof constructed using these inference rules is correct. Any code that is not essential to the rule is written not in the class but in its companion object.
+
+The class \texttt{SimpleProver} implements a theorem prover that is generic in the sense that it takes arbitrary (companion objects of) inferences rules and then performs bottom-up proof search using the given inference rules. For each open goal, the prover tries all inference rules in a bottom-up manner in parallel, generating all possible subgoals. Then it recursively tries to prove the subgoals in parallel. When returning from the recursion, the prover chooses the smallest subproof among all alternative subproofs returned by the recursive calls. This exhaustive search strategy is appropriate in the context of proof compression, where the goal is to find small proofs not necessarily as fast as possible. The depth of the recursion is bounded by the maximum proof height specified as a parameter of \texttt{SimpleProver}.
+
+The companion objects of the inference rules implement a standard interface, which provides methods that generate subgoals as required by the prover and reconstruct the proof when the subgoals are proved. In the case of {\ND}'s implication elimination rule, when generating subgoals for a goal of the form $\Gamma \seq B$, it is necessary to guess a formula $A$ in order to generate the subgoals $\Gamma_1 \seq A \imp B$ and $\Gamma_2 \seq A$. Exhaustively guessing all possible formulas would be inefficient. Instead, the rule searches for hypotheses of the form $D_1 \imp (\ldots \imp (D_k \imp B)\ldots)$ in $\Gamma$ and then generates the subgoals $\Gamma \seq (D_k \imp B)$ and $\Gamma \seq D_k$. Although proof search is still complete under this restriction, the proofs it finds are always normalized. Consequently, a proof found by this procedure is not necessarily the smallest possible proof, because sometimes non-normal proofs can be smaller. In the case of {\NDd} rules, the generation of subgoals is complicated further by the need to take positions into account. For a goal of the form $\Gamma \seq F$, the contextual implication elimination rule first searches for all positive positions $\pi_1$ and $\pi_2$ such that $F = \C_{\pi_1}[\C_{\pi_2}[B]]$ for some $B$. Then it searches for a hypothesis of the form $\C_{\pi_1}[D_1 \imp (\ldots \imp (D_k \imp B)\ldots)]$ (or $\C_{\pi_2}[D_1 \imp (\ldots \imp (D_k \imp B)\ldots)]$) and, if it succeeds, it generates the subgoals $\Gamma \seq \C_{\pi_1}[(D_k \imp B)]$ and $\Gamma \seq \C_{\pi_2}[D_k]$ (or, respectively, $\Gamma \seq \C_{\pi_2}[(D_k \imp B)]$ and $\Gamma \seq \C_{\pi_1}[D_k]$).
+
+
+\section{Experimental Setup}
+\label{sec:ExperimentalSetup}
+
+In order to evaluate the provers, a random formula generator was implemented. It takes a desired size $s$ and a desired number of distinct atomic formulas $q$ as input. Then it generates a list of length $s$ containing $q$ distinct atomic formulas. The list is grown recursively, and at each iteration, every atomic formula is equally likely to be selected. At this stage, care is taken to avoid generating formulas that are isomorphic modulo variable renaming (e.g. $A \imp B$, $B \imp A$, $A \imp C$, \ldots; only $B \imp A$ can be generated). Subsequently, the generator transforms this list into a minimal logic formula by recursively introducing implications at random positions in the list. The positions are equally likely to be selected (i.e. $A \imp (A \imp A)$ and $(A \imp A) \imp A$ are equally probable to be generated).
+
+The experiments varied the value of $s$ from 3 to 15 and the value of $q$ from 1 to $s-1$. For each pair of values $(s,q)$, 1000 formulas were generated, except for small values of $s$ and $q$, for which there are less than 1000 distinct formulas that could be generated. In total, 76755 formulas were generated.
+
+For each generated formula $f$, the {\ND} prover with a timeout of 30 seconds and a maximum proof height of 20. The {\NDd} prover, on the other hand, had a timeout of 300 seconds and a maximum proof height of $h + 1$, where $h$ is the height of proof of $f$ found by the {\ND} prover. The larger timeout was chosen because {\NDd}'s contextual rules clearly result in a larger search space, with more subgoals to try. With the larger timeout, it is possible to measure the impact of the larger search space in the proof search time.
+
+
+\section{Results of the Experiments}
+\label{sec:Results}
+
+30127 formulas were proved by the {\ND} prover. 46628 formulas were shown to be countersatisfiable by the {\ND} prover, because it terminated before the timeout exhausting the proof search space without finding a proof. There was no case of timeout for the {\ND} prover. There were 533 cases of timeout for the {\NDd} prover.
+
+Among the 29594 formulas on which both provers were successful, 2557 (8.49\%) had shorter proofs in {\NDd} than in {\ND}. The total length of the {\NDd}-proofs was 2.97\% lesser than the total length of the proofs found by the {\ND} prover on all 29594 formulas. The total length of the {\NDd}-proofs was 27.8\% lesser than the total length of the {\ND}-proofs on the 2557 proofs that admit shorter {\NDd} proofs.
+
+In Figure \ref{fig:Scatter}, each dot represents a generated formula and its position indicates the length of the proof found by each prover. Overlapped dots are shown as darker dots. In the standard box-whiskers plot of Figure \ref{fig:BoxWhiskers}, formulas have been grouped by the length of their {\ND}-proofs. For each group, the chart shows the median length of {\NDd}-proofs, as well as the quantiles, fences and outliers. This chart, together with the bar charts in Figure \ref{fig:barcharts} indicate a dependence of the compressibility of proofs on the length. Figure \ref{fig:ProportionByLength} shows that the proportion of formulas that admit shorter {\NDd}-proofs (i.e. whose {\ND}-proofs could be compressed to shorter {\NDd}-proofs) tends to grow with the length of the {\ND}-proofs. In a larger proof, the likelihood of an opportunity for compression is greater; however, the compression might be less significant in comparison to the proof length, as indicated by the decreasing trend in Figure \ref{fig:CompressionByLength}.
+
+The 3D-charts in Figure \ref{fig:3D} shed further light on what influences the proportion of formulas that admit shorter {\NDd}-proofs and the total compression ratios (including all 29594 formulas). The proportion of formulas admitting shorter {\NDd}-proofs (and their total compression ratios) is higher the lower the number of distinct atoms they contain and the larger they are. The depths\footnote{$\mathrm{depth}(A) = 1$, for an atomic $A$; $\mathrm{depth}(B \imp C) = \mathrm{max}(\mathrm{depth}(B), \mathrm{depth}(C)) + 1$.} of the formulas also seem to play a role, with greater compression proportions and total compression ratios for intermediary depth values.
+
+Figure \ref{fig:Time} (which takes into account all 76755 formulas) shows that the {\ND} prover rarely took longer than 10 milliseconds on a formula. Surprisingly, the {\NDd} prover was faster than the {\ND} prover in the majority of the cases (46733 formulas; 60.88\%), probably due to the stricter upper-bound on proof height. However, when the {\NDd} prover was slower, it tended to be significantly slower, as shown in the Figure. 
+
+\begin{figure}[!ht]
+        \centering
+        \subfloat[\label{fig:Scatter}]{ \includegraphics[width=0.45\textwidth]{Charts/Scatter.pdf}}
+        
+        \subfloat[\label{fig:BoxWhiskers}]{ \includegraphics[width=0.4\textwidth]{Charts/BoxWhiskers.pdf}}
+        \hfill
+        \subfloat[\label{fig:Time}]{ \includegraphics[width=0.5\textwidth]{Charts/Time.png}}
+        \caption{}\label{fig:charts}
+\end{figure}
+
+\begin{figure}[!ht]
+        \centering
+        \subfloat[\label{fig:ProportionByLength}]{ \includegraphics[width=0.45\textwidth]{Charts/ProportionByLength.pdf}}
+        \hfill
+        \subfloat[\label{fig:CompressionByLength}]{ \includegraphics[width=0.45\textwidth]{Charts/CompressionByLength.pdf}}
+        \caption{Bar Charts}\label{fig:barcharts}
+\end{figure}
+
+\begin{figure}[!ht]
+        \centering
+        \subfloat[\label{fig:3DSyzeSymbolsCompression}]{ \includegraphics[width=0.45\textwidth]{Charts/3DSizeSymbolsProportion.png}}
+        \hfill
+        \subfloat[\label{fig:3DSizeDepthProportion}]{ \includegraphics[width=0.45\textwidth]{Charts/3DSizeDepthProportion.png}}
+
+        \subfloat[\label{fig:3DSizeSymbolsCompression}]{ \includegraphics[width=0.45\textwidth]{Charts/3DSizeSymbolsCompression.png}}
+        \hfill
+        \subfloat[\label{fig:3DSizeDepthProportion}]{ \includegraphics[width=0.45\textwidth]{Charts/3DSizeDepthCompression.png}}
+        \caption{proportion of compressed proofs and total compression ratio as functions of formula size, formula depth and number of distinct atoms.}\label{fig:3D}
+\end{figure}
+
+
+\section{Conclusions}
+
+The empirical investigation reported in this paper confirms the expectation that {\NDd} can provide shorter proofs in a significant number of cases. This complements and strengthens the previous asymptotic complexity theorem proved in \cite{NDc}, which showed the {\NDd}-proofs could be quadratically shorter than {\ND}-proofs for one particular sequence of proofs. The price to pay for shorter proofs is currently a much longer proving time.
+
+
+\begin{small}
+%\vspace{-10pt}
+\bibliographystyle{plain}
+\bibliography{Bibliography}
+%\bibliography{../../../PaperDatabase/Bibliography}
+\end{small}
+
+\clearpage
+
+\appendix
+
+\section{Appendix}
+\label{appendix}
+
+\begin{figure}
+\begin{calculus}
+\begin{prooftree}
+\AXC{$ $} \RightLabel{$ $}
+\UIC{$ \Gamma, a: A \seq a: A$}
+\end{prooftree}
+\begin{prooftree}
+\AXC{$ \Gamma, a: A \seq b: B$} \RightLabel{$\imp_I$}
+\UIC{$ \Gamma \seq \lambda a^A. b : A \imp B$}
+\end{prooftree}
+\begin{prooftree}
+\AXC{$ \Gamma \seq f: A \imp B $}
+    \AXC{$ \Gamma \seq a: A$} \RightLabel{$\imp_E$}
+  \BIC{$ \Gamma \seq (f \ a) : B$}
+\end{prooftree}
+\end{calculus}
+\caption{The natural deduction calculus \ND}
+\label{figure:ND}
+\end{figure}
+
+
+\end{document}
