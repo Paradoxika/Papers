@@ -348,10 +348,9 @@ to the short explanation decision problem.
 The short explanation decision problem is in NP.
 \end{lemma}
 \begin{proof}
-Explanations are subsets of the input equations, therefore they are clearly
-polynomial in the problem size.  The congruence of two terms, i.e.\ verifying
-that a subset is actually an explanation, can be decided in polynomial
-time\marginpar{be more precise}\marginpar{bruno:citation needed?} using classical congruence closure algorithms.
+A solution to the short explanation decision problem is a subsets of the input equations, therefore it is are clearly polynomial in the problem size.  
+Whether a given subset is a solution can be verified by computing its congruence closure and checking whether the target terms are in the same congruence class.
+Congruence closure can be computed in polynomial time \cite{Nelson2,Downey1,Nieuwenhuis6}.
 \end{proof}
 
 Lemmas~\ref{lemma:nphardness} and~\ref{lemma:innp} thus establish:
@@ -363,6 +362,15 @@ The short explanation decision problem is NP-complete.
 \section*{Conclusion}
 
 Besson PxTP
+Obtaining short explanations for congruence of terms is an interesting subroutine of the classical congruence closure problem.
+Explanations are a form of a proof of the congruence of two terms, and generally short proofs are more desirable than large ones.
+We show that the problem of finding the shortest explanation is NP - complete in general.
+Therefore, it is infeasible to obtain the shortest explanation always.
+
+In \cite{Nieuwenhuis3,Nieuwenhuis9} methods to obtain short, but not necessary the shortest, explanations are discussed.
+However, the proof tree data structure they use is designed towards speed of the congruence closure algorithm.
+Other methods to obtain short explanations still have to be investigated.
+An encoding of the short explanation problem into SAT could provide the shortest explanation for small instances and might turn out to be a good approach also for larger ones.
 
 We would like to thank Roberto Nieuwenhuis and Ashish Tiwari for the discussion
 and some preliminary ideas that led us to this proof.
