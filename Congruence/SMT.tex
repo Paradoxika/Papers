@@ -70,12 +70,13 @@ Therefore, an optimal conflict clause, corresponding to a minimal unsatisfiable
 subset of literals (i.e.\ such that all its proper subsets are satisfiable) or
 even a minimum one (i.e.\ smallest among the minimals) is desirable.  This
 feature of the theory reasoners to \emph{generate small conflict sets} (a name
-adopted in~\cite{Barrett14}) from their input is also called \emph{proof
+adopted in~\cite{Barrett14}) from their input is also referred by \emph{proof
 production}~\cite{Nieuwenhuis3,Nieuwenhuis9} or \emph{explanation
-generation}~\cite{Nieuwenhuis6}.\marginpar{TODO: This footnote is vague. I would suggest removing it. ``unuseful'' doesn't exist, but ``useless'' would sound too strong. }\footnote{\emph{Proof production} and \emph{explanation
-  generation} additionally convey the idea that, besides giving a small
-  unsatisfiable subset, the valuable reasoning process can be isolated from the
-  unuseful computation.}
+generation}~\cite{Nieuwenhuis6}.
+%% \marginpar{TODO: This footnote is vague. I would suggest removing it. ``unuseful'' doesn't exist, but ``useless'' would sound too strong. }\footnote{\emph{Proof production} and \emph{explanation
+%%   generation} additionally convey the idea that, besides giving a small
+%%   unsatisfiable subset, the valuable reasoning process can be isolated from the
+%%   unuseful computation.}
 
 Decision procedures for the theory of uninterpreted symbols and equality can be
 based on congruence closure~\cite{Nelson2,Downey1,Nieuwenhuis6}.  The decision problem is polynomial
@@ -102,12 +103,29 @@ Our interest in this problem arose from our work on Skeptik \cite{Boudou1}, a to
 
 \section*{Notations}
 
-Propositional logic and quantifier-free first order logic with equality
+We assume knowledge of propositional logic and quantifier-free first order logic
+with equality.  
+
+%TODO Propositional logic studies formulas written  $\vee$, $\wedge$, $\neg$
+A literal is either a propositional variable or the negation of a propositional
+variable.  A clause is a disjunctive set of literals.  A propositional variable
+$x$ appears positively (negatively) in a clause $C$ if $x \in C$ (resp.\ $\neg x
+\in C$).  The notations $\{\ell_1, \dots \ell_n\}$ and $\ell_1 \vee \dots
+\ell_n$ will be used interchangeably.  A formula in conjunctive normal form (CNF
+for short) is a conjunctive set of clauses.  A total (partial) assignment $\cal
+I$ for a formula in propositional logic associates a value in $\{\top, \bot\}$
+to every (resp.\ some) propositional variable in the formula.  An assignemnt
+$\cal I$ a formula $F$ is a model of $F$, noted ${\cal I}\models F$, if it makes
+the formula $F$ true.  A total or partial assignement can be perfectly defined
+by the set of literals it makes true.  By default, an assignment is total unless
+explicitely said to be partial.
+
+
+A constant is a nullary function.  For convenience, we will use notations like $\top_i$ and $\bot_i$ to denote convenience, with no implicit relation to the Boolean constants $\top$ and $\bot$.
 
 $S \models s=t$
 
-A literal is either a Boolean variable or the negation of a Boolean variable.
-A clause is a (disjunctive) set of literals.  A variable appears positively (negatively) in a clause if it (resp.\ its negation) belongs to the clause.
+Congruence graph
 
 \section*{Congruence closure}
 
@@ -122,24 +140,19 @@ Define ``explanation".
 \section*{NP-completeness of small explanation decision problem}
 \label{sec:npcomplete}
 
-In Section \ref{sec:congruencedef} the notion of explanation is
-defined and it is mentioned that we want to find short explanations
-in order to compress proofs. In this section we show that the problem
-of deciding whether there is an explanation of a given size is NP-
-complete, and therefore finding short explanations is hard. Our proof
-of NP-completeness reduces the problem of deciding the satisfiability
-of a propositional logic formula in conjunctive normal form (SAT) to
-the short explanation problem. For basics about satisfiability of
-propositional logic formulas and assignments, we refer the reader to
-\cite{Biere3}. We begin by formally defining the problem.
+We here prove that the problem of deciding whether there is an conflict set
+smaller than a given size is NP-complete.  Our proof of NP-completeness reduces
+the problem of deciding the satisfiability of a propositional logic formula in
+conjunctive normal form (SAT) to the short conflict set generation problem.  For
+basics about satisfiability of propositional logic formulas and assignments, we
+refer the reader to \cite{Biere3}.  First, the problem has to be formally
+defined.
 
-
-\begin{definition}[Short explanation problem]
-Let $E = \{ s_1 = t_1,\ldots, s_n = t_n\}$ be a set of equations, 
-$k \in \mathbb{N}$ and $s = t$ be a target equation.  
-The \emph{short explanation problem} is the problem of finding 
-whether there exists a set $E'$ such that $E' \subseteq E$, 
-$E' \models s = t$ and $|E'| \leq k$.
+\begin{definition}[Short conflict set generation problem]
+Let $E = \{ s_1 = t_1,\ldots, s_n = t_n\}$ be a set of equations, $k \in
+\mathbb{N}$ and $s = t$ be a target equation.  The \emph{short conflict set
+  generation problem} is the problem of finding whether there exists a set $E'$
+such that $E' \subseteq E$, $E' \models s = t$ and $|E'| \leq k$.
 \end{definition}
 
 \noindent Our proof of hardness is based on a (polynomial) 
@@ -156,16 +169,16 @@ Let $\mathcal{C}$ be a set of propositional clauses $\{C_1,\ldots C_n\}$ using v
 %The set of terms $\mathcal{T}$ is constructed using the following constants and function symbols.
 %For every $i= 1,\ldots,n + 1$, there is a constant $\hat{c}_i$ and function symbols $t_i$ and $f_i$.
 %For every $j= 1,\ldots,m$, there are constants $\hat{x}_j$, $\top_j$ and $\bot_j$.
-The congruence translation $E_{\mathcal{C}}$ of $\mathcal{C}$ is defined as the set of equations
+The \emph{congruence translation} $E_{\mathcal{C}}$ of\/ $\mathcal{C}$ is defined as the set of equations
 \begin{equation*}
-\Connect \cup \bigcup_{1 \leq i \leq n}\Clause_i 
+E_{\mathcal{C}} = \Connect \cup \bigcup_{1 \leq i \leq n}\Clause_i 
 \end{equation*}
 with
 \begin{eqnarray*}
-	\Connect &=& \{ \hat{c}_{i}' = \hat{c}_{i+1} \mid 1 \leq i < n\}\\
-        \Clause_i &=& \{ \hat{c}_i = t_i(\hat{x}_j) \mid x_j \text{ appears in } C_i \}\\
-           & & \cup\ \{ t_i(\top_j) = \hat{c}_i' \mid x_j \text{ appears positively in } C_i \}\\
-           & & \cup\ \{ t_i(\bot_j) = \hat{c}_i' \mid x_j \text{ appears negatively in } C_i \}
+	\Connect &=& \{ \hat{c}_{i}' = \hat{c}_{i+1} \ \mid\ 1 \leq i < n\}\\
+        \Clause_i &=& \{ \hat{c}_i = t_i(\hat{x}_j) \ \mid\ x_j \text{ appears in } C_i \}\\
+           & & \cup\ \{ t_i(\top_j) = \hat{c}_i' \ \mid\ x_j \text{ appears positively in } C_i \}\\
+           & & \cup\ \{ t_i(\bot_j) = \hat{c}_i' \ \mid\ x_j \text{ appears negatively in } C_i \}
 \end{eqnarray*}
 where $\hat{c}_{1},\dots \hat{c}_{n},\hat{c}_{1}', \dots \hat{c}_{n}',
 \hat{x}_1, \dots \hat{x}_m, \top_1, \dots \top_m, \bot_1, \dots \bot_m$ are distinct constants, and $t_1, \dots t_m$ are
@@ -182,14 +195,13 @@ Consider the set of clauses $\mathcal{C}$
 \begin{equation*}
 \big\{C_1 = x_1 \vee x_2 \vee \neg x_3, C_2 = \neg x_2 \vee x_3, C_3 = \neg x_1 \vee \neg x_2\big\}.
 \end{equation*}
-Figure~\ref{fig:npexamplebig} represents $\Connect \cup \bigcup_{1 \leq i \leq n}\Clause_i$
-graphically --- an edge between two nodes meaning that the set contains an
-equation between the two nodes --- for the congruence translation $E_{\mathcal{C}}$ of
-$\mathcal{C}$.
+Figure~\ref{fig:npexamplebig} represents the congruence translation of
+$\mathcal{C}$ graphically, an edge between two nodes meaning that the set
+contains an equation between the terms labeling the two nodes.
 
-\begin{figure}[ht]
+\begin{figure}[htb]
 \input{figures/npexamplebig2}
-\caption{$\Connect \cup \bigcup_{1 \leq i \leq n}\Clause_i$}
+\caption{The congruence translation $E_{\mathcal{C}} = \Connect \cup \bigcup_{1 \leq i \leq n}\Clause_i$ of $\mathcal{C}$.}
 \label{fig:npexamplebig}
 \end{figure}
 
@@ -203,12 +215,12 @@ Let $\mathcal{I}$ be an assignment on variables $x_1,\ldots,x_m$.
 %For every $j= 1,\ldots,m$, there are constants $\hat{x}_j$, $\top_j$ and $\bot_j$.
 The congruence translation $E_{\mathcal{I}}$ of $\mathcal{I}$ is defined as the set of equations
 \begin{eqnarray*}
-  E_{\mathcal{I}} & = & \phantom{\cup}\ \{ \hat{x}_j = \top_j \mid 1 \leq j \leq m \text{ and } \mathcal{I} \models x_j \} \\
-               &   & \cup\ \{ \hat{x}_j = \bot_j \mid 1 \leq j \leq m \text{ and } \mathcal{I} \models \neg x_j \}
+  E_{\mathcal{I}} & = & \phantom{\cup}\ \{ \hat{x}_j = \top_j \ \mid\  1 \leq j \leq m \text{ and } \mathcal{I} \models x_j \} \\
+               &   & \cup\ \{ \hat{x}_j = \bot_j \ \mid\ 1 \leq j \leq m \text{ and } \mathcal{I} \models \neg x_j \}
 \end{eqnarray*}
 For convenience, we also define the set
 \begin{equation*}
-  \Assignment^\star = \{ \hat{x}_j = \top_j, \hat{x}_j = \bot_j \mid 1 \leq j \leq m\}.
+  \Assignment^\star = \{ \hat{x}_j = \top_j, \hat{x}_j = \bot_j \ \mid\ 1 \leq j \leq m\}.
 \end{equation*}
 \end{definition}
 \noindent
@@ -219,7 +231,7 @@ that is, if it does not contain both $\hat{x}_j = \top_j$ and $\hat{x}_j =
 \bot_j$ for some $j$.
 
 \begin{example}\label{ex:np2} (Example~\ref{ex:np1} continued)  
-Consider the model $\mathcal{I} = \{x_1, \neg x_2, x_3\}$ of $\mathcal{C}$.
+Consider the model $\mathcal{I} = \{x_1, \neg x_2, x_3\}$ of\/ $\mathcal{C}$.
 Figure~\ref{fig:npassignment} gives a graphical representation of
 $E_{\mathcal{I}}$, whereas $\Assignment^\star$ is described by
 Figure~\ref{fig:npassignmentstar}.  Notice that
@@ -258,13 +270,13 @@ $E_{\mathcal{I}} \cup E_\mathcal{C}$.  Besides edges directly associated to
 equalities in the set, the only edges are congruence edges between terms
 $t_i(\hat{x}_j)$ and either $t_i(\top_j)$ or $t_i(\bot_j)$.  So any path from
 $\hat{c}_1$ to $\hat{c}_n$ would go through such a congruence edge for each $i$.
-And such an edge exist for $i$ if and only if clause $i$ is satisfied by
+And such an edge exists for $i$ if and only if clause $i$ is satisfied by
 $\mathcal{I}$.
 
 The condition is also necessary.  If $\mathcal{I} \models \mathcal{C}$, then
 $\mathcal{I} \models C_i$ for each clause $C_i \in \mathcal{C}$.  Assume
 $\mathcal{I}$ makes true a variable $x_j$, literal of $C_i$ (the case of
-negation of a variable is handled similarly).  Then $E_{\mathcal{I}} \models
+the negation of a variable is handled similarly).  Then $E_{\mathcal{I}} \models
 t_i(\hat{x}_j) = t_i(\top_j)$, and $E_{\mathcal{I}} \cup \Clause_i
 \models \hat{c}_i = \hat{c}_i'$.  This is true for each $i$, and
 thanks to the equations in \Connect, one can deduce using transitivity that
