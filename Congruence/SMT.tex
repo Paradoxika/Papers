@@ -110,7 +110,7 @@ A literal is either a propositional variable or the negation of a propositional
 variable.  A clause is a disjunctive set of literals.  A propositional variable
 $x$ appears positively (negatively) in a clause $C$ if $x \in C$ (resp.\ $\neg x
 \in C$).  The notations $\{\ell_1, \dots \ell_n\}$ and $\ell_1 \vee \dots
-\ell_n$ will be used interchangeably.  A formula in conjunctive normal form (CNF
+\vee \ell_n$ will be used interchangeably.  A formula in conjunctive normal form (CNF
 for short) is a conjunctive set of clauses.  A total (partial) assignment $\cal
 I$ for a formula in propositional logic associates a value in $\{\top, \bot\}$
 to every (resp.\ some) propositional variable in the formula.  An assignment
@@ -144,7 +144,7 @@ not restricted to) $\mathcal{T}(E)$.
 %$E$. 
 Throughout this work, we assume that when we check whether $E \models s = t$ it is the case that $s,t\in \mathcal{T}(E)$. 
 This is w.l.o.g. since we can always add the axiomatic equations $s=s$ and $t=t$ to $E$, which does not change its congruence closure.
-Under this assumption, the set of nodes in the congruence graph are restricted to $\mathcal{T}(E)$. 
+Under this assumption, the set of nodes in the congruence graph are restricted to $\mathcal{T}(E)$. \marginpar{Andreas: I think this is true and simplifying? Why would any other terms end up in the congruence graph?}
 
 There are two kinds of edges in the graph: full edges and congruence
 edges.  There is a full edge between two nodes associated with terms $s$ and $t$
@@ -167,7 +167,7 @@ When we consider complexity, not only the cardinality of the set is important, b
 Congruence closure algorithms in modern SMT solvers also typically work on Directed Acyclic Graphs (DAGs), not on trees to represent terms. In that case, what matters is not the number of term and subterm occurrences, but only the number of (sub)terms. However, the input is also typically not a set, but successive call to an assertion function with a literal as argument. In that case, every repetition of the
 same literal could matter for complexity. 
 Let us assume however here that the input is a set E, that terms are DAGs with maximal sharing (identity of two terms can be checked in constant time), and that identity of two function symbols can be checked in constant time. 
-Therefore, we characterize complexity results in terms of number of terms and subterms of the input equations, i.e. |T (E)|.
+Therefore, we characterize complexity results in terms of number of equations, terms and subterms of the input set, i.e. $|E| + |\mathcal{T}(E)|$.
 
 \section*{NP-completeness of small conflict set generation problem}
 \label{sec:npcomplete}
@@ -226,7 +226,7 @@ with
            & & \cup\ \{ t_i(\bot_j) = \hat{c}_i' \ \mid\ x_j \text{ appears negatively in } C_i \}
 \end{eqnarray*}
 where $\hat{c}_{1},\dots \hat{c}_{n},\hat{c}_{1}', \dots \hat{c}_{n}',
-\hat{x}_1, \dots \hat{x}_m, \top_1, \dots \top_m, \bot_1, \dots \bot_m$ are distinct constants, and $t_1, \dots t_m$ are
+\hat{x}_1, \dots \hat{x}_m, \top_1, \dots \top_m, \bot_1, \dots \bot_m$ are distinct constants, and $t_1, \dots t_n$ are
 distinct unary functions.
 
 \end{definition}
@@ -308,7 +308,7 @@ This is actually the aim of the construction.
 Consider a (partial or total) assignment $\mathcal{I}$ for a set of clauses
 $\mathcal{C}= \{C_1, \dots C_n\}$ with variables $x_1,\ldots x_m$.  $\mathcal{I} \models \mathcal{C}$ if and only if
 $E_{\mathcal{I}} \cup E_\mathcal{C} \models \hat{c}_1 = \hat{c}'_n$.
-Furthermore, $|E_{\mathcal{I}} \cup E_\mathcal{C}|$ is polynomial in $n$ and $m$.
+Furthermore, $|E_{\mathcal{I}} \cup E_\mathcal{C}|$ and $|\mathcal{T}(E_{\mathcal{I}} \cup E_\mathcal{C})|$ are polynomial in $n$ and $m$.
 \end{lemma}
 \begin{proof}
 The condition is sufficient.  Consider the congruence graph induced by
@@ -331,7 +331,8 @@ $E_{\mathcal{I}} \cup E_\mathcal{C} \models \hat{c}_1 = \hat{c}_n'$.
 $E_{\mathcal{I}}$ contains at most $m$ equations, since for every $j$ either $\mathcal{I} \models x_j$ or $\mathcal{I} \models \neg x_j$.
 The set $Connect$ contains exactly $n-1$ equations.
 For every $i$, the set $Clause_i$ contains at most $2m$ equations.
-In total, $E_{\mathcal{C}}$ contains at most $n-1 + 2mn$ equations.
+$E_{\mathcal{I}} \cup E_\mathcal{C}$ contains at most $2n + 3m + 3mn$ terms (for $i = 1,\ldots n$, $j = 1,\ldots m$ we have $\hat{c}_i,\hat{c}_i'$, $\hat{x}_j,\top_j,\bot_j$ and $t_i(\hat{x}_j),t_i(\top_j),t_i(\bot_j)$.
+In total we have $|E_{\mathcal{I}} \cup E_\mathcal{C}| < n-1 + m + 2mn$ and $|\mathcal{T}(E_{\mathcal{I}} \cup E_\mathcal{C})| < 2n + 3m + 3mn$.
 \end{proof}
 
 \noindent 
