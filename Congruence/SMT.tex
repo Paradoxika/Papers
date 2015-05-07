@@ -191,9 +191,9 @@ $E' \subseteq E$ with $|E'| \leq k$.
 of deciding the satisfiability of a propositional logic formula in conjunctive
 normal form (SAT) to the small \emph{explanation problem}:
 \begin{definition}[Small explanation problem]
-Given a set of equations $E = \{ s_1 = t_1,\ldots, s_n = t_n\}$, $k \in
+Given a set of equations $E = \{ s_1~=~t_1,\ldots s_n~=~t_n\}$, $k \in
 \mathbb{N}$ and a target equation $s = t$, the \emph{small explanation problem}
-is the problem of finding whether there exists a set $E'$ such that $E'
+is the problem of answering whether there exists a set $E'$ such that $E'
 \subseteq E$, $E' \models s = t$ and $|E'| \leq k$.
 \end{definition}
 
@@ -306,7 +306,7 @@ This is actually the aim of the construction.
 \begin{lemma}
 \label{lemma:eqv}
 Consider a (partial or total) assignment $\mathcal{I}$ for a set of clauses
-$\mathcal{C}= \{C_1, \dots C_n\}$ with variables $x_1,\ldots x_m$.  $\mathcal{I} \models \mathcal{C}$ if and only if
+$\mathcal{C}= \{C_1, \dots C_n\}$ using variables $x_1,\ldots x_m$.  $\mathcal{I} \models \mathcal{C}$ if and only if
 $E_{\mathcal{I}} \cup E_\mathcal{C} \models \hat{c}_1 = \hat{c}'_n$.
 Furthermore, $|E_{\mathcal{I}} \cup E_\mathcal{C}|$ and $|\mathcal{T}(E_{\mathcal{I}} \cup E_\mathcal{C})|$ are polynomial in $n$ and $m$.
 \end{lemma}
@@ -331,7 +331,7 @@ $E_{\mathcal{I}} \cup E_\mathcal{C} \models \hat{c}_1 = \hat{c}_n'$.
 $E_{\mathcal{I}}$ contains at most $m$ equations, since for every $j$ either $\mathcal{I} \models x_j$ or $\mathcal{I} \models \neg x_j$.
 The set $Connect$ contains exactly $n-1$ equations.
 For every $i$, the set $Clause_i$ contains at most $2m$ equations.
-$E_{\mathcal{I}} \cup E_\mathcal{C}$ contains at most $2n + 3m + 3mn$ terms (for $i = 1,\ldots n$, $j = 1,\ldots m$ we have $\hat{c}_i,\hat{c}_i'$, $\hat{x}_j,\top_j,\bot_j$ and $t_i(\hat{x}_j),t_i(\top_j),t_i(\bot_j)$.
+$E_{\mathcal{I}} \cup E_\mathcal{C}$ contains at most $2n + 3m + 3mn$ terms (for $i = 1,\ldots n$, $j = 1,\ldots m$ we have $\hat{c}_i,\hat{c}_i'$, $\hat{x}_j,\top_j,\bot_j$ and $t_i(\hat{x}_j),t_i(\top_j),t_i(\bot_j))$.
 In total we have $|E_{\mathcal{I}} \cup E_\mathcal{C}| < n-1 + m + 2mn$ and $|\mathcal{T}(E_{\mathcal{I}} \cup E_\mathcal{C})| < 2n + 3m + 3mn$.
 \end{proof}
 
@@ -398,7 +398,7 @@ The small explanation problem is in NP.
 \begin{proof}
 Let $E$ be a set of equations and $s=t$ be a target equation.
 A solution to the explanation problem for some $k \in \mathbb{N}$ is a subset $E' \subseteq E$, such that $|E'| \leq k$.
-Let $n = \mathcal{T}(E)$ and $n' = \mathcal{T}(E')$.
+Let $n = |\mathcal{T}(E)|$ and $n' = |\mathcal{T}(E')|$.
 Clearly we have $n' \leq n$.
 Checking whether $E'$ is an explanation of $s=t$ can be done by computing its congruence closure, which is possible in polynomial time in $n'$ \cite{Nelson2} and thereby also in $n$.
 
