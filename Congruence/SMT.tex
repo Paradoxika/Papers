@@ -114,7 +114,7 @@ $x$ appears positively (negatively) in a clause $C$ if $x \in C$ (resp.\ $\neg x
 for short) is a conjunctive set of clauses.  A total (partial) assignment $\cal
 I$ for a formula in propositional logic associates a value in $\{\top, \bot\}$
 to every (resp.\ some) propositional variable in the formula.  An assignment
-$\cal I$ a formula $F$ is a model of $F$, noted ${\cal I}\models F$, if it makes
+$\cal I$ for a formula $F$ is a model of $F$, noted ${\cal I}\models F$, if it makes
 the formula $F$ true.  A formula is satisfiable if it has a model, it is
 unsatisfiable otherwise.  A total or partial assignment can be perfectly
 defined by the set of literals it makes true.  By default, an assignment is
@@ -124,14 +124,14 @@ We use the usual notions of (un)satisfiability and model also for
 quantifier-free first-order logic.  A constant is a nullary function.  For
 convenience, we will use notations like $\top_i$ and $\bot_i$ as constants, with
 no implicit relation to the Boolean constants $\top$ and $\bot$.  A set of
-formula $E$ implies a (set of) formula(s) $E'$, denoted $E\models E'$, if every
+formula $E$ entails a (set of) formula(s) $E'$, denoted $E\models E'$, if every
 model of $E$ is a model of $E'$.
 
 \vspace*{5pt}
 \noindent \textbf{Congruence closure and congruence graph}
 
 \noindent
-We do not here give a full description of congruence closure algorithms and
+We do not give here a full description of congruence closure algorithms and
 refer the reader to~\cite{Nelson2,Downey1,Nieuwenhuis6} for more details.  We
 only remind that the satisfiability of a set of first-order literals with
 equality and uninterpreted symbols $E$ can easily be checked by building a
@@ -154,7 +154,7 @@ there is a path between $s$ and $t$ in the congruence graph of $E$.
 \section*{NP-completeness of small conflict set generation problem}
 \label{sec:npcomplete}
 
-We have to find where to put this remark.  The algorithms we consider here take as input a set of literals $S$.  When we consider complexity, not only the cardinality of the set is important, but also the number of terms and subterms as well as the number of their occurrences.  Congruence closure algorithms in modern SMT solvers also typically work on Directed Acyclic Graphs (DAGs), not on trees to represent terms.  In that case, what matters is not the number of term and subterm occurrences, but only the number of (sub)terms.  However, the input is also typically not a set, but successive call to an assertion function with a literal as argument.  In that case, every repetition of the same literal would could.  Let us assume however here that the input is a set $E$, that terms are DAGs with maximal sharing (identity of two terms can be checked in constant time), and that identity of two function symbols can be checked in constant time.
+\marginpars{We have to find where to put this remark.}  The algorithms we consider here take as input a set of literals $S$.  When we consider complexity, not only the cardinality of the set is important, but also the number of terms and subterms as well as the number of their occurrences.  Congruence closure algorithms in modern SMT solvers also typically work on Directed Acyclic Graphs (DAGs), not on trees to represent terms.  In that case, what matters is not the number of term and subterm occurrences, but only the number of (sub)terms.  However, the input is also typically not a set, but successive call to an assertion function with a literal as argument.  In that case, every repetition of the same literal would count.  Let us assume however here that the input is a set $E$, that terms are DAGs with maximal sharing (identity of two terms can be checked in constant time), and that identity of two function symbols can be checked in constant time.
 
 %% Rather than considering directly the conflict set generation problem ---
 %% given a natural number $k$ and an unsatisfiable set of literals, is there a
