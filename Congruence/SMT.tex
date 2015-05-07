@@ -135,10 +135,18 @@ We do not give here a full description of congruence closure algorithms and
 refer the reader to~\cite{Nelson2,Downey1,Nieuwenhuis6} for more details.  We
 only remind that the satisfiability of a set of first-order literals with
 equality and uninterpreted symbols $E$ can easily be checked by building a
-congruence graph.  A congruence graph is built on a set of nodes including (but
-not restricted to) all terms and subterms in $E$.  We assume this set of nodes
-is finite, and unless stated otherwise, only contains the terms and subterms in
-$E$.  There are two kinds of edges in the graph: full edges and congruence
+congruence graph.
+We denote the set of all terms and subterms occurring in $E$ by $\mathcal{T}(E)$.
+A congruence graph is built on a set of nodes including (but
+not restricted to) $\mathcal{T}(E)$.  
+%We assume this set of nodes
+%is finite, and unless stated otherwise, only contains the terms and subterms in
+%$E$. 
+Throughout this work, we assume that when we check whether $E \models s = t$ it is the case that $s,t\in \mathcal{T}(E)$. 
+This is w.l.o.g. since we can always add the axiomatic equations $s=s$ and $t=t$ to $E$, which does not change its congruence closure.
+Under this assumption, the set of nodes in the congruence graph are restricted to $\mathcal{T}(E)$. 
+
+There are two kinds of edges in the graph: full edges and congruence
 edges.  There is a full edge between two nodes associated with terms $s$ and $t$
 if and only if there is an equality $s=t$ (or $t=s$) in $E$.  The congruence
 closure algorithm adds congruence edges to the graph until (the smallest)
@@ -151,11 +159,18 @@ subterms in $E$, $s$ and $t$.  A set of first-order literals $E$ is
 unsatisfiable if and only if there is an inequality $s\neq t \in E$ such that
 there is a path between $s$ and $t$ in the congruence graph of $E$.
 
+\marginpar{Bruno: one possibility would be to put these remarks after lemma 3. Maybe we should omit these remarks until we fully convert our current results to results using these alternative ways of measuring size of the problem.}
+\marginpar{Andreas: I moved the remark here and edited it a little bit. I think it is more precise and concise now}
+
+The algorithms we consider in the next section take as input a set of equations E \marginpar{Andreas: I replaced literals S by equations E and hope that this is general enough while remaining clear}. 
+When we consider complexity, not only the cardinality of the set is important, but also the number of terms and subterms as well as the number of their occurrences. 
+Congruence closure algorithms in modern SMT solvers also typically work on Directed Acyclic Graphs (DAGs), not on trees to represent terms. In that case, what matters is not the number of term and subterm occurrences, but only the number of (sub)terms. However, the input is also typically not a set, but successive call to an assertion function with a literal as argument. In that case, every repetition of the
+same literal could matter for complexity. 
+Let us assume however here that the input is a set E, that terms are DAGs with maximal sharing (identity of two terms can be checked in constant time), and that identity of two function symbols can be checked in constant time. 
+Therefore, we characterize complexity results in terms of number of terms and subterms of the input equations, i.e. |T (E)|.
+
 \section*{NP-completeness of small conflict set generation problem}
 \label{sec:npcomplete}
-
-\marginpar{We have to find where to put this remark.}
-\marginpar{Bruno: one possibility would be to put these remarks after lemma 3. Maybe we should omit these remarks until we fully convert our current results to results using these alternative ways of measuring size of the problem. }  The algorithms we consider here take as input a set of literals $S$.  When we consider complexity, not only the cardinality of the set is important, but also the number of terms and subterms as well as the number of their occurrences.  Congruence closure algorithms in modern SMT solvers also typically work on Directed Acyclic Graphs (DAGs), not on trees to represent terms.  In that case, what matters is not the number of term and subterm occurrences, but only the number of (sub)terms.  However, the input is also typically not a set, but successive call to an assertion function with a literal as argument.  In that case, every repetition of the same literal would count.  Let us assume however here that the input is a set $E$, that terms are DAGs with maximal sharing (identity of two terms can be checked in constant time), and that identity of two function symbols can be checked in constant time.
 
 %% Rather than considering directly the conflict set generation problem ---
 %% given a natural number $k$ and an unsatisfiable set of literals, is there a
@@ -291,8 +306,9 @@ This is actually the aim of the construction.
 \begin{lemma}
 \label{lemma:eqv}
 Consider a (partial or total) assignment $\mathcal{I}$ for a set of clauses
-$\mathcal{C}= \{C_1, \dots C_n\}$.  $\mathcal{I} \models \mathcal{C}$ if and only if
+$\mathcal{C}= \{C_1, \dots C_n\}$ with variables $x_1,\ldots x_m$.  $\mathcal{I} \models \mathcal{C}$ if and only if
 $E_{\mathcal{I}} \cup E_\mathcal{C} \models \hat{c}_1 = \hat{c}'_n$.
+Furthermore, $|E_{\mathcal{I}} \cup E_\mathcal{C}|$ is polynomial in $n$ and $m$.
 \end{lemma}
 \begin{proof}
 The condition is sufficient.  Consider the congruence graph induced by
@@ -311,13 +327,19 @@ t_i(\hat{x}_j) = t_i(\top_j)$, and $E_{\mathcal{I}} \cup \Clause_i
 \models \hat{c}_i = \hat{c}_i'$.  This is true for each $i$, and
 thanks to the equations in \Connect, one can deduce using transitivity that
 $E_{\mathcal{I}} \cup E_\mathcal{C} \models \hat{c}_1 = \hat{c}_n'$.
+
+$E_{\mathcal{I}}$ contains at most $m$ equations, since for every $j$ either $\mathcal{I} \models x_j$ or $\mathcal{I} \models \neg x_j$.
+The set $Connect$ contains exactly $n-1$ equations.
+For every $i$, the set $Clause_i$ contains at most $2m$ equations.
+In total, $E_{\mathcal{C}}$ contains at most $n-1 + 2mn$ equations.
 \end{proof}
 
-\noindent Notice also that, for any model $\mathcal{I}$ of a set of $n$ clauses
-$\mathcal{C}$, every explanation that $E_{\mathcal{I}} \cup E_\mathcal{C}
-\models \hat{c}_1 = \hat{c}_n'$ contains at least two equalities in
-each set $\Clause_i$, since each clause has to be satisfied.  But also, there is
-an explanation that contains exactly two equalities in each set $\Clause_i$.
+\noindent 
+%Notice also that, for any model $\mathcal{I}$ of a set of $n$ clauses
+%$\mathcal{C}$, every explanation that $E_{\mathcal{I}} \cup E_\mathcal{C}
+%\models \hat{c}_1 = \hat{c}_n'$ contains at least two equalities in
+%each set $\Clause_i$, since each clause has to be satisfied.  But also, there is
+%an explanation that contains exactly two equalities in each set $\Clause_i$.
 Considering again Example~\ref{ex:np2}, and particularly
 Figure~\ref{fig:npmodel}, any transitivity chain from $\hat{c}_1$ to
 $\hat{c}'_3$ will pass through $\hat{c}'_1$, $\hat{c}_2$, $\hat{c}_2'$ and
@@ -360,16 +382,12 @@ guarantees the existence of a model for $\mathcal{C'}$, or equivalently for
 the original set of clauses $\mathcal{C}$.
 \end{proof}
 
-
-
-
 \begin{corollary}[NP-hardness]
 \label{lemma:nphardness}
 The small explanation problem is NP-hard.
 \end{corollary}
 \begin{proof}
-Propositional satisfiability is NP-hard, and can be reduced in polynomial time
-to the small explanation problem.
+Propositional satisfiability is NP-hard, and can be reduced in polynomial time to the small explanation problem.
 \end{proof}
 
 \begin{lemma}[NP]
@@ -377,11 +395,12 @@ to the small explanation problem.
 The small explanation problem is in NP.
 \end{lemma}
 \begin{proof}
-A solution to the small explanation decision problem is a subset of the input
-equations, therefore it is clearly polynomial in the problem size.  Whether
-a subset $E'$ is a solution can be verified by computing its congruence closure
-and checking whether the target equation $s = t$ is implied. Congruence closure can be computed in polynomial time
-\cite{Nelson2,Downey1,Nieuwenhuis6}.
+Let $E$ be a set of equations and $s=t$ be a target equation.
+A solution to the explanation problem for some $k \in \mathbb{N}$ is a subset $E' \subseteq E$, such that $|E'| \leq k$.
+Let $n = \mathcal{T}(E)$ and $n' = \mathcal{T}(E')$.
+Clearly we have $n' \leq n$.
+Checking whether $E'$ is an explanation of $s=t$ can be done by computing its congruence closure, which is possible in polynomial time in $n'$ \cite{Nelson2} and thereby also in $n$.
+
 \end{proof}
 
 
