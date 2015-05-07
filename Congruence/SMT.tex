@@ -400,8 +400,8 @@ The small explanation problem is in NP.
 \begin{proof}
 Let $E$ be a set of equations and $s=t$ be a target equation.
 A solution to the explanation problem for some $k \in \mathbb{N}$ is a subset $E' \subseteq E$, such that $|E'| \leq k$.
-Let $n = |\mathcal{T}(E)|$ and $n' = |\mathcal{T}(E')|$.
-Clearly we have $n' \leq n$.
+Let $n = |\mathcal{T}(E)| + |E|$ and $n' = |\mathcal{T}(E')| + |E'|$.
+We have $n' \leq n$, since $E' \subseteq E$ and every term in $E'$ appears also in $E$.
 Checking whether $E'$ is an explanation of $s=t$ can be done by computing its congruence closure, which is possible in polynomial time in $n'$ \cite{Nelson2} and thereby also in $n$.
 
 \end{proof}
