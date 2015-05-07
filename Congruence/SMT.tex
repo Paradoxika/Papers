@@ -154,7 +154,8 @@ there is a path between $s$ and $t$ in the congruence graph of $E$.
 \section*{NP-completeness of small conflict set generation problem}
 \label{sec:npcomplete}
 
-\marginpar{We have to find where to put this remark.}  The algorithms we consider here take as input a set of literals $S$.  When we consider complexity, not only the cardinality of the set is important, but also the number of terms and subterms as well as the number of their occurrences.  Congruence closure algorithms in modern SMT solvers also typically work on Directed Acyclic Graphs (DAGs), not on trees to represent terms.  In that case, what matters is not the number of term and subterm occurrences, but only the number of (sub)terms.  However, the input is also typically not a set, but successive call to an assertion function with a literal as argument.  In that case, every repetition of the same literal would count.  Let us assume however here that the input is a set $E$, that terms are DAGs with maximal sharing (identity of two terms can be checked in constant time), and that identity of two function symbols can be checked in constant time.
+\marginpar{We have to find where to put this remark.}
+\marginpar{Bruno: one possibility would be to put these remarks after lemma 3. Maybe we should omit these remarks until we fully convert our current results to results using these alternative ways of measuring size of the problem. }  The algorithms we consider here take as input a set of literals $S$.  When we consider complexity, not only the cardinality of the set is important, but also the number of terms and subterms as well as the number of their occurrences.  Congruence closure algorithms in modern SMT solvers also typically work on Directed Acyclic Graphs (DAGs), not on trees to represent terms.  In that case, what matters is not the number of term and subterm occurrences, but only the number of (sub)terms.  However, the input is also typically not a set, but successive call to an assertion function with a literal as argument.  In that case, every repetition of the same literal would count.  Let us assume however here that the input is a set $E$, that terms are DAGs with maximal sharing (identity of two terms can be checked in constant time), and that identity of two function symbols can be checked in constant time.
 
 %% Rather than considering directly the conflict set generation problem ---
 %% given a natural number $k$ and an unsatisfiable set of literals, is there a
@@ -163,7 +164,8 @@ there is a path between $s$ and $t$ in the congruence graph of $E$.
 %% an equality $s=t$ is there a subset of $E$ smaller than $k$ that implies a
 %% given equality $s=t$.
 
-Let us first define the small conflict set generation problem formally
+%Let us first define the small conflict set generation problem formally:
+
 \begin{definition}[Small conflict set generation problem]
 Given an unsatisfiable set $E$ of literals in quantifier-free first-order logic
 with equality and $k \in \mathbb{N}$, the \emph{small conflict set generation
