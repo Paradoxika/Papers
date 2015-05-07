@@ -35,15 +35,7 @@
 \maketitle
 
 \begin{abstract}
-The efficiency of Satisfiability Modulo Theories (SMT) solvers is dependent on
-the capability of theory reasoners to provide small conflict sets, i.e.\ small
-unsatisfiable subsets from unsatisfiable sets of literals.  Decision procedures
-for uninterpreted symbols (i.e.\ congruence closure algorithms) date back from
-the very early days of SMT.  Nevertheless, to our best knowledge, the complexity
-of the smallest conflict set generation for sets of literals with uninterpreted
-symbols and equalities had not yet been determined, although it is believed to
-be NP-complete.  We provide here an NP-hardness proof, using a simple reduction
-from SAT.
+The efficiency of Satisfiability Modulo Theories (SMT) solvers is dependent on the capability of theory reasoners to provide small conflict sets, i.e.\ small unsatisfiable subsets from unsatisfiable sets of literals.  Decision procedures for uninterpreted symbols (i.e.\ congruence closure algorithms) date back from the very early days of SMT.  Nevertheless, to our best knowledge, the complexity of the smallest conflict set generation for sets of literals with uninterpreted symbols and equalities had not yet been determined, although it is believed to be NP-complete.  We provide here an NP-hardness proof, using a simple reduction from SAT.
 \end{abstract}
 
 
@@ -144,7 +136,7 @@ not restricted to) $\mathcal{T}(E)$.
 %$E$. 
 Throughout this work, we assume that when we check whether $E \models s = t$ it is the case that $s,t\in \mathcal{T}(E)$. 
 This is w.l.o.g. since we can always add the tautological equations $s=s$ and $t=t$ to $E$, which does not change its congruence closure.
-Under this assumption, the set of nodes in the congruence graph are restricted to $\mathcal{T}(E)$. \marginpar{Andreas: I think this is true and simplifying? Why would any other terms end up in the congruence graph?}
+Under this assumption, the set of nodes in the congruence graph are restricted to $\mathcal{T}(E)$. %\marginpar{Andreas: I think this is true and simplifying? Why would any other terms end up in the congruence graph?}
 
 There are two kinds of edges in the graph: full edges and congruence edges.
 There is a full edge between two nodes associated with terms $s$ and $t$ if and
@@ -163,7 +155,7 @@ graph of $E$.
 %\marginpar{Andreas: I moved the remark here and edited it a little bit. I think it is more precise and concise now}
 %PF2ALL: it is nice here.
 
-The algorithms we consider in the next section take as input a set of equations E \marginpar{Andreas: I replaced literals S by equations E and hope that this is general enough while remaining clear}. 
+The algorithms we consider in the next section take as input a set of literals E% \marginpar{Andreas: I replaced literals S by equations E and hope that this is general enough while remaining clear}. 
 When we consider complexity, not only the cardinality of the set is important, but also the number of terms and subterms as well as the number of their occurrences. 
 Congruence closure algorithms in modern SMT solvers also typically work on Directed Acyclic Graphs (DAGs), not on trees, to represent terms. In that case, what matters is not the number of term and subterm occurrences, but only the number of (sub)terms. However, the input is also typically not a set, but successive calls to an assertion function with a literal as argument. In that case, every repetition of the
 same literal could matter for complexity. 
@@ -424,16 +416,22 @@ The small conflict set problem is at least as hard as the small explanation prob
 
 \section*{Conclusion}
 
-\marginpar{Besson PxTP}
-The extraction of small explanations for the congruence of terms is an interesting subroutine of the classical congruence closure algorithm, which is especially relevant in applications where proofs are desirable. When the lack of solution for an unsatisfiable problem needs to be externally verified, a proof/refutation may serve as a certificate of the unsatisfiability.
+%\marginpar{Besson PxTP}
+The conflict set generation feature of congruence algorithms is essential for
+practical SMT solving.  Although one could argue that the important property of the generated conflicts is minimality (i.e.\ no useless literal is in the conflict), it is also interesting to consider producing the smallest conflict.  We have shown that the problem of deciding whether a conflict of a given size exists is NP-complete. Therefore, it is generally intractable to obtain the smallest conflict. 
 
-We have shown that the problem of deciding whether an explanation of a given size exists is NP-complete. Therefore, it is generally intractable to obtain the smallest explanation. 
-
-In \cite{Nieuwenhuis3,Nieuwenhuis9} methods to obtain small, but not necessary the smallest, explanations are discussed.
-However, the proof tree data structure used in those methods is designed to prioritize speed of the congruence closure algorithm. 
-Other methods prioritizing small size of extracted explanations could still be investigated. Thanks to the NP-completeness, one option would be to iteratively encode the small explanation problem into SAT, and use SAT-solvers to find succesively smaller explanations, until the smallest explanation is found. 
-Another approach would be to use Max-SAT to find the smallest explanation in one call to the solver.
-\marginpar{note that we would have to encode and call a SAT-solver many times, with progressively smaller values of $k$, until we find a value of $k$ for which the encoded problem is unsatisfiable. this would guarantee a \emph{minimum} conflict, but would probably be less efficient than the iterative addition/removal of literals from the explanation, which only guarantees a \emph{minimal} conflict.} 
+In \cite{Fontaine1,Nieuwenhuis3,Nieuwenhuis9}, methods to obtain small
+conflicts, but not necessarily the smallest, are discussed.  In practice, it
+pays off to prioritize speed of the congruence closure algorithm and conflict
+generation over succinctness of conflicts.  However, other applications
+sensitive to proof size may benefit from other methods prioritizing small
+conflict size, at a cost of less efficient solving. Thanks to the
+NP-completeness, one option could be to iteratively encode the small conflict
+problem into SAT, and use SAT-solvers to find successively smaller conflicts,
+until the smallest is found.  An algorithm based on a variant of the SAT problem
+(i.e.\ Max-SAT) may provide a technique to avoid repeated calls to the solver,
+and find the smallest conflict in one run.
+%\marginpar{note that we would have to encode and call a SAT-solver many times, with progressively smaller values of $k$, until we find a value of $k$ for which the encoded problem is unsatisfiable. this would guarantee a \emph{minimum} conflict, but would probably be less efficient than the iterative addition/removal of literals from the explanation, which only guarantees a \emph{minimal} conflict.} 
 
 \vspace*{5pt}\noindent
 {\bf Acknowledgment.} We would like to thank Roberto Nieuwenhuis and Ashish
