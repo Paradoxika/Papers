@@ -1,0 +1,52 @@
+\documentclass{easychair}
+
+\title{SMT-proof compression with small conflict sets}
+%\titlerunning{SMT-proof compression with small conflict sets}
+
+\author{Andreas Fellner\inst{1,2}
+   \and Pascal Fontaine\inst{3}
+   \and\\ Georg Hofferek\inst{4}
+   \and Bruno Woltzenlogel Paleo\inst{2,5}
+}
+\institute{IST-Austria, Klosterneuburg (Austria)
+\and Vienna University of Technology (Austria)
+\and Inria, Loria, U. of Lorraine (France)
+\and IAIK, Graz University of Technology (Austria)
+\and Australian National University and NICTA (Australia)
+}
+
+\authorrunning{Fellner et al.}
+
+\usepackage{amssymb}
+\usepackage{graphicx}            			% Figures
+\usepackage{tikz}					% tikz graphics
+\usetikzlibrary{arrows,automata,positioning}
+\usetikzlibrary{fit}
+%\usepackage{hyperref}
+
+\newtheorem{example}{Example}
+\newtheorem{definition}{Definition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+This paper presents a novel proof compression algorithm for proofs in the SMT theory of equality and uninterpreted functions.
+The algorithm is based on replacing congruence closure conflicts by more general, smaller ones. 
+Thereby we effectively cut out literals and as a consequence whole subproofs.
+However, finding the smallest conflict is NP-complete.
+We propose a method to obtain short explanation as shortest paths in a weighted congruence graph.
+Using this method, we show that we obtain shorter explanations than existing techniques, while remaining optimal asymptotic runtime.
+The presented techniques were implemented into the proof compression tool Skeptik and evaluated on a wide range of proofs from problems of the SMT-lib.
+
+\end{abstract}
+
+%\bibliographystyle{plain}
+%\bibliography{biblio}
+
+\end{document}
