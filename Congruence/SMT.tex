@@ -113,7 +113,7 @@ $x$ appears positively (negatively) in a clause $C$ if $x \in C$ (resp.\ $\neg x
 \vee \ell_n$ will be used interchangeably.  A formula in conjunctive normal form (CNF
 for short) is a conjunctive set of clauses.  A total (partial) assignment $\cal
 I$ for a formula in propositional logic associates a value in $\{\top, \bot\}$
-to every (resp.\ some) propositional variable in the formula.  An assignment
+to each (resp.\ some) propositional variable(s) in the formula.  An assignment
 $\cal I$ for a formula $F$ is a model of $F$, noted ${\cal I}\models F$, if it makes
 the formula $F$ true.  A formula is satisfiable if it has a model, it is
 unsatisfiable otherwise.  A total or partial assignment can be perfectly
@@ -124,7 +124,7 @@ We use the usual notions of (un)satisfiability and model also for
 quantifier-free first-order logic.  A constant is a nullary function.  For
 convenience, we will use notations like $\top_i$ and $\bot_i$ as constants, with
 no implicit relation to the Boolean constants $\top$ and $\bot$.  A set of
-formula $E$ entails a (set of) formula(s) $E'$, denoted $E\models E'$, if every
+formulas $E$ entails a (set of) formula(s) $E'$, denoted $E\models E'$, if every
 model of $E$ is a model of $E'$.
 
 \vspace*{5pt}
@@ -143,31 +143,32 @@ not restricted to) $\mathcal{T}(E)$.
 %is finite, and unless stated otherwise, only contains the terms and subterms in
 %$E$. 
 Throughout this work, we assume that when we check whether $E \models s = t$ it is the case that $s,t\in \mathcal{T}(E)$. 
-This is w.l.o.g. since we can always add the axiomatic equations $s=s$ and $t=t$ to $E$, which does not change its congruence closure.
+This is w.l.o.g. since we can always add the tautological equations $s=s$ and $t=t$ to $E$, which does not change its congruence closure.
 Under this assumption, the set of nodes in the congruence graph are restricted to $\mathcal{T}(E)$. \marginpar{Andreas: I think this is true and simplifying? Why would any other terms end up in the congruence graph?}
 
-There are two kinds of edges in the graph: full edges and congruence
-edges.  There is a full edge between two nodes associated with terms $s$ and $t$
-if and only if there is an equality $s=t$ (or $t=s$) in $E$.  The congruence
-closure algorithm adds congruence edges to the graph until (the smallest)
-fix-point is reached: a congruence edge is added between two terms with the same
-top symbol $f(s_1, \dots s_n)$ and $f(t_1, \dots t_n)$ if there is a path (using
-full and congruence edges) from $s_i$ to $t_i$ for all $i\in \{1,\dots n\}$.  An
-equality $s=t$ is implied by a set of literals $E$ if and only if there is a
-path between $s$ and $t$ in the congruence graph of $E$ built on all terms and
-subterms in $E$, $s$ and $t$.  A set of first-order literals $E$ is
-unsatisfiable if and only if there is an inequality $s\neq t \in E$ such that
-there is a path between $s$ and $t$ in the congruence graph of $E$.
+There are two kinds of edges in the graph: full edges and congruence edges.
+There is a full edge between two nodes associated with terms $s$ and $t$ if and
+only if there is an equality $s=t$ (or $t=s$) in $E$.  The congruence closure
+algorithm adds congruence edges to the graph until (the smallest) fix-point is
+reached: a congruence edge is added between two terms with the same top symbol
+$f(s_1, \dots s_n)$ and $f(t_1, \dots t_n)$ if there is a path (using full and
+congruence edges) from $s_i$ to $t_i$ for all $i\in \{1,\dots n\}$.  An equality
+$s=t$ between to terms in $E$ is implied by a set of literals $E$ if and only if
+there is a path between $s$ and $t$ in the congruence graph of $E$.  A set of
+first-order literals $E$ is unsatisfiable if and only if there is an inequality
+$s\neq t \in E$ such that there is a path between $s$ and $t$ in the congruence
+graph of $E$.
 
-\marginpar{Bruno: one possibility would be to put these remarks after lemma 3. Maybe we should omit these remarks until we fully convert our current results to results using these alternative ways of measuring size of the problem.}
-\marginpar{Andreas: I moved the remark here and edited it a little bit. I think it is more precise and concise now}
+%\marginpar{Bruno: one possibility would be to put these remarks after lemma 3. Maybe we should omit these remarks until we fully convert our current results to results using these alternative ways of measuring size of the problem.}
+%\marginpar{Andreas: I moved the remark here and edited it a little bit. I think it is more precise and concise now}
+%PF2ALL: it is nice here.
 
 The algorithms we consider in the next section take as input a set of equations E \marginpar{Andreas: I replaced literals S by equations E and hope that this is general enough while remaining clear}. 
 When we consider complexity, not only the cardinality of the set is important, but also the number of terms and subterms as well as the number of their occurrences. 
-Congruence closure algorithms in modern SMT solvers also typically work on Directed Acyclic Graphs (DAGs), not on trees to represent terms. In that case, what matters is not the number of term and subterm occurrences, but only the number of (sub)terms. However, the input is also typically not a set, but successive call to an assertion function with a literal as argument. In that case, every repetition of the
+Congruence closure algorithms in modern SMT solvers also typically work on Directed Acyclic Graphs (DAGs), not on trees, to represent terms. In that case, what matters is not the number of term and subterm occurrences, but only the number of (sub)terms. However, the input is also typically not a set, but successive calls to an assertion function with a literal as argument. In that case, every repetition of the
 same literal could matter for complexity. 
 Let us assume however here that the input is a set E, that terms are DAGs with maximal sharing (identity of two terms can be checked in constant time), and that identity of two function symbols can be checked in constant time. 
-Therefore, we characterize complexity results in terms of number of equations, terms and subterms of the input set, i.e. $|E| + |\mathcal{T}(E)|$.
+Therefore, we characterize complexity results in terms of number of literals, terms and subterms of the input set, i.e. $|E| + |\mathcal{T}(E)|$.
 
 \section*{NP-completeness of small conflict set generation problem}
 \label{sec:npcomplete}
@@ -197,11 +198,12 @@ is the problem of answering whether there exists a set $E'$ such that $E'
 \subseteq E$, $E' \models s = t$ and $|E'| \leq k$.
 \end{definition}
 
-\marginpar{In this paragraph, we are assuming that $=$ is the only predicate symbol. But we have not stated this assumption before. }
+%\marginpar{In this paragraph, we are assuming that $=$ is the only predicate symbol. But we have not stated this assumption before. }
+% PF2whoever: I think this is not a problem.
 \noindent The small explanation problem and the small conflict set generation
 problem are closely related.  There is a small explanation of size $k$ of $s=t$
 from $E$ if and only if there is a small conflict of size $k+1$ for $E \cup
-\{s\neq t\}$.  Our proof of hardness is based on a (polynomial) translation of
+\{s\neq t\}$.  The proof of hardness is based on a (polynomial) translation of
 the propositional satisfiability problem to the small explanation problem.
 
 \newcommand{\Assignment}{{\it Assignment}}
@@ -316,7 +318,7 @@ $E_{\mathcal{I}} \cup E_\mathcal{C}$.  Besides edges directly associated to
 equalities in the set, the only edges are congruence edges between terms
 $t_i(\hat{x}_j)$ and either $t_i(\top_j)$ or $t_i(\bot_j)$.  So any path from
 $\hat{c}_1$ to $\hat{c}_n$ would go through such a congruence edge for each $i$.
-And such an edge exists for $i$ if and only if clause $i$ is satisfied by
+And such an edge exists for $i$ if and only if the clause $i$ is satisfied by
 $\mathcal{I}$.
 
 The condition is also necessary.  If $\mathcal{I} \models \mathcal{C}$, then
