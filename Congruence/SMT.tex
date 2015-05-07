@@ -431,7 +431,9 @@ We have shown that the problem of deciding whether an explanation of a given siz
 
 In \cite{Nieuwenhuis3,Nieuwenhuis9} methods to obtain small, but not necessary the smallest, explanations are discussed.
 However, the proof tree data structure used in those methods is designed to prioritize speed of the congruence closure algorithm. 
-Other methods prioritizing small size of extracted explanations could still be investigated. Thanks to the NP-completeness, one option would be to iteratively encode the small explanation problem into SAT, and use SAT-solvers to find succesively smaller explanations, until the smallest explanation is found. \marginpar{note that we would have to encode and call a SAT-solver many times, with progressively smaller values of $k$, until we find a value of $k$ for which the encoded problem is unsatisfiable. this would guarantee a \emph{minimum} conflict, but would probably be less efficient than the iterative addition/removal of literals from the explanation, which only guarantees a \emph{minimal} conflict.} 
+Other methods prioritizing small size of extracted explanations could still be investigated. Thanks to the NP-completeness, one option would be to iteratively encode the small explanation problem into SAT, and use SAT-solvers to find succesively smaller explanations, until the smallest explanation is found. 
+Another approach would be to use Max-SAT to find the smallest explanation in one call to the solver.
+\marginpar{note that we would have to encode and call a SAT-solver many times, with progressively smaller values of $k$, until we find a value of $k$ for which the encoded problem is unsatisfiable. this would guarantee a \emph{minimum} conflict, but would probably be less efficient than the iterative addition/removal of literals from the explanation, which only guarantees a \emph{minimal} conflict.} 
 
 \vspace*{5pt}\noindent
 {\bf Acknowledgment.} We would like to thank Roberto Nieuwenhuis and Ashish
