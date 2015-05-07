@@ -400,16 +400,14 @@ The small conflict set problem is at least as hard as the small explanation prob
 
 \section*{Conclusion}
 
-Besson PxTP
-Obtaining small explanations for congruence of terms is an interesting subroutine of the classical congruence closure problem.
-Explanations are a form of a proof of the congruence of two terms, and generally small proofs are more desirable than large ones.
-We show that the problem of finding the smallest explanation is NP - complete in general.
-Therefore, it is infeasible to obtain the smallest explanation always.
+\marginpar{Besson PxTP}
+The extraction of small explanations for the congruence of terms is an interesting subroutine of the classical congruence closure algorithm, which is especially relevant in applications where proofs are desirable. When the lack of solution for an unsatisfiable problem needs to be externally verified, a proof/refutation may serve as a certificate of the unsatisfiability.
+
+We have shown that the problem of deciding whether an explanation of a given size exists is NP-complete. Therefore, it is generally intractable to obtain the smallest explanation. 
 
 In \cite{Nieuwenhuis3,Nieuwenhuis9} methods to obtain small, but not necessary the smallest, explanations are discussed.
-However, the proof tree data structure they use is designed towards speed of the congruence closure algorithm.
-Other methods to obtain small explanations still have to be investigated.
-An encoding of the small explanation problem into SAT could provide the smallest explanation for small instances and might turn out to be a good approach also for larger ones.
+However, the proof tree data structure used in those methods is designed to prioritize speed of the congruence closure algorithm. 
+Other methods prioritizing small size of extracted explanations could still be investigated. Thanks to the NP-completeness, one option would be to iteratively encode the small explanation problem into SAT, and use SAT-solvers to find succesively smaller explanations, until the smallest explanation is found. \marginpar{note that we would have to encode and call a SAT-solver many times, with progressively smaller values of $k$, until we find a value of $k$ for which the encoded problem is unsatisfiable. this would guarantee a \emph{minimum} conflict, but would probably be less efficient than the iterative addition/removal of literals from the explanation, which only guarantees a \emph{minimal} conflict.} 
 
 \vspace*{5pt}\noindent
 {\bf Acknowledgment.} We would like to thank Roberto Nieuwenhuis and Ashish
