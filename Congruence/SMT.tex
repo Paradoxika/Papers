@@ -375,25 +375,26 @@ to the small explanation problem.
 The small explanation problem is in NP.
 \end{lemma}
 \begin{proof}
-A solution to the small explanation decision problem is a subsets of the input
-equations, therefore it is are clearly polynomial in the problem size.  Whether
-a given subset is a solution can be verified by computing its congruence closure
-and checking whether the target terms are in the same congruence class.
-Congruence closure can be computed in polynomial time
+A solution to the small explanation decision problem is a subset of the input
+equations, therefore it is clearly polynomial in the problem size.  Whether
+a subset $E'$ is a solution can be verified by computing its congruence closure
+and checking whether the target equation $s = t$ is implied. Congruence closure can be computed in polynomial time
 \cite{Nelson2,Downey1,Nieuwenhuis6}.
 \end{proof}
 
-Lemmas~\ref{lemma:nphardness} and~\ref{lemma:innp} thus establish:
 
 \begin{theorem}[NP-completeness]
 The small explanation problem is NP-complete.
 \end{theorem}
-\noindent and also
+\begin{proof}
+By lemmas~\ref{lemma:nphardness} and~\ref{lemma:innp}.
+\end{proof}
+
 \begin{theorem}[NP-completeness]
 The small conflict set problem is NP-complete.
 \end{theorem}
 \begin{proof}
-The small conflict set problem is at least as hard as the small explanation problem since the small explanation problem has been showed to be reducible to the small conflict set problem.  It is also in NP for exactly the same reason that the small explanation problem.
+The small conflict set problem is at least as hard as the small explanation problem since the small explanation problem has been showed to be reducible to the small conflict set problem.  It is also in NP for exactly the same reason that the small explanation problem is.
 \end{proof}
 
 
