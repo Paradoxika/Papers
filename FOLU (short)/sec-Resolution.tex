@@ -30,20 +30,23 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
     then
     $\psi_L \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
     \begin{align*}
-      V &= V_L \cup V_R \cup \{\n \} \\
+      V &= V_L \cup V_R \cup \{\n \} \qquad
+      \Gamma = \left( \clause_L \setminus \left\{ \ell_L \right\} \right) \sigma_L \cup \left( \clause_R
+                    \setminus \left\{ \ell_R \right\} \right) \sigma_R  \\
       E &= E_L \cup E_R \cup
                     \left\{ \raiz{\psi_L} \xrightarrow[\sigma_L]{\{\ell_L\} } \n, 
-                            \raiz{\psi_R} \xrightarrow[\sigma_R]{\{\ell_R\} } \n \right\} \\
-     \Gamma &= \left( \clause_L \setminus \left\{ \ell_L \right\} \right) \sigma_L \cup \left( \clause_R
-                    \setminus \left\{ \ell_R \right\} \right) \sigma_R 
+                            \raiz{\psi_R} \xrightarrow[\sigma_R]{\{\ell_R\} } \n \right\}
     \end{align*}
     where $\n$ is a new (resolution) node and $\raiz{\varphi}$ denotes the root node of $\varphi$. The \emph{resolved atom} $\ell$ is such that $\ell = \ell_L \sigma_L = \dual{\ell_R} \sigma_R$ or $\ell = \dual{\ell_L} \sigma_L = \ell_R \sigma_R$.
   \item \textbf{Contraction:} If $\psi'$ is a proof $\langle V', E', \clause' \rangle$ and $\sigma$ is a unifier of $\{\ell_1, \ldots \ell_n\}$ with $\{\ell_1, \ldots \ell_n\} \subseteq \clause'$, then $\con{\psi}{\{\ell_1, \ldots \ell_n\}}{\sigma}$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
+    \begin{small}
     \begin{align*}
-      V &= V' \cup \{\n \} \\
-      E &= E' \cup \{ \raiz{\psi'} \xrightarrow[\sigma]{\{\ell_1, \ldots \ell_n\}} \n \} \\
+      V &= V' \cup \{\n \} &\quad
+      E &= E' \cup \{ \raiz{\psi'} \xrightarrow[\sigma]{\{\ell_1, \ldots \ell_n\}} \n \} 
+      &\quad
      \Gamma &= (\clause' \setminus \{ \ell_1, \ldots \ell_n \} ) \sigma \cup \{ \ell \}
     \end{align*}
+    \end{small}
     where $\n$ is a new (contraction) node, $\ell = \ell_k \sigma$ (for any $k \in \{1,\ldots, n\}$) and $\raiz{\varphi}$ denotes the root node of $\varphi$.
   \qed
 \end{itemize}
