@@ -2,9 +2,30 @@
 \section{A Linear Greedy Variant of First-Order LowerUnits}
 \label{sec:SimpleFOLU}
 
-The {\FOLowerUnits} described in the previous section is not only complex (worst-case quadratic run-time complexity in the length of the input proof) but also difficult to implement. The necessity to ensure the post-deletion unifiability property would require a lot of bookkeeping, to track changes in literals and their descendants, and to know which literals have to be contracted in the bottom of the proof before reintroduction of the units. 
+%%original
+%The {\FOLowerUnits} described in the previous section is not only complex (worst-case quadratic run-time complexity in the length of the input proof) but also difficult to implement. The necessity to ensure the post-deletion unifiability property would require a lot of bookkeeping, to track changes in literals and their descendants, and to know which literals have to be contracted in the bottom of the proof before reintroduction of the units. 
 
-This section presents {\SFOLowerUnits} (Algorithm \ref{algo:optSFOLU}), an alterantive (single traversal) variant of {\FOLowerUnits}, which avoids the quadratic complexity and the implementation difficulties by: 1) ignoring the stricter post-deletion unifiability property and focusing instead on the pre-deletion unifiability property, which is easier to check (lines 9-11); and 2) employing a greedy contraction approach (lines 16-18) together with substitutions (lines 5-7), in order not to care about bookkeeping. By doing so, compression may not always succeed on all proofs (e.g. Example \ref{ex:rootpair}). When compression succeeds, the root clause of the generated proof will be the empty clause (line 20) and the generated proof may be returned. Otherwise, the original proof must be returned (line 20).
+%The necessity to ensure the post-deletion unifiability property would require a lot of bookkeeping, to track changes in literals and their descendants, and to know which literals have to be contracted in the bottom of the proof before reintroduction of the units. Such an algorithm would be not only complex (worst-case quadratic run-time complexity in the length of the input proof, as each deletion would may be required for every collected unit) but also difficult to implement.
+
+%The necessity to ensure the post-deletion unifiability property would require a lot of bookkeeping, to track changes in literals and their descendants, and to know which literals have to be contracted in the bottom of the proof before reintroduction of the units. 
+%Further, in the worst case the deletion algorithm may have to be executed once for every collected unit, and the number of collected units is in the worst case linear in the length of the proof, the overall runtime complexity is in the worst case quadratic with respect to the length of the proof. 
+%Such an algorithm would be not only complex but also difficult to implement. 
+
+%%original
+%This section presents {\SFOLowerUnits} (Algorithm \ref{algo:optSFOLU}), an alterantive (single traversal) variant of {\FOLowerUnits}, which avoids the quadratic complexity and the implementation difficulties by: 1) ignoring the stricter post-deletion unifiability property and focusing instead on the pre-deletion unifiability property, which is easier to check (lines 9-11); and 2) employing a greedy contraction approach (lines 16-18) together with substitutions (lines 5-7), in order not to care about bookkeeping. By doing so, compression may not always succeed on all proofs (e.g. Example \ref{ex:rootpair}). When compression succeeds, the root clause of the generated proof will be the empty clause (line 20) and the generated proof may be returned. Otherwise, the original proof must be returned (line 20).
+
+%adapted from the old FOLU section
+The examples shown in the previous section indicate that there are two main challenges that need to be overcome in order to generalize \LowerUnits to the first-order case:
+\begin{enumerate}
+\item The deletion of a node changes literals. Since substitutions associated with the deleted node are not applied anymore, some literals become more general. Therefore, the reconstruction of the proof during deletion needs to take such changes into account.
+\item Whether a unit should be collected for lowering must depend on whether the literals that were resolved with the unit's single literal are unifiable after they are propagated down to the bottom of the proof by the process of unit deletion. Only if this is the case, they can be contracted and the unit can be reintroduced in the bottom of the proof.
+\end{enumerate}
+
+The first challenge can be overcome by keeping an additional map from old literals in the input proof to the corresponding more general changed literals in the output proof under construction. The second challenge is harder to overcome. In the propositional case, collecting units and deleting units can be done in two distinct and independent phases (as in {\LowerUnits}). In the first-order case, on the other hand, these two phases seem to be so interlaced, that they appear to be in a deadlock: the decision to collect a unit to be lowered depends on what will happen with the proof after deletion, while deletion depends on knowing which units will be lowered. In a naive approach, the deletion algorithm may have to be executed once for every collected unit, and since the number of collected units is in the worst case linear in the length of the proof, the overall runtime complexity is quadratic with respect to the length of the proof. 
+
+This section presents {\SFOLowerUnits} (Algorithm \ref{algo:optSFOLU}), an single traversal first-order adaptation of {\LowerUnits}, which avoids
+the quadratic complexity and the 
+implementation difficulties by: 1) ignoring the stricter post-deletion unifiability property and focusing instead on the pre-deletion unifiability property, which is easier to check (lines 9-11); and 2) employing a greedy contraction approach (lines 16-18) together with substitutions (lines 5-7), in order not to care about bookkeeping. By doing so, compression may not always succeed on all proofs (e.g. Example \ref{ex:rootpair}). When compression succeeds, the root clause of the generated proof will be the empty clause (line 20) and the generated proof may be returned. Otherwise, the original proof must be returned (line 20).
 
 \newlength\algowd
 \def\savewd#1{\setbox0=\hbox{#1\hspace{.7in}}\algowd=\wd0\relax#1}
