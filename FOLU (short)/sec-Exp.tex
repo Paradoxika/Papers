@@ -1,6 +1,5 @@
 
 \section{Experiments} \label{sec:exp}
-
 A prototype
 %\footnote{Source code available at \url{https://github.com/jgorzny/Skeptik}}
 of a (two-traversal) version of {\SFOLowerUnits} has been implemented in the functional programming language Scala
@@ -56,9 +55,10 @@ The total time needed by {\SPASS} to solve the 308 problems for which proofs wer
 %\begin{figure}%USED
 %\includegraphics[scale=0.5]{images/compress_ratio_res_vs_proof_length_all_proofs.pdf}
 %\end{figure}
-\begin{figure}
+\begin{figure}[t]
 \centering
 %    \subfloat[Average compression (only success)]{{\includegraphics[scale=0.5]{images/compress_ratio_res_vs_proof_length.pdf} }}
+\vspace{-0.5cm}
     \subfloat[Compression ratio]{{\includegraphics[scale=0.5]{images/compress_ratio_res_vs_proof_length_all_proofs.pdf} }}%\hfilll
     \subfloat[Number of (non-)compressed proofs]{{\includegraphics[scale=0.5]{images/num_compressed_stacked.pdf}}}\hfill
     \subfloat[Compressed length against input length]{{\includegraphics[scale=0.5]{images/compress_length_no_sub_vs_length_all_proofs.pdf} }}
