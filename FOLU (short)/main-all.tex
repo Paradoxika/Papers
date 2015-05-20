@@ -459,11 +459,9 @@ The total time needed by {\SPASS} to solve the 308 problems for which proofs wer
 \section{Conclusions and Future Work}
 
 
-{\SFOLowerUnits} is our first attempt to lift a propositional proof compression algorithm to the first-order case. We consider this algorithm a prototype, useful to evaluate whether this approach is promising. The experimental results discussed in the previous section are encouraging, especially in comparison with existing results for the propositional case. In the near future, we shall seek improvements of this algorithm as well as other ways to overcome the difficulties related to the post-deletion unifiability property. 
+{\SFOLowerUnits} is our first attempt to lift a propositional proof compression algorithm to the first-order case. We consider it a prototype, useful to evaluate this approach. The results discussed in the previous section are encouraging, especially in comparison with existing results for the propositional case. In the near future, we shall seek improvements of this algorithm as well as other ways to overcome the difficulties related to the post-deletion unifiability property. The difficulties related to unit reintroduction suggest that other propositional proof compression algorithms that do not require reintroduction (e.g. {\RecyclePivotsIntersection} \cite{LURPI}) might need less sophisticated bookkeeping when lifted to first-order.
 
-The difficulties related to unit reintroduction suggest that other propositional proof compression algorithms that do not require reintroduction (e.g. {\RecyclePivotsIntersection} \cite{LURPI}) might need less sophisticated bookkeeping when lifted to first-order.
-
-The efficiency and versatility of contemporary automated theorem provers depend on inference rules (e.g. equality rules) and techniques (e.g. splitting) that go beyond the pure resolution calculus. The eventual generalization of the compression algorithms to support such extended calculi will be essential for their usability on a wider range of problems.
+The efficiency and versatility of contemporary automated theorem provers depend on inference rules and techniques that go beyond the pure resolution calculus. The generalization of compression algorithms to support such extended calculi will be essential for their usability on a wider range of problems.
 
 
 
