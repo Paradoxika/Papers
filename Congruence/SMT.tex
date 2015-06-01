@@ -101,8 +101,9 @@ notations used in this paper.
 A literal is either a propositional variable or the negation of a propositional
 variable.  A clause is a disjunctive set of literals.  A propositional variable
 $x$ appears positively (negatively) in a clause $C$ if $x \in C$ (resp.\ $\neg x
-\in C$).  The notations $\{\ell_1, \dots \ell_n\}$ and $\ell_1 \vee \dots
-\vee \ell_n$ will be used interchangeably.  A formula in conjunctive normal form (CNF
+\in C$).  The notations $\{\ell_1, \dots \ell_n\}$ and $\ell_1 \vee \dots \vee
+\ell_n$ will be used interchangeably.  A clause is tautological if it contains a variable positively and negatively; it is non-tautological otherwise.  We will mainly work with non-tautological clauses, except explicitly stated.  Clauses being sets, they can not contain multiple occurrences of the same literal.  
+A formula in conjunctive normal form (CNF
 for short) is a conjunctive set of clauses.  A total (partial) assignment $\cal
 I$ for a formula in propositional logic associates a value in $\{\top, \bot\}$
 to each (resp.\ some) propositional variable(s) in the formula.  An assignment
@@ -299,13 +300,16 @@ This is actually the aim of the construction.
 
 \begin{lemma}
 \label{lemma:eqv}
-Consider a (partial or total) assignment $\mathcal{I}$ for a set of clauses
-$\mathcal{C}= \{C_1, \dots C_n\}$ using variables $x_1,\ldots, x_m$.  $\mathcal{I} \models \mathcal{C}$ if and only if
+Consider a (partial or total) assignment $\mathcal{I}$ for a set of
+non-tautological clauses $\mathcal{C}= \{C_1, \dots C_n\}$ using variables
+$x_1,\ldots, x_m$.  $\mathcal{I} \models \mathcal{C}$ if and only if
 $E_{\mathcal{I}} \cup E_\mathcal{C} \models \hat{c}_1 = \hat{c}'_n$.
-Furthermore, $|E_{\mathcal{I}} \cup E_\mathcal{C}|$ and $|\mathcal{T}(E_{\mathcal{I}} \cup E_\mathcal{C})|$ are polynomial in $n$ and $m$.
+Furthermore, $|E_{\mathcal{I}} \cup E_\mathcal{C}|$ and
+$|\mathcal{T}(E_{\mathcal{I}} \cup E_\mathcal{C})|$ are polynomial in $n$ and
+$m$.
 \end{lemma}
 \begin{proof}
-The condition is sufficient.  Consider the congruence graph induced by
+($\Leftarrow$)  Consider the congruence graph induced by
 $E_{\mathcal{I}} \cup E_\mathcal{C}$.  Besides edges directly associated to
 equalities in the set, the only edges are congruence edges between terms
 $t_i(\hat{x}_j)$ and either $t_i(\top_j)$ or $t_i(\bot_j)$.  So any path from
@@ -313,7 +317,7 @@ $\hat{c}_1$ to $\hat{c}'_n$ would go through such a congruence edge for each $i$
 And such an edge exists for $i$ if and only if the clause $i$ is satisfied by
 $\mathcal{I}$.
 
-The condition is also necessary.  If $\mathcal{I} \models \mathcal{C}$, then
+($\Rightarrow$)  If $\mathcal{I} \models \mathcal{C}$, then
 $\mathcal{I} \models C_i$ for each clause $C_i \in \mathcal{C}$.  Assume
 $\mathcal{I}$ makes true a variable $x_j$, literal of $C_i$ (the case of
 the negation of a variable is handled similarly).  Then $E_{\mathcal{I}} \models
@@ -357,24 +361,32 @@ explanation.
 
 
 \begin{lemma}
-A set of clauses $\mathcal{C}= \{C_1, \dots C_n\}$ using variables $x_1,\dots,
-x_m$ is satisfiable if and only if there is a subset $E' \subseteq
-\Assignment^\star \cup E_{\mathcal{C}'}$ such that $E'\models \hat{c}_1 =
-\hat{c}'_{n+m}$ and $|E'| \leq 3n+4m-1$, where $\mathcal{C}'$ is $\mathcal{C}$
-augmented with the tautological clauses $c_{n+i} = x_i \vee \neg x_i$ for
-$i=1,\dots m$.
+A set of non-tautological clauses $\mathcal{C}= \{C_1, \dots C_n\}$ using
+variables $x_1,\dots, x_m$ is satisfiable if and only if there is a subset $E'
+\subseteq \Assignment^\star \cup E_{\mathcal{C}'}$ such that $E'\models
+\hat{c}_1 = \hat{c}'_{n+m}$ and $|E'| \leq 3n+4m-1$, where $\mathcal{C}'$ is
+$\mathcal{C}$ augmented with the tautological clauses $C_{n+i} = x_i \vee \neg
+x_i$ for $i=1,\dots m$.
 \end{lemma}
 \begin{proof}
-The condition is straightforwardly necessary.  It is also sufficient since an
-explanation of $\hat{c}_1 = \hat{c}'_{n+m}$ has to contain $2(n + m)$
-equations from $Clause_i$ ($i= 1\dots n + m$) and $n + m - 1$ equations from
-$\Connect$.  Thanks to the tautological clauses, any explanation also has to
-contain at least $\hat{x}_j = \top_j$ or $\hat{x}_j = \bot_j$ for each
-$j\in\{1\dots m\}$. Therefore, the cardinality constraint requires that the explanation
-contains at most one $\hat{x}_j = \top_j$ or $\hat{x}_j = \bot_j$ for each
-$j\in\{1\dots m\}$.  If such an explanation exists, Lemma~\ref{lemma:eqv}
-guarantees the existence of a model for $\mathcal{C'}$, or equivalently for
-the original set of clauses $\mathcal{C}$.
+($\Rightarrow$)  Consider a total model $\mathcal{I}$ for
+$\mathcal{C}$: $E_{\mathcal{I}} \subset \Assignment^\star$ contains exactly $m$
+elements.  For each clause $i$ ($i= 1\dots n + m$), collect in $E\subset
+E_{\mathcal{C}'}$ both equations relative to one satisfied literal (that is $2(n
++m)$ equations in total), as well as the $n + m - 1$ equations from $\Connect$.
+The equation $\hat{c}_1 = \hat{c}'_{n+m}$ is a consequence of the disjoint union
+$E \cup E_{\mathcal{I}}$, which contains $3n + 4m - 1$ elements.
+
+($\Leftarrow$)  An explanation of $\hat{c}_1 =
+\hat{c}'_{n+m}$ has to contain $2(n + m)$ equations from $Clause_i$ ($i= 1\dots
+n + m$) and $n + m - 1$ equations from $\Connect$.  Thanks to the tautological
+clauses, any explanation also has to contain at least $\hat{x}_j = \top_j$ or
+$\hat{x}_j = \bot_j$ for each $j\in\{1\dots m\}$.  Therefore, the cardinality
+constraint requires that the explanation contains at most one $\hat{x}_j =
+\top_j$ or $\hat{x}_j = \bot_j$ for each $j\in\{1\dots m\}$.  If such an
+explanation exists, Lemma~\ref{lemma:eqv} guarantees the existence of a model
+for $\mathcal{C'}$, or equivalently for the original set of clauses
+$\mathcal{C}$.
 \end{proof}
 
 \begin{corollary}[NP-hardness]
