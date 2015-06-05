@@ -1,18 +1,21 @@
 \documentclass{easychair}
 
-\title{A note on conflict set generation\\ for congruence closure\\\small Extended abstract}
-\titlerunning{A note on congruence closure}
+%\title{A note on conflict set generation\\ for congruence closure\\\small Extended abstract}
+%\titlerunning{A note on congruence closure}
+\title{NP-completeness of small conflict set generation for congruence closure}
+\titlerunning{Conflict generation for congruence closure}
+
 
 \author{Andreas Fellner\inst{1,2}
    \and Pascal Fontaine\inst{3}
    \and\\ Georg Hofferek\inst{4}
-   \and Bruno Woltzenlogel Paleo\inst{2,5}
+   \and Bruno Woltzenlogel Paleo\inst{2,5}\thanks{This work has been partially supported by the project ANR-13-IS02-0001 of the Agence Nationale de la Recherche, by the European Union Seventh Framework Programme under grant agreement no. 295261 (MEALS), and by the STIC AmSud MISMT}
 }
 \institute{IST-Austria, Klosterneuburg (Austria)
 \and Vienna University of Technology (Austria)
 \and Inria, Loria, U. of Lorraine (France)
 \and IAIK, Graz University of Technology (Austria)
-\and Australian National University and NICTA (Australia)
+\and Australian National University (Australia)
 }
 
 \authorrunning{Fellner et al.}
@@ -216,12 +219,12 @@ E_{\mathcal{C}} = \Connect \cup \bigcup_{1 \leq i \leq n}\Clause_i
 \end{equation*}
 with
 \begin{eqnarray*}
-	\Connect &=& \{ \hat{c}_{i}' = \hat{c}_{i+1} \ \mid\ 1 \leq i < n\}\\
-        \Clause_i &=& \{ \hat{c}_i = t_i(\hat{x}_j) \ \mid\ x_j \text{ appears in } C_i \}\\
-           & & \cup\ \{ t_i(\top_j) = \hat{c}_i' \ \mid\ x_j \text{ appears positively in } C_i \}\\
-           & & \cup\ \{ t_i(\bot_j) = \hat{c}_i' \ \mid\ x_j \text{ appears negatively in } C_i \}
+	\Connect &=& \{ c_{i}' = c_{i+1} \ \mid\ 1 \leq i < n\}\\
+        \Clause_i &=& \{ c_i = t_i(\hat{x}_j) \ \mid\ x_j \text{ appears in } C_i \}\\
+           & & \cup\ \{ t_i(\top_j) = c_i' \ \mid\ x_j \text{ appears positively in } C_i \}\\
+           & & \cup\ \{ t_i(\bot_j) = c_i' \ \mid\ x_j \text{ appears negatively in } C_i \}
 \end{eqnarray*}
-where $\hat{c}_{1},\dots \hat{c}_{n},\hat{c}_{1}', \dots \hat{c}_{n}',
+where $c_{1},\dots c_{n},c_{1}', \dots c_{n}',
 \hat{x}_1, \dots \hat{x}_m, \top_1, \dots \top_m, \bot_1, \dots \bot_m$ are distinct constants, and $t_1, \dots t_n$ are
 distinct unary functions.
 
@@ -252,7 +255,7 @@ Assignments can also be translated to sets of equations:
 \begin{definition}[Assignment congruence translation]
 Let $\mathcal{I}$ be an assignment on variables $x_1,\ldots,x_m$.
 %The set of terms $\mathcal{T}$ is constructed using the following constants and function symbols.
-%For every $i= 1,\ldots,n + 1$, there is a constant $\hat{c}_i$ and function symbols $t_i$ and $f_i$.
+%For every $i= 1,\ldots,n + 1$, there is a constant $c_i$ and function symbols $t_i$ and $f_i$.
 %For every $j= 1,\ldots,m$, there are constants $\hat{x}_j$, $\top_j$ and $\bot_j$.
 The congruence translation $E_{\mathcal{I}}$ of $\mathcal{I}$ is defined as the set of equations
 \begin{eqnarray*}
@@ -276,8 +279,8 @@ Consider the model $\mathcal{I} = \{x_1, \neg x_2, x_3\}$ of\/ $\mathcal{C}$.
 Figure~\ref{fig:npassignment} gives a graphical representation of
 $E_{\mathcal{I}}$, whereas $\Assignment^\star$ is described by
 Figure~\ref{fig:npassignmentstar}.  Notice that
-$E_{\mathcal{C}} \cup E_{\mathcal{I}} \models \hat{c}_1 = \hat{c}'_3$,
-and $\hat{c}_1$ and $\hat{c}'_3$ are connected in the congruence graph
+$E_{\mathcal{C}} \cup E_{\mathcal{I}} \models c_1 = c'_3$,
+and $c_1$ and $c'_3$ are connected in the congruence graph
 of $E_{\mathcal{C}} \cup E_{\mathcal{I}}$ (Figure~\ref{fig:npmodel}).
 This is actually the aim of the construction.
 
@@ -304,14 +307,14 @@ This is actually the aim of the construction.
 Consider a (partial or total) assignment $\mathcal{I}$ for a set of
 non-tautological clauses $\mathcal{C}= \{C_1, \dots C_n\}$ using variables
 $x_1,\ldots, x_m$.  $\mathcal{I} \models \mathcal{C}$ if and only if
-$E_{\mathcal{I}} \cup E_\mathcal{C} \models \hat{c}_1 = \hat{c}'_n$.
+$E_{\mathcal{I}} \cup E_\mathcal{C} \models c_1 = c'_n$.
 \end{lemma}
 \begin{proof}
 ($\Leftarrow$)  Consider the congruence graph induced by
 $E_{\mathcal{I}} \cup E_\mathcal{C}$.  Besides edges directly associated to
 equalities in the set, the only edges are congruence edges between terms
 $t_i(\hat{x}_j)$ and either $t_i(\top_j)$ or $t_i(\bot_j)$.  So any path from
-$\hat{c}_1$ to $\hat{c}'_n$ would go through such a congruence edge for each $i$.
+$c_1$ to $c'_n$ would go through such a congruence edge for each $i$.
 And such an edge exists for $i$ if and only if the clause $i$ is satisfied by
 $\mathcal{I}$.
 
@@ -320,9 +323,9 @@ $\mathcal{I} \models C_i$ for each clause $C_i \in \mathcal{C}$.  Assume
 $\mathcal{I}$ makes true a variable $x_j$, literal of $C_i$ (the case of
 the negation of a variable is handled similarly).  Then $E_{\mathcal{I}} \models
 t_i(\hat{x}_j) = t_i(\top_j)$, and $E_{\mathcal{I}} \cup \Clause_i
-\models \hat{c}_i = \hat{c}_i'$.  This is true for each $i$, and
+\models c_i = c_i'$.  This is true for each $i$, and
 thanks to the equations in \Connect, one can deduce using transitivity that
-$E_{\mathcal{I}} \cup E_\mathcal{C} \models \hat{c}_1 = \hat{c}_n'$.
+$E_{\mathcal{I}} \cup E_\mathcal{C} \models c_1 = c_n'$.
 
 \end{proof}
 
@@ -337,7 +340,7 @@ $m$.
 $E_{\mathcal{I}}$ contains at most $m$ equations, since for no $j$ both $\mathcal{I} \models x_j$ and $\mathcal{I} \models \neg x_j$.
 The set $Connect$ contains exactly $n-1$ equations.
 For every $i$, the set $Clause_i$ contains at most $2m$ equations.
-$E_{\mathcal{I}} \cup E_\mathcal{C}$ contains at most $2n + 3m + 3mn$ terms (for $i = 1,\ldots n$, $j = 1,\ldots m$ we have $\hat{c}_i,\hat{c}_i'$, $\hat{x}_j,\top_j,\bot_j$ and $t_i(\hat{x}_j),t_i(\top_j),t_i(\bot_j))$.
+$E_{\mathcal{I}} \cup E_\mathcal{C}$ contains at most $2n + 3m + 3mn$ terms (for $i = 1,\ldots n$, $j = 1,\ldots m$ we have $c_i,c_i'$, $\hat{x}_j,\top_j,\bot_j$ and $t_i(\hat{x}_j),t_i(\top_j),t_i(\bot_j))$.
 In total we have $|E_{\mathcal{I}} \cup E_\mathcal{C}| < n-1 + m + 2mn$ and $|\mathcal{T}(E_{\mathcal{I}} \cup E_\mathcal{C})| < 2n + 3m + 3mn$.
 \end{proof}
 \end{lemma}
@@ -345,20 +348,20 @@ In total we have $|E_{\mathcal{I}} \cup E_\mathcal{C}| < n-1 + m + 2mn$ and $|\m
 \noindent 
 %Notice also that, for any model $\mathcal{I}$ of a set of $n$ clauses
 %$\mathcal{C}$, every explanation that $E_{\mathcal{I}} \cup E_\mathcal{C}
-%\models \hat{c}_1 = \hat{c}_n'$ contains at least two equalities in
+%\models c_1 = c_n'$ contains at least two equalities in
 %each set $\Clause_i$, since each clause has to be satisfied.  But also, there is
 %an explanation that contains exactly two equalities in each set $\Clause_i$.
 Considering again Example~\ref{ex:np2}, and particularly
-Figure~\ref{fig:npmodel}, any transitivity chain from $\hat{c}_1$ to
-$\hat{c}'_3$ will pass through $\hat{c}'_1$, $\hat{c}_2$, $\hat{c}_2'$ and
-$\hat{c}_3$.  Any acyclic path from $\hat{c}_1$ to $\hat{c}'_3$ will contain 11
+Figure~\ref{fig:npmodel}, any transitivity chain from $c_1$ to
+$c'_3$ will pass through $c'_1$, $c_2$, $c_2'$ and
+$c_3$.  Any acyclic path from $c_1$ to $c'_3$ will contain 11
 edges: 3 congruence edges, $3\times 2$ edges in $\Clause_i$ for $i=1,\dots 3$
 and 2 edges from $\Connect$.
 
 Since every interpretation $\mathcal{I}$ is such that $E_{\mathcal{I}} \subset
 \Assignment^\star$, one can try to relate the propositional satisfiability
 problem for a set of clauses $\mathcal{C}= \{C_1, \dots C_n\}$ to finding an
-explanation of $\hat{c}_1 = \hat{c}_n'$ in $\Assignment^\star \cup
+explanation of $c_1 = c_n'$ in $\Assignment^\star \cup
 E_{\mathcal{C}}$.  However, it is necessary that this explanation does not set
 $\hat{x}_j$ equal both to $\top_j$ and $\bot_j$, i.e.\ at most one of the two
 equations $\hat{x}_j = \top_j$ and $\hat{x}_j = \bot_j$ should be in the
@@ -373,7 +376,7 @@ explanation.
 A set of non-tautological clauses $\mathcal{C}= \{C_1, \dots C_n\}$ using
 variables $x_1,\dots, x_m$ is satisfiable if and only if there is a subset $E'
 \subseteq \Assignment^\star \cup E_{\mathcal{C}'}$ such that $E'\models
-\hat{c}_1 = \hat{c}'_{n+m}$ and $|E'| \leq 3n+4m-1$, where $\mathcal{C}'$ is
+c_1 = c'_{n+m}$ and $|E'| \leq 3n+4m-1$, where $\mathcal{C}'$ is
 $\mathcal{C}$ augmented with the tautological clauses $C_{n+i} = x_i \vee \neg
 x_i$ for $i=1,\dots m$.
 \end{lemma}
@@ -383,11 +386,11 @@ $\mathcal{C}$: $E_{\mathcal{I}} \subset \Assignment^\star$ contains exactly $m$
 elements.  For each clause $i$ ($i= 1\dots n + m$), collect in $E\subset
 E_{\mathcal{C}'}$ both equations relative to one satisfied literal (that is $2(n
 +m)$ equations in total), as well as the $n + m - 1$ equations from $\Connect$.
-The equation $\hat{c}_1 = \hat{c}'_{n+m}$ is a consequence of the disjoint union
+The equation $c_1 = c'_{n+m}$ is a consequence of the disjoint union
 $E \cup E_{\mathcal{I}}$, which contains $3n + 4m - 1$ elements.
 
-($\Leftarrow$)  An explanation of $\hat{c}_1 =
-\hat{c}'_{n+m}$ has to contain $2(n + m)$ equations from $Clause_i$ ($i= 1\dots
+($\Leftarrow$)  An explanation of $c_1 =
+c'_{n+m}$ has to contain $2(n + m)$ equations from $Clause_i$ ($i= 1\dots
 n + m$) and $n + m - 1$ equations from $\Connect$.  Thanks to the tautological
 clauses, any explanation also has to contain at least $\hat{x}_j = \top_j$ or
 $\hat{x}_j = \bot_j$ for each $j\in\{1\dots m\}$.  Therefore, the cardinality
