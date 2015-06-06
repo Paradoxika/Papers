@@ -1,0 +1,73 @@
+
+\centering
+\begin{tikzpicture}[node distance=.3cm]
+\small
+\node(c1){$c_1\phantom{'}$};
+
+\node[right =.25cm of c1] (t1x2) {$t_1(\hat{x}_2)$};
+\node[above =.8cm of t1x2] (t1x1) {$t_1(\hat{x}_1)$};
+\node[below =.8cm of t1x2] (t1x3) {$t_1(\hat{x}_3)$};
+\draw [-] (c1) to (t1x2);
+\draw [-] (c1) to (t1x1);
+\draw [-] (c1) to (t1x3);
+
+\node[right = 3.1cm of c1](c1p){$c_1'$};
+
+\node[left =.25cm of c1p] (t12) {$t_1(\top_2)$};
+\node[above=.8cm of t12] (t11) {$t_1(\top_1)$};
+\node[below=.8cm of t12] (t13) {$t_1(\bot_3)$};
+\draw [-] (c1p) to (t11);
+\draw [-] (c1p) to (t12);
+\draw [-] (c1p) to (t13);
+
+\node[right = .3cm of c1p](c2){$c_2\phantom{'}$};
+\draw [-] (c1p) to (c2);
+
+\node[right=.25cm of c2, yshift=.8cm]  (t2x2) {$t_2(\hat{x}_2)$};
+\node[right=.25cm of c2, yshift=-.8cm] (t2x3) {$t_2(\hat{x}_3)$};
+\draw [-] (c2) to (t2x2);
+\draw [-] (c2) to (t2x3);
+
+\node[right = 3.1cm of c2](c2p){$c_2'$};
+\node[left =.25cm of c2p, yshift=.8cm]  (t22) {$t_2(\bot_2)$};
+\node[left =.25cm of c2p, yshift=-.8cm] (t23) {$t_2(\top_3)$};
+\draw [-] (c2p) to (t23);
+\draw [-] (c2p) to (t22);
+
+\node[right = .3cm of c2p](c3){$c_3\phantom{'}$};
+\draw [-] (c2p) to (c3);
+\node[right =.25cm of c3, yshift=.8cm] (t3x1) {$t_3(\hat{x}_1)$};
+\node[right =.25cm of c3, yshift=-.8cm] (t3x2) {$t_3(\hat{x}_2)$};
+\draw [-] (c3) to (t3x1);
+\draw [-] (c3) to (t3x2);
+
+\node[right = 3.1cm of c3](c3p){$c_3'$};
+\node[left =.25cm of c3p, yshift=.8cm] (t31) {$t_3(\bot_1)$};
+\node[left =.25cm of c3p, yshift=-.8cm] (t32) {$t_3(\bot_2)$};
+\draw [-] (c3p) to (t31);
+\draw [-] (c3p) to (t32);
+
+\node [below =1.3cm of c2, xshift=1.5cm] (x1) {$\hat{x}_1$};
+\node [below =.5cm of x1] (x2) {$\hat{x}_2$};
+\node [below =.5cm of x2] (x3) {$\hat{x}_3$};
+
+\node [right = of x1] (t1) {$\top_1$};
+
+\draw [-] (x1) to (t1);
+
+\node [left = of x2] (t2) {$\bot_2$};
+
+\draw [-] (x2) to (t2);
+
+\node [right = of x3] (t3) {$\top_3$};
+
+\draw [-] (x3) to (t3);
+
+\draw [dotted] (t1x1) to (t11);
+\draw [dotted] (t1x3) to (t13);
+\draw [dotted] (t2x2) to (t22);
+\draw [dotted] (t2x3) to (t23);
+\draw [dotted] (t3x2) to (t32);
+
+\end{tikzpicture}
+

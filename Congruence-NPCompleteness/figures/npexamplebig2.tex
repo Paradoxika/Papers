@@ -1,0 +1,51 @@
+
+\centering
+\begin{tikzpicture}[node distance=.3cm]
+\small
+\node(c1){$c_1\phantom{'}$};
+
+\node[right =.25cm of c1] (t1x2) {$t_1(\hat{x}_2)$};
+\node[above =.8cm of t1x2] (t1x1) {$t_1(\hat{x}_1)$};
+\node[below =.8cm of t1x2] (f1x3) {$t_1(\hat{x}_3)$};
+\draw [-] (c1) to (t1x2);
+\draw [-] (c1) to (t1x1);
+\draw [-] (c1) to (f1x3);
+
+\node[right = 3.1cm of c1](c1p){$c_1'$};
+
+\node[left =.25cm of c1p] (t12) {$t_1(\top_2)$};
+\node[above=.8cm of t12] (t11) {$t_1(\top_1)$};
+\node[below=.8cm of t12] (f13) {$t_1(\bot_3)$};
+\draw [-] (c1p) to (t11);
+\draw [-] (c1p) to (t12);
+\draw [-] (c1p) to (f13);
+
+\node[right = .3cm of c1p](c2){$c_2\phantom{'}$};
+\draw [-] (c1p) to (c2);
+
+\node[right=.25cm of c2, yshift=.8cm]  (f2x2) {$t_2(\hat{x}_2)$};
+\node[right=.25cm of c2, yshift=-.8cm] (t2x3) {$t_2(\hat{x}_3)$};
+\draw [-] (c2) to (f2x2);
+\draw [-] (c2) to (t2x3);
+
+\node[right = 3.1cm of c2](c2p){$c_2'$};
+\node[left =.25cm of c2p, yshift=.8cm]  (f22) {$t_2(\bot_2)$};
+\node[left =.25cm of c2p, yshift=-.8cm] (t23) {$t_2(\top_3)$};
+\draw [-] (c2p) to (t23);
+\draw [-] (c2p) to (f22);
+
+\node[right = .3cm of c2p](c3){$c_3\phantom{'}$};
+\draw [-] (c2p) to (c3);
+\node[right =.25cm of c3, yshift=.8cm] (f3x1) {$t_3(\hat{x}_1)$};
+\node[right =.25cm of c3, yshift=-.8cm] (f3x2) {$t_3(\hat{x}_2)$};
+\draw [-] (c3) to (f3x1);
+\draw [-] (c3) to (f3x2);
+
+\node[right = 3.1cm of c3](c3p){$c_3'$};
+\node[left =.25cm of c3p, yshift=.8cm] (f31) {$t_3(\bot_1)$};
+\node[left =.25cm of c3p, yshift=-.8cm] (f32) {$t_3(\bot_2)$};
+\draw [-] (c3p) to (f31);
+\draw [-] (c3p) to (f32);
+
+\end{tikzpicture}
+
