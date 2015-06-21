@@ -2,93 +2,88 @@
 \section{First-Order Challenges}\label{sec:Challenges}
 
 
-In this section, we describe challenges that have to be overcome in order to successfully adapt {\LowerUnits} to the first-order case. The first example illustrates the need to take unification into account. The other two examples discuss complex issues that can arise when unification is take into account in a naively.
+In this section, we describe challenges that have to be overcome in order to successfully adapt {\RecyclePivotsIntersection} to the first-order case. The first example illustrates the need to take unification into account. The other two examples discuss complex issues that can arise when unification is take into account in a naive way.
 
-
- \begin{example}\label{ex:unif} 
- Consider the following proof $\psi$, noting that the unit subproof $\eta_2$ is used twice. It is resolved once with $\eta_1$ (against the literal $p(W)$ and producing the child $\eta_3$) and once with $\eta_5$ (against the literal $p(X)$ and producing $\psi$).
+%straightforward example
+\begin{example}\label{ex:unif} 
+Consider the following proof $\psi$, noting that the proof is largely redundant. Naively computed, the safe literals for $\eta_3$ are $\{ \vdash q(c), ~ p(a,X)\}$. $\eta_1$ and $\eta_5$ and these two literals are unifiable. Further, the safe literals for $\eta_1$ includes $\eta_5$. Thus the proof can be regularized by recycling $\eta_1$.
 
 \begin{footnotesize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_1$: $p(W)$\e$q(Z)$}
-\AxiomC{$\eta_2$: \e$p(Y)$}
-\BinaryInfC{$\eta_3$: \e$q(Z)$}
-\AxiomC{$\eta_4$: $p(X),q(Z)$\e}
-\BinaryInfC{$\eta_5$: $p(X)$\e}
-\AxiomC{$\eta_2$}
+\AxiomC{$\eta_1$: \e $p(W,X)$}
+\AxiomC{$\eta_2$: $p(W,X)$ \e $q(c)$}
+\BinaryInfC{$\eta_3$: \e $q(c)$}
+\AxiomC{$\eta_4$: $q(c)$ \e $p(a,X)$}
+\BinaryInfC{$\eta_5$: \e $p(a,X)$}
+\AxiomC{$\eta_6$: $p(Y,b)$ \e }
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{footnotesize}
 
 \noindent
-The result of deleting $\eta_2$ from $\psi$ is the proof $\dn{\psi}{\eta_2}$ shown below:
+Regularization of the proof by recycling $\eta_1$ results in deleting the edge between $\eta_2$ and $\eta_3$, which in turn replaces $\eta_3$ by $\eta_1$. Since $\eta_1$ cannot be resolved against $\eta_4$, and $\eta_1$ contained safe literals, $\eta_5$ is replaced by $\eta_1$. The result is the much shorter proof below.
 
 \begin{footnotesize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta'_1$: $p(W)$\e$q(Z)$}
-\AxiomC{$\eta'_4$: $p(X),q(Z)$\e}
-\BinaryInfC{$\eta'_5$ ($\psi'$): $p(W), p(X)$\e}
+\AxiomC{$\eta_1$: \e$p(W,X)$}
+\AxiomC{$\eta_2$: $p(Y,b)$\e}
+\BinaryInfC{$\psi'$: $\bot$}
 \end{prooftree}
 \end{footnotesize}
 
 \noindent
-Unlike in the propositional case, where the literals that had been resolved against the unit are all syntactically equal, in the first-order case, this is not necessarily the case. As illustrated above, $p(W)$ and $p(X)$ are not syntactically equal. Nevertheless, they are unifiable. Therefore, in order to reintroduce $\eta'_2$, we may first perform a contraction, as shown below:
-\begin{footnotesize}
-\begin{prooftree}
-\def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_1'$: $p(W)$\e$q(Z)$}
-\AxiomC{$\eta_4'$: $p(X),q(Z)$\e}
-\BinaryInfC{$\eta_5'$: $p(X),p(Y)$\e}
-\UnaryInfC{$\con{\eta_5'}{}{}$: $p(U)$\e}
-\AxiomC{$\eta_2'$: \e$p(Y)$}
-\BinaryInfC{$\psi^{\star}$: $\bot$}
-\end{prooftree}
-\end{footnotesize}
- \end{example}
+Unlike in the propositional case, where the pivots and their corresponding safe literal list are all syntactically equal, in the first-order case, this is not necessarily the case. As illustrated above, $p(W,X)$ and $p(a,X)$ are not syntactically equal. Nevertheless, they are unifiable, and the proof can be regularized.
+\end{example}
 
+%unification necessary example
+\begin{example}\label{ex:pairwise}
 
- \begin{example}\label{ex:pairwise}
-
-There are cases, as shown below, when the literals that had been resolved away are not unifiable, and then a contraction is not possible.
+There are cases, as shown below, that require more careful care when attempting to regularize. Again, naively computed the safe literals for $\eta_3$ are $\{ \vdash q(c), ~ p(a,X)\}$, and so $\eta_1$ and $\eta_2$ appear to be candidates for regularization. 
 
 \begin{footnotesize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_2$}
-\AxiomC{$\eta_4$: $r(X),p(b)$\e $s(Y)$}
-\AxiomC{$\eta_1$: $p(a)$\e$q(Y),r(Z)$}
-\AxiomC{$\eta_2$: \e $p(X)$}
-\BinaryInfC{$\eta_3$: \e$q(Y),r(Z)$}
-\BinaryInfC{$\eta_5$: $p(b)$\e $s(Y),q(Y)$}
-\AxiomC{$\eta_6$: $s(Y)$\e}
-\insertBetweenHyps{\hskip -0.5in}
-\BinaryInfC{$\eta_7$: $p(b)$\e$q(Y)$}
-\AxiomC{$\eta_8$: $q(Y)$\e}
-\insertBetweenHyps{\hskip -0.5in}
-\BinaryInfC{$\eta_9$: $p(b)$\e}
-\insertBetweenHyps{\hskip -0.8in}
+\AxiomC{$\eta_1$: \e $p(a,c)$}
+\AxiomC{$\eta_2$: $p(a,c)$ \e $q(c)$}
+\BinaryInfC{$\eta_3$: \e $q(c)$}
+\AxiomC{$\eta_4$: $q(c)$ \e $p(a,X)$}
+\BinaryInfC{$\eta_5$: \e $p(a,X)$}
+\AxiomC{$\eta_6$: $p(Y,b)$ \e }
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{footnotesize}
 
-\noindent
-If we attempted to postpone the resolution inferences involving the unit $\eta_2$ (i.e. by deleting $\eta_2$ and reintroducing it with a single resolution inference in the bottom of the proof), a contraction of the literals $p(a)$ and $p(b)$ would be needed. Since these literals are not unifiable, the contraction is not possible. Note that, in principle, we could still lower $\eta_2$ if we resolved it not only once but twice when reintroducing it in the bottom of the proof. However, this would lead to no compression of the proof's length.
- \end{example}
 
 \noindent
-The observations above lead to the idea of requiring units to satisfy the following property before collecting them to be lowered.
+However, if we attempt to regularize the proof, the same series of actions as in Example \ref{ex:unif} would result in the following resolution, which cannot be completed.
+
+\begin{footnotesize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_1$: \e$p(a,c)$}
+\AxiomC{$\eta_2$: $p(Y,b)$\e}
+\BinaryInfC{$\psi'$: ??}
+\end{prooftree}
+\end{footnotesize}
+
+\end{example}
+
+\noindent
+The observations above lead to the idea of requiring pivots to satisfy the following property before collecting them to be reused.
 
 \begin{definition}
 \label{prop:pair}
-Let $\eta$ be a unit with literal $\ell$ and let $\eta_1$, \ldots, $\eta_n$ be subproofs that are resolved with $\eta$ in a proof $\psi$, respectively, with resolved literals $\ell_1$, \ldots, $\ell_n$. 
-$\eta$ is said to satisfy the \emph{pre-deletion unifiability property} in $\psi$ if $\ell_1$,\ldots,$\ell_n$, and $\dual{\ell}$ are unifiable.
+Let $\eta$ be a clause with literal $\ell'$ with corresponding safe literal $\ell$ which is resolved against literals $\ell_1$, \ldots, $\ell_n$ in a proof $\psi$. $\eta$ is said to satisfy the \emph{pre-regularization unifiability property} in $\psi$ if $\ell_1$,\ldots,$\ell_n$, and $\dual{\ell'}$ are unifiable.
 \end{definition}
 
+\noindent
+One technique to ensure this property is met is to apply the unifier of a resolution to each resolvent before computing the safe literals. In the case of Example \ref{ex:pairwise}, this would result in $\eta_1$ having the safe literals $\{ \vdash q(c),~p(a,b)\}$, and now it is clear that the literal in $\eta_1$ is not safe.
 
-
- \begin{example}\label{ex:rootpair}
+%TODO: continue from here
+%extra check example
+\begin{example}\label{ex:rootpair}
 Satisfaction of the pre-deletion unifiability property is not enough. Deletion of the units from a proof $\psi$ may actually change the literals that had been resolved away by the units, because fewer substitutions are applied to them. This is exemplified below:
 
 \begin{footnotesize}
@@ -128,70 +123,4 @@ Let $\eta$ be a unit with literal $\ell_{\eta}$ and let $\eta_1$, \ldots, $\eta_
 $\eta$ is said to satisfy the \emph{post-deletion unifiability property} in $\psi$ if $\ell_1^{\dagger\downarrow}$,\ldots,$\ell_m^{\dagger\downarrow}$, and $\dual{\ell_{\eta}^{\dagger}}$ are unifiable, where $\ell^{\dagger}$ is the literal in $\dn{\psi}{\eta}$ corresponding to $\ell$ in $\psi$ and $\ell_k^{\dagger\downarrow}$ is the descendant of $\ell_k^{\dagger}$ in the root of $\dn{\psi}{\eta}$.
 \end{definition}
 
-% \begin{definition}
-% Let $\eta$ be a unit with literal $\ell_{\eta}$ and let $\eta_1$, \ldots, $\eta_n$ be subproofs that are resolved with $\eta$ in a proof $\psi$, respectively, with resolved literals $\ell_1$, \ldots, $\ell_m$. 
-% $\eta$ is said to satisfy the \emph{ancestor unifiability property} in $\psi$ if $\ell_1^{\uparrow}$,\ldots,$\ell_m^{\uparrow}$, and $\dual{\ell_{\eta}}$ are unifiable, where $\ell^{\uparrow}$ is the highest ancestor of $\ell$ in $\psi$.
-% \end{definition}
-
-
-% \begin{example}\label{ex:ambig} 
-% Lastly, we note that care must be taken when lowering a valid unit in order to ensure that the proof can still be completed. In particular, postponing resolution of a node $v$ with a unit $u$ may result in an \emph{ambiguous resolution}. A resolution is said to be ambiguous if there are more than one pair of literals $(\ell, \dual{\ell})$ with $\ell \in \Gamma_{\psi_l}$ and $\dual{\ell} \in \Gamma_{\psi_r}$ such that $(\ell, \dual{\ell})$ are unifiable. %and the conclusion is not known?
-% In the case of ambiguous resolution, any compression algorithm must take care to pick the appropriate pair  $(\ell, \dual{\ell})$ since either $\ell$ or $\dual{\ell}$ might share variables with other literals in the premises, and attempting to resolve away the wrong pair may ground (or otherwise modify) another literal $\ell'$ in such a way that $\ell'$ can no longer be unified with any other literal in the proof, resulting in the inability to complete the proof. Consider the following proof of $\psi$, where resolution with $u=\eta_2$ is to be postponed:
-% \begin{footnotesize}
-% \begin{prooftree}
-% \def\e{\mbox{\ $\vdash$\ }}
-% \def\defaultHypSeparation{\hskip .05in}
-
-% \AxiomC{$\eta_{2}$}
-% \AxiomC{$\eta_6$: \e$r(W~V)$}
-% \AxiomC{$\eta_4$: \e$r(X~c)$}
-% \AxiomC{$\eta_1$: $p(U),r(U~V),r(V~U),q(V)$\e}
-% \AxiomC{$\eta_2$: \e$p(c)$}
-% \BinaryInfC{$\eta_3$: $r(c~V),r(V~c),q(V)$\e}
-% %\AxiomC{$\eta_4$: \e$r(X~c)$}
-% \BinaryInfC{$\eta_5$: $r(c~X),q(X)$\e}
-% %\AxiomC{$\eta_6$: \e$r(W~V)$}
-% \BinaryInfC{$\eta_7$: $q(V)$\e}
-% \AxiomC{$\eta_8$: $p(Z)$\e$q(d)$}
-% \insertBetweenHyps{\hskip -1.5in}
-% \BinaryInfC{$\eta_9$: $p(Z)$\e}
-% \insertBetweenHyps{\hskip -0.8in}
-% \BinaryInfC{$\psi$: $\bot$}
-% \end{prooftree}
-% \end{footnotesize}
-
-% If we postpone $\eta_2$: $\vdash p(c)$, the first resolution in the compressed proof would be between the following two clauses:
-% \begin{equation}
-% \eta_1:~p(U),r(U~V),r(V~U),q(V)\vdash 
-% \end{equation}
-% \begin{equation}
-% \eta_4:~\vdash r(X~c) 
-% \end{equation}
-% Both $r(U~V)$ and $r(V~U)$ are unifiable with the literal in (2), and so this resolution is ambiguous. If we used $(r(U~V),r(X~c))$, then we would use the unifier $\sigma =\{U\setminus X, V\setminus c\}$, which would result in the following resolvent clause:
-% \begin{equation}
-% p(X),r(V~X),q(c)\vdash
-% \end{equation}
-% However, the original proof does not have a clause which contains $q(c)$ in the succedent, so it would be impossible to complete the proof. On the other hand, if we chose $(r(V~U),r(X~c))$, we would unify with $\sigma = \{V\setminus X, U\setminus c\}$, with which we could complete the proof:
-
-% \begin{footnotesize}
-% \begin{prooftree}
-% \def\defaultHypSeparation{\hskip .05in}
-% \def\e{\mbox{\ $\vdash$\ }}
-% \AxiomC{$\eta_9'$: \e$p(c)$}
-% \AxiomC{$\eta_6'$: $p(Z)$\e$q(d)$}
-
-% \AxiomC{$\eta_1'$: $p(U),r(U~V),r(V~U),q(V)$\e}
-% \AxiomC{$\eta_2'$: \e$r(X~c)$}
-% \BinaryInfC{$\eta_3'$: $p(c),r(c~X),q(X)$\e}
-% \AxiomC{$\eta_4'$: \e$r(W~V)$}
-% \BinaryInfC{$\eta_5'$: $p(c),q(V)$\e}
-% \insertBetweenHyps{\hskip -0.5in}
-% \BinaryInfC{$\eta_7'$: $p(c),p(Z)$\e}
-% \UnaryInfC{$\eta_8'$: $p(c)$\e}
-% \insertBetweenHyps{\hskip -0.8in}
-% \BinaryInfC{$\psi$: $\bot$}
-% \end{prooftree}
-% \end{footnotesize}
-% Note that this issue is not present in the propositional case since there is no unification, and resolution cannot affect any terms in a premise that are not removed during resolution. In practice, this issue can be avoided by careful book keeping which would not be necessary in the propositional case. %Several techniques are available to ensure the correct choice of ambiguous resolutions are always made, the simplest of which is described in Section \ref{sec:SimpleFOLU}.
-% %A method to avoid this issue is discussed in section \ref{sec:SimpleFOLU}
-%  \end{example}
+%intersection example?
