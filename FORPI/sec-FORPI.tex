@@ -1,15 +1,12 @@
 \section{First-Order RecyclePivotsWithIntersection}
 \label{sec:FORPI}
 %TODO: this section
-This section presents {\FORPI} (Algorithm \ref{algo:optSFOLU}), a first order generalization of {\RecyclePivotsIntersection}. 
+This section presents {\FORPI} (Algorithm \ref{algo:FORPI}), a first order generalization of {\RecyclePivotsIntersection}, which aims to compress irregular proofs. Recall that \RecyclePivotsIntersection
+is a modification of the \texttt{RecyclePivots} algorithm, %described in  \cite{Bar-IlanFuhrmannHooryShachamStrichman2009Linear-time-reductions-of-resolution-proofs}, from which it derives its name. 
+and \RecyclePivotsIntersection provides better compression on proofs where nodes have several children, when compared to \texttt{RecyclePivots}. Through a small modification to our algorithm (described later), a first order generalization of \texttt{RecyclePivots} is also possible.
 
-Our second algorithm, {\RPI} ({\RPI}), aims at compressing irregular proofs. It can be seen as a simple 
-but significant modification of the {} ({\RPI}) algorithm described in 
-\cite{Bar-IlanFuhrmannHooryShachamStrichman2009Linear-time-reductions-of-resolution-proofs}, 
-from which it derives its name. 
-Although in the worst case full regularization can increase the proof length exponentially 
-\cite{Tseitin1983On-The-Complexity-of-Proofs-in-Propositional-Logics}, these algorithms show that 
-many irregular proofs can have their length decreased if a careful partial regularization is performed. 
+%TODO: move to intro?
+%Although in the worst case full regularization can increase the proof length exponentially \cite{Tseitin1983On-The-Complexity-of-Proofs-in-Propositional-Logics}, these algorithms show that many irregular proofs can have their length decreased if a careful partial regularization is performed. 
 
 \newcommand{\la}{\leftarrow}
 
@@ -20,8 +17,8 @@ many irregular proofs can have their length decreased if a careful partial regul
 \SetKwData{units}{unitsQueue}
 \SetKwData{fixedUnits}{fixedUnitsQueue}
 
-\Input{A proof $\psi$}
-\Output{A possibly less-irregular proof $\psi'$}
+\Input{A first-order proof $\psi$}
+\Output{A possibly less-irregular first-order proof $\psi'$}
 
 \BlankLine
 
@@ -34,25 +31,23 @@ traverse $\psi'$ bottom-up and \ForEach{node $\eta$ in $\psi'$}{
   }
 $\psi'$ $\la$ fix($\psi'$) \;
 \Return {$\psi'$}\;
-\caption{\label{algo:RPI} \texttt{}}
+\caption{\label{algo:FORPI} \texttt{\FORPI}}
 \end{footnotesize}
 \end{algorithm}
 
 
-These observations lead to the idea of traversing the proof in a bottom-up
-manner, storing for every node a set of \emph{safe literals} that get resolved
-in all paths below it in the proof (or that already occurred in the root clause
-of the original proof). Moreover, if one of the node's resolved literals belongs
-to the set of safe literals, then it is possible to regularize the node by
-replacing it by one of its parents (cf.\ Algorithm~\ref{algo:RPI}). 
 
-The regularization of a node should replace a node by one of its parents, and more precisely by the parent whose clause contains the resolved literal that is safe. After regularization, all nodes below the regularized node may have to be fixed. However, since the regularization is done with a bottom-up traversal, and only nodes below the regularized node need to be fixed, it is again possible to postpone fixing and do it with only a single traversal afterwards. 
-Therefore, instead of replacing the irregular node by one of its parents immediately, 
-its other parent is replaced by \texttt{deletedNodeMarker}, as shown in Algorithm~\ref{algo:Regularize}. Only later during fixing, 
-the irregular node is actually replaced by its surviving parent (i.e. the parent that is not \texttt{deletedNodeMarker}).
+Our generalization, Algorithm~\ref{algo:FORPI}, follows the propositional idea of traversing the proof in a bottom-up manner, storing for every node a set of \emph{safe literals} that get resolved in all paths below it in the proof (or that already occurred in the root clause of the original proof). If one of the node's resolved literals can be unified to a literal in the set of safe literals, then it may be possible to regularize the node by replacing it by one of its parents. 
+
+%TODO: re-write -- taken from FORPI paper
+In the propositional case, regularization of a node replaces it by the parent whose clause contains the resolved literal that is safe. In the first order case, because unification introduces complications like those seen in Example \ref{ex:unifcheck}, we ensure that the replacement parent is (possibly after unification) contained entirely in the safe literals. This ensures that the remainder of the proof does not expect a variable to be unified to different values simultaneously. After regularization, all nodes below the regularized node may have to be fixed. 
+Similar to \RecyclePivotsIntersection, instead of replacing the irregular node by one of its parents immediately, 
+its other parent is replaced by \texttt{deletedNodeMarker}, as shown in Algorithm~\ref{algo:Regularize}.
+As in the propositional case, fixing of the proof is postponed to another (single) traversal, as regularization proceeds bottom up and only nodes below a regularized node may require fixing.
+During fixing, the irregular node is actually replaced by the parent that is not \texttt{deletedNodeMarker}.
 
 
-
+%Unchanged from propositional case? %TODO: or should the $\in$ relation be unification?
 \begin{algorithm}[t]
 \begin{footnotesize}
 
@@ -60,17 +55,21 @@ the irregular node is actually replaced by its surviving parent (i.e. the parent
 \SetKwData{units}{unitsQueue}
 \SetKwData{fixedUnits}{fixedUnitsQueue}
 
-\Input{A node $\eta$}
-\Output{nothing (but the proof containing $\eta$ may be changed)}
+\Input{A node $\psi=\psi_L  \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$}
+\Output{nothing (but the proof containing $\psi$ may be changed)}
 
 \BlankLine
-    \uIf{$\eta${\upshape.rightResolvedLiteral} $\in$ $\eta${\upshape.safeLiterals}}{
-      replace left parent of $\eta$ by \texttt{deletedNodeMarker} \;
-      mark $\eta$ as regularized
+    \uIf{$\exists \sigma$  and $l \in \psi${\upshape.safeLiterals} such that $\sigma l = l_R$ or $l=\sigma l_R$}{
+     \uIf{$\exists \sigma$ such that $\sigma\psi_R\subseteq\psi${\upshape.safeLiterals}} {
+      replace $\psi_L$ of $\eta$ by \texttt{deletedNodeMarker} \;
+      mark $\psi$ as regularized
+}
     }
-    \ElseIf{\textrm{$\eta${\upshape.leftResolvedLiteral} $\in$ $\eta${\upshape.safeLiterals}}}{
-      replace right parent of $\eta$ by \texttt{deletedNodeMarker} \;
-      mark $\eta$ as regularized
+    \ElseIf{$\exists \sigma$  and $l \in \psi${\upshape.safeLiterals} such that $\sigma l = l_L$ or $l=\sigma l_L$}{
+     \uIf{$\exists \sigma$ such that $\sigma\psi_L\subseteq\psi${\upshape.safeLiterals}} {
+      replace $\psi_R$ by \texttt{deletedNodeMarker} \;
+      mark $\psi$ as regularized
+}
     }
 \caption{\label{algo:Regularize} \texttt{regularizeIfPossible}}
 \end{footnotesize}
@@ -109,65 +108,21 @@ the irregular node is actually replaced by its surviving parent (i.e. the parent
 \end{footnotesize}
 \end{algorithm}
 
+%The set of safe literals of a node $\eta$ can be computed from the set of safe literals of its children (cf.\ Algorithm~\ref{algo:SetSafeLiterals}). In the case when $\eta$ has a single child $\varsigma$, the safe literals of $\eta$ are simply the safe literals of $\varsigma$ together with the resolved literal $p$ of $\varsigma$ belonging to $\eta$ ($p$ is safe for $\eta$, because whenever $p$ is propagated down the proof through $\eta$, $p$ gets resolved in $\varsigma$). It is important to note, however, that if $\varsigma$ has been marked as regularized, it will eventually be replaced by $\eta$, and hence $p$ should not be added to the safe literals of $\eta$. In this case, the safe literals of $\eta$ should be exactly the same as the safe literals of $\varsigma$. When $\eta$ has several children, the safe literals of $\eta$ w.r.t. a child $\varsigma_i$ contain literals that are safe on all paths that go from $\eta$ through $\varsigma_i$ to the root. For a literal to be safe for all paths from $\eta$ to the root, it should therefore be in the intersection of the sets of safe literals w.r.t. each child.
 
-The set of safe literals of a node $\eta$ can be computed from the set of safe
-literals of its children (cf.\ Algorithm~\ref{algo:SetSafeLiterals}). In the case when $\eta$ has a single child $\varsigma$, the safe literals of $\eta$ are simply the safe literals of $\varsigma$ together with the resolved literal $p$ of $\varsigma$ belonging to $\eta$ ($p$ is safe for $\eta$, because whenever $p$ is propagated down the proof through $\eta$, $p$ gets resolved in $\varsigma$). It is important to note, however, that if $\varsigma$ has been marked as regularized, it will eventually be replaced by $\eta$, and hence $p$ should not be added to the safe literals of $\eta$. In this case, the safe literals of $\eta$ should be exactly the same as the safe literals of $\varsigma$. When $\eta$ has several children, the safe literals of $\eta$ w.r.t. a child $\varsigma_i$ contain literals that are safe on all paths that go from $\eta$ through $\varsigma_i$ to the root. For a literal to be safe for all paths from $\eta$ to the root, it should therefore be in the intersection of the sets of safe literals w.r.t. each child.
+The {\RecyclePivotsIntersection} and the \texttt{RecyclePivots} algorithms differ from each other mainly in the
+computation of the safe literals of a node that has many children. While the former 
+returns the intersection as shown in Algorithm~\ref{algo:SetSafeLiterals}, the latter
+returns the empty set. 
+Further, while in \RecyclePivotsIntersection the safe literals of the root node contain all the literals of the root clause, in \texttt{RecyclePivots} the root node is always assigned an empty set of literals. 
+This is easy accomplished in the first order case by changing lines 11 and 2, respectively, of Algorithm~\ref{algo:SetSafeLiterals}.
+This makes a difference only when the proof is not a refutation.
 
-
-The {\RPI} and the {\RPI} algorithms differ from each other mainly in the
-computation of the safe literals of a node that has many children. While {\RPI}
-returns the intersection as shown in Algorithm~\ref{algo:SetSafeLiterals}, {\RPI}
-returns the empty set (cf.\ Algorithm~\ref{algo:SetSafeLiteralsRP}). Additionally, while in {\RPI} the safe literals of the root node contain all the literals of the root clause, in {\RPI} the root node is always assigned an empty set of literals. 
-(Of course, this makes a difference only when the proof is not a refutation.)
-Note that during a traversal of the proof, 
-the lines from 5 to 10 in Algorithm~\ref{algo:SetSafeLiterals} are executed as many times as the number of edges in the proof. 
-Since every node has at most two parents, the number of edges is at most twice the number of nodes. 
-Therefore, during a traversal of a proof with $n$ nodes, lines from 5 to 10 are
-executed at most $2n$ times, and the algorithm remains linear.
-In our prototype implementation, the sets of safe literals are instances of Scala's 
-\texttt{mutable.HashSet} class. Being mutable, new elements can be added efficiently.
-And being HashSets, membership checking is done in constant time in the average case, 
-and set intersection (line 12) can be done in $O(k.s)$, where $k$ is the number of sets and $s$ is the size of the smallest set.
+The set of safe literals of a node $\eta$ can be computed from the set of safe literals of its children (cf.\ Algorithm~\ref{algo:SetSafeLiterals}), in a manner identical to the propositional case.
 
 
-\begin{algorithm}[t]
-\begin{footnotesize}
+%Note that during a traversal of the proof,  the lines from 5 to 10 in Algorithm~\ref{algo:SetSafeLiterals} are executed as many times as the number of edges in the proof.  Since every node has at most two parents, the number of edges is at most twice the number of nodes.  Therefore, during a traversal of a proof with $n$ nodes, lines from 5 to 10 are executed at most $2n$ times, and the algorithm remains linear. In our prototype implementation, the sets of safe literals are instances of Scala's  \texttt{mutable.HashSet} class. Being mutable, new elements can be added efficiently. And being HashSets, membership checking is done in constant time in the average case, and set intersection (line 12) can be done in $O(k.s)$, where $k$ is the number of sets and $s$ is the size of the smallest set.
 
-\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-\SetKwData{units}{unitsQueue}
-\SetKwData{fixedUnits}{fixedUnitsQueue}
-
-\Input{A node $\eta$}
-\Output{nothing (but the node $\eta$ gets a set of safe literals)}
-
-\BlankLine
-
-    \uIf{$\eta$ is a root node with no children}{
-      $\eta$.safeLiterals $\la$ $\emptyset$ 
-    }
-    \Else{
-      \uIf{$\eta$ has only one child $\eta'$}{
-        \uIf{$\eta'$ is marked as regularized}{ 
-          $\eta$.safeLiterals $\la$ $\eta'$.safeLiterals \;}
-        \uElseIf{$\eta$ is left parent of $\eta'$}{ 
-        	$\eta$.safeLiterals $\la$ $\eta'$.safeLiterals $\cup$ \{ $\eta'$.rightResolvedLiteral \} \;
-        }
-        \ElseIf{$\eta$ is right parent of $\eta'$}{ 
-			$\eta$.safeLiterals $\la$ $\eta'$.safeLiterals $\cup$ \{ $\eta'$.leftResolvedLiteral \} \;
-        }
-      }
-      \Else{
-      	$\eta$.safeLiterals $\la$ $\emptyset$
-      }
-    }
-\caption{\label{algo:SetSafeLiteralsRP} \texttt{setSafeLiterals} for }
-\end{footnotesize}
-\end{algorithm}
-
-
-\begin{example}
-%TODO: an example
-\end{example}
 
 
 
