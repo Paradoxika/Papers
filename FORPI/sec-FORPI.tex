@@ -51,7 +51,7 @@ During fixing, the irregular node is actually replaced by the parent that is not
 
 
 %Unchanged from propositional case? %TODO: or should the $\in$ relation be unification?
-\begin{algorithm}
+\begin{algorithm}[bt]
 \begin{footnotesize}
 
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
@@ -79,37 +79,68 @@ During fixing, the irregular node is actually replaced by the parent that is not
 \end{algorithm}
 
 
-\begin{algorithm}
+\begin{algorithm}[bt]
 \begin{footnotesize}
 
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 \SetKwData{units}{unitsQueue}
 \SetKwData{fixedUnits}{fixedUnitsQueue}
 
-\Input{A node $\eta$}
-\Output{nothing (but the node $\eta$ gets a set of safe literals)}
+\Input{A first order resolution node $\psi$}
+\Output{nothing (but the node $\psi$ gets a set of safe literals)}
 
 \BlankLine
 
-    \uIf{$\eta$ is a root node with no children}{
-      $\eta$.safeLiterals $\la$ $\eta$.clause  
+    \uIf{$\psi$ is a root node with no children}{
+      $\psi$.safeLiterals $\la$ $\psi$.clause  
     }
     \Else{
-      \ForEach{$\eta'$ $\in$ $\eta${\upshape.children}}{
-        \uIf{$\eta'$ is marked as regularized}{ 
-          safeLiteralsFrom($\eta'$) $\la$ $\eta'$.safeLiterals \;}
-        \uElseIf{$\eta$ is left parent of $\eta'$}{ 
-        	safeLiteralsFrom($\eta'$) $\la$ $\eta'$.safeLiterals $\cup$ \{ $\eta'$.rightResolvedLiteral \} \;
+      \ForEach{$\psi'$ $\in$ $\psi${\upshape.children}}{
+        \uIf{$\psi'$ is marked as regularized}{ 
+          safeLiteralsFrom($\psi'$) $\la$ $\psi'$.safeLiterals \;}
+%        \uElseIf{$\eta$ is left parent of $\eta'$}{ 
+          \uElseIf{$\psi' = \psi  \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$ for some $\psi_R$}{ 
+        	safeLiteralsFrom($\psi'$) $\la$ $\psi'$.safeLiterals $\cup$ \{ $\sigma_R l_R \}$ %\;
         }
-        \ElseIf{$\eta$ is right parent of $\eta'$}{ 
-			safeLiteralsFrom($\eta'$) $\la$ $\eta'$.safeLiterals $\cup$ \{ $\eta'$.leftResolvedLiteral \} \;
+        \ElseIf{$\psi' = \psi_L  \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi$ for some $\psi_L$}{ 
+	safeLiteralsFrom($\psi'$) $\la$ $\psi'$.safeLiterals $\cup$ \{ $\sigma_L l_L \}$%\;
         }
       }
-      $\eta$.safeLiterals $\la$ $\bigcap_{\eta' \in \eta\textrm{.children}}$ safeLiteralsFrom($\eta'$)
+      $\psi$.safeLiterals $\la$ $\bigcap_{\psi' \in \psi\textrm{.children}}$ safeLiteralsFrom($\psi'$)
     }
 \caption{\label{algo:SetSafeLiterals} \texttt{setSafeLiterals}}
 \end{footnotesize}
 \end{algorithm}
+
+
+%original
+%\begin{algorithm}[bt]
+%\begin{footnotesize}
+%\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+%\SetKwData{units}{unitsQueue}
+%\SetKwData{fixedUnits}{fixedUnitsQueue}
+%\Input{A node $\eta$}
+%\Output{nothing (but the node $\eta$ gets a set of safe literals)}
+%\BlankLine
+%    \uIf{$\eta$ is a root node with no children}{
+%      $\eta$.safeLiterals $\la$ $\eta$.clause  
+%    }
+%    \Else{
+%      \ForEach{$\eta'$ $\in$ $\eta${\upshape.children}}{
+%        \uIf{$\eta'$ is marked as regularized}{ 
+%          safeLiteralsFrom($\eta'$) $\la$ $\eta'$.safeLiterals \;}
+%        \uElseIf{$\eta$ is left parent of $\eta'$}{ 
+%        	safeLiteralsFrom($\eta'$) $\la$ $\eta'$.safeLiterals $\cup$ \{ $\eta'$.rightResolvedLiteral \} \;
+%        }
+%        \ElseIf{$\eta$ is right parent of $\eta'$}{ 
+%			safeLiteralsFrom($\eta'$) $\la$ $\eta'$.safeLiterals $\cup$ \{ $\eta'$.leftResolvedLiteral \} \;
+%        }
+%      }
+%      $\eta$.safeLiterals $\la$ $\bigcap_{\eta' \in \eta\textrm{.children}}$ safeLiteralsFrom($\eta'$)
+%    }
+%\caption{\label{algo:SetSafeLiterals} \texttt{setSafeLiterals}}
+%\end{footnotesize}
+%\end{algorithm}
 
 %The set of safe literals of a node $\eta$ can be computed from the set of safe literals of its children (cf.\ Algorithm~\ref{algo:SetSafeLiterals}). In the case when $\eta$ has a single child $\varsigma$, the safe literals of $\eta$ are simply the safe literals of $\varsigma$ together with the resolved literal $p$ of $\varsigma$ belonging to $\eta$ ($p$ is safe for $\eta$, because whenever $p$ is propagated down the proof through $\eta$, $p$ gets resolved in $\varsigma$). It is important to note, however, that if $\varsigma$ has been marked as regularized, it will eventually be replaced by $\eta$, and hence $p$ should not be added to the safe literals of $\eta$. In this case, the safe literals of $\eta$ should be exactly the same as the safe literals of $\varsigma$. When $\eta$ has several children, the safe literals of $\eta$ w.r.t. a child $\varsigma_i$ contain literals that are safe on all paths that go from $\eta$ through $\varsigma_i$ to the root. For a literal to be safe for all paths from $\eta$ to the root, it should therefore be in the intersection of the sets of safe literals w.r.t. each child.
 
@@ -121,7 +152,7 @@ Further, while in {\RPI} the safe literals of the root node contain all the lite
 This is easy accomplished in the first order case by changing lines 11 and 2, respectively, of Algorithm~\ref{algo:SetSafeLiterals}.
 This makes a difference only when the proof is not a refutation.
 
-The set of safe literals of a node $\eta$ can be computed from the set of safe literals of its children (cf.\ Algorithm~\ref{algo:SetSafeLiterals}), in a manner identical to the propositional case.
+The set of safe literals for a node $\psi$ is computed from the set of safe literals of its children (cf.\ Algorithm~\ref{algo:SetSafeLiterals}), similar to the propositional case, but additionally applies unifiers to the resolved pivots (cf. Example \ref{ex:pairwise}).
 
 
 %Note that during a traversal of the proof,  the lines from 5 to 10 in Algorithm~\ref{algo:SetSafeLiterals} are executed as many times as the number of edges in the proof.  Since every node has at most two parents, the number of edges is at most twice the number of nodes.  Therefore, during a traversal of a proof with $n$ nodes, lines from 5 to 10 are executed at most $2n$ times, and the algorithm remains linear. In our prototype implementation, the sets of safe literals are instances of Scala's  \texttt{mutable.HashSet} class. Being mutable, new elements can be added efficiently. And being HashSets, membership checking is done in constant time in the average case, and set intersection (line 12) can be done in $O(k.s)$, where $k$ is the number of sets and $s$ is the size of the smallest set.

@@ -51,12 +51,12 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
 \end{definition}
 
 
+%\noindent
+%The resolution and contraction (factoring) rules described above are the standard rules of the resolution calculus, except for the fact that we do not require resolution to use most general unifiers. The presentation of the resolution rule here uses two substitutions, in order to explicitly handle the necessary renaming of variables, which is often left implicit in other presentations of resolution.
 \noindent
-The resolution and contraction (factoring) rules described above are the standard rules of the resolution calculus, except for the fact that we do not require resolution to use most general unifiers. The presentation of the resolution rule here uses two substitutions, in order to explicitly handle the necessary renaming of variables, which is often left implicit in other presentations of resolution.
-
 When we write $\psi_L \res{\ell_L}{}{\ell_R}{} \psi_R$, we assume that the omitted substitutions are such that the resolved atom is most general. 
-We write $\con{\psi}{}{}$ for an arbitrary maximal contraction, and $\con{\psi}{}{\sigma}$ for a (pseudo-)contraction that does merge no literals but merely applies the substitution $\sigma$. 
-When the literals and substitutions are irrelevant or clear from the context, we may write simply $\psi_L \res{}{}{}{} \psi_R$ instead of $\psi_L \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$.
+%We write $\con{\psi}{}{}$ for an arbitrary maximal contraction, and $\con{\psi}{}{\sigma}$ for a (pseudo-)contraction that does merge no literals but merely applies the substitution $\sigma$. 
+When the literals and substitutions are irrelevant or clear from the context, we may write simply $\psi_L \res{}{}{}{} \psi_R$. % instead of $\psi_L \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$.
 The $\res{}{}{}{}$ operator is assumed to be left-associative. 
 In the propositional case, we omit contractions (treating clauses as sets instead of multisets) and $\psi_L \res{\ell}{\emptyset}{\dual{\ell}}{\emptyset} \psi_R$ is abbreviated by $\psi_L \odot_{\ell} \psi_R$.
 
