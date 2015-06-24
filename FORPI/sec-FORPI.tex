@@ -1,7 +1,7 @@
 \section{First-Order RecyclePivotsWithIntersection}
 \label{sec:FORPI}
 %TODO: this section
-This section presents {\FirstOrderRPI} ({\FORPI}), Algorithm \ref{algo:FORPI}, a first order generalization of {\RPI}, 
+This section presents {\FirstOrderRPI} ({\FORPI}), Algorithm \ref{algo:FORPI}, a first order generalization of {\RPI}. 
 %which aims to compress irregular proofs. 
 %Recall that \RecyclePivotsIntersection is a modification of the \texttt{RecyclePivots} algorithm, %described in  \cite{Bar-IlanFuhrmannHooryShachamStrichman2009Linear-time-reductions-of-resolution-proofs}, from which it derives its name. 
 %and \RecyclePivotsIntersection provides better compression on proofs where nodes have several children, when compared to \texttt{RecyclePivots}. Through a small modification to our algorithm (described later), a first order generalization of \texttt{RecyclePivots} is also possible.
@@ -14,7 +14,7 @@ It follows the propositional idea of traversing the proof in a bottom-up manner,
 \newcommand{\la}{\leftarrow}
 
 
-\begin{algorithm}[!b]
+\begin{algorithm}[bt]
 \begin{footnotesize}
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 \SetKwData{units}{unitsQueue}
@@ -51,7 +51,7 @@ During fixing, the irregular node is actually replaced by the parent that is not
 
 
 %Unchanged from propositional case? %TODO: or should the $\in$ relation be unification?
-\begin{algorithm}[t]
+\begin{algorithm}
 \begin{footnotesize}
 
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
@@ -79,7 +79,7 @@ During fixing, the irregular node is actually replaced by the parent that is not
 \end{algorithm}
 
 
-\begin{algorithm}[!b]
+\begin{algorithm}
 \begin{footnotesize}
 
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}

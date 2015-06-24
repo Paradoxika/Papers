@@ -22,7 +22,7 @@ Consider the following irregular proof $\psi$. Naively computed, the safe litera
 \end{footnotesize}
 
 \noindent
-Regularization of the proof by recycling $\eta_1$ results in deleting the edge between $\eta_2$ and $\eta_3$, which in turn replaces $\eta_3$ by $\eta_1$. Since $\eta_1$ cannot be resolved against $\eta_4$, and $\eta_1$ contained safe literals, $\eta_5$ is replaced by $\eta_1$. The result is the much shorter proof below.
+Regularization of the proof by recycling $\eta_1$ results in removing the inference between $\eta_2$ and $\eta_3$, which in turn replaces $\eta_3$ by $\eta_1$. Since $\eta_1$ cannot be resolved against $\eta_4$, and $\eta_1$ contained safe literals, $\eta_5$ is replaced by $\eta_1$. The result is the much shorter proof below.
 
 \begin{footnotesize}
 \begin{prooftree}
@@ -40,7 +40,7 @@ Unlike in the propositional case, where the pivots and their corresponding safe 
 %unification necessary example
 \begin{example}\label{ex:pairwise}
 
-There are cases, as shown below, that require more careful care when attempting to regularize. Again, naively computed the safe literals for $\eta_3$ are $\{ \vdash q(c), ~ p(a,X)\}$, and so $\eta_1$ and $\eta_2$ appear to be candidates for regularization. 
+There are cases, as shown below, that require more careful care when attempting to regularize. Again, naively computed, the safe literals for $\eta_3$ are $\{ \vdash q(c), ~ p(a,X)\}$, and so $\eta_1$ and $\eta_2$ appear to be candidates for regularization. 
 
 \begin{footnotesize}
 \begin{prooftree}
@@ -79,12 +79,12 @@ Let $\eta$ be a clause with literal $\ell'$ with corresponding safe literal $\el
 \end{definition}
 
 \noindent
-One technique to ensure this property is met is to apply the unifier of a resolution to each resolvent before computing the safe literals. In the case of Example \ref{ex:pairwise}, this would result in $\eta_1$ having the safe literals $\{ \vdash q(c),~p(a,b)\}$, and now it is clear that the literal in $\eta_1$ is not safe.
+One technique to ensure this property is met is to apply the unifier of a resolution to each resolvent before computing the safe literals. In the case of Example \ref{ex:pairwise}, this would result in $\eta_3$ having the safe literals $\{ \vdash q(c),~p(a,b)\}$, and now it is clear that the literal in $\eta_1$ is not safe.
 
 %TODO: continue from here
 %extra check example
 \begin{example}\label{ex:unifcheck}
-Due to complications with unification, there are also cases where satisfying the pre-regularization unifiability property is not sufficient to attempt regularization. Consider the proof of $\psi$ below. After collecting the safe literals, $\eta_3$'s safe literals are $\{q(T,V),p(c,d)\vdash q(f(a,e),c)\}$.
+Satisfying the pre-regularization unifiability property is not sufficient to attempt regularization. Consider the proof of $\psi$ below. After collecting the safe literals, $\eta_3$'s safe literals are $\{q(T,V),p(c,d)\vdash q(f(a,e),c)\}$.
 
 \begin{footnotesize}
 \begin{prooftree}
@@ -102,7 +102,7 @@ Due to complications with unification, there are also cases where satisfying the
 \end{footnotesize}
 
 \noindent
-Since $q(f(a,X),Y) \in \eta_2$ and $q(T,V)$ (in $\eta_3$'s safe literals) are unifiable, regularization would be attempted. However, in this case, we would mark the edge between $\eta_2$ and $\eta_3$ for deletion, and as a result, $\eta_3$ will be replaced with $\eta_1$. $\eta_1$ does not contain the required pivot for $\eta_5$, and so $\eta_5$ is also replaced with $\eta_1$, and resolution is attempted before $\eta_1$ and $\eta_6$, which results in $\eta_7'$, and an inability to complete the proof, as shown below.
+Since $q(f(a,X),Y) \in \eta_2$ and $q(T,V)$ (in $\eta_3$'s safe literals) are unifiable, regularization would be attempted. In this case, the inference between $\eta_2$ and $\eta_3$ for would be removed, and as a result, $\eta_3$ will be replaced with $\eta_1$. $\eta_1$ does not contain the required pivot for $\eta_5$, and so $\eta_5$ is also replaced with $\eta_1$, and resolution is attempted before $\eta_1$ and $\eta_6$, which results in $\eta_7'$, and an inability to complete the proof, as shown below.
 
 \begin{footnotesize}
 \begin{prooftree}
@@ -115,7 +115,8 @@ Since $q(f(a,X),Y) \in \eta_2$ and $q(T,V)$ (in $\eta_3$'s safe literals) are un
 \end{prooftree}
 \end{footnotesize}
 
-In order to avoid these scenarios, we perform an additional check during edge deletion. The node $\eta*$ which will replace a resolution $\eta$ (because $\eta$ would have a deleted parent), must be entirely contained, via unification which modifies only $\eta^*$'s variables, in the safe literals of $\eta$. In the case of this example, $\eta_1$ would not satisfy this property: in order to unify with $\eta_3$'s safe literals, it would be necessary to send $V\rightarrow Z$ due to $\eta_1$'s second literal, but leave $V$ unchanged due $\eta_1$'s first literal, which is not possible. Note that this check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals.
+\noindent
+In order to avoid these scenarios, we perform an additional check during inference removal. The node $\eta*$ which will replace a resolution $\eta$ (because $\eta$ would have a deleted parent), must be entirely contained, via unification which modifies only $\eta^*$'s variables, in the safe literals of $\eta$. In the case of this example, $\eta_1$ would not satisfy this property: in order to unify with $\eta_3$'s safe literals, it would be necessary to send $V\rightarrow Z$ due to $\eta_1$'s second literal, but leave $V$ unchanged due $\eta_1$'s first literal, which is not possible. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
 
 \end{example}
 
