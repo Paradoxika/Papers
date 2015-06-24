@@ -2,11 +2,11 @@
 \section{First-Order Challenges}\label{sec:Challenges}
 
 
-In this section, we describe challenges that have to be overcome in order to successfully adapt {\RecyclePivotsIntersection} to the first-order case. The first example illustrates the need to take unification into account. The other two examples discuss complex issues that can arise when unification is take into account in a naive way.
+In this section, we describe challenges that have to be overcome in order to successfully adapt {\RPI} to the first-order case. The first example illustrates the need to take unification into account. The other two examples discuss complex issues that can arise when unification is take into account in a naive way.
 
 %straightforward example
 \begin{example}\label{ex:unif} 
-Consider the following proof $\psi$, noting that the proof is largely redundant. Naively computed, the safe literals for $\eta_3$ are $\{ \vdash q(c), ~ p(a,X)\}$. $\eta_1$ and $\eta_5$ and these two literals are unifiable. Further, the safe literals for $\eta_1$ includes $\eta_5$. Thus the proof can be regularized by recycling $\eta_1$.
+Consider the following irregular proof $\psi$. Naively computed, the safe literals for $\eta_3$ are $\{ \vdash q(c), ~ p(a,X)\}$. $\eta_1$ and $\eta_5$ and these two literals are unifiable. Further, the safe literals for $\eta_1$ includes $\eta_5$. Thus the proof can be regularized by recycling $\eta_1$.
 
 \begin{footnotesize}
 \begin{prooftree}
@@ -28,7 +28,7 @@ Regularization of the proof by recycling $\eta_1$ results in deleting the edge b
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
 \AxiomC{$\eta_1$: \e$p(W,X)$}
-\AxiomC{$\eta_2$: $p(Y,b)$\e}
+\AxiomC{$\eta_6$: $p(Y,b)$\e}
 \BinaryInfC{$\psi'$: $\bot$}
 \end{prooftree}
 \end{footnotesize}
@@ -63,7 +63,7 @@ However, if we attempt to regularize the proof, the same series of actions as in
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
 \AxiomC{$\eta_1$: \e$p(a,c)$}
-\AxiomC{$\eta_2$: $p(Y,b)$\e}
+\AxiomC{$\eta_6$: $p(Y,b)$\e}
 \BinaryInfC{$\psi'$: ??}
 \end{prooftree}
 \end{footnotesize}
@@ -84,25 +84,25 @@ One technique to ensure this property is met is to apply the unifier of a resolu
 %TODO: continue from here
 %extra check example
 \begin{example}\label{ex:unifcheck}
-Due to complications with unification, there are also cases where satisfying the pre-regularization unifiability property is not sufficient to attempt regularization. Consider the proof of $\psi$ below. After collecting the safe literals, $\eta_3$'s safe literals are $\{q(B,V),p(c,d)\vdash q(f(a,e),c)\}$.
+Due to complications with unification, there are also cases where satisfying the pre-regularization unifiability property is not sufficient to attempt regularization. Consider the proof of $\psi$ below. After collecting the safe literals, $\eta_3$'s safe literals are $\{q(T,V),p(c,d)\vdash q(f(a,e),c)\}$.
 
 \begin{footnotesize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_8$: $Q(f(ae)c)\e$\hspace{-1cm}}
-\AxiomC{$\eta_6$: $\e P(cd)$\hspace{-4.5cm}}
-\AxiomC{$\eta_1$: $P(UV)\e Q(f(aV)U)$}
-\AxiomC{$\eta_2$: $Q(f(aX)Y)Q(BX)\e Q(f(aZ)Y)$}
-\BinaryInfC{$\eta_3$: $P(UV)Q(BV)\e Q(f(aZ)U)$\hspace{-3.5cm}}
-\AxiomC{\hspace{-1.5cm} $\eta_4$: $\e Q(RS)$}
-\BinaryInfC{$\eta_5$: $P(UV)\e Q(f(aZ)U)$}
-\BinaryInfC{$\eta_7$: $\e Q(f(aZ)c)$}
+\AxiomC{$\eta_8$: $q(f(a,e),c)\e$\hspace{-1cm}}
+\AxiomC{$\eta_6$: $\e p(c,d)$\hspace{-4.5cm}}
+\AxiomC{$\eta_1$: $p(U,V)\e q(f(a,V),U)$}
+\AxiomC{$\eta_2$: $q(f(a,X),Y),q(T,X)\e q(f(a,Z),Y)$}
+\BinaryInfC{$\eta_3$: $p(U,V),Q(T,V)\e q(f(a,Z),U)$\hspace{-3.5cm}}
+\AxiomC{\hspace{-1.5cm} $\eta_4$: $\e q(R,S)$}
+\BinaryInfC{$\eta_5$: $p(U,V)\e q(f(a,Z),U)$}
+\BinaryInfC{$\eta_7$: $\e q(f(a,Z),c)$}
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{footnotesize}
 
 \noindent
-Since $q(f(a,X),Y) \in \eta_2$ and $q(B,V)$ (in $\eta_3$'s safe literals) are unifiable, regularization would be attempted. However, in this case, we would mark the edge between $\eta_2$ and $\eta_3$ for deletion, and as a result, $\eta_3$ will be replaced with $\eta_1$. $\eta_1$ does not contain the required pivot for $\eta_5$, and so $\eta_5$ is also replaced with $\eta_1$, and resolution is attempted before $\eta_1$ and $\eta_6$, which results in $\eta_7'$, and an inability to complete the proof, as shown below.
+Since $q(f(a,X),Y) \in \eta_2$ and $q(T,V)$ (in $\eta_3$'s safe literals) are unifiable, regularization would be attempted. However, in this case, we would mark the edge between $\eta_2$ and $\eta_3$ for deletion, and as a result, $\eta_3$ will be replaced with $\eta_1$. $\eta_1$ does not contain the required pivot for $\eta_5$, and so $\eta_5$ is also replaced with $\eta_1$, and resolution is attempted before $\eta_1$ and $\eta_6$, which results in $\eta_7'$, and an inability to complete the proof, as shown below.
 
 \begin{footnotesize}
 \begin{prooftree}
