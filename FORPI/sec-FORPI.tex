@@ -6,7 +6,7 @@ This section presents {\FirstOrderRPI} ({\FORPI}), Algorithm \ref{algo:FORPI}, a
 %Recall that \RecyclePivotsIntersection is a modification of the \texttt{RecyclePivots} algorithm, %described in  \cite{Bar-IlanFuhrmannHooryShachamStrichman2009Linear-time-reductions-of-resolution-proofs}, from which it derives its name. 
 %and \RecyclePivotsIntersection provides better compression on proofs where nodes have several children, when compared to \texttt{RecyclePivots}. Through a small modification to our algorithm (described later), a first order generalization of \texttt{RecyclePivots} is also possible.
 %Our generalization, Algorithm~\ref{algo:FORPI}. 
-It follows the propositional idea of traversing the proof in a bottom-up manner, storing for every node a set of \emph{safe literals} that get resolved in all paths below it in the proof (or that already occurred in the root clause of the original proof). If one of the node's resolved literals can be unified to a literal in the set of safe literals, then it may be possible to regularize the node by replacing it by one of its parents. 
+{\FORPI} traverses the proof in a bottom-up manner, storing for every node a set of \emph{safe literals} that are resolved in all paths below it in the proof (or that already occurred in the root clause of the original proof). If one of the node's resolved literals can be unified to a literal in the set of safe literals, then it may be possible to regularize the node by replacing it by one of its parents. 
 
 %TODO: move to intro?
 %Although in the worst case full regularization can increase the proof length exponentially \cite{Tseitin1983On-The-Complexity-of-Proofs-in-Propositional-Logics}, these algorithms show that many irregular proofs can have their length decreased if a careful partial regularization is performed. 
@@ -47,7 +47,9 @@ In the propositional case, regularization of a node replaces it by the parent wh
 Similar to {\RPI}, instead of replacing the irregular node by one of its parents immediately, 
 its other parent is replaced by \texttt{deletedNodeMarker}, as shown in Algorithm~\ref{algo:Regularize}.
 As in the propositional case, fixing of the proof is postponed to another (single) traversal, as regularization proceeds bottom up and only nodes below a regularized node may require fixing.
-During fixing, the irregular node is actually replaced by the parent that is not \texttt{deletedNodeMarker}.
+During fixing, the irregular node is actually replaced by the parent that is not \texttt{deletedNodeMarker}. 
+With careful bookkeeping, it is often possible to contract nodes during proof fixing to compress the proof further.
+%Further, if a resolution is rebuilt where either either resolvent contains multiple literals that are unifiable with the pivot, then that resolvent is first contracted, to reduce the number of resolutions required and increase the compression achieved.
 
 
 %Unchanged from propositional case? %TODO: or should the $\in$ relation be unification?
@@ -63,13 +65,13 @@ During fixing, the irregular node is actually replaced by the parent that is not
 
 \BlankLine
     \uIf{$\exists \sigma$  and $l \in \psi${\upshape.safeLiterals} such that $\sigma l = l_R$ or $l=\sigma l_R$}{
-     \uIf{$\exists \sigma$ such that $\sigma\psi_R\subseteq\psi${\upshape.safeLiterals}} {
-      replace $\psi_L$ of $\eta$ by \texttt{deletedNodeMarker} \;
+     \uIf{$\exists \sigma'$ such that $\sigma'\psi_R\subseteq\psi${\upshape.safeLiterals}} {
+      replace $\psi_L$ by \texttt{deletedNodeMarker} \;
       mark $\psi$ as regularized
 }
     }
     \ElseIf{$\exists \sigma$  and $l \in \psi${\upshape.safeLiterals} such that $\sigma l = l_L$ or $l=\sigma l_L$}{
-     \uIf{$\exists \sigma$ such that $\sigma\psi_L\subseteq\psi${\upshape.safeLiterals}} {
+     \uIf{$\exists \sigma'$ such that $\sigma'\psi_L\subseteq\psi${\upshape.safeLiterals}} {
       replace $\psi_R$ by \texttt{deletedNodeMarker} \;
       mark $\psi$ as regularized
 }
