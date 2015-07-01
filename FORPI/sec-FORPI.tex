@@ -146,11 +146,7 @@ With careful bookkeeping, it is often possible to contract nodes during proof fi
 
 %The set of safe literals of a node $\eta$ can be computed from the set of safe literals of its children (cf.\ Algorithm~\ref{algo:SetSafeLiterals}). In the case when $\eta$ has a single child $\varsigma$, the safe literals of $\eta$ are simply the safe literals of $\varsigma$ together with the resolved literal $p$ of $\varsigma$ belonging to $\eta$ ($p$ is safe for $\eta$, because whenever $p$ is propagated down the proof through $\eta$, $p$ gets resolved in $\varsigma$). It is important to note, however, that if $\varsigma$ has been marked as regularized, it will eventually be replaced by $\eta$, and hence $p$ should not be added to the safe literals of $\eta$. In this case, the safe literals of $\eta$ should be exactly the same as the safe literals of $\varsigma$. When $\eta$ has several children, the safe literals of $\eta$ w.r.t. a child $\varsigma_i$ contain literals that are safe on all paths that go from $\eta$ through $\varsigma_i$ to the root. For a literal to be safe for all paths from $\eta$ to the root, it should therefore be in the intersection of the sets of safe literals w.r.t. each child.
 
-The {\RPI} and the {\RP} algorithms differ from each other mainly in the
-computation of the safe literals of a node that has many children. While the former 
-returns the intersection as shown in Algorithm~\ref{algo:SetSafeLiterals}, the latter
-returns the empty set. 
-Further, while in {\RPI} the safe literals of the root node contain all the literals of the root clause, in {\RP} the root node is always assigned an empty set of literals. 
+
 This is easy accomplished in the first order case by changing lines 11 and 2, respectively, of Algorithm~\ref{algo:SetSafeLiterals}.
 This makes a difference only when the proof is not a refutation.
 
