@@ -56,14 +56,14 @@
 
 \newcommand{\res}[4]{\mathrel{\operatorname*{\odot}_{#1 #3}^{#2 #4}}}
 
-\title{Compression of First-Order Resolution Proofs by Partial Regularization} %Working title only
+\title{Partial Regularization of First-Order Resolution Proofs}
 
 \author{
   Jan Gorzny\inst{1}
   \thanks{Supported by the Google Summer of Code 2014 program.}
   \and 
-  Bruno Woltzenlogel Paleo\inst{2}
-  \thanks{Supported by the Austrian Science Fund, project P24300.}
+  Bruno Woltzenlogel Paleo\inst{2,3}
+  %\thanks{Supported by the Austrian Science Fund, project P24300.}
 }
 
 \authorrunning{J.\~Gorzny \and B.\~Woltzenlogel Paleo}
@@ -72,6 +72,8 @@
   \email{jgorzny@uvic.ca}, University of Victoria, Canada
   \and 
   \email{bruno@logic.at}, Vienna University of Technology, Austria
+  \and 
+  Australian National University
 }
 
 
@@ -113,22 +115,15 @@ The work reported in this paper is part of a new trend that aims at lifting succ
 ({\GFOLU}) algorithm. Here we continue this line of research by lifting the 
 %\RecyclePivotsIntersection 
 \texttt{Recycle\-PivotsWithIntersection}
-({\RPI}) algorithm described in \cite{}. {\RPI} removes inferences with a node $\eta$ when its resolved literal (a.k.a. its \emph{pivot}) occurs as the pivot of another inference located below in the path from $\eta$ to the root of the proof. {\RPI} is an improvement of the \texttt{RecyclePivots} ({\RP}) algorithm \cite{Bar-IlanFuhrmannHooryShachamStrichman2009Linear-time-reductions-of-resolution-proofs}, providing better compression on proofs where nodes have several children.
+({\RPI}) algorithm described in \cite{}. {\RPI} removes \emph{irregularities}, which are resolution inferences with a node $\eta$ when the resolved literal (a.k.a. \emph{pivot}) occurs as the pivot of another inference located below in the path from $\eta$ to the root of the proof. In the worst case, regular resolution proofs can be exponentially bigger than irregular ones, but {\RPI} takes care of regularizing the proof only partially, removing inferences only when this does not enlarge the proof. {\RPI} improves the \texttt{RecyclePivots} ({\RP}) algorithm \cite{Bar-IlanFuhrmannHooryShachamStrichman2009Linear-time-reductions-of-resolution-proofs}, providing better compression on proofs where nodes have several children.
 
 %TODO: edit this again
 Section \ref{sec:res} introduces the first-order resolution calculus and the notations used in this paper. Section \ref{sec:Challenges} discusses the challenges that arise in the first-order case (mainly due to unification), which are not present the propositional case. Section \ref{sec:FORPI} describes an algorithm that overcomes these challenges. Section \ref{sec:exp} concludes the paper by presenting experimental results obtained by applying this algorithm, and also its combinations with {\GFOLU}, on hundreds of proofs generated with the {\SPASS} theorem prover. 
 
 
 
-
-
-
-
 \input{sec-Resolution}
-%\input{sec-PropositionalLU}
 \input{sec-Challenges}
-%\input{sec-FOLU}
-%\input{sec-SimpleFOLU}
 \input{sec-FORPI}
 \input{sec-Exp}
 

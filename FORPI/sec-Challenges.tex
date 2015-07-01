@@ -2,7 +2,7 @@
 \section{First-Order Challenges}\label{sec:Challenges}
 
 
-In this section, we describe challenges that have to be overcome in order to successfully adapt {\RPI} to the first-order case. The first example illustrates the need to take unification into account. The other two examples discuss complex issues that can arise when unification is take into account in a naive way.
+In this section, we describe challenges that have to be overcome in order to successfully adapt {\RPI} to the first-order case. The first example illustrates the need to take unification into account. The other two examples discuss complex issues that can arise when unification is taken into account in a naive way.
 
 %straightforward example
 \begin{example}\label{ex:unif} 
@@ -84,7 +84,7 @@ One technique to ensure this property is met is to apply the unifier of a resolu
 %TODO: continue from here
 %extra check example
 \begin{example}\label{ex:unifcheck}
-Satisfying the pre-regularization unifiability property is not sufficient to attempt regularization. Consider the proof of $\psi$ below. After collecting the safe literals, $\eta_3$'s safe literals are $\{q(T,V),p(c,d)\vdash q(f(a,e),c)\}$.
+Satisfying the pre-regularization unifiability property is not sufficient to attempt regularization. Consider the proof $\psi$ below. After collecting the safe literals, $\eta_3$'s safe literals are $\{q(T,V),p(c,d)\vdash q(f(a,e),c)\}$.
 
 \begin{footnotesize}
 \begin{prooftree}
@@ -107,10 +107,10 @@ Since $q(f(a,X),Y) \in \eta_2$ and $q(T,V)$ (in $\eta_3$'s safe literals) are un
 \begin{footnotesize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_8$: $Q(f(ae)c)\e$}
-\AxiomC{$\eta_6$: $\e P(cd)$}
-\AxiomC{$\eta_1$: $P(UV)\e Q(f(aV)U)$}
-\BinaryInfC{$\eta_7'$: $\e Q(f(ad)c)$}
+\AxiomC{$\eta_8$: $Q(f(a,e)c)\e$}
+\AxiomC{$\eta_6$: $\e P(c,d)$}
+\AxiomC{$\eta_1$: $P(U,V)\e Q(f(a,V)U)$}
+\BinaryInfC{$\eta_7'$: $\e Q(f(a,d)c)$}
 \BinaryInfC{$\psi'$: ??}
 \end{prooftree}
 \end{footnotesize}

@@ -102,10 +102,10 @@ With careful bookkeeping, it is often possible to contract nodes during proof fi
           safeLiteralsFrom($\psi'$) $\la$ $\psi'$.safeLiterals \;}
 %        \uElseIf{$\eta$ is left parent of $\eta'$}{ 
           \uElseIf{$\psi' = \psi  \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$ for some $\psi_R$}{ 
-        	safeLiteralsFrom($\psi'$) $\la$ $\psi'$.safeLiterals $\cup$ \{ $\sigma_R l_R \}$ %\;
+        	safeLiteralsFrom($\psi'$) $\la$ $\psi'$.safeLiterals $\cup$ \{ $\sigma_R \ell_R \}$ %\;
         }
         \ElseIf{$\psi' = \psi_L  \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi$ for some $\psi_L$}{ 
-	safeLiteralsFrom($\psi'$) $\la$ $\psi'$.safeLiterals $\cup$ \{ $\sigma_L l_L \}$%\;
+	safeLiteralsFrom($\psi'$) $\la$ $\psi'$.safeLiterals $\cup$ \{ $\sigma_L \ell_L \}$%\;
         }
       }
       $\psi$.safeLiterals $\la$ $\bigcap_{\psi' \in \psi\textrm{.children}}$ safeLiteralsFrom($\psi'$)
