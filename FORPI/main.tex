@@ -112,10 +112,10 @@ In contrast, there has been much less work on simplifying first-order proofs. Fo
 
 The work reported in this paper is part of a new trend that aims at lifting successful propositional proof compression algorithms to first-order logic. Our first target was the propositional {\LowerUnits} algorithm, which delays resolution steps with unit clauses, and its lifting resulted in the 
 {\SFOLowerUnits} 
-({\GFOLU}) algorithm. Here we continue this line of research by lifting the 
+({\GFOLU}) algorithm \cite{GFOLU}. Here we continue this line of research by lifting the 
 %\RecyclePivotsIntersection 
 \texttt{Recycle\-PivotsWithIntersection}
-({\RPI}) algorithm \cite{}, which is an improvement of the \texttt{RecyclePivots} ({\RP}) algorithm \cite{Bar-IlanFuhrmannHooryShachamStrichman2009Linear-time-reductions-of-resolution-proofs}, providing better compression on proofs where nodes have several children. 
+({\RPI}) algorithm \cite{LURPI}, which is an improvement of the \texttt{RecyclePivots} ({\RP}) algorithm \cite{RP08}, providing better compression on proofs where nodes have several children. 
 
 %TODO: edit this again
 Section \ref{sec:res} introduces the first-order resolution calculus and the notations used in this paper. Section \ref{sec:Challenges} discusses the challenges that arise in the first-order case (mainly due to unification), which are not present the propositional case. Section \ref{sec:FORPI} describes an algorithm that overcomes these challenges. Section \ref{sec:exp} concludes the paper by presenting experimental results obtained by applying this algorithm, and also its combinations with {\GFOLU}, on hundreds of proofs generated with the {\SPASS} theorem prover. 
