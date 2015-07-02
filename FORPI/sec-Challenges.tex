@@ -6,7 +6,11 @@ In this section, we describe challenges that have to be overcome in order to suc
 
 %straightforward example
 \begin{example}\label{ex:unif} 
-Consider the following irregular proof $\psi$. Naively computed, the safe literals for $\eta_3$ are $\{ \vdash q(c), ~ p(a,X)\}$. $\eta_1$ and $\eta_5$ and these two literals are unifiable. Further, the safe literals for $\eta_1$ includes $\eta_5$. Thus the proof can be regularized by recycling $\eta_1$.
+Consider the following irregular proof $\psi$. Naively computed, the safe literals for $\eta_3$ are $\{ \vdash q(c), ~ p(a,X)\}$.
+$\eta_3$'s left pivot $p(W,X)\in \eta_1$ is unifiabled with $p(a,X)$ in its safe literals, and thus the proof can be regularized by recycling $\eta_1$.
+%$\eta_1$'s literal is unifiable with $p(a,X)$, which is inherited from $\eta_3$'s safe literals. 
+%Thus the proof can be regularized by recycling $\eta_1$.
+%$\eta_1$ and $\eta_5$ and these two literals are unifiable. Further, the safe literals for $\eta_1$ includes $\eta_5$. Thus the proof can be regularized by recycling $\eta_1$.
 
 \begin{footnotesize}
 \begin{prooftree}
@@ -40,7 +44,7 @@ Unlike in the propositional case, where the pivots and their corresponding safe 
 %unification necessary example
 \begin{example}\label{ex:pairwise}
 
-There are cases, as shown below, that require more careful care when attempting to regularize. Again, naively computed, the safe literals for $\eta_3$ are $\{ \vdash q(c), ~ p(a,X)\}$, and so $\eta_1$ and $\eta_2$ appear to be candidates for regularization. 
+There are cases, as shown below, that require more careful care when attempting to regularize. Again, naively computed, the safe literals for $\eta_3$ are $\{ \vdash q(c), ~ p(a,X)\}$, and so $\eta_1$ appears to be a candidate for regularization. 
 
 \begin{footnotesize}
 \begin{prooftree}
@@ -57,21 +61,23 @@ There are cases, as shown below, that require more careful care when attempting 
 
 
 \noindent
-However, if we attempt to regularize the proof, the same series of actions as in Example \ref{ex:unif} would result in the following resolution, which cannot be completed.
-
-\begin{footnotesize}
-\begin{prooftree}
-\def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_1$: \e$p(a,c)$}
-\AxiomC{$\eta_6$: $p(Y,b)$\e}
-\BinaryInfC{$\psi'$: ??}
-\end{prooftree}
-\end{footnotesize}
+However, if we attempt to regularize the proof, the same series of actions as in Example \ref{ex:unif} would 
+require resolution between $\eta_1$ and $\eta_5$, which is not possible.
+%result in the following resolution, which cannot be completed.
+%\begin{footnotesize}
+%\begin{prooftree}
+%\def\e{\mbox{\ $\vdash$\ }}
+%\AxiomC{$\eta_1$: \e$p(a,c)$}
+%\AxiomC{$\eta_6$: $p(Y,b)$\e}
+%\BinaryInfC{$\psi'$: ??}
+%\end{prooftree}
+%\end{footnotesize}
 
 \end{example}
 
 \noindent
-The observations above lead to the idea of requiring pivots to satisfy the following property before collecting them to be reused.
+%The observations above lead to the idea of requiring pivots to satisfy the following property before collecting them to be reused.
+This observation implies that the following property should be satisfied before attempting regularization.
 
 \begin{definition}
 \label{prop:pair}
@@ -116,7 +122,7 @@ Since $q(f(a,X),Y) \in \eta_2$ and $q(T,V)$ (in $\eta_3$'s safe literals) are un
 \end{footnotesize}
 
 \noindent
-In order to avoid these scenarios, we perform an additional check during inference removal. The node $\eta*$ which will replace a resolution $\eta$ (because $\eta$ would have a deleted parent), must be entirely contained, via unification which modifies only $\eta^*$'s variables, in the safe literals of $\eta$. In the case of this example, $\eta_1$ would not satisfy this property: in order to unify with $\eta_3$'s safe literals, it would be necessary to send $V\rightarrow Z$ due to $\eta_1$'s second literal, but leave $V$ unchanged due $\eta_1$'s first literal, which is not possible. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
+In order to avoid these scenarios, we perform an additional check during inference removal. The node $\eta*$ which will replace a resolution $\eta$ (because $\eta$ would have a deleted parent), must be entirely contained, via unification which modifies only $\eta^*$'s variables, in the safe literals of $\eta$. In this example, $\eta_1$ does not satisfy this property: in order to unify with $\eta_3$'s safe literals, it would be necessary to send $V\rightarrow Z$ due to $\eta_1$'s second literal, but leave $V$ unchanged due $\eta_1$'s first literal, which is not possible. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
 
 \end{example}
 
