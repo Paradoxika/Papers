@@ -122,7 +122,9 @@ Since $q(f(a,X),Y) \in \eta_2$ and $q(T,V)$ (in $\eta_3$'s safe literals) are un
 \end{footnotesize}
 
 \noindent
-In order to avoid these scenarios, we perform an additional check during inference removal. The node $\eta*$ which will replace a resolution $\eta$ (because $\eta$ would have a deleted parent), must be entirely contained, via unification which modifies only $\eta^*$'s variables, in the safe literals of $\eta$. In this example, $\eta_1$ does not satisfy this property: in order to unify with $\eta_3$'s safe literals, it would be necessary to send $V\rightarrow Z$ due to $\eta_1$'s second literal, but leave $V$ unchanged due $\eta_1$'s first literal, which is not possible. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
+In order to avoid these scenarios, we perform an additional check during inference removal. The node $\eta*$ which will replace a resolution $\eta$ (because $\eta$ would have a deleted parent), must be entirely contained, via unification which modifies only $\eta^*$'s variables, in the safe literals of $\eta$. 
+%In this example, $\eta_1$ does not satisfy this property: in order to unify with $\eta_3$'s safe literals, it would be necessary to send $V\rightarrow Z$ due to $\eta_1$'s second literal, but leave $V$ unchanged due $\eta_1$'s first literal, which is not possible. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
+In this example, $\eta_1$ does not satisfy this property. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
 
 \end{example}
 

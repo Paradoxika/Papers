@@ -53,17 +53,15 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
 
 %\noindent
 %The resolution and contraction (factoring) rules described above are the standard rules of the resolution calculus, except for the fact that we do not require resolution to use most general unifiers. The presentation of the resolution rule here uses two substitutions, in order to explicitly handle the necessary renaming of variables, which is often left implicit in other presentations of resolution.
-\noindent
-When we write $\psi_L \res{\ell_L}{}{\ell_R}{} \psi_R$, we assume that the omitted substitutions are such that the resolved atom is most general. 
+%\noindent
+%When we write $\psi_L \res{\ell_L}{}{\ell_R}{} \psi_R$, we assume that the omitted substitutions are such that the resolved atom is most general. 
 %We write $\con{\psi}{}{}$ for an arbitrary maximal contraction, and $\con{\psi}{}{\sigma}$ for a (pseudo-)contraction that does merge no literals but merely applies the substitution $\sigma$. 
-When the literals and substitutions are irrelevant or clear from the context, we may write simply $\psi_L \res{}{}{}{} \psi_R$. % instead of $\psi_L \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$.
-The $\res{}{}{}{}$ operator is assumed to be left-associative. 
-In the propositional case, we omit contractions (treating clauses as sets instead of multisets) and $\psi_L \res{\ell}{\emptyset}{\dual{\ell}}{\emptyset} \psi_R$ is abbreviated by $\psi_L \odot_{\ell} \psi_R$.
+%When the literals and substitutions are irrelevant or clear from the context, we may write simply $\psi_L \res{}{}{}{} \psi_R$. % instead of $\psi_L \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$.
+%The $\res{}{}{}{}$ operator is assumed to be left-associative. 
+%In the propositional case, we omit contractions (treating clauses as sets instead of multisets) and $\psi_L \res{\ell}{\emptyset}{\dual{\ell}}{\emptyset} \psi_R$ is abbreviated by $\psi_L \odot_{\ell} \psi_R$.
 
-If $\psi = \varphi_L \odot \varphi_R$ or $\psi = \con{\varphi}{}{}$, then $\varphi$, $\varphi_L$ and $\varphi_R$ are \emph{direct
-subproofs} of $\psi$ and $\psi$ is a \emph{child} of both $\varphi_L$ and $\varphi_R$. The
-transitive closure of the direct subproof relation is the \emph{subproof} relation. A subproof which
-has no direct subproof is an \emph{axiom} of the proof.
+%If $\psi = \varphi_L \odot \varphi_R$ or $\psi = \con{\varphi}{}{}$, then $\varphi$, $\varphi_L$ and $\varphi_R$ are \emph{direct subproofs} of $\psi$ and $\psi$ is a \emph{child} of both $\varphi_L$ and $\varphi_R$. The
+%transitive closure of the direct subproof relation is the \emph{subproof} relation. A subproof which has no direct subproof is an \emph{axiom} of the proof.
 %
-$\Vertices{\psi}$, $\Edges{\psi}$ and $\Conclusion{\psi}$
-denote, respectively, the nodes, edges and proved clause (conclusion) of $\psi$. If $\psi$ is a proof ending with a resolution node, then $\psi_L$ and $\psi_R$ denote, respectively, the left and right premises of $\psi$.
+%$\Vertices{\psi}$, $\Edges{\psi}$ and $\Conclusion{\psi}$
+%denote, respectively, the nodes, edges and proved clause (conclusion) of $\psi$. If $\psi$ is a proof ending with a resolution node, then $\psi_L$ and $\psi_R$ denote, respectively, the left and right premises of $\psi$.

@@ -45,7 +45,8 @@ $\psi'$ $\la$ fix($\psi'$) \;
 
 
 %TODO: re-write -- taken from FORPI paper
-In the propositional case, regularization of a node replaces it by the parent whose clause contains the resolved literal that is safe. In the first order case, because unification introduces complications like those seen in Example \ref{ex:unifcheck}, we ensure that the replacement parent is (possibly after unification) contained entirely in the safe literals. This ensures that the remainder of the proof does not expect a variable to be unified to different values simultaneously. After regularization, all nodes below the regularized node may have to be fixed. 
+In the propositional case, regularization of a node replaces it by the parent whose clause contains the resolved literal that is safe. In the first order case, because unification introduces complications like those seen in Example \ref{ex:unifcheck}, we ensure that the replacement parent is (possibly after unification) contained entirely in the safe literals. This ensures that the remainder of the proof does not expect a variable to be unified to different values simultaneously. 
+%After regularization, all nodes below the regularized node may have to be fixed. 
 Similar to {\RPI}, instead of replacing the irregular node by one of its parents immediately, 
 its other parent is replaced by \texttt{deletedNodeMarker}, as shown in Algorithm~\ref{algo:Regularize}.
 As in the propositional case, fixing of the proof is postponed to another (single) traversal, as regularization proceeds bottom up and only nodes below a regularized node may require fixing.
