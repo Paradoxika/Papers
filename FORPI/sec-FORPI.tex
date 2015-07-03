@@ -6,7 +6,9 @@ This section presents {\FirstOrderRPI} ({\FORPI}), Algorithm \ref{algo:FORPI}, a
 %Recall that \RecyclePivotsIntersection is a modification of the \texttt{RecyclePivots} algorithm, %described in  \cite{Bar-IlanFuhrmannHooryShachamStrichman2009Linear-time-reductions-of-resolution-proofs}, from which it derives its name. 
 %and \RecyclePivotsIntersection provides better compression on proofs where nodes have several children, when compared to \texttt{RecyclePivots}. Through a small modification to our algorithm (described later), a first order generalization of \texttt{RecyclePivots} is also possible.
 %Our generalization, Algorithm~\ref{algo:FORPI}. 
-{\FORPI} traverses the proof in a bottom-up manner, storing for every node a set of safe literals that are resolved in all paths below it in the proof (or that already occurred in the root clause of the original proof). If one of the node's resolved literals can be unified to a literal in the set of safe literals, then it may be possible to regularize the node by replacing it by one of its parents. 
+{\FORPI} traverses the proof in a bottom-up manner, storing for every node a set of safe literals.
+% that are resolved in all paths below it in the proof (or that already occurred in the root clause of the original proof). 
+If one of the node's resolved literals can be unified to a literal in the set of safe literals, then it may be possible to regularize the node by replacing it by one of its parents. 
 
 %TODO: move to intro?
 %Although in the worst case full regularization can increase the proof length exponentially \cite{Tseitin1983On-The-Complexity-of-Proofs-in-Propositional-Logics}, these algorithms show that many irregular proofs can have their length decreased if a careful partial regularization is performed. 
