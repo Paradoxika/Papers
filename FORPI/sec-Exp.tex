@@ -4,7 +4,12 @@ A prototype\footnote{Source code available at \url{https://github.com/jgorzny/Sk
 %{\SFOLowerUnits} prototype was developed earlier for the same system \cite{}.
 Evaluation of this algorithm was performed on the same 308 real first-order proofs generated to evaluate {\GFOLU}, and for consistency, the same system and metrics were used (see \cite{GFOLU}).
 
-Figure \ref{fig:ex} (a) shows the compression results of applying {\FORPI} and {\GFOLU} to the same proof (in both application orders), as well as each of these algorithms individually. Unsurprisingly, applying both algorithms generally does better than either algorithm alone. Figure \ref{fig:ex} (b) shows that the order of compression matters, and applying {\FORPI} after {\GFOLU} is more successful than the alternative. This is consistent with propositional results for these algorithms.
+Figure \ref{fig:ex} (a) shows the compression results of applying {\FORPI} and {\GFOLU} to the same proof (in both application orders), as well as each of these algorithms individually. Unsurprisingly, applying both algorithms generally does better than either algorithm alone. On this data set, {\FORPI} compresses provides some compression to the original proofs, {\GFOLU} is responsible for most of the compression. {\FORPI} compresses only three proofs already compressed by {\GFOLU}.
+{\RPI} performs best when the proofs are tall; {\FORPI} will likely perform similarly. However, the proofs in this data set are relatively short, and those compressed by {\GFOLU} first are even shorter. Thus, the performance of {\FORPI} is not unsurprising.
+
+Figure \ref{fig:ex} (b) shows that the order of compression may matter less than in than in the propositional case, although more data is needed to confirm. The number of points above and below the main diagonal are the same; however, the points below may simply be the result of {\GFOLU} being more likely to compress such short proofs. If so, that would imply that Running {\FORPI} after {\GFOLU} is more successful, which would be consistent with propositional results for these algorithms.
+%Running {\FORPI} after {\GFOLU} shows some compression that...
+%This is consistent with propositional results for these algorithms.
 
 %Before evaluating this algorithm, we first generated several benchmark proofs. This was done by executing the {\SPASS}\footnote{\url{http://www.spass-prover.org/}} theorem prover on 2280 real first-order problems without equality of the TPTP Problem Library \footnote{\url{http://www.cs.miami.edu/{\textasciitilde}tptp/}} (among them, 1032 problems are known to be unsatisfiable). In order to generate pure resolution proofs, most advanced inference rules used by {\SPASS}  were disabled. The Euler Cluster at the University of Victoria\footnote{\url{https://rcf.uvic.ca/euler.php}} was used and the time limit was 300 seconds per problem. Under these conditions, {\SPASS} was able to generate 308 proofs. 
 
@@ -23,7 +28,7 @@ Figure \ref{fig:ex} (a) shows the compression results of applying {\FORPI} and {
 %TODO: change time
 %{\SPASS} required approximately 40 minutes (running on a cluster and proof generation time for each problem) to solve the generated proofs. The total time for {\GFOLU} and {\FORPI} to be executed on all 308 proofs was just under 5 seconds on a simple laptop. Both times including parsing time. These compression algorithms continue to be very fast, and may simplify the proof considerably for a relatively quick time cost.
 
-{\SPASS} required approximately 40 minutes to solve and generate the proofs; the total time for {\GFOLU} and {\FORPI} to be executed on all 308 proofs was just under 5 seconds (both include parsing time). These compression algorithms continue to be very fast, and may simplify the proof considerably for a relatively quick time cost.
+{\SPASS} required approximately 40 minutes to solve and generate the proofs; the total time for {\GFOLU} and {\FORPI} to be executed on all 308 proofs was just under 8 seconds (both include parsing time). These compression algorithms continue to be very fast, and may simplify the proof considerably for a relatively quick time cost.
 
 \begin{figure}[bt]
 \centering

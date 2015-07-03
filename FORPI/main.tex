@@ -128,7 +128,10 @@ Section \ref{sec:res} introduces the first-order resolution calculus and the not
 
 {\RPI} removes \emph{irregularities}, which are resolution inferences with a node $\eta$ when the resolved literal (a.k.a. \emph{pivot}) occurs as the pivot of another inference located below in the path from $\eta$ to the root of the proof. In the worst case, regular resolution proofs can be exponentially bigger than irregular ones, but {\RPI} takes care of regularizing the proof only partially, removing inferences only when this does not enlarge the proof.
 
-ToDo: Informal textual description of the propositional algorithm, explaining what safe literals are. Refer reader to the CADE 2011 paper (where RPI is described) for a formal description of the propositional algorithm. Consider adding the formal description to an appendix in this paper, for the convenience of the reviewer.
+ToDo: Informal textual description of the propositional algorithm, explaining what safe literals are. 
+%Refer reader to the CADE 2011 paper (where RPI is described) for a formal description of the propositional algorithm. 
+Appendix \ref{Section:RPI} contains a formal description of {\RPI} (taken from \cite{LURPI}).
+%Consider adding the formal description to an appendix in this paper, for the convenience of the reviewer.
 
 The {\RPI} and the {\RP} algorithms differ from each other mainly in the
 computation of the safe literals of a node that has many children. While the former 
