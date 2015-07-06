@@ -26,18 +26,18 @@ $\eta_3$'s left pivot $p(W,X)\in \eta_1$ is unifiable with $p(a,X)$ in its safe 
 \end{scriptsize}
 
 \noindent
-Regularization of the proof by recycling $\eta_1$ results in removing the inference between $\eta_2$ and $\eta_3$, which in turn replaces $\eta_3$ by $\eta_1$. Since $\eta_1$ cannot be resolved against $\eta_4$, and $\eta_1$ contained safe literals, $\eta_5$ is replaced by $\eta_1$. The result is the much shorter proof below.
+Regularization of the proof by recycling $\eta_1$ results in removing the inference between $\eta_2$ and $\eta_3$, which in turn replaces $\eta_3$ by $\eta_1$. Since $\eta_1$ cannot be resolved against $\eta_4$, and $\eta_1$ contained safe literals, $\eta_5$ is replaced by $\eta_1$. The result is a much shorter proof consisting of a single resolution between $\eta_1$ and $\eta_6$.
+%The result is the much shorter proof below.
+%\begin{scriptsize}
+%\begin{prooftree}
+%\def\e{\mbox{\ $\vdash$\ }}
+%\AxiomC{$\eta_1$: \e$p(W,X)$}
+%\AxiomC{$\eta_6$: $p(Y,b)$\e}
+%\BinaryInfC{$\psi'$: $\bot$}
+%\end{prooftree}
+%\end{scriptsize}
 
-\begin{scriptsize}
-\begin{prooftree}
-\def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_1$: \e$p(W,X)$}
-\AxiomC{$\eta_6$: $p(Y,b)$\e}
-\BinaryInfC{$\psi'$: $\bot$}
-\end{prooftree}
-\end{scriptsize}
-
-\noindent
+%\noindent
 Unlike in the propositional case, where the pivots and their corresponding safe literal list are all syntactically equal, in the first-order case, this is not necessarily the case. As illustrated above, $p(W,X)$ and $p(a,X)$ are not syntactically equal. Nevertheless, they are unifiable, and the proof can be regularized.
 \end{example}
 
