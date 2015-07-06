@@ -126,12 +126,12 @@ Section \ref{sec:res} introduces the first-order resolution calculus and the not
 
 \section{The Propositional Algorithm}
 
-{\RPI} removes \emph{irregularities}, which are resolution inferences with a node $\eta$ when the resolved literal (a.k.a. \emph{pivot}) occurs as the pivot of another inference located below in the path from $\eta$ to the root of the proof. In the worst case, regular resolution proofs can be exponentially bigger than irregular ones, but {\RPI} takes care of regularizing the proof only partially, removing inferences only when this does not enlarge the proof.
+{\RPI} (formally defined in Appendix \ref{Section:RPI}) removes \emph{irregularities}, which are resolution inferences with a node $\eta$ when the resolved literal (a.k.a. \emph{pivot}) occurs as the pivot of another inference located below in the path from $\eta$ to the root of the proof. In the worst case, regular resolution proofs can be exponentially bigger than irregular ones, but {\RPI} takes care of regularizing the proof only partially, removing inferences only when this does not enlarge the proof.
 
 %ToDo: Informal textual description of the propositional algorithm, explaining what safe literals are. 
 {\RPI} traverses the a proof twice from the bottom-up. On the first traversal, it stores for each node a set of \emph{safe literals} that get resolved in all paths below it in the proof, or which already occurred in the root clause of the proof). If one of the node's resolved literals belongs to the set of safe literals, then it is possible to \emph{regularize} the node by replacing it by one of its parents. Such a node is marked as \texttt{deleted}. On the second traversal, regularization is performed: nodes that have a parent node marked \texttt{deleted} are replaced.
 %Refer reader to the CADE 2011 paper (where RPI is described) for a formal description of the propositional algorithm. 
-Appendix \ref{Section:RPI} contains a formal description of {\RPI} (taken from \cite{LURPI}). On the second traversal, regularization is performed.
+% contains a formal description of {\RPI} (taken from \cite{LURPI}).
 %Consider adding the formal description to an appendix in this paper, for the convenience of the reviewer.
 
 The {\RPI} and the {\RP} algorithms differ from each other mainly in the
