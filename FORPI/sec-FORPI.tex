@@ -2,50 +2,11 @@
 \label{sec:FORPI}
 %TODO: this section
 This section presents {\FirstOrderRPI} ({\FORPI}), Algorithm \ref{algo:FORPI}, a first order generalization of {\RPI}. 
-%which aims to compress irregular proofs. 
-%Recall that \RecyclePivotsIntersection is a modification of the \texttt{RecyclePivots} algorithm, %described in  \cite{Bar-IlanFuhrmannHooryShachamStrichman2009Linear-time-reductions-of-resolution-proofs}, from which it derives its name. 
-%and \RecyclePivotsIntersection provides better compression on proofs where nodes have several children, when compared to \texttt{RecyclePivots}. Through a small modification to our algorithm (described later), a first order generalization of \texttt{RecyclePivots} is also possible.
-%Our generalization, Algorithm~\ref{algo:FORPI}. 
 {\FORPI} traverses the proof in a bottom-up manner, storing for every node a set of safe literals.
-% that are resolved in all paths below it in the proof (or that already occurred in the root clause of the original proof). 
 If one of the node's resolved literals can be unified to a literal in the set of safe literals, then it may be possible to regularize the node by replacing it by one of its parents. 
 
-%TODO: move to intro?
-%Although in the worst case full regularization can increase the proof length exponentially \cite{Tseitin1983On-The-Complexity-of-Proofs-in-Propositional-Logics}, these algorithms show that many irregular proofs can have their length decreased if a careful partial regularization is performed. 
+%NOTE: FORPPI desciption has been moved to challenges file to optimize whitespace use
 
-\newcommand{\la}{\leftarrow}
-
-
-\begin{algorithm}[bt]
-\begin{footnotesize}
-\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-\SetKwData{units}{unitsQueue}
-\SetKwData{fixedUnits}{fixedUnitsQueue}
-
-\Input{A first-order proof $\psi$}
-\Output{A possibly less-irregular first-order proof $\psi'$}
-
-\BlankLine
-
-$\psi'$ $\la$ $\psi$\;
-traverse $\psi'$ bottom-up and \ForEach{node $\eta$ in $\psi'$}{
-   \If{$\eta$ is a resolvent node}{
-     setSafeLiterals($\eta$) \;
-     regularizeIfPossible($\eta$)
-   }
-  }
-$\psi'$ $\la$ fix($\psi'$) \;
-\Return {$\psi'$}\;
-\caption{\label{algo:FORPI} \texttt{\FORPI}}
-\end{footnotesize}
-\end{algorithm}
-
-
-
-
-
-%TODO: re-write -- taken from FORPI paper
-%In the propositional case, regularization of a node replaces it by the parent whose clause contains the resolved literal that is safe. 
 In the first order case, because unification introduces complications like those seen in Example \ref{ex:unifcheck}, we ensure that the replacement parent is (possibly after unification) contained entirely in the safe literals. This ensures that the remainder of the proof does not expect a variable to be unified to different values simultaneously. 
 %After regularization, all nodes below the regularized node may have to be fixed. 
 Similar to {\RPI}, instead of replacing the irregular node by one of its parents immediately, 

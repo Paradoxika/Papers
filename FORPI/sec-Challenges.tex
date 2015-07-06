@@ -87,6 +87,32 @@ Let $\eta$ be a clause with literal $\ell'$ with corresponding safe literal $\el
 \noindent
 One technique to ensure this property is met is to apply the unifier of a resolution to each resolvent before computing the safe literals. In the case of Example \ref{ex:pairwise}, this would result in $\eta_3$ having the safe literals $\{ \vdash q(c),~p(a,b)\}$, and now it is clear that the literal in $\eta_1$ is not safe.
 
+
+\newcommand{\la}{\leftarrow}
+\begin{algorithm}[bt]
+\begin{footnotesize}
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\SetKwData{units}{unitsQueue}
+\SetKwData{fixedUnits}{fixedUnitsQueue}
+
+\Input{A first-order proof $\psi$}
+\Output{A possibly less-irregular first-order proof $\psi'$}
+
+\BlankLine
+
+$\psi'$ $\la$ $\psi$\;
+traverse $\psi'$ bottom-up and \ForEach{node $\eta$ in $\psi'$}{
+   \If{$\eta$ is a resolvent node}{
+     setSafeLiterals($\eta$) \;
+     regularizeIfPossible($\eta$)
+   }
+  }
+$\psi'$ $\la$ fix($\psi'$) \;
+\Return {$\psi'$}\;
+\caption{\label{algo:FORPI} \texttt{\FORPI}}
+\end{footnotesize}
+\end{algorithm}
+
 %TODO: continue from here
 %extra check example
 \begin{example}\label{ex:unifcheck}
@@ -127,6 +153,7 @@ In order to avoid these scenarios, we perform an additional check during inferen
 In this example, $\eta_1$ does not satisfy this property. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
 
 \end{example}
+
 
 
 %intersection example?
