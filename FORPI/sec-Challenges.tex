@@ -11,7 +11,7 @@ Consider the following proof $\psi$. When computed as in the propositional case,
 %Thus the proof can be regularized by recycling $\eta_1$.
 %$\eta_1$ and $\eta_5$ and these two literals are unifiable. Further, the safe literals for $\eta_1$ includes $\eta_5$. Thus the proof can be regularized by recycling $\eta_1$.
 
-\begin{footnotesize}
+\begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
 \AxiomC{$\eta_1$: \e $p(W,X)$}
@@ -22,7 +22,7 @@ Consider the following proof $\psi$. When computed as in the propositional case,
 \AxiomC{$\eta_6$: $p(Y,b)$ \e }
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
-\end{footnotesize}
+\end{scriptsize}
 
 \noindent
 As neither of $\eta_3$'s pivots is syntactically equal to a safe literal, the propositional {\RPI} algorithm would not change $\psi$. However, $\eta_3$'s left pivot $p(W,X)\in \eta_1$ is unifiable with the safe literal $p(a,X)$. Regularizing $\eta_3$, by deleting the edge between $\eta_2$ and $\eta_3$ and replacing $\eta_3$ by $\eta_1$, leads to further deletion of $\eta_4$ (because it is not resolvable with $\eta_1$) and finally to the much shorter proof below.
@@ -46,7 +46,7 @@ Unlike in the propositional case, where a pivot must be syntactically equal to a
 
 Again, the safe literals for $\eta_3$, when computed as in the propositional case, are $\{ \vdash q(c), ~ p(a,X)\}$, and as the pivot $p(a,c)$ is unifiable with the safe literal $p(a,X)$, $\eta_3$ appears to be a candidate for regularization. 
 
-\begin{footnotesize}
+\begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
 \AxiomC{$\eta_1$: \e $p(a,c)$}
@@ -57,7 +57,7 @@ Again, the safe literals for $\eta_3$, when computed as in the propositional cas
 \AxiomC{$\eta_6$: $p(Y,b)$ \e }
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
-\end{footnotesize}
+\end{scriptsize}
 
 
 \noindent
@@ -76,7 +76,6 @@ require resolution between $\eta_1$ and $\eta_6$, which is not possible.
 \end{example}
 
 \noindent
-%The observations above lead to the idea of requiring pivots to satisfy the following property before collecting them to be reused.
 One way to prevent the problem depicted above would be to require the pivot to be not only unifiable but in fact more general than a safe literal. A weaker (and better) requirement is possible, however, as defined below.
 
 \begin{definition}
@@ -86,6 +85,32 @@ Let $\eta$ be a node with pivot $\ell'$ unifiable with safe literal $\ell$ which
 
 \noindent
 One way to ensure this property is met is to slightly modify the notion of safe literals, by applying the unifier of the resolution step to the each pivot before adding it to the safe literals (cf. algorithm 3, lines 8 and 10). In the case of Example \ref{ex:pairwise}, this would result in $\eta_3$ having the safe literals $\{ \vdash q(c),~p(a,b)\}$, where clearly the pivot $p(a,c)$ in $\eta_1$ is not safe.
+
+
+\newcommand{\la}{\leftarrow}
+\begin{algorithm}[bt]
+\begin{footnotesize}
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\SetKwData{units}{unitsQueue}
+\SetKwData{fixedUnits}{fixedUnitsQueue}
+
+\Input{A first-order proof $\psi$}
+\Output{A possibly less-irregular first-order proof $\psi'$}
+
+\BlankLine
+
+$\psi'$ $\la$ $\psi$\;
+traverse $\psi'$ bottom-up and \ForEach{node $\eta$ in $\psi'$}{
+   \If{$\eta$ is a resolvent node}{
+     setSafeLiterals($\eta$) \;
+     regularizeIfPossible($\eta$)
+   }
+  }
+$\psi'$ $\la$ fix($\psi'$) \;
+\Return {$\psi'$}\;
+\caption{\label{algo:FORPI} \texttt{\FORPI}}
+\end{footnotesize}
+\end{algorithm}
 
 %TODO: continue from here
 %extra check example
@@ -110,7 +135,7 @@ Satisfying the pre-regularization unifiability property is not sufficient. Consi
 \noindent
 $\eta_3$'s pivot $q(f(a,V),U)$ is unifiable to (and even more general than) the safe literal $q(f(a,e),c)$. Attempting to regularize $\eta_3$ would lead to the removal of $\eta_2$, the replacement of $\eta_3$ by $\eta_1$ and the removal of $\eta_4$ (because $\eta_1$ does not contain the pivot required by $\eta_5$), with $\eta_5$ also being replaced by $\eta_1$. Then resolution between $\eta_1$ and $\eta_6$ results in $\eta_7'$, which cannot be resolved with $\eta_8$, as shown below.
 
-\begin{footnotesize}
+\begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
 \AxiomC{$\eta_8$: $Q(f(a,e),c)\e$}
@@ -119,7 +144,7 @@ $\eta_3$'s pivot $q(f(a,V),U)$ is unifiable to (and even more general than) the 
 \BinaryInfC{$\eta_7'$: $\e Q(f(a,d),c)$}
 \BinaryInfC{$\psi'$: ??}
 \end{prooftree}
-\end{footnotesize}
+\end{scriptsize}
 
 \noindent
 $\eta_1$'s literal $q(f(a, V), U)$, which would be resolved with $\eta_8$'s literal, was changed to $Q(f(a,d),c)$ due to the resolution between $\eta_1$ and $\eta_6$.
@@ -133,6 +158,7 @@ ToDo: The following paragraph is not understandable. It must be made clearer. It
 In order to avoid these scenarios, we perform an additional check during inference removal. The node $\eta*$ which will replace a resolution $\eta$ (because $\eta$ would have a deleted parent), must be entirely contained, via unification which modifies only $\eta^*$'s variables, in the safe literals of $\eta$. 
 %In this example, $\eta_1$ does not satisfy this property: in order to unify with $\eta_3$'s safe literals, it would be necessary to send $V\rightarrow Z$ due to $\eta_1$'s second literal, but leave $V$ unchanged due $\eta_1$'s first literal, which is not possible. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
 In this example, $\eta_1$ does not satisfy this property. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
+
 
 
 

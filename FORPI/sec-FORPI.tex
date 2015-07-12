@@ -2,53 +2,15 @@
 \label{sec:FORPI}
 %TODO: this section
 This section presents {\FirstOrderRPI} ({\FORPI}), Algorithm \ref{algo:FORPI}, a first order generalization of {\RPI}. 
-%which aims to compress irregular proofs. 
-%Recall that \RecyclePivotsIntersection is a modification of the \texttt{RecyclePivots} algorithm, %described in  \cite{Bar-IlanFuhrmannHooryShachamStrichman2009Linear-time-reductions-of-resolution-proofs}, from which it derives its name. 
-%and \RecyclePivotsIntersection provides better compression on proofs where nodes have several children, when compared to \texttt{RecyclePivots}. Through a small modification to our algorithm (described later), a first order generalization of \texttt{RecyclePivots} is also possible.
-%Our generalization, Algorithm~\ref{algo:FORPI}. 
 {\FORPI} traverses the proof in a bottom-up manner, storing for every node a set of safe literals.
-% that are resolved in all paths below it in the proof (or that already occurred in the root clause of the original proof). 
 If one of the node's resolved literals can be unified to a literal in the set of safe literals, then it may be possible to regularize the node by replacing it by one of its parents. 
 
-%TODO: move to intro?
-%Although in the worst case full regularization can increase the proof length exponentially \cite{Tseitin1983On-The-Complexity-of-Proofs-in-Propositional-Logics}, these algorithms show that many irregular proofs can have their length decreased if a careful partial regularization is performed. 
+%NOTE: FORPPI desciption has been moved to challenges file to optimize whitespace use
 
-\newcommand{\la}{\leftarrow}
-
-
-\begin{algorithm}[bt]
-\begin{footnotesize}
-\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-\SetKwData{units}{unitsQueue}
-\SetKwData{fixedUnits}{fixedUnitsQueue}
-
-\Input{A first-order proof $\psi$}
-\Output{A possibly less-irregular first-order proof $\psi'$}
-
-\BlankLine
-
-$\psi'$ $\la$ $\psi$\;
-traverse $\psi'$ bottom-up and \ForEach{node $\eta$ in $\psi'$}{
-   \If{$\eta$ is a resolvent node}{
-     setSafeLiterals($\eta$) \;
-     regularizeIfPossible($\eta$)
-   }
-  }
-$\psi'$ $\la$ fix($\psi'$) \;
-\Return {$\psi'$}\;
-\caption{\label{algo:FORPI} \texttt{\FORPI}}
-\end{footnotesize}
-\end{algorithm}
-
-
-
-
-
-%TODO: re-write -- taken from FORPI paper
-In the propositional case, regularization of a node replaces it by the parent whose clause contains the resolved literal that is safe. In the first order case, because unification introduces complications like those seen in Example \ref{ex:unifcheck}, we ensure that the replacement parent is (possibly after unification) contained entirely in the safe literals. This ensures that the remainder of the proof does not expect a variable to be unified to different values simultaneously. 
+In the first order case, because unification introduces complications like those seen in Example \ref{ex:unifcheck}, we ensure that the replacement parent is (possibly after unification) contained entirely in the safe literals. This ensures that the remainder of the proof does not expect a variable to be unified to different values simultaneously. 
 %After regularization, all nodes below the regularized node may have to be fixed. 
 Similar to {\RPI}, instead of replacing the irregular node by one of its parents immediately, 
-its other parent is replaced by \texttt{deletedNodeMarker}, as shown in Algorithm~\ref{algo:Regularize}.
+its other parent is replaced by \texttt{deletedNodeMarker}, as shown in Algorithm~\ref{algo:foRegularize}.
 As in the propositional case, fixing of the proof is postponed to another (single) traversal, as regularization proceeds bottom up and only nodes below a regularized node may require fixing.
 During fixing, the irregular node is actually replaced by the parent that is not \texttt{deletedNodeMarker}. 
 With careful bookkeeping, it is often possible to contract nodes during proof fixing to compress the proof further.
@@ -79,7 +41,7 @@ With careful bookkeeping, it is often possible to contract nodes during proof fi
       mark $\psi$ as regularized
 }
     }
-\caption{\label{algo:Regularize} \texttt{regularizeIfPossible}}
+\caption{\label{algo:foRegularize} \texttt{FOregularizeIfPossible}}
 \end{footnotesize}
 \end{algorithm}
 
@@ -113,7 +75,7 @@ With careful bookkeeping, it is often possible to contract nodes during proof fi
       }
       $\psi$.safeLiterals $\la$ $\bigcap_{\psi' \in \psi\textrm{.children}}$ safeLiteralsFrom($\psi'$)
     }
-\caption{\label{algo:SetSafeLiterals} \texttt{setSafeLiterals}}
+\caption{\label{algo:foSetSafeLiterals} \texttt{FOsetSafeLiterals}}
 \end{footnotesize}
 \end{algorithm}
 
@@ -150,10 +112,10 @@ With careful bookkeeping, it is often possible to contract nodes during proof fi
 %The set of safe literals of a node $\eta$ can be computed from the set of safe literals of its children (cf.\ Algorithm~\ref{algo:SetSafeLiterals}). In the case when $\eta$ has a single child $\varsigma$, the safe literals of $\eta$ are simply the safe literals of $\varsigma$ together with the resolved literal $p$ of $\varsigma$ belonging to $\eta$ ($p$ is safe for $\eta$, because whenever $p$ is propagated down the proof through $\eta$, $p$ gets resolved in $\varsigma$). It is important to note, however, that if $\varsigma$ has been marked as regularized, it will eventually be replaced by $\eta$, and hence $p$ should not be added to the safe literals of $\eta$. In this case, the safe literals of $\eta$ should be exactly the same as the safe literals of $\varsigma$. When $\eta$ has several children, the safe literals of $\eta$ w.r.t. a child $\varsigma_i$ contain literals that are safe on all paths that go from $\eta$ through $\varsigma_i$ to the root. For a literal to be safe for all paths from $\eta$ to the root, it should therefore be in the intersection of the sets of safe literals w.r.t. each child.
 
 
-Changing between generalizations of {\RPI} and {\RP} is easily accomplished in the first order case by changing lines 11 and 2, respectively, of Algorithm~\ref{algo:SetSafeLiterals}.
+Changing between generalizations of {\RPI} and {\RP} is easily accomplished in the first order case by changing lines 11 and 2, respectively, of Algorithm~\ref{algo:foSetSafeLiterals}.
 This makes a difference only when the proof is not a refutation.
 
-The set of safe literals for a node $\psi$ is computed from the set of safe literals of its children (cf.\ Algorithm~\ref{algo:SetSafeLiterals}), similar to the propositional case, but additionally applies unifiers to the resolved pivots (cf. Example \ref{ex:pairwise}).
+The set of safe literals for a node $\psi$ is computed from the set of safe literals of its children (cf.\ Algorithm~\ref{algo:foSetSafeLiterals}), similar to the propositional case, but additionally applies unifiers to the resolved pivots (cf. Example \ref{ex:pairwise}).
 
 
 %Note that during a traversal of the proof,  the lines from 5 to 10 in Algorithm~\ref{algo:SetSafeLiterals} are executed as many times as the number of edges in the proof.  Since every node has at most two parents, the number of edges is at most twice the number of nodes.  Therefore, during a traversal of a proof with $n$ nodes, lines from 5 to 10 are executed at most $2n$ times, and the algorithm remains linear. In our prototype implementation, the sets of safe literals are instances of Scala's  \texttt{mutable.HashSet} class. Being mutable, new elements can be added efficiently. And being HashSets, membership checking is done in constant time in the average case, and set intersection (line 12) can be done in $O(k.s)$, where $k$ is the number of sets and $s$ is the size of the smallest set.
