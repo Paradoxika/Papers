@@ -6,8 +6,7 @@ In this section, we describe challenges that have to be overcome in order to suc
 
 %straightforward example
 \begin{example}\label{ex:unif} 
-Consider the following irregular proof $\psi$. Naively computed, the safe literals for $\eta_3$ are $\{ \vdash q(c), ~ p(a,X)\}$.
-$\eta_3$'s left pivot $p(W,X)\in \eta_1$ is unifiable with $p(a,X)$ in its safe literals, and thus the proof can be regularized by recycling $\eta_1$.
+Consider the following proof $\psi$. When computed as in the propositional case, the safe literals for $\eta_3$ are $\{ \vdash q(c), ~ p(a,X)\}$.
 %$\eta_1$'s literal is unifiable with $p(a,X)$, which is inherited from $\eta_3$'s safe literals. 
 %Thus the proof can be regularized by recycling $\eta_1$.
 %$\eta_1$ and $\eta_5$ and these two literals are unifiable. Further, the safe literals for $\eta_1$ includes $\eta_5$. Thus the proof can be regularized by recycling $\eta_1$.
@@ -26,7 +25,7 @@ $\eta_3$'s left pivot $p(W,X)\in \eta_1$ is unifiable with $p(a,X)$ in its safe 
 \end{footnotesize}
 
 \noindent
-Regularization of the proof by recycling $\eta_1$ results in removing the inference between $\eta_2$ and $\eta_3$, which in turn replaces $\eta_3$ by $\eta_1$. Since $\eta_1$ cannot be resolved against $\eta_4$, and $\eta_1$ contained safe literals, $\eta_5$ is replaced by $\eta_1$. The result is the much shorter proof below.
+As neither of $\eta_3$'s pivots is syntactically equal to a safe literal, the propositional {\RPI} algorithm would not change $\psi$. However, $\eta_3$'s left pivot $p(W,X)\in \eta_1$ is unifiable with the safe literal $p(a,X)$. Regularizing $\eta_3$, by deleting the edge between $\eta_2$ and $\eta_3$ and replacing $\eta_3$ by $\eta_1$, leads to further deletion of $\eta_4$ (because it is not resolvable with $\eta_1$) and finally to the much shorter proof below.
 
 \begin{footnotesize}
 \begin{prooftree}
@@ -37,14 +36,15 @@ Regularization of the proof by recycling $\eta_1$ results in removing the infere
 \end{prooftree}
 \end{footnotesize}
 
-\noindent
-Unlike in the propositional case, where the pivots and their corresponding safe literal list are all syntactically equal, in the first-order case, this is not necessarily the case. As illustrated above, $p(W,X)$ and $p(a,X)$ are not syntactically equal. Nevertheless, they are unifiable, and the proof can be regularized.
 \end{example}
+
+\noindent
+Unlike in the propositional case, where a pivot must be syntactically equal to a safe literal for regularization to be possible, the example above suggests that, in the first-order case, it might suffice that a pivot be unifiable with a safe literal. However, there are cases, as shown in the example below, where mere unifiability is not enough and greater care is needed.
 
 %unification necessary example
 \begin{example}\label{ex:pairwise}
 
-There are cases, as shown below, that require more careful care when attempting to regularize. Again, naively computed, the safe literals for $\eta_3$ are $\{ \vdash q(c), ~ p(a,X)\}$, and so $\eta_1$ appears to be a candidate for regularization. 
+Again, the safe literals for $\eta_3$, when computed as in the propositional case, are $\{ \vdash q(c), ~ p(a,X)\}$, and as the pivot $p(a,c)$ is unifiable with the safe literal $p(a,X)$, $\eta_3$ appears to be a candidate for regularization. 
 
 \begin{footnotesize}
 \begin{prooftree}
@@ -62,7 +62,7 @@ There are cases, as shown below, that require more careful care when attempting 
 
 \noindent
 However, if we attempt to regularize the proof, the same series of actions as in Example \ref{ex:unif} would 
-require resolution between $\eta_1$ and $\eta_5$, which is not possible.
+require resolution between $\eta_1$ and $\eta_6$, which is not possible.
 %result in the following resolution, which cannot be completed.
 %\begin{footnotesize}
 %\begin{prooftree}
@@ -77,56 +77,64 @@ require resolution between $\eta_1$ and $\eta_5$, which is not possible.
 
 \noindent
 %The observations above lead to the idea of requiring pivots to satisfy the following property before collecting them to be reused.
-This observation implies that the following property should be satisfied before attempting regularization.
+One way to prevent the problem depicted above would be to require the pivot to be not only unifiable but in fact more general than a safe literal. A weaker (and better) requirement is possible, however, as defined below.
 
 \begin{definition}
 \label{prop:pair}
-Let $\eta$ be a clause with literal $\ell'$ with corresponding safe literal $\ell$ which is resolved against literals $\ell_1$, \ldots, $\ell_n$ in a proof $\psi$. $\eta$ is said to satisfy the \emph{pre-regularization unifiability property} in $\psi$ if $\ell_1$,\ldots,$\ell_n$, and $\dual{\ell'}$ are unifiable.
+Let $\eta$ be a node with pivot $\ell'$ unifiable with safe literal $\ell$ which is resolved against literals $\ell_1$, \ldots, $\ell_n$ in a proof $\psi$. $\eta$ is said to satisfy the \emph{pre-regularization unifiability property} in $\psi$ if $\ell_1$,\ldots,$\ell_n$, and $\dual{\ell'}$ are unifiable.
 \end{definition}
 
 \noindent
-One technique to ensure this property is met is to apply the unifier of a resolution to each resolvent before computing the safe literals. In the case of Example \ref{ex:pairwise}, this would result in $\eta_3$ having the safe literals $\{ \vdash q(c),~p(a,b)\}$, and now it is clear that the literal in $\eta_1$ is not safe.
+One way to ensure this property is met is to slightly modify the notion of safe literals, by applying the unifier of the resolution step to the each pivot before adding it to the safe literals (cf. algorithm 3, lines 8 and 10). In the case of Example \ref{ex:pairwise}, this would result in $\eta_3$ having the safe literals $\{ \vdash q(c),~p(a,b)\}$, where clearly the pivot $p(a,c)$ in $\eta_1$ is not safe.
 
 %TODO: continue from here
 %extra check example
 \begin{example}\label{ex:unifcheck}
-Satisfying the pre-regularization unifiability property is not sufficient to attempt regularization. Consider the proof $\psi$ below. After collecting the safe literals, $\eta_3$'s safe literals are $\{q(T,V),p(c,d)\vdash q(f(a,e),c)\}$.
+Satisfying the pre-regularization unifiability property is not sufficient. Consider the proof $\psi$ below. After collecting the safe literals, $\eta_3$'s safe literals are $\{q(T,V),p(c,d)\vdash q(f(a,e),c)\}$.
 
-\begin{footnotesize}
+\begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
 \AxiomC{$\eta_8$: $q(f(a,e),c)\e$\hspace{-1cm}}
 \AxiomC{$\eta_6$: $\e p(c,d)$\hspace{-4.5cm}}
 \AxiomC{$\eta_1$: $p(U,V)\e q(f(a,V),U)$}
 \AxiomC{$\eta_2$: $q(f(a,X),Y),q(T,X)\e q(f(a,Z),Y)$}
-\BinaryInfC{$\eta_3$: $p(U,V),Q(T,V)\e q(f(a,Z),U)$\hspace{-3.5cm}}
-\AxiomC{\hspace{-1.5cm} $\eta_4$: $\e q(R,S)$}
+\BinaryInfC{$\eta_3$: $p(U,V),Q(T,V)\e q(f(a,Z),U)$\hspace{-1cm}}
+\AxiomC{\hspace{-1cm} $\eta_4$: $\e q(R,S)$}
 \BinaryInfC{$\eta_5$: $p(U,V)\e q(f(a,Z),U)$}
 \BinaryInfC{$\eta_7$: $\e q(f(a,Z),c)$}
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
-\end{footnotesize}
+\end{scriptsize}
 
 \noindent
-Since $q(f(a,X),Y) \in \eta_2$ and $q(T,V)$ (in $\eta_3$'s safe literals) are unifiable, regularization would be attempted. In this case, the inference between $\eta_2$ and $\eta_3$ for would be removed, and as a result, $\eta_3$ will be replaced with $\eta_1$. $\eta_1$ does not contain the required pivot for $\eta_5$, and so $\eta_5$ is also replaced with $\eta_1$, and resolution is attempted before $\eta_1$ and $\eta_6$, which results in $\eta_7'$, and an inability to complete the proof, as shown below.
+$\eta_3$'s pivot $q(f(a,V),U)$ is unifiable to (and even more general than) the safe literal $q(f(a,e),c)$. Attempting to regularize $\eta_3$ would lead to the removal of $\eta_2$, the replacement of $\eta_3$ by $\eta_1$ and the removal of $\eta_4$ (because $\eta_1$ does not contain the pivot required by $\eta_5$), with $\eta_5$ also being replaced by $\eta_1$. Then resolution between $\eta_1$ and $\eta_6$ results in $\eta_7'$, which cannot be resolved with $\eta_8$, as shown below.
 
 \begin{footnotesize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_8$: $Q(f(a,e)c)\e$}
+\AxiomC{$\eta_8$: $Q(f(a,e),c)\e$}
 \AxiomC{$\eta_6$: $\e P(c,d)$}
-\AxiomC{$\eta_1$: $P(U,V)\e Q(f(a,V)U)$}
-\BinaryInfC{$\eta_7'$: $\e Q(f(a,d)c)$}
+\AxiomC{$\eta_1$: $P(U,V)\e Q(f(a,V),U)$}
+\BinaryInfC{$\eta_7'$: $\e Q(f(a,d),c)$}
 \BinaryInfC{$\psi'$: ??}
 \end{prooftree}
 \end{footnotesize}
+
+\noindent
+$\eta_1$'s literal $q(f(a, V), U)$, which would be resolved with $\eta_8$'s literal, was changed to $Q(f(a,d),c)$ due to the resolution between $\eta_1$ and $\eta_6$.
+
+\end{example}
+
+
+ToDo: The following paragraph is not understandable. It must be made clearer. It must be made more formal (as a definition) and more mathematically precise (with the same level of detail as definition 2). It must explain \textbf{why} this additional check suffices.
 
 \noindent
 In order to avoid these scenarios, we perform an additional check during inference removal. The node $\eta*$ which will replace a resolution $\eta$ (because $\eta$ would have a deleted parent), must be entirely contained, via unification which modifies only $\eta^*$'s variables, in the safe literals of $\eta$. 
 %In this example, $\eta_1$ does not satisfy this property: in order to unify with $\eta_3$'s safe literals, it would be necessary to send $V\rightarrow Z$ due to $\eta_1$'s second literal, but leave $V$ unchanged due $\eta_1$'s first literal, which is not possible. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
 In this example, $\eta_1$ does not satisfy this property. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
 
-\end{example}
+
 
 
 %intersection example?
