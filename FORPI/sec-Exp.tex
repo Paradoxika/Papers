@@ -3,9 +3,12 @@ A prototype\footnote{Source code available at \url{https://github.com/jgorzny/Sk
  library. %\footnote{\url{https://github.com/Paradoxika/Skeptik}}. 
 %{\SFOLowerUnits} prototype was developed earlier for the same system \cite{}.
 
-\textbf{ToDo: Describe in the next paragraph where these 308 proofs come from. It is important to show to the reader that we used all possible benchmarks available to us, obtainable with SPASS with all appropriate flags set. I think we had a description inthe FOLU paper. It should be added here.}
+%\textbf{ToDo: Describe in the next paragraph where these 308 proofs come from. It is important to show to the reader that we used all possible benchmarks available to us, obtainable with SPASS with all appropriate flags set. I think we had a description inthe FOLU paper. It should be added here.}
 
-Evaluation of this algorithm was performed on the same 308 real first-order proofs generated to evaluate {\GFOLU}, and for consistency, the same system and metrics were used (see \cite{GFOLU}).
+Evaluation used the same proofs that were used to evaluate {\GFOLU}.
+The {\SPASS} ({\url{http://www.spass-prover.org/}) theorem prover was executed on 2280 real first-order problems without equality of the TPTP Problem Library (among them, 1032 problems are known to be unsatisfiable). In order to generate pure resolution proofs, the advanced inference rules of {\SPASS} were disabled. The proofs were generated on the Euler Cluster at the University of Victoria with a time limit of 300 seconds per problem. Under these conditions, {\SPASS} generated 308 proofs. 
+
+%, and for consistency, the same system and metrics were used (see \cite{GFOLU}).
 
 Figure \ref{fig:ex} (a) shows the compression results of applying {\FORPI} and {\GFOLU} to the same proof (in both application orders), as well as each of these algorithms individually. 
 %Unsurprisingly, applying both algorithms generally does better than either algorithm alone. 
