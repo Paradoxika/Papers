@@ -9,7 +9,8 @@ If one of the node's resolved literals can be unified to a literal in the set of
 
 %NOTE: FORPPI desciption has been moved to challenges file to optimize whitespace use
 
-In the first order case, because unification introduces complications like those seen in Example \ref{ex:unifcheck}, we ensure that the replacement parent is (possibly after unification) contained entirely in the safe literals. This ensures that the remainder of the proof does not expect a variable to be unified to different values simultaneously. 
+In the first order case, we additionally check for the regularization property (cf. lines 2 and 6 of Algorithm~\ref{algo:foRegularize}).
+%because unification introduces complications like those seen in Example \ref{ex:unifcheck},
 %After regularization, all nodes below the regularized node may have to be fixed. 
 Similar to {\RPI}, instead of replacing the irregular node by one of its parents immediately, 
 its other parent is marked as a \texttt{deletedNode}, as shown in Algorithm~\ref{algo:foRegularize}.
