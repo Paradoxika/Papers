@@ -13,7 +13,7 @@ In the first-order case, we additionally check for the regularization property (
 %After regularization, all nodes below the regularized node may have to be fixed. 
 Similarly to {\RPI}, instead of replacing the irregular node by one of its parents immediately, 
 its other parent is marked as a \texttt{deletedNode}, as shown in Algorithm~\ref{algo:foRegularize}.
-As in the propositional case, fixing of the proof is postponed to another (single) traversal, as regularization proceeds bottom up and only nodes below a regularized node may require fixing.
+As in the propositional case, fixing of the proof is postponed to another (single) traversal, as regularization proceeds top-down and only nodes below a regularized node may require fixing.
 During fixing, the irregular node is actually replaced by the parent that is not marked as \texttt{deletedNode}. During proof fixing, factoring inferences can be applied, in order to compress the proof further.
 %Further, if a resolution is rebuilt where either either resolvent contains multiple literals that are unifiable with the pivot, then that resolvent is first contracted, to reduce the number of resolutions required and increase the compression achieved.
 
