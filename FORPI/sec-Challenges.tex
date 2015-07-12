@@ -86,32 +86,6 @@ Let $\eta$ be a node with pivot $\ell'$ unifiable with safe literal $\ell$ which
 \noindent
 One way to ensure this property is met is to slightly modify the notion of safe literals, by applying the unifier of the resolution step to the each pivot before adding it to the safe literals (cf. algorithm 3, lines 8 and 10). In the case of Example \ref{ex:pairwise}, this would result in $\eta_3$ having the safe literals $\{ \vdash q(c),~p(a,b)\}$, where clearly the pivot $p(a,c)$ in $\eta_1$ is not safe.
 
-
-\newcommand{\la}{\leftarrow}
-\begin{algorithm}[bt]
-\begin{footnotesize}
-\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-\SetKwData{units}{unitsQueue}
-\SetKwData{fixedUnits}{fixedUnitsQueue}
-
-\Input{A first-order proof $\psi$}
-\Output{A possibly less-irregular first-order proof $\psi'$}
-
-\BlankLine
-
-$\psi'$ $\la$ $\psi$\;
-traverse $\psi'$ bottom-up and \ForEach{node $\eta$ in $\psi'$}{
-   \If{$\eta$ is a resolvent node}{
-     setSafeLiterals($\eta$) \;
-     regularizeIfPossible($\eta$)
-   }
-  }
-$\psi'$ $\la$ fix($\psi'$) \;
-\Return {$\psi'$}\;
-\caption{\label{algo:FORPI} \texttt{\FORPI}}
-\end{footnotesize}
-\end{algorithm}
-
 %TODO: continue from here
 %extra check example
 \begin{example}\label{ex:unifcheck}
@@ -160,8 +134,8 @@ Thus we additionally require the following property be satisfied.
 \label{prop:extracheck}
 Let $\eta$ be a node with safe literals $\phi$ that is marked for regularization with parents $\eta_1$ and $\eta_2$, where 
 %without loss generality 
-$\eta_2$ is marked \texttt{deleted}
-in a proof $\psi$. $\eta$ is said to satisfy the \emph{regularization unifiability property} in $\psi$ if there exists a substitution $\sigma$ such that $\sigma\eta_1 \subseteq \phi$.
+$\eta_2$ is marked as a \texttt{deletedNode}
+in a proof $\psi$. $\eta$ is said to satisfy the \emph{regularization unifiability property} in $\psi$ if there exists a substitution $\sigma$ such that $\eta_1\sigma \subseteq \phi$.
 \end{definition}
 %we ensure that the replacement parent is (possibly after unification) contained entirely in the safe literals. 
 This property ensures that the remainder of the proof does not expect a variable in $\eta_1$ to be unified to different values simultaneously. This property is not necessary in the propositional case, as the replacement node would not change lower in the proof. 
@@ -172,7 +146,30 @@ This property ensures that the remainder of the proof does not expect a variable
 %In this example, $\eta_1$ does not satisfy this property. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
 
 
+\newcommand{\la}{\leftarrow}
+\begin{algorithm}[bt]
+\begin{footnotesize}
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\SetKwData{units}{unitsQueue}
+\SetKwData{fixedUnits}{fixedUnitsQueue}
 
+\Input{A first-order proof $\psi$}
+\Output{A possibly less-irregular first-order proof $\psi'$}
+
+\BlankLine
+
+$\psi'$ $\la$ $\psi$\;
+traverse $\psi'$ bottom-up and \ForEach{node $\eta$ in $\psi'$}{
+   \If{$\eta$ is a resolvent node}{
+     setSafeLiterals($\eta$) \;
+     regularizeIfPossible($\eta$)
+   }
+  }
+$\psi'$ $\la$ fix($\psi'$) \;
+\Return {$\psi'$}\;
+\caption{\label{algo:FORPI} \texttt{\FORPI}}
+\end{footnotesize}
+\end{algorithm}
 
 
 %intersection example?

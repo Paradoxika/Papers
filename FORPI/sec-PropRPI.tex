@@ -93,8 +93,8 @@ replacing it by one of its parents (cf.\ Algorithm~\ref{algo:RPI}).
 
 The regularization of a node should replace a node by one of its parents, and more precisely by the parent whose clause contains the resolved literal that is safe. After regularization, all nodes below the regularized node may have to be fixed. However, since the regularization is done with a bottom-up traversal, and only nodes below the regularized node need to be fixed, it is again possible to postpone fixing and do it with only a single traversal afterwards. 
 Therefore, instead of replacing the irregular node by one of its parents immediately, 
-its other parent is replaced by \texttt{deletedNodeMarker}, as shown in Algorithm~\ref{algo:Regularize}. Only later during fixing, 
-the irregular node is actually replaced by its surviving parent (i.e. the parent that is not \texttt{deletedNodeMarker}).
+its other parent is marked as \texttt{deletedNode}, as shown in Algorithm~\ref{algo:Regularize}. Only later during fixing, 
+the irregular node is actually replaced by its surviving parent (i.e. the parent that is not marked as \texttt{deletedNode}).
 
 
 
@@ -109,11 +109,11 @@ the irregular node is actually replaced by its surviving parent (i.e. the parent
 
 \BlankLine
     \uIf{$\eta${\upshape.rightResolvedLiteral} $\in$ $\eta${\upshape.safeLiterals}}{
-      replace left parent of $\eta$ by \texttt{deletedNodeMarker} \;
+      mark left parent of $\eta$ as \texttt{deletedNode} \;
       mark $\eta$ as regularized
     }
     \ElseIf{\textrm{$\eta${\upshape.leftResolvedLiteral} $\in$ $\eta${\upshape.safeLiterals}}}{
-      replace right parent of $\eta$ by \texttt{deletedNodeMarker} \;
+      mark right parent of $\eta$ as \texttt{deletedNode} \;
       mark $\eta$ as regularized
     }
 \caption{\label{algo:Regularize} \texttt{regularizeIfPossible}}
