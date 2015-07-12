@@ -2,11 +2,14 @@
 A prototype\footnote{Source code available at \url{https://github.com/jgorzny/Skeptik}} version of {\FORPI} has been implemented in the functional programming language Scala as part of the \skeptik
  library. %\footnote{\url{https://github.com/Paradoxika/Skeptik}}. 
 %{\SFOLowerUnits} prototype was developed earlier for the same system \cite{}.
+
+\textbf{ToDo: Describe in the next paragraph where these 308 proofs come from. It is important to show to the reader that we used all possible benchmarks available to us, obtainable with SPASS with all appropriate flags set. I think we had a description inthe FOLU paper. It should be added here.}
+
 Evaluation of this algorithm was performed on the same 308 real first-order proofs generated to evaluate {\GFOLU}, and for consistency, the same system and metrics were used (see \cite{GFOLU}).
 
 Figure \ref{fig:ex} (a) shows the compression results of applying {\FORPI} and {\GFOLU} to the same proof (in both application orders), as well as each of these algorithms individually. 
 %Unsurprisingly, applying both algorithms generally does better than either algorithm alone. 
-With this data, {\FORPI} compresses provides some compression to the original proofs, although {\GFOLU} is responsible for most of the compression. {\FORPI} compresses only three proofs already compressed by {\GFOLU}.
+With this data, {\FORPI} provides some compression to the original proofs, although {\GFOLU} is responsible for most of the compression. {\FORPI} compresses only three proofs already compressed by {\GFOLU}.
 {\RPI} performs best when the proofs are tall; {\FORPI} will likely perform similarly. However, the proofs in this data set are relatively short, and those compressed by {\GFOLU} first are even shorter. Thus, the performance of {\FORPI} is not surprising.
 
 Figure \ref{fig:ex} (b) shows that the order of compression may matter less than in than in the propositional case, although more data is needed for confirmation. The number of points above and below the main diagonal are the same; however, the points below may simply be the result of {\GFOLU} being more likely to compress such short proofs. If so, that would imply that running {\FORPI} after {\GFOLU} is more successful, which would be consistent with propositional results for these algorithms.
