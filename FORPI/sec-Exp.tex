@@ -1,4 +1,6 @@
 \section{Experiments} \label{sec:exp}
+\vspace{-0.25cm}
+
 A prototype\footnote{Source code available at \url{https://github.com/jgorzny/Skeptik}} version of {\FORPI} has been implemented in the functional programming language Scala as part of the \skeptik
 library. Evaluation used the same proofs that were used to evaluate {\GFOLU} \cite{GFOLU}.
 The {\SPASS} ({\url{http://www.spass-prover.org/}) theorem prover was executed on 2280 real first-order problems without equality of the TPTP Problem Library (among them, 1032 problems are known to be unsatisfiable). In order to generate pure resolution proofs, the advanced inference rules of {\SPASS} were disabled. The proofs were generated on the Euler Cluster at the University of Victoria with a time limit of 300 seconds per problem. Under these conditions, {\SPASS} generated 308 proofs. The data is available at \url{http://www.math.uvic.ca/~jgorzny/data/}.
@@ -7,7 +9,7 @@ The {\SPASS} ({\url{http://www.spass-prover.org/}) theorem prover was executed o
 
 Figure \ref{fig:ex} (a) shows the compression obtained by applying {\FORPI} and {\GFOLU} (as well as their combinations) to the proofs. 
 %Unsurprisingly, applying both algorithms generally does better than either algorithm alone. 
-With this data set, {\FORPI} compresses a few proofs only, and its performance is not as good as that of {\GFOLU}. Furthermore, when {\FORPI} is combined with {\GFOLU}, {\FORPI} provides additional compression to only three proofs already compressed by {\GFOLU}. This is surprising, because in the propositional case, {\RPI} usually compresses up to ten times more than {\LowerUnits}. Nevertheless, this can be easily explained by the fact that all available benchmark proofs have small heights (not more than ToDo); consequently the path from any node to the root is short and unlikely to contain irregularities. In the propositional case, on the other hand, {\RPI} has been tested on proofs that are a thousand times higher.
+With this data set, {\FORPI} compresses a few proofs only, and its performance is not as good as that of {\GFOLU}. Furthermore, when {\FORPI} is combined with {\GFOLU}, {\FORPI} provides additional compression to only three proofs already compressed by {\GFOLU}. This is surprising, because in the propositional case, {\RPI} usually compresses up to ten times more than {\LowerUnits}. Nevertheless, this can be easily explained by the fact that all available benchmark proofs have small heights (not more than 11); consequently the path from any node to the root is short and unlikely to contain irregularities. In the propositional case, on the other hand, {\RPI} has been tested on proofs that are a thousand times higher.
 
 Figure \ref{fig:ex} (b) shows that the order of compression may matter less than it does in the propositional case, since only a few points occur outside the diagonal. However, this might be due to the small size of the proofs.
 
@@ -35,12 +37,14 @@ Figure \ref{fig:ex} (b) shows that the order of compression may matter less than
 {\SPASS} required approximately 40 minutes to solve and generate the proofs; the total time for {\GFOLU} and {\FORPI} to be executed on all 308 proofs was just under 8 seconds (both include parsing time).
 
 \begin{figure}[bt]
+\vspace{-0.75cm}
 \centering
     \subfloat[\scriptsize Length: Compressed vs. Original]{{\includegraphics[scale=0.5]{images/everything-forpi-folu-length_vs_compress_length_all_proofs.pdf}}}
 %    \subfloat[Compressed length against input length (resolutions)]{{\includegraphics[scale=0.5]{images/everything-forpi-folu-res_length_vs_compress_res_length_all_proofs.pdf} }}
 \subfloat[\scriptsize \FORPI(\GFOLU(p)) vs. \GFOLU(\FORPI(p))]{{\includegraphics[scale=0.5]{images/forpi-folu-vs-folu-forpi-length_vs_compress_length_all_proofs.pdf} }}
 \caption{Scatter Plots of Experimental Results}
 \label{fig:ex}
+\vspace{-0.5cm}
 \end{figure}
 
 
