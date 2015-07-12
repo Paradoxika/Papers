@@ -161,7 +161,7 @@ Thus we additionally require the following property be satisfied.
 Let $\eta$ be a node with safe literals $\phi$ that is marked for regularization with parents $\eta_1$ and $\eta_2$, where 
 %without loss generality 
 $\eta_2$ is marked \texttt{deleted}
-in a proof $\psi$. $\eta$ is said to satisfy the \emph{regularization unifiability property} in $\psi$ if there exists a unifier $\sigma$ such that $\sigma\eta_1 \subseteq \phi$.
+in a proof $\psi$. $\eta$ is said to satisfy the \emph{regularization unifiability property} in $\psi$ if there exists a substitution $\sigma$ such that $\sigma\eta_1 \subseteq \phi$.
 \end{definition}
 %we ensure that the replacement parent is (possibly after unification) contained entirely in the safe literals. 
 This property ensures that the remainder of the proof does not expect a variable in $\eta_1$ to be unified to different values simultaneously. This property is not necessary in the propositional case, as the replacement node would not change lower in the proof. 
