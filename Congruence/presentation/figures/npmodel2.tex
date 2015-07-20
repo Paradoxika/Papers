@@ -1,0 +1,100 @@
+
+\centering
+\begin{tikzpicture}[node distance=.3cm]
+\newcommand\myadd[2]{\the\numexpr(#1)+(#2)\relax}
+\newcommand\x{3} %c1,c2,c3 and x1,x2,x3 have been shown
+\newcommand\y{\myadd{\x}{4}}  %Their connections have been shown
+\uncover<2->{\node(c1){$c_1\phantom{'}$};}
+
+\uncover<\myadd{\x}{1}->{
+\node[right =.25cm of c1] (t1x2) {$t_1(\hat{x}_2)$};
+\node[above =.8cm of t1x2] (t1x1) {$t_1(\hat{x}_1)$};
+\node[below =.8cm of t1x2] (t1x3) {$t_1(\hat{x}_3)$};
+\draw [-] (c1) to (t1x2);
+\draw [-] (c1) to (t1x1);
+\draw [-] (c1) to (t1x3);
+}
+
+\uncover<\myadd{\y}{1}->{\node[right = 3.1cm of c1](c1p){$c_1'$};}
+
+\uncover<\myadd{\y}{2}->{
+\node[left =.25cm of c1p] (t12) {$t_1(\top_2)$};
+\node[above=.8cm of t12] (t11) {$t_1(\top_1)$};
+\node[below=.8cm of t12] (t13) {$t_1(\bot_3)$};
+\draw [-] (c1p) to (t11);
+\draw [-] (c1p) to (t12);
+\draw [-] (c1p) to (t13);
+}
+
+\uncover<2->{\node[right = .3cm of c1p](c2){$c_2\phantom{'}$};}
+\uncover<\myadd{\y}{1}->{\draw [-] (c1p) to (c2);}
+
+\uncover<\myadd{\x}{2}->{
+\node[right=.25cm of c2, yshift=.8cm]  (t2x2) {$t_2(\hat{x}_2)$};
+\node[right=.25cm of c2, yshift=-.8cm] (t2x3) {$t_2(\hat{x}_3)$};
+\draw [-] (c2) to (t2x2);
+\draw [-] (c2) to (t2x3);
+}
+
+\uncover<\myadd{\y}{1}->{\node[right = 3.1cm of c2](c2p){$c_2'$};}
+
+\uncover<\myadd{\y}{2}->{
+\node[left =.25cm of c2p, yshift=.8cm]  (t22) {$t_2(\bot_2)$};
+\node[left =.25cm of c2p, yshift=-.8cm] (t23) {$t_2(\top_3)$};
+\draw [-] (c2p) to (t23);
+\draw [-] (c2p) to (t22);
+}
+
+\uncover<2->{\node[right = .3cm of c2p](c3){$c_3\phantom{'}$};}
+\uncover<\myadd{\y}{1}->{\draw [-] (c2p) to (c3);}
+
+\uncover<\myadd{\x}{3}->{
+\node[right =.25cm of c3, yshift=.8cm] (t3x1) {$t_3(\hat{x}_1)$};
+\node[right =.25cm of c3, yshift=-.8cm] (t3x2) {$t_3(\hat{x}_2)$};
+\draw [-] (c3) to (t3x1);
+\draw [-] (c3) to (t3x2);
+}
+
+\uncover<\myadd{\y}{1}->{\node[right = 3.1cm of c3](c3p){$c_3'$};}
+
+\uncover<\myadd{\y}{2}->{
+\node[left =.25cm of c3p, yshift=.8cm] (t31) {$t_3(\bot_1)$};
+\node[left =.25cm of c3p, yshift=-.8cm] (t32) {$t_3(\bot_2)$};
+\draw [-] (c3p) to (t31);
+\draw [-] (c3p) to (t32);
+}
+
+\uncover<3->{
+\node [below =1.3cm of c2, xshift=1.5cm] (x1) {$\hat{x}_1$};
+\node [below =.5cm of x1] (x2) {$\hat{x}_2$};
+\node [below =.5cm of x2] (x3) {$\hat{x}_3$};
+}
+
+\uncover<\myadd{\x}{4}->{
+\node [right = of x1] (t1) {$\top_1$};
+\node [left = of x1] (f1) {$\bot_1$};
+
+\draw [-] (x1) to (t1);
+\draw [-] (x1) to (f1);
+
+\node [right = of x2] (t2) {$\top_2$};
+\node [left = of x2] (f2) {$\bot_2$};
+
+\draw [-] (x2) to (t2);
+\draw [-] (x2) to (f2);
+
+\node [right = of x3] (t3) {$\top_3$};
+\node [left = of x3] (f3) {$\bot_3$};
+
+\draw [-] (x3) to (t3);
+\draw [-] (x3) to (f3);
+}
+
+%\draw [dotted] (t1x1) to (t11);
+%\draw [dotted] (t1x3) to (t13);
+%\draw [dotted] (t2x2) to (t22);
+%\draw [dotted] (t2x3) to (t23);
+%\draw [dotted] (t3x2) to (t32);
+
+\end{tikzpicture}
+
