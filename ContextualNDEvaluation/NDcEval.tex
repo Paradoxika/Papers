@@ -292,7 +292,9 @@ Among the 29594 formulas on which both provers were successful, 2557 (8.49\%) ha
         \caption{} \label{fig:BoxWhiskers}
 \end{figure}
 
-In Figure \ref{fig:Scatter}, each dot represents a generated formula and its position indicates the length of the proof found by each prover. Overlapped dots are shown as darker dots. In the standard box-whiskers plot of Figure \ref{fig:BoxWhiskers}, formulas have been grouped by the length of their {\ND}-proofs. For each group, the chart shows the median length of {\NDd}-proofs, as well as the quantiles, fences and outliers. This chart, together with the bar charts in Figures \ref{fig:ProportionByLength} and \ref{fig:CompressionByLength} indicate a dependence of the compressibility of proofs on the length. Figure \ref{fig:ProportionByLength} shows that the proportion of formulas that admit shorter {\NDd}-proofs (i.e. whose {\ND}-proofs could be compressed to shorter {\NDd}-proofs) tends to grow with the length of the {\ND}-proofs. In a larger proof, the likelihood of an opportunity for compression is greater; however, the compression might be less significant in comparison to the proof length, as indicated by the decreasing trend in Figure \ref{fig:CompressionByLength}.
+
+Figure \ref{fig:Time} (which takes into account all 76755 formulas) shows that the {\ND} prover rarely took longer than 10 milliseconds on a formula. The {\NDd} prover was, as expected, significantly slower than the {\ND} prover, because the search space for {\NDd} proofs is much larger. Nevertheless, the {\NDd} prover is surprinsingly faster in a few cases, probably due to the stricter upper-bound on proof height. 
+
 
 \begin{figure}[!ht]
         \centering
