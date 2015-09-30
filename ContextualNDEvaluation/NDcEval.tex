@@ -255,7 +255,7 @@ In Figure \ref{fig:Scatter}, each dot represents a generated formula and its pos
 
 The 3D-charts in Figure \ref{fig:3D} shed further light on what influences the proportion of formulas that admit shorter {\NDd}-proofs and the total compression ratios (including all 29594 formulas). The proportion of formulas admitting shorter {\NDd}-proofs (and their total compression ratios) is higher the lower the number of distinct atoms they contain and the larger they are. The depths\footnote{$\mathrm{depth}(A) = 1$, for an atomic $A$; $\mathrm{depth}(B \imp C) = \mathrm{max}(\mathrm{depth}(B), \mathrm{depth}(C)) + 1$.} of the formulas also seem to play a role, with greater compression proportions and total compression ratios for intermediary depth values.
 
-Figure \ref{fig:Time} (which takes into account all 76755 formulas) shows that the {\ND} prover rarely took longer than 10 milliseconds on a formula. Surprisingly, the {\NDd} prover was faster than the {\ND} prover in the majority of the cases (46733 formulas; 60.88\%), probably due to the stricter upper-bound on proof height. However, when the {\NDd} prover was slower, it tended to be significantly slower, as shown in the Figure. 
+Figure \ref{fig:Time} (which takes into account all 76755 formulas) shows that the {\ND} prover rarely took longer than 10 milliseconds on a formula. The {\NDd} prover was, as expected, significantly slower than the {\ND} prover, because the search space for {\NDd} proofs is much larger. Nevertheless, the {\NDd} prover is surprinsingly faster in a few cases, probably due to the stricter upper-bound on proof height. 
 
 \begin{figure}[!ht]
         \centering
