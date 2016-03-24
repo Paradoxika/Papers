@@ -73,9 +73,10 @@ Other common measures of proofs that are not discussed in this work are for exam
 
 \begin{example}
 
-Consider the unsatisfiable propositional logic formula $\Phi$ in conjunctive normal form.
-$$\Phi := (x_1 \vee x_2 \vee \neg x_3) \wedge (x_1 \vee \neg x_2) \wedge (x_1 \vee x_3) \wedge (\neg x_1)$$
-In clause notation, this formula is written as $\langle \{x_1, x_2, \neg x_3\}, \{x_1, \neg x_2\}, \{x_1, x_3\}, \{\neg x_1\} \rangle$.
+Consider the unsatisfiable propositional logic formula $\Phi$ displayed in clause notation.
+$$\Phi := {\langle \{x_1, x_2, \neg x_3\}, \{x_1, \neg x_2\}, \{x_1, x_3\}, \{\neg x_1\} \rangle}$$
+%$$\Phi := (x_1 \vee x_2 \vee \neg x_3) \wedge (x_1 \vee \neg x_2) \wedge (x_1 \vee x_3) \wedge (\neg x_1)$$
+%In clause notation of this ${\langle \{x_1, x_2, \neg x_3\}, \{x_1, \neg x_2\}, \{x_1, x_3\}, \{\neg x_1\} \rangle}$.
 By resolving the clauses $\{x_1, x_2, \neg x_3\}$ and $\{x_1, \neg x_2\}$, we obtain the clause $\{x_1,\neg x_3\}$, which we can resolve with $\{x_1, x_3\}$ to obtain $\{x_1\}$.
 Finally, we obtain the empty clause $\bot$ by resolving $\{x_1\}$ with $\{\neg x_1\}$.
 The resulting proof is displayed in Figure \ref{fig:resolutionexample}.
@@ -108,11 +109,11 @@ A function $f: V \times T \times T \rightarrow T$ is a \emph{processing function
 Let $\mathcal{F}$ be the set of processing functions.
 The \emph{apply function} $\ap: V \times \mathcal{F} \rightarrow T$ is defined recursively as follows.
 $$
-\ap(v,f) = \Big\{
-\begin{array}{ll}
-	f(v,\ap(pr_1,f),\ap(pr_2,f)) &\text{ if } v \text{ has premises } pr_1 \text{ and } pr_2\\
-	g_f(v) &\text{ otherwise}\\
-\end{array}
+\ap(v,f) = 
+\begin{cases}
+	f(v,\ap(pr_1,f),\ap(pr_2,f)) &\text{if } \Premises{v}{\varphi} = \{pr_1,pr_2\} \\
+	g_f(v) &\text{otherwise}\\
+\end{cases}
 $$
 
 \emph{Processing a node} $v$ with some processing function $f$ means computing the value $\ap(v,f)$.
@@ -124,14 +125,21 @@ $$
 
 Checking the correctness of a proof (i.e. checking for the absence of faulty resolution steps) can be done in terms of the following processing function with $T = \{\top,\bot\}$ and $\wedge$ being the usual boolean and-operation.
 $$
-f(v,w_1,w_2) = \left\{
-\begin{array}{ll}
-	\top & \text{ if $v$ has no premises} \\
-	w_1 \wedge w_2 &\text{ if the conclusion of $v$ is a resolvent}\\
-								 &\hspace{0.85em} \text{ of the conclusions of its premises} \\
+f(v,w_1,w_2) = 
+\begin{cases}
+	\top & \text{if} v \text{has no premises} \\
+	%w_1 \wedge w_2 &\text{if } v \text{ has premises }\\
+								 %&\quad pr_1, pr_2 \text{ and}\\
+								 %&\quad \mathcal{L}(v) \text{ is the resolvent of}\\
+								 %&\quad \mathcal{L}(pr_1) \text{ and } \mathcal{L}(pr_2)\\
+	w_1 \wedge w_2 &\text{if } \Premises{v}{\varphi} = \{pr_1,pr_2\} \text{ and}\\
+								 &\quad \mathcal{L}(v) \text{ is the resolvent of} \\
+								 &\quad \mathcal{L}(pr_1) \text{ and } \mathcal{L}(pr_2)\\
 	\bot & \text{ otherwise}
-\end{array}
-\right.
+\end{cases}
 $$
 Processing a proof with processing function $f$ yields $\top$ if and only if the proof is a correct resolution proof.
 \end{example}
+
+Another example of proof processing is any proof compression algorithm, that might alter the structure of a proof.
+In that case, the set $T$ contains (potentially new) proof nodes.

@@ -19,14 +19,17 @@ When $N$ becomes empty, all nodes have been pebbled once and a topological order
   \KwIn{proof $\varphi$}
   \KwOut{sequence of nodes $S$ representing a topological order $\prec$ of $\varphi$}
 	
+	
 	$S = ()$; \tcp*[f]{the empty sequence} \\
-	$N = \Axioms{\varphi}$; \tcp*[f]{initialize pebbleable nodes with Axioms}
+	
+	$N = \Axioms{\varphi}$; \tcp*[f]{pebbleable nodes} \\
 	
   \While{$N$ is not empty}{
     choose $v \in N$ heuristically\;
-		$S = S ::: (v)$; \tcp*[f]{$:::$ is the concatenation of sequences}\\
+		$S = S ::: (v)$; \tcp*[f]{$:::$ is sequence concatenation}\\
 		$N = N \setminus \{v\}$\;
-		\For(\tcp*[f]{check whether $c$ is now pebbleable}){\KwSty{each} $c \in \Children{v}{\varphi}$}{ 
+		\tcp*[f]{check whether $c$ is now pebbleable}\\
+		\For {\KwSty{each} $c \in \Children{v}{\varphi}$}{ 	
 			\If{$\forall p \in \Premises{c}{\varphi}: p \in S$}
 					{$N = N \cup \{c\}$\;}
 					}
@@ -45,8 +48,8 @@ The following example shows such a situation.
 \label{example:topdown}
 
 \begin{figure}[tb]
-	\makebox[\textwidth][c]{
-	\begin{minipage}{.33\textwidth}
+	\makebox[.5\textwidth][c]{
+	\begin{minipage}{.25\textwidth}
 		\begin{tikzpicture}[node distance=\nodedistance]
 			\proofnodeBW{root};
 			\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
@@ -76,7 +79,7 @@ The following example shows such a situation.
 			\node [yshift = 1.5mm] (cap7) at (n9.north) {\small{4?}};
 		\end{tikzpicture}
 	\end{minipage}%
-	\begin{minipage}{.33\textwidth}
+	\begin{minipage}{.25\textwidth}
 		\begin{tikzpicture}[node distance=\nodedistance]
 			\proofnodeBW{root};
 			\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
@@ -102,7 +105,9 @@ The following example shows such a situation.
 			\node [yshift = 2mm] (cap8) at (n8.north) {\small{4}};
 		\end{tikzpicture}
 	\end{minipage}%
-	\begin{minipage}{.33\textwidth}
+	}
+	\makebox[.5\textwidth][c]{
+	\begin{minipage}{.25\textwidth}
 	\begin{tikzpicture}[node distance=\nodedistance]
 			\proofnodeBW{root};
 			\proofnodeBW[above left of = root,xshift=-\nodedistance]{n7};
@@ -192,18 +197,18 @@ Also previously visited nodes are not visited again.
   \KwOut{sequence of nodes}
 	
 	$D = D \cup \{v\}$; \\
-	$N = \Premises{v}{\varphi} \setminus D$; \tcp*[f]{Only unprocessed premises are visited} \\
+	$N = \Premises{v}{\varphi} \setminus D$; \tcp*[f]{Visit only unprocessed premises} \\
 	$S_1 = S$\;
 	
   \While{$N$ is not empty}{
-    choose $p \in N$ heuristically;
+    choose $p \in N$ heuristically\;
 		$N = N \setminus p$\;
-		$S_1 = S_1 ::: BUpebble(\varphi,p,D,S)$; \tcp*[f]{$:::$ is the concatenation of sequences}
+		$S_1 = S_1 ::: Bottom-Up Pebbling(\varphi,p,D,S)$\; 
   }
 	
 	\Return $S_1 ::: (v)$\;
 	
-  \caption{BUpebble}
+  \caption{Bottom-Up Pebbling}
 	\label{algo:BUpebbling}
   
 \end{algorithm}
@@ -221,8 +226,8 @@ In the Top-Down scenario there were two such external pebbles.
 At no point more than five pebbles will be used for pebbling the root node, which is shown in the bottom right picture of the figure. This is independent of the heuristic choices.
 
 \begin{figure}[tb]
-	\makebox[\textwidth][c]{
-		\begin{minipage}{0.4\textwidth}
+	\makebox[.5\textwidth][c]{
+		\begin{minipage}{0.25\textwidth}
 			\begin{tikzpicture}[node distance=\nodedistanceThree]
 				\proofnodeBW{root};
 				\proofnodeBW[above left of = root,xshift=-\nodedistanceThree]{n7};
@@ -248,7 +253,7 @@ At no point more than five pebbles will be used for pebbling the root node, whic
 				\node [yshift = 2mm] (cap3) at (n3.north) {\small{3}};
 			\end{tikzpicture}
 		\end{minipage}%
-		\begin{minipage}{0.4\textwidth}
+		\begin{minipage}{0.25\textwidth}
 			\begin{tikzpicture}[node distance=\nodedistance]
 				\proofnodeBW{root};
 				\proofnodeBW[above left of = root,xshift=-\nodedistanceThree]{n7};
@@ -276,8 +281,8 @@ At no point more than five pebbles will be used for pebbling the root node, whic
 			\end{tikzpicture}
 		\end{minipage}%
 		}
-		\makebox[\textwidth][c]{
-		\begin{minipage}{0.4\textwidth}
+		\makebox[.5\textwidth][c]{
+		\begin{minipage}{0.25\textwidth}
 			\begin{tikzpicture}[node distance=\nodedistanceThree]
 				\proofnodeBW{root};
 				\proofnodeBW[above left of = root,xshift=-\nodedistanceThree]{n7};
@@ -310,7 +315,7 @@ At no point more than five pebbles will be used for pebbling the root node, whic
 				\node [yshift = 2mm] (cap7) at (n6.north) {\small{10}};
 			\end{tikzpicture}
 		\end{minipage}%
-		\begin{minipage}{0.4\textwidth}
+		\begin{minipage}{0.25\textwidth}
 			\begin{tikzpicture}[node distance=\nodedistanceThree]
 				\proofnodeBW{root};
 				\proofnodeBW[above left of = root,xshift=-\nodedistanceThree]{n7};
@@ -400,11 +405,11 @@ Pebbling one of them does not influence the pebbling number of the other.
         regular polygon sides=3,
         node distance=\nodedistanceTwo,
         %minimum height=4em,
-				minimum width= 1.5cm
+				minimum width= 1cm
 			}
 	}
-	\makebox[\textwidth][c]{
-	\begin{minipage}{.3\textwidth}
+	\makebox[.5\textwidth][c]{
+	\begin{minipage}{.15\textwidth}
 		\begin{tikzpicture}[node distance=\nodedistanceTwo]
 			\node[circle, draw, anchor=mid](root) {?};
 			\addchildrenBW{root}{n1}{n2};
@@ -415,7 +420,7 @@ Pebbling one of them does not influence the pebbling number of the other.
 			\drawchildren{root}{n1}{n2};
 		\end{tikzpicture}
 	\end{minipage}%
-		\begin{minipage}{.3\textwidth}
+		\begin{minipage}{.15\textwidth}
 		\begin{tikzpicture}[node distance=\nodedistanceTwo]
 			\node[circle, draw, anchor=mid](root) {6};
 			\addchildrenBW{root}{n1}{n2};
@@ -426,7 +431,7 @@ Pebbling one of them does not influence the pebbling number of the other.
 			\drawchildren{root}{n1}{n2};
 		\end{tikzpicture}
 	\end{minipage}%
-		\begin{minipage}{.3\textwidth}
+		\begin{minipage}{.15\textwidth}
 		\begin{tikzpicture}[node distance=\nodedistanceTwo]
 			%\proofnodeBW{root};
 			\node[circle, draw, anchor=mid](root) {5};

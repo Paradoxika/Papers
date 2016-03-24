@@ -30,6 +30,8 @@ The \emph{move} of the player in this round is $p(v)$, if $v$ is pebbleable and 
 
 \end{definition}
 
+We display examples of this game in Section \ref{sec:algorithm}, when we discuss algorithms to construct strategies for it.
+
 Note that due to rule \ref{rule:premises} the move in each round is uniquely defined by the chosen node $v$.
 The distinction of the two kinds of moves is just made for presentation purposes.
 Also note that as a consequence of rule \ref{rule:premises}, pebbles can be put on nodes without predecessors at any time.
@@ -37,15 +39,23 @@ When playing the Bounded Pebbling Game on a proof $\varphi$, the designated targ
 
 \begin{definition}[Strategy]
 \label{def:strategy}
-A \emph{pebbling strategy} $\sigma$ for the Bounded Pebbling Game, played on a DAG $G = (V,E)$ and distinguished node $\n$, is a sequence of moves $(\sigma_1,\ldots,\sigma_n)$ of the player such that $\sigma_n = p(\n)$.
+For a Boundend Pebbling Game, played on a DAG $G = (V,E)$ with distinguished node $\n$, 
+a \emph{pebbling strategy} $\sigma$ is a sequence of moves $(\sigma_1,\ldots,\sigma_n)$ of the player such that $\sigma_n = p(\n)$
+%A \emph{pebbling strategy} $\sigma$ for the Bounded Pebbling Game, played on a DAG $G = (V,E)$ and distinguished node $\n$, 
+%is a sequence of moves $(\sigma_1,\ldots,\sigma_n)$ of the player such that $\sigma_n = p(\n)$.
+We denote the set of nodes that are pebbled in round $i$ by 
+\begin{align*}
+	\pebbledAt{\sigma}{i} \defeq \{ v \in V \mid	& \exists j \leq i: \sigma_j = p(v) \wedge\\
+																								&\forall k: j < k \leq i: \sigma_k \neq u(v)\}
+\end{align*}
 \end{definition}
 
 The following definition allows to measure how many pebbles are required to play the Bounded Pebbling Game on a given graph.
 
 \begin{definition}[Pebbling number]
-The \emph{pebbling number of a pebbling strategy} $(\sigma_1,\ldots,\sigma_n)$ is 
-$ max_{\indexIn{i}{1}{n}}|\{ v \in V \mid v \text{ is pebbled in round } i\}| $.
-The \emph{pebbling number of a DAG $G$ and node $s$} is the minimum pebbling number of all pebbling strategies for $G$ and $\n$.
+The \emph{pebbling number of a pebbling strategy} $(\sigma_1,\ldots,\sigma_n)$ is defined as the maximum number of pebbled nodes in all rounds, 
+i.e. $max_{\indexIn{i}{1}{n}}|\pebbledAt{\sigma}{i}|$.
+The \emph{pebbling number of a DAG $G$ and distinguished node $\n$} is the minimum pebbling number over all pebbling strategies for $G$ and $\n$.
 \end{definition}
 
 The Bounded Pebbling Game from Definition \ref{def:pebbling-game} differs from the Black Pebbling Game discussed in \cite{Hertel2007,Pippenger1982} in two aspects. 
@@ -64,8 +74,8 @@ In the Bounded Pebbling Game the number of rounds is linear in the number of nod
 In order to process a node according to Definition \ref{def:proof-processing}, the results of processing its premises are used and therefore have to be stored in memory.
 The requirement of having premises in memory corresponds to rule \ref{rule:premises} of the Bounded Pebbling Game. 
 A node that has been processed can be removed from memory, which corresponds to rule \ref{rule:unpebbling}.
-Note that removing a node and its results too early in combination with \ref{rule:onlyonce} makes it impossible to process the whole proof.
-The optimal moment to remove a node from memory is uniquely determined by the order nodes are processed (see Theorem \ref{theorem:canonical}).
+Note that removing a node and its results too early in combination with rule \ref{rule:onlyonce} makes it impossible to process the whole proof.
+The optimal moment to remove a node from memory is uniquely determined by the order that nodes are processed (see Theorem \ref{theorem:canonical}).
 
 Definition \ref{def:proof-processing} does not specify in which order to process nodes.
 The order in which nodes are processed is essential for the memory consumption, just like the order of pebbling nodes in the pebbling game is essential for the pebbling number.
@@ -83,7 +93,7 @@ A topological order $\prec$ of a proof $\varphi$ can be represented as a sequenc
 The requirement that topological orders premises lower than their children corresponds to rule \ref{rule:premises} of the Bounded Pebbling Game.
 The antisymmetry together with the fact that $V = \{v_1,\dots,v_n\}$ correspond to rule \ref{rule:onlyonce}.
 Theorem \ref{theorem:canonical} shows that the rounds for unpebbling moves are predefined by the pebbling moves, when the goal is to find strategies with small pebbling numbers.
-Therefore there is a bijection between topological orders and canonical pebbling strategies.
+Therefore, there is a bijection between topological orders and canonical pebbling strategies.
 
 \begin{definition}[Canonical Topological Pebbling Strategy]
 \label{def:canonstrat}
@@ -92,21 +102,21 @@ $$
 \begin{array}{l}
 \sigma_1 = p(v_1) \\
 \sigma_i = 
-	\left\{
-	\begin{array}{ll}
+	\begin{cases}
 		%u(v) & \text{ if for all } c \in \Children{v}{\varphi}: \\
 		       %& \quad \text{ there exists }k < i, \sigma_k = p(u) \text{ and }\\
 					 %& \quad \text{ for all } l: k < l < i, \sigma_l \neq u(v) \\
 		%u(v) & \text{ for all } c \in \Children{v}{\varphi} \text{ exists } k < i, \sigma_k = p(u) \text{ and for all }l: k < l < i, \sigma_l \neq u(v) \\
-		u(v) & \text{if for all } c \in \Children{v}{\varphi} \text{ exists } k < i \text { such that } \sigma_k = p(c)\\
-		p(v) & \text{otherwise, where } v = min_{\prec}(w \mid \text{ for all } l < i: \sigma_l \neq p(w))
-	\end{array}
-	\right.
+		u(v) & \text{if for all } c \in \Children{v}{\varphi} \\
+				 & \quad \text{exists } k < i \text { such that } \sigma_k = p(c)\\
+		p(v) & \text{otherwise, where } \\
+				 & \quad v = min_{\prec}(w \mid \text{ for all } l < i: \sigma_l \neq p(w))
+	\end{cases}
 	%finished(v,i) := \text{ for all} c \in \Children{v}{\varphi} \text{ exists } k < i, \sigma_k = p(u) \text{ and for all } k < l < i, \sigma_l \neq u(v) 
 \end{array}
 $$
 \end{definition}
-
+Intuitively, the strategy pebbles the nodes in the order in which they are given, and as soon as it is possible to unpebble a node it does so immediately.
 The following theorem shows that unpebbling moves can be omitted from strategies for the Bounded Pebbling Game, when the goal is to produce strategies with low pebbling numbers.
 
 \begin{theorem}
@@ -114,10 +124,18 @@ The following theorem shows that unpebbling moves can be omitted from strategies
 The canonical pebbling strategy has the minimum pebbling number among all pebbling strategies that respect the topological order $\prec$.
 \end{theorem}
 \begin{proof}
+%Let $\sigma = (\sigma_1,\ldots,\sigma_n)$ be the canonical pebbling strategy for $\prec$ and let $\sigma' = (\sigma'_1,\ldots,\sigma'_n)$ be any pebbling strategy respecting $\prec$.
+%We show that for every $i \in \{1,\ldots,n\}$ we have $\pebbledAt{i}{\sigma} \subseteq \pebbledAt{i}{\sigma'}$ by induction on $i$.
+%Let $\n$ be the minimal node of $V$ w.r.t. $\prec$.
+%We have $\sigma_1' = \sigma_1 = p(\n)$, since both strategies respect $\prec$.
+%Furthermore, we mentioned earlier that whether $p(\n)$ or $u(\n)$ is played, is uniquely defined by the sequence of moves, which leaves only the option that initially $p(\n)$ is the move of both strategies.
+%
+%Let $\sigma_i' = p(\n)$ for some node $\n \in V$. Then 
+%Suppose that the pebbling number of $\sigma'$ is strictly smaller than the one of $\sigma$.
 %Let $\sigma = (\sigma_1,\ldots,\sigma_n)$ be the canonical pebbling strategy for $\prec$ and let $\sigma' = (\sigma'_1,\ldots,\sigma'_n)$ be a pebbling strategy respecting $\prec$ such that $\sigma \neq \sigma'$.
 %All the pebbling strategies respecting $\prec$ differ only in the order of unpebbling moves.
-Definition \ref{def:canonstrat} prioritizes unpebbling over pebbling moves.
-Therefore the canonical topological pebbling strategy makes unpebbling moves as soon as possible.
+%Definition \ref{def:canonstrat} prioritizes unpebbling over pebbling moves.
+The priorization of unpebbling moves in definition \ref{def:canonstrat} implues that the canonical topological pebbling strategy makes unpebbling moves as soon as possible.
 Consider the moment for unpebbling an arbitrary node $v$ in the canonical pebbling strategy. 
 Unpebbling it later could only possibly increase the pebble number. 
 To reduce the pebble number, $v$ would have to be unpebbled earlier than some preceding pebbling move. 
@@ -155,12 +173,14 @@ The problem of compressing the space of a proof $\varphi$ and a topological orde
 
 \begin{theorem}
 \label{theorem:enumeration}
-There is a sequence of proofs $(\varphi_1,\ldots,\varphi_m,\ldots)$ such that $\plength{\varphi_m} \in O(m)$ and $|T(\varphi_m)| \in \Omega(m!)$, where $T(\varphi_m)$ is the set of possible topological orders for $\varphi_m$.
+There is a sequence of proofs $(\varphi_1,\varphi_2,\ldots)$ such that $\plength{\varphi_m} \in O(m)$ and $|T(\varphi_m)| \in \Omega(m!)$, where $T(\varphi_m)$ is the set of possible topological orders for $\varphi_m$.
 \end{theorem}
 \begin{proof}
 Let $\varphi_m$ be a perfect binary tree with $m$ axioms. Clearly, $\plength{\varphi_m} = 2m-1$.
 Let $(v_1,\ldots,v_n)$ be a topological order for $\varphi_m$. 
-Let $\Axioms{\varphi} = \{v_{k_1},\ldots,v_{k_m}\}$, then\\ $(v_{k_1},\ldots,v_{k_m},v_{l_1},\ldots,v_{l_{n-m}})$, where $(l_1,\ldots,l_{n-m}) = (1,\ldots,n) \setminus (k_1,\ldots,k_m)$, is a topological order as well. 
+Let $\Axioms{\varphi} = \{v_{k_1},\ldots,v_{k_m}\}$, then $(v_{k_1},\ldots,v_{k_m},v_{l_1},\ldots,v_{l_{n-m}})$, 
+where the indexes are such that $(l_1,\ldots,l_{n-m}) = (1,\ldots,n) \setminus (k_1,\ldots,k_m)$, is a topological order as well. 
+
 Likewise, $(v_{\pi({k_1})},\ldots,v_{\pi({k_m})},v_{l_1},\ldots,v_{l_{n-m}})$ is a topological order, for every permutation $\pi$ of $\{k_1,\ldots,k_m\}$. There are $m!$ such permutations, so the overall number of topological orders is at least factorial in $m$ (and also in $n$).
 \end{proof}
 

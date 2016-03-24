@@ -2,10 +2,10 @@
 \label{sec:experiments}
 
 The experiments on the space compression algorithm were performed on four disjoint sets of proof benchmarks (Table \ref{tab:benchmarks}). 
-TraceCheck$_1$ and TraceCheck$_2$ contain proofs produced by the SAT-solver PicoSAT \cite{Biere2008} on unsatisfiable benchmarks from the SATLIB. 
-The proofs\footnote{SAT proofs: \scriptsize{\url{www.logic.at/people/bruno/Experiments/2014/Pebbling/tc-proofs.zip}}} are in the TraceCheck proof format, which is one of the three formats accepted at the \emph{Certified Unsat} track of the SAT-Competition.
+TraceCheck$_1$ and TraceCheck$_2$ contain proofs produced by the SAT-solver PicoSAT \cite{Biere2008} on unsatisfiable benchmarks from SATLIB. 
+The proofs are in the TraceCheck proof format, which is one of the three formats accepted at the \emph{Certified Unsat} track of the SAT-Competition.
 SMT$_1$ and SMT$_2$ contain proofs produced by the SMT-solver VeriT \cite{Bouton2009} on unsatisfiable problems from the SMT-LIB. 
-These proofs\footnote{SMT proofs: \scriptsize{\url{www.logic.at/people/bruno/Experiments/2014/Pebbling/smt-proofs.zip}}} are in a proof format that resembles SMT-LIB's problem format and they were translated into pure resolution proofs by considering every non-resolution inference as an axiom.
+These proofs are in a proof format that resembles SMT-LIB's problem format and they were translated into pure resolution proofs by considering every non-resolution inference as an axiom.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%% Benchmarks table &&&&&&&&&&&&&&&&&&&&&&&&&&&&&
@@ -14,11 +14,13 @@ These proofs\footnote{SMT proofs: \scriptsize{\url{www.logic.at/people/bruno/Exp
 \begin{table}[tb]
 	\centering
 	\setlength{\tabcolsep}{8pt}
+	\caption{Proof Benchmark Sets, where length is measured in number of nodes}
+	\label{tab:benchmarks}
 	\begin{tabular}{lrrr}
 		\toprule
 		%\textbf{Name} & \textbf{Number of proofs} & \textbf{Maximum length} & \textbf{Average length} \\ 
-		\textbf{Name} & \textbf{Number of} & \textbf{Maximum} & \textbf{Average} \\ 
-		              & \textbf{proofs}    & \textbf{length}  & \textbf{length} \\
+		\textbf{Name} & \textbf{\#Proofs} & \textbf{Max} & \textbf{Avg} \\ 
+		              &    & \textbf{length}  & \textbf{length} \\
 		\midrule
 		TraceCheck$_1$ & 2239 & 90756   & 5423   \\
 		TraceCheck$_2$ & 215	& 1768249 & 268863 \\
@@ -26,8 +28,7 @@ These proofs\footnote{SMT proofs: \scriptsize{\url{www.logic.at/people/bruno/Exp
     SMT$_2$ & 914  & 120075  & 5391  \\ 
 		\bottomrule   
 	\end{tabular}
-	\caption{Proof Benchmark Sets}
-	\label{tab:benchmarks}
+
 \end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -36,10 +37,12 @@ These proofs\footnote{SMT proofs: \scriptsize{\url{www.logic.at/people/bruno/Exp
 \begin{table}[tb]
 \centering
 %\setlength{\tabcolsep}{8pt}
+\caption{Experimental Results, where \textbf{RP} denotes the relative performance according to Formula \ref{eq:space}}
+\label{tab:results}
 \begin{tabular}{l c c}
 \toprule
-\textbf{Algorithm} & \textbf{Relative} & \textbf{Speed}\\ 
-Heuristic & \textbf{Performance} (\%) & (nodes/ms)\\ 
+\textbf{Algorithm} & \textbf{RP} & \textbf{Speed}\\ 
+Heuristic & (\%) & (nodes/ms)\\ 
 \midrule
 
 \textbf{Bottom-Up} & & \\
@@ -59,8 +62,6 @@ Distance(3) & \textbf{-74.33} & \textbf{0.1}\\
 \bottomrule
 %\hline
 \end{tabular}
-\caption{Experimental Results}
-\label{tab:results}
 \end{table}
 
 \begin{table}[t]
@@ -70,11 +71,12 @@ Distance(3) & \textbf{-74.33} & \textbf{0.1}\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%% Decay table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\caption{Improvement of LastChild using Decay Heuristic, where \textbf{PI} denotes the performance improvement against no decay heuristic}
+\label{tab:decay}
 \begin{tabular}{c c c c c}
 \toprule
-\textbf{Decay} & \textbf{Depth} &  \textbf{Combination} & \textbf{Performance} & \textbf{Speed}\\ 
-$\gamma$ &$d$ &  $com$ & \textbf{Improvement} (\%) & (nodes/ms)\\ 
+\textbf{Decay} & \textbf{Depth} &  \textbf{Combin.} & \textbf{PI} & \textbf{Speed}\\ 
+$\gamma$ &$d$ &  $com$ &  (\%) & (nodes/ms)\\ 
 \midrule
 0.5&1& mean & 0.50 & 47.7\\ 
 0.5& 1& maximum & 0.40 & 47.0 \\
@@ -87,8 +89,6 @@ $\gamma$ &$d$ &  $com$ & \textbf{Improvement} (\%) & (nodes/ms)\\
 \bottomrule
 %\hline
 \end{tabular}
-\caption{Improvement of LastChild using Decay Heuristic}
-\label{tab:decay}
 \end{table}
 
 Table \ref{tab:results} summarizes the main results of the experiments.
@@ -131,7 +131,7 @@ The improvement comes at the cost of slower speed, especially when the recursion
 
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.5]{figures/td_vs_bu.pdf}
+	\includegraphics[scale=0.45]{figures/Fig7.pdf}
 	\caption{Space measures of best Bottom-Up and Top-Down result}
 	\label{fig:BUvsTD}
 \end{figure}

@@ -30,9 +30,9 @@ The conjunction of the following four constraints expresses the existence of a p
 				
 	\item \label{c:pebble} For pebbling a node, its premises have to be pebbled the round before and only one node is being pebbled each round.\\
 				\begin{align*}
-					\Psi_4 = \bigwedge_{x = 1}^k \bigwedge_{j = 1}^n \bigwedge_{t = 1}^n & \Bigg( \left(\neg p_{x,j,t} \wedge p_{x,j,(t+1)} \right)\rightarrow \\
-					&\bigg( \bigwedge_{i \in \Premises{j}{\varphi}} \bigvee_{y = 1, y \neq x}^k p_{y,i,t} \bigg) \wedge 
-					\bigg( \bigwedge_{i = 1}^n \bigwedge_{y = 1, y \neq x}^k \neg \left( \neg p_{y,i,t} \wedge p_{y,i,(t+1)} \right) \bigg) \Bigg)
+					\Psi_4 = \bigwedge_{x = 1}^k \bigwedge_{j = 1}^n & \bigwedge_{t = 1}^n  \Bigg( \left(\neg p_{x,j,t} \wedge p_{x,j,(t+1)} \right)\rightarrow \\
+					&\bigg( \bigwedge_{i \in \Premises{j}{\varphi}} \bigvee_{y = 1, y \neq x}^k p_{y,i,t} \bigg) \wedge \\
+					&\bigg( \bigwedge_{i = 1}^n \bigwedge_{y = 1, y \neq x}^k \neg \left( \neg p_{y,i,t} \wedge p_{y,i,(t+1)} \right) \bigg) \Bigg)
 				\end{align*}
 				
 \end{enumerate}
