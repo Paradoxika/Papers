@@ -48,6 +48,12 @@ We denote the set of nodes that are pebbled in round $i$ by
 	\pebbledAt{\sigma}{i} \defeq \{ v \in V \mid	& \exists j \leq i: \sigma_j = p(v) \wedge\\
 																								&\forall k: j < k \leq i: \sigma_k \neq u(v)\}
 \end{align*}
+Furthermore, we denote the set of nodes that are ready to be unpebbled in round $i$ by
+\begin{align*}
+	\unpebbleAt{\sigma}{i} \defeq \{ v \in V \mid	& \neq \exists j \leq i: \sigma_j = u(v) \wedge\\
+																									& \forall c \in \Children{v}{\varphi} c \in \pebbledAt{\sigma}{i}
+\end{align*}
+
 \end{definition}
 
 The following definition allows to measure how many pebbles are required to play the Bounded Pebbling Game on a given graph.
@@ -107,8 +113,8 @@ $$
 		       %& \quad \text{ there exists }k < i, \sigma_k = p(u) \text{ and }\\
 					 %& \quad \text{ for all } l: k < l < i, \sigma_l \neq u(v) \\
 		%u(v) & \text{ for all } c \in \Children{v}{\varphi} \text{ exists } k < i, \sigma_k = p(u) \text{ and for all }l: k < l < i, \sigma_l \neq u(v) \\
-		u(v) & \text{if for all } c \in \Children{v}{\varphi} \\
-				 & \quad \text{exists } k < i \text { such that } \sigma_k = p(c)\\
+		u(v) & \text{if } \unpebbleAt{\sigma}{i} \neq \emptyset \text{, where} \\
+				 & \quad v = min_{\prec}(\unpebbleAt{\sigma}{i}) \\
 		p(v) & \text{otherwise, where } \\
 				 & \quad v = min_{\prec}(w \mid \text{ for all } l < i: \sigma_l \neq p(w))
 	\end{cases}
@@ -124,23 +130,53 @@ The following theorem shows that unpebbling moves can be omitted from strategies
 The canonical pebbling strategy has the minimum pebbling number among all pebbling strategies that respect the topological order $\prec$.
 \end{theorem}
 \begin{proof}
-%Let $\sigma = (\sigma_1,\ldots,\sigma_n)$ be the canonical pebbling strategy for $\prec$ and let $\sigma' = (\sigma'_1,\ldots,\sigma'_n)$ be any pebbling strategy respecting $\prec$.
-%We show that for every $i \in \{1,\ldots,n\}$ we have $\pebbledAt{i}{\sigma} \subseteq \pebbledAt{i}{\sigma'}$ by induction on $i$.
-%Let $\n$ be the minimal node of $V$ w.r.t. $\prec$.
-%We have $\sigma_1' = \sigma_1 = p(\n)$, since both strategies respect $\prec$.
-%Furthermore, we mentioned earlier that whether $p(\n)$ or $u(\n)$ is played, is uniquely defined by the sequence of moves, which leaves only the option that initially $p(\n)$ is the move of both strategies.
+Let $\sigma = (\sigma_1,\ldots,\sigma_n)$ be the canonical pebbling strategy for $\prec$ and let $\gamma = (\gamma_1,\ldots,\gamma_n)$ be any pebbling strategy respecting $\prec$.
+Suppose that in case $\gamma$ does more than one consecutive unpebbling move, the strategy does them in the order given by $\prec$.
+Since the pebbling number, i.e. most simultaneous pebbled nodes, is surely reached after a pebbling move, reordering unpebbling move in this manner does not change the pebbling number of the strategy.
+
+Let $i$ be such that $\gamma_i = u(\n)$ for some node $\n \in V$.
+The rules of the pebbling game imply, that in order to unpebble a node, all its children nodes have to be pebbled.
+The canonical strategy prioritizes such unpebbling moves and since we assumed consecutive unpebbling moves are made in the same order, we have 
+\begin{equation}
+	\label{eq:proof1}
+ \gamma_i = u(\n) \text{ then }\exists k \leq i: \sigma_k = u(\n)
+\end{equation}
+Since pebbling moves are the only alternative to unpebbling moves, this implies that $\sigma$ does the minimal amount of pebbling moves, 
+i.e. 
+\begin{equation}
+	\label{eq:proof2}
+	\begin{split}
+	\forall i \in \{1,\ldots,n\}: &|\{j \mid j \leq i \text{ and }\sigma_j = p(u), u \in V\}| \leq \\
+	&|\{j \mid j \leq i \text{ and }\gamma_j = p(u), u \in V\}|
+	\end{split}
+\end{equation}
+
+We now show that for every $i \in \{1,\ldots,n\}$ we have $\pebbledAt{i}{\sigma} \subseteq \pebbledAt{i}{\gamma}$ by induction on $i$.
+Let $\n$ be the minimal node of $V$ w.r.t. $\prec$.
+We have $\sigma_1' = \sigma_1 = p(\n)$, since both strategies respect $\prec$.
+Furthermore, we mentioned earlier that whether $p(\n)$ or $u(\n)$ is played, is uniquely defined by the sequence of moves, which leaves only the option that initially $p(\n)$ is the move of both strategies.
+
+For $i > 1$, suppose $\gamma_i = p(\n)$ for some $\n \in V$, then $\pebbledAt{\gamma}{i} = \pebbledAt{\gamma}{i-1} \cup \{\n\}$.
+In case $\sigma_i = u(\n')$ for some $\n' \in V$, we have $\pebbledAt{\sigma}{i} = \pebbledAt{\sigma}{i-1} \setminus \{\n'\} \subseteq \pebbledAt{\gamma}{i-1} \subseteq \pebbledAt{\gamma}{i}$ by induction.
+Otherwise $\sigma_i = p(\n')$ it follows from \ref{eq:proof1} and \ref{eq:proof2} that $\n' \in \pebbledAt{\gamma}{i}$ and we have $\pebbledAt{\sigma}{i} = \pebbledAt{\sigma}{i-1} \cup \{\n'\} \subseteq \pebbledAt{\gamma}{i}$ by induction.
+
+Suppose $\gamma_i = u(\n)$ for some $\n \in V$, then $\pebbledAt{\gamma}{i} = \pebbledAt{\gamma}{i-1} \setminus \{\n\}$.
+From \ref{eq:proof1} it follows that either $\sigma_i = u(\n)$ or $\n \notin \pebbledAt{\sigma}{i-1}$.
+In case $\sigma_i = u(\n')$ for both cases, we have $\pebbledAt{\sigma}{i} = \pebbledAt{\sigma}{i-1} \setminus \{\n'\} \subseteq \pebbledAt{\gamma}{i}$ by induction.
+In case $\sigma_i = p(\n')$, from \ref{eq:proof1} and \ref{eq:proof2} follows that $\n' \in \pebbledAt{\gamma}{i}$ and again we obtain the desired property by induction.
 %
 %Let $\sigma_i' = p(\n)$ for some node $\n \in V$. Then 
-%Suppose that the pebbling number of $\sigma'$ is strictly smaller than the one of $\sigma$.
-%Let $\sigma = (\sigma_1,\ldots,\sigma_n)$ be the canonical pebbling strategy for $\prec$ and let $\sigma' = (\sigma'_1,\ldots,\sigma'_n)$ be a pebbling strategy respecting $\prec$ such that $\sigma \neq \sigma'$.
+%Suppose that the pebbling number of $\gamma$ is strictly smaller than the one of $\sigma$.
+%Let $\sigma = (\sigma_1,\ldots,\sigma_n)$ be the canonical pebbling strategy for $\prec$ and let $\gamma = (\gamma_1,\ldots,\gamma_n)$ be a pebbling strategy respecting $\prec$ such that $\sigma \neq \gamma$.
 %All the pebbling strategies respecting $\prec$ differ only in the order of unpebbling moves.
 %Definition \ref{def:canonstrat} prioritizes unpebbling over pebbling moves.
-The priorization of unpebbling moves in definition \ref{def:canonstrat} implies that the canonical topological pebbling strategy makes unpebbling moves as soon as possible.
-Consider the moment for unpebbling an arbitrary node $v$ in the canonical pebbling strategy. 
-Unpebbling it later could only possibly increase the pebble number. 
-To reduce the pebble number, $v$ would have to be unpebbled earlier than some preceding pebbling move. 
-But, by definition of canonical pebbling strategy, the immediately preceding pebbling move pebbles the last child of $v$ w.r.t. $\prec$. 
-Therefore, unpebbling $v$ earlier would make it impossible for its last child to be pebbled later without violating the rules of the game.
+%The priorization of unpebbling moves in definition \ref{def:canonstrat} implies that the canonical topological pebbling strategy makes unpebbling moves as soon as possible.
+%Consider the moment for unpebbling an arbitrary node $v$ in the canonical pebbling strategy. 
+%Unpebbling it later could only possibly increase the pebble number. 
+%To reduce the pebble number, $v$ would have to be unpebbled earlier than some preceding pebbling move. 
+%But, by definition of canonical pebbling strategy, the immediately preceding pebbling move pebbles the last child of $v$ w.r.t. $\prec$. 
+%Therefore, unpebbling $v$ earlier would make it impossible for its last child to be pebbled later without violating the rules of the game.
+\qed
 \end{proof}
 
 As a consequence of Theorem \ref{theorem:canonical}, finding pebbling strategies with low pebbling numbers can be reduced to constructing topological orders.
