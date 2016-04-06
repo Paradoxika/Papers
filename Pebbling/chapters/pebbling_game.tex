@@ -131,17 +131,17 @@ The canonical pebbling strategy has the minimum pebbling number among all pebbli
 \end{theorem}
 \begin{proof}
 Let $\sigma = (\sigma_1,\ldots,\sigma_n)$ be the canonical pebbling strategy for $\prec$ and let $\gamma = (\gamma_1,\ldots,\gamma_n)$ be any pebbling strategy respecting $\prec$.
-Suppose that in case $\gamma$ does more than one consecutive unpebbling move, the strategy does them in the order given by $\prec$.
-Since the pebbling number, i.e. most simultaneous pebbled nodes, is surely reached after a pebbling move, reordering unpebbling move in this manner does not change the pebbling number of the strategy.
+Suppose that, in case $\gamma$ does more than one consecutive unpebbling move, the strategy does them in the order given by $\prec$.
+Since the pebbling number (i.e. the maximum number of simultaneously pebbled nodes) is surely reached after a pebbling move, reordering unpebbling move in this manner does not change the pebbling number of the strategy.
 
 Let $i$ be such that $\gamma_i = u(\n)$ for some node $\n \in V$.
 The rules of the pebbling game imply, that in order to unpebble a node, all its children nodes have to be pebbled.
-The canonical strategy prioritizes such unpebbling moves and since we assumed consecutive unpebbling moves are made in the same order, we have 
+The canonical strategy prioritizes such unpebbling moves and since we assumed that consecutive unpebbling moves are made in the same order, we have 
 \begin{equation}
 	\label{eq:proof1}
  \gamma_i = u(\n) \text{ then }\exists k \leq i: \sigma_k = u(\n)
 \end{equation}
-Since pebbling moves are the only alternative to unpebbling moves, this implies that $\sigma$ does the minimal amount of pebbling moves, 
+Since pebbling moves are the only alternative to unpebbling moves, $\sigma$ does the minimal amount of pebbling moves, 
 i.e. 
 \begin{equation}
 	\label{eq:proof2}
@@ -152,18 +152,28 @@ i.e.
 \end{equation}
 
 We now show that for every $i \in \{1,\ldots,n\}$ we have $\pebbledAt{i}{\sigma} \subseteq \pebbledAt{i}{\gamma}$ by induction on $i$.
-Let $\n$ be the minimal node of $V$ w.r.t. $\prec$.
-We have $\sigma_1' = \sigma_1 = p(\n)$, since both strategies respect $\prec$.
-Furthermore, we mentioned earlier that whether $p(\n)$ or $u(\n)$ is played, is uniquely defined by the sequence of moves, which leaves only the option that initially $p(\n)$ is the move of both strategies.
+\begin{itemize}
+\item Base Case ($i = 1$): Let $\n$ be the minimal node of $V$ w.r.t. $\prec$.
+The first move of both strategies has to be a pebbling move. Since both strategies respect $\prec$, the pebbling move must pebble the minimal node $\n$. Therefore, $\gamma_1 = \sigma_1 = p(\n)$.
 
-For $i > 1$, suppose $\gamma_i = p(\n)$ for some $\n \in V$, then $\pebbledAt{\gamma}{i} = \pebbledAt{\gamma}{i-1} \cup \{\n\}$.
-In case $\sigma_i = u(\n')$ for some $\n' \in V$, we have $\pebbledAt{\sigma}{i} = \pebbledAt{\sigma}{i-1} \setminus \{\n'\} \subseteq \pebbledAt{\gamma}{i-1} \subseteq \pebbledAt{\gamma}{i}$ by induction.
-Otherwise $\sigma_i = p(\n')$ it follows from \ref{eq:proof1} and \ref{eq:proof2} that $\n' \in \pebbledAt{\gamma}{i}$ and we have $\pebbledAt{\sigma}{i} = \pebbledAt{\sigma}{i-1} \cup \{\n'\} \subseteq \pebbledAt{\gamma}{i}$ by induction.
+\item Inductive Case ($i > 1$): we distinguish four cases:
+\begin{itemize}
+\item Case 1 ($\gamma_i = p(\n)$ and $\sigma_i = u(\n')$ for some $\n, \n' \in V$): then $\pebbledAt{\gamma}{i} = \pebbledAt{\gamma}{i-1} \cup \{\n\}$ and $\pebbledAt{\sigma}{i} = \pebbledAt{\sigma}{i-1} \setminus \{\n'\}$. By induction hypothesis,  $\pebbledAt{\sigma}{i_1} \subseteq \pebbledAt{\gamma}{i-1}$, and hence $\pebbledAt{\sigma}{i} = \pebbledAt{\sigma}{i-1} \setminus \{\n'\} \subset \pebbledAt{\gamma}{i-1} \cup \{\n\} = \pebbledAt{\gamma}{i}$.
 
-Suppose $\gamma_i = u(\n)$ for some $\n \in V$, then $\pebbledAt{\gamma}{i} = \pebbledAt{\gamma}{i-1} \setminus \{\n\}$.
+\marginpar{ToDo: improve cases 2, 3 and 4 following the style of case 1.}
+
+\item Case 2 ($\gamma_i = p(\n)$ and $\sigma_i = p(\n')$ for some $\n, \n' \in V$): it follows from \ref{eq:proof1} and \ref{eq:proof2} that $\n' \in \pebbledAt{\gamma}{i}$ and we have $\pebbledAt{\sigma}{i} = \pebbledAt{\sigma}{i-1} \cup \{\n'\} \subseteq \pebbledAt{\gamma}{i}$ by induction.
+
+\item Case 3 ($\gamma_i = u(\n)$ and $\sigma_i = p(\n')$ for some $\n, \n' \in V$): then $\pebbledAt{\gamma}{i} = \pebbledAt{\gamma}{i-1} \setminus \{\n\}$.
 From \ref{eq:proof1} it follows that either $\sigma_i = u(\n)$ or $\n \notin \pebbledAt{\sigma}{i-1}$.
+
+\item Case 4 \ldots
 In case $\sigma_i = u(\n')$ for both cases, we have $\pebbledAt{\sigma}{i} = \pebbledAt{\sigma}{i-1} \setminus \{\n'\} \subseteq \pebbledAt{\gamma}{i}$ by induction.
 In case $\sigma_i = p(\n')$, from \ref{eq:proof1} and \ref{eq:proof2} follows that $\n' \in \pebbledAt{\gamma}{i}$ and again we obtain the desired property by induction.
+\end{itemize}
+
+\end{itemize}
+
 %
 %Let $\sigma_i' = p(\n)$ for some node $\n \in V$. Then 
 %Suppose that the pebbling number of $\gamma$ is strictly smaller than the one of $\sigma$.
@@ -176,7 +186,8 @@ In case $\sigma_i = p(\n')$, from \ref{eq:proof1} and \ref{eq:proof2} follows th
 %To reduce the pebble number, $v$ would have to be unpebbled earlier than some preceding pebbling move. 
 %But, by definition of canonical pebbling strategy, the immediately preceding pebbling move pebbles the last child of $v$ w.r.t. $\prec$. 
 %Therefore, unpebbling $v$ earlier would make it impossible for its last child to be pebbled later without violating the rules of the game.
-\qed
+
+\hfill \qed
 \end{proof}
 
 As a consequence of Theorem \ref{theorem:canonical}, finding pebbling strategies with low pebbling numbers can be reduced to constructing topological orders.
