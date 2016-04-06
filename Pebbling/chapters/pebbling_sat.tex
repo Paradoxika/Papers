@@ -1,8 +1,11 @@
 \section{Pebbling as a Satisfiability Problem}
 \label{sec:pebblingSAT}
 
-To find the pebble number of a proof, the question whether the proof can be pebbled using no more than $k$ pebbles can be encoded as a propositional satisfiability problem.
-In this section let $\varphi$ be a proof with nodes $v_1,\ldots,v_n$ and let $v_n$ be its root. 
+Pebbling is a graph problem and many graph problems can be encoded as SAT problems and, at least in principle, solved by running a SAT solver \cite{ToDo: Handbook of Satisifiability?}. \marginpar{add citation here.} 
+Not surprisingly, there exists a SAT encoding for the problem of deciding whether a proof can be pebbled using no more than $k$ pebbles, and the pebble number of a proof could in principle be found by trying increasingly larger values of $k$. In this section, we present the SAT encoding and briefly discuss its complexity, in order to argue that finding the pebble number through SAT encodings is not a practical solution.
+
+
+In this section, $\varphi$ is assumed to be a proof with nodes $v_1,\ldots,v_n$ with $v_n$ its root. 
 Due to rule \ref{rule:onlyonce} of the Bounded Pebbling Game, the number of moves that pebble nodes is exactly $n$ and due to Theorem \ref{theorem:canonical}, determining the order of these moves is enough to define a strategy. 
 
 In our SAT encoding, for every $x \in \{1,\ldots,k\}$, every $j \in \{1,\ldots,n\}$ and every $t \in \{0,\ldots,n\}$ there is a propositional variable $p_{x,j,t}$. 
