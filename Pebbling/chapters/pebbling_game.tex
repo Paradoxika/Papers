@@ -200,6 +200,9 @@ The \emph{space} $\pspace{\varphi}{\prec}$
 of a proof $\varphi$ and a topological order $\prec$ is the pebbling number of the canonical topological pebbling strategy of $\varphi$, its root and $\prec$.
 \end{definition}
 
+Note that the space $\pspace{\varphi}{\prec}$ of a proof $\varphi$ and a topological order $\prec$ is an abstract idealized approximation of the memory consumption needed by a proof comsumer processing $\varphi$ according to the canonical strategy corresponding to $\prec$. It is a good approximation, because the size of non-leaf nodes can be assumed to be constant, since non-tautological resolvents (cf. Definition \ref{def:Resolvent}) \marginpar{ToDo: Check this reference} are uniquely determined by their premises and do not need to be explicitly stored in memory. Only the size of leaf nodes varies depending on the size of the input clauses they contain.
+
+
 \begin{example}
 
 Consider the proof displayed in Figure \ref{fig:spaceproof}.
