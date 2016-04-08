@@ -30,7 +30,7 @@ The \emph{move} of the player in this round is $p(v)$, if $v$ is pebbleable and 
 
 \end{definition}
 
-We display examples of this game in Section \ref{sec:algorithm}, when we discuss algorithms to construct strategies for it.
+We display examples of this game in Section \ref{sec:algorithms}, when we discuss algorithms to construct strategies for it.
 
 Note that due to rule \ref{rule:premises} the move in each round is uniquely defined by the chosen node $v$.
 The distinction of the two kinds of moves is just made for presentation purposes.
@@ -50,8 +50,8 @@ We denote the set of nodes that are pebbled in round $i$ by
 \end{align*}
 Furthermore, we denote the set of nodes that are ready to be unpebbled in round $i$ by
 \begin{align*}
-	\unpebbleAt{\sigma}{i} \defeq \{ v \in V \mid	& \neq \exists j \leq i: \sigma_j = u(v) \wedge\\
-																									& \forall c \in \Children{v}{\varphi} c \in \pebbledAt{\sigma}{i}
+	\unpebbleAt{\sigma}{i} \defeq \{ v \in V \mid	& \nexists j \leq i: \sigma_j = u(v) \wedge\\
+																									& \forall c \in \Children{v}{\varphi} c \in \pebbledAt{\sigma}{i}\}
 \end{align*}
 
 \end{definition}
@@ -131,48 +131,68 @@ The canonical pebbling strategy has the minimum pebbling number among all pebbli
 \end{theorem}
 \begin{proof}
 Let $\sigma = (\sigma_1,\ldots,\sigma_n)$ be the canonical pebbling strategy for $\prec$ and let $\gamma = (\gamma_1,\ldots,\gamma_n)$ be any pebbling strategy respecting $\prec$.
-Suppose that, in case $\gamma$ does more than one consecutive unpebbling move, the strategy does them in the order given by $\prec$.
-Since the pebbling number (i.e. the maximum number of simultaneously pebbled nodes) is surely reached after a pebbling move, reordering unpebbling move in this manner does not change the pebbling number of the strategy.
 
-Let $i$ be such that $\gamma_i = u(\n)$ for some node $\n \in V$.
-The rules of the pebbling game imply, that in order to unpebble a node, all its children nodes have to be pebbled.
-The canonical strategy prioritizes such unpebbling moves and since we assumed that consecutive unpebbling moves are made in the same order, we have 
-\begin{equation}
-	\label{eq:proof1}
- \gamma_i = u(\n) \text{ then }\exists k \leq i: \sigma_k = u(\n)
-\end{equation}
-Since pebbling moves are the only alternative to unpebbling moves, $\sigma$ does the minimal amount of pebbling moves, 
-i.e. 
-\begin{equation}
-	\label{eq:proof2}
-	\begin{split}
-	\forall i \in \{1,\ldots,n\}: &|\{j \mid j \leq i \text{ and }\sigma_j = p(u), u \in V\}| \leq \\
-	&|\{j \mid j \leq i \text{ and }\gamma_j = p(u), u \in V\}|
-	\end{split}
-\end{equation}
+Let $\#P^{\delta}_i$ and $\#U^{\delta}_i$ be the number of pebbling- and unpebbling- moves respectively, performed by $\delta \in \{\sigma,\gamma\}$ up to round $i$ of the game.
+Rule \ref{rule:onlyonce} of the Bounded Pebbling Game disallows to play a pebbling move on the same node more than once.
+Furthermore, by our definition of unpebbling moves, such moves are only played on nodes that are pebbled in the respective round.
+Therefore, we can characterize the number of pebbled nodes in round $i$ by strategy $\delta$ as $|Peb^{\delta}_i| = \#P^{\delta}_i - \#U^{\delta}_i$.
 
-We now show that for every $i \in \{1,\ldots,n\}$ we have $\pebbledAt{i}{\sigma} \subseteq \pebbledAt{i}{\gamma}$ by induction on $i$.
-\begin{itemize}
-\item Base Case ($i = 1$): Let $\n$ be the minimal node of $V$ w.r.t. $\prec$.
-The first move of both strategies has to be a pebbling move. Since both strategies respect $\prec$, the pebbling move must pebble the minimal node $\n$. Therefore, $\gamma_1 = \sigma_1 = p(\n)$.
+Pebbling and unpebbling moves are the only possible moves and the player is forced to play a move every turn.
+Therefore, we have $\#P^{\delta}_i = i - \#U^{\delta}_i$ and $|Peb^{\delta}_i| = i - 2 \#U^{\delta}_i$.
 
-\item Inductive Case ($i > 1$): we distinguish four cases:
-\begin{itemize}
-\item Case 1 ($\gamma_i = p(\n)$ and $\sigma_i = u(\n')$ for some $\n, \n' \in V$): then $\pebbledAt{\gamma}{i} = \pebbledAt{\gamma}{i-1} \cup \{\n\}$ and $\pebbledAt{\sigma}{i} = \pebbledAt{\sigma}{i-1} \setminus \{\n'\}$. By induction hypothesis,  $\pebbledAt{\sigma}{i_1} \subseteq \pebbledAt{\gamma}{i-1}$, and hence $\pebbledAt{\sigma}{i} = \pebbledAt{\sigma}{i-1} \setminus \{\n'\} \subset \pebbledAt{\gamma}{i-1} \cup \{\n\} = \pebbledAt{\gamma}{i}$.
+Strategies $\sigma$ and $\gamma$ respect the same topological order $\prec$.
+Therefore, nodes are available for unpebbling in the same sequence for the two strategies.
+Strategy $\sigma$ prioritizes unpebbling over pebbling moves, i.e. it does the maximum amount of unpebbling moves possible.
+Thus for every $i$ we have $\#U^{\sigma}_i \geq \#U^{\gamma}_i$, which implies $|Peb^{\sigma}_i| \leq |Peb^{\gamma}_i|$.
+Since we have the property for every $i$, it also holds for the maximum over all $i$, which is the desired property. 
 
-\marginpar{ToDo: improve cases 2, 3 and 4 following the style of case 1.}
+\noindent\qed
 
-\item Case 2 ($\gamma_i = p(\n)$ and $\sigma_i = p(\n')$ for some $\n, \n' \in V$): it follows from \ref{eq:proof1} and \ref{eq:proof2} that $\n' \in \pebbledAt{\gamma}{i}$ and we have $\pebbledAt{\sigma}{i} = \pebbledAt{\sigma}{i-1} \cup \{\n'\} \subseteq \pebbledAt{\gamma}{i}$ by induction.
-
-\item Case 3 ($\gamma_i = u(\n)$ and $\sigma_i = p(\n')$ for some $\n, \n' \in V$): then $\pebbledAt{\gamma}{i} = \pebbledAt{\gamma}{i-1} \setminus \{\n\}$.
-From \ref{eq:proof1} it follows that either $\sigma_i = u(\n)$ or $\n \notin \pebbledAt{\sigma}{i-1}$.
-
-\item Case 4 \ldots
-In case $\sigma_i = u(\n')$ for both cases, we have $\pebbledAt{\sigma}{i} = \pebbledAt{\sigma}{i-1} \setminus \{\n'\} \subseteq \pebbledAt{\gamma}{i}$ by induction.
-In case $\sigma_i = p(\n')$, from \ref{eq:proof1} and \ref{eq:proof2} follows that $\n' \in \pebbledAt{\gamma}{i}$ and again we obtain the desired property by induction.
-\end{itemize}
-
-\end{itemize}
+%Since the pebbling number (i.e. the maximum number of simultaneously pebbled nodes) is surely reached after a pebbling move, reordering unpebbling move in this manner does not change the pebbling number of the strategy.
+%
+%Let $i$ be such that $\gamma_i = u(\n)$ for some node $\n \in V$.
+%The rules of the pebbling game imply, that in order to unpebble a node, all its children nodes have to be pebbled.
+%The canonical strategy prioritizes such unpebbling moves and since we assumed that consecutive unpebbling moves are made in the same order, we have 
+%\begin{equation}
+	%\label{eq:proof1}
+ %\gamma_i = u(\n) \text{ then }\exists k \leq i: \sigma_k = u(\n)
+%\end{equation}
+%Since pebbling moves are the only alternative to unpebbling moves, $\sigma$ does the minimal amount of pebbling moves, 
+%i.e. 
+%\begin{equation}
+	%\label{eq:proof2}
+	%\begin{split}
+	%\forall i \in \{1,\ldots,n\}: &|\{j \mid j \leq i \text{ and }\sigma_j = p(u), u \in V\}| \leq \\
+	%&|\{j \mid j \leq i \text{ and }\gamma_j = p(u), u \in V\}|
+	%\end{split}
+%\end{equation}
+%
+%We define the set of never pe
+%
+%We now show that for every $i \in \{1,\ldots,n\}$ we have 
+%$\pebbledAt{i}{\sigma} \subseteq \pebbledAt{i}{\gamma}$ by induction on $i$.
+%\begin{itemize}
+%\item Base Case ($i = 1$): Let $\n$ be the minimal node of $V$ w.r.t. $\prec$.
+%The first move of both strategies has to be a pebbling move. Since both strategies respect $\prec$, the pebbling move must pebble the minimal node $\n$. Therefore, $\gamma_1 = \sigma_1 = p(\n)$.
+%
+%\item Inductive Case ($i > 1$): we distinguish four cases:
+%\begin{itemize}
+%\item Case 1 ($\gamma_i = p(\n)$ and $\sigma_i = u(\n')$ for some $\n, \n' \in V$): then $\pebbledAt{\gamma}{i} = \pebbledAt{\gamma}{i-1} \cup \{\n\}$ and $\pebbledAt{\sigma}{i} = \pebbledAt{\sigma}{i-1} \setminus \{\n'\}$. By induction hypothesis,  $\pebbledAt{\sigma}{i_1} \subseteq \pebbledAt{\gamma}{i-1}$, and hence $\pebbledAt{\sigma}{i} = \pebbledAt{\sigma}{i-1} \setminus \{\n'\} \subset \pebbledAt{\gamma}{i-1} \cup \{\n\} = \pebbledAt{\gamma}{i}$.
+%
+%\marginpar{ToDo: improve cases 2, 3 and 4 following the style of case 1.}
+%
+%\item Case 2 ($\gamma_i = p(\n)$ and $\sigma_i = p(\n')$ for some $\n, \n' \in V$): it follows from \ref{eq:proof1} and \ref{eq:proof2} that $\n' \in \pebbledAt{\gamma}{i}$.
+%By induction hypothesis, $\pebbledAt{\sigma}{i} = \pebbledAt{\sigma}{i-1} \cup \{\n'\} \subseteq \pebbledAt{\gamma}{i-1} \cup \{\n'\} = \pebbledAt{\gamma}{i}$.
+%
+%\item Case 3 ($\gamma_i = u(\n)$ and $\sigma_i = p(\n')$ for some $\n, \n' \in V$): then $\pebbledAt{\gamma}{i} = \pebbledAt{\gamma}{i-1} \setminus \{\n\}$.
+%From \ref{eq:proof1} it follows that either $\sigma_i = u(\n)$ or $\n \notin \pebbledAt{\sigma}{i-1}$.
+%
+%\item Case 4 \ldots
+%In case $\sigma_i = u(\n')$ for both cases, we have $\pebbledAt{\sigma}{i} = \pebbledAt{\sigma}{i-1} \setminus \{\n'\} \subseteq \pebbledAt{\gamma}{i}$ by induction.
+%In case $\sigma_i = p(\n')$, from \ref{eq:proof1} and \ref{eq:proof2} follows that $\n' \in \pebbledAt{\gamma}{i}$ and again we obtain the desired property by induction.
+%\end{itemize}
+%
+%\end{itemize}
 
 %
 %Let $\sigma_i' = p(\n)$ for some node $\n \in V$. Then 
@@ -187,7 +207,6 @@ In case $\sigma_i = p(\n')$, from \ref{eq:proof1} and \ref{eq:proof2} follows th
 %But, by definition of canonical pebbling strategy, the immediately preceding pebbling move pebbles the last child of $v$ w.r.t. $\prec$. 
 %Therefore, unpebbling $v$ earlier would make it impossible for its last child to be pebbled later without violating the rules of the game.
 
-\hfill \qed
 \end{proof}
 
 As a consequence of Theorem \ref{theorem:canonical}, finding pebbling strategies with low pebbling numbers can be reduced to constructing topological orders.
@@ -200,7 +219,7 @@ The \emph{space} $\pspace{\varphi}{\prec}$
 of a proof $\varphi$ and a topological order $\prec$ is the pebbling number of the canonical topological pebbling strategy of $\varphi$, its root and $\prec$.
 \end{definition}
 
-Note that the space $\pspace{\varphi}{\prec}$ of a proof $\varphi$ and a topological order $\prec$ is an abstract idealized approximation of the memory consumption needed by a proof comsumer processing $\varphi$ according to the canonical strategy corresponding to $\prec$. It is a good approximation, because the size of non-leaf nodes can be assumed to be constant, since non-tautological resolvents (cf. Definition \ref{def:Resolvent}) \marginpar{ToDo: Check this reference} are uniquely determined by their premises and do not need to be explicitly stored in memory. Only the size of leaf nodes varies depending on the size of the input clauses they contain.
+Note that the space $\pspace{\varphi}{\prec}$ of a proof $\varphi$ and a topological order $\prec$ is an abstract idealized approximation of the memory consumption needed by a proof comsumer processing $\varphi$ according to the canonical strategy corresponding to $\prec$. It is a good approximation, because the size of non-leaf nodes can be assumed to be constant, since non-tautological resolvents (cf. Definition \ref{def:resolvent}) are uniquely determined by their premises and do not need to be explicitly stored in memory. Only the size of leaf nodes varies depending on the size of the input clauses they contain.
 
 
 \begin{example}
@@ -228,9 +247,39 @@ There is a sequence of proofs $(\varphi_1,\varphi_2,\ldots)$ such that $\plength
 \begin{proof}
 Let $\varphi_m$ be a perfect binary tree with $m$ axioms. Clearly, $\plength{\varphi_m} = 2m-1$.
 Let $(v_1,\ldots,v_n)$ be a topological order for $\varphi_m$. 
-Let $\Axioms{\varphi} = \{v_{k_1},\ldots,v_{k_m}\}$, then $(v_{k_1},\ldots,v_{k_m},v_{l_1},\ldots,v_{l_{n-m}})$, 
+Let $\Axioms{\varphi_m} = \{v_{k_1},\ldots,v_{k_m}\}$, then $(v_{k_1},\ldots,v_{k_m},v_{l_1},\ldots,v_{l_{n-m}})$, 
 where the indexes are such that $(l_1,\ldots,l_{n-m}) = (1,\ldots,n) \setminus (k_1,\ldots,k_m)$, is a topological order as well. 
 
 Likewise, $(v_{\pi({k_1})},\ldots,v_{\pi({k_m})},v_{l_1},\ldots,v_{l_{n-m}})$ is a topological order, for every permutation $\pi$ of $\{k_1,\ldots,k_m\}$. There are $m!$ such permutations, so the overall number of topological orders is at least factorial in $m$ (and also in $n$).
+
+\noindent\qed
 \end{proof}
 
+There might not only be many possible topological orders, their pebbling numbers might also be substantially different.
+
+\begin{theorem}
+\label{theorem:enumeration}
+There is a sequence of proofs $(\varphi_2,\varphi_4,\ldots)$ such that there are topological orders $\delta, \gamma$ for $\varphi_m$ with pebbling numbers $n_\delta$ and $n_\gamma$, such that $n_\delta = O(2^{n_\gamma})$.
+\end{theorem}
+\begin{proof}
+Again let $\varphi_m$ be a perfect binary tree with $m$ axioms, where $m > 1$.
+Let $\delta = (v_{k_1},\ldots,v_{k_m},v_{l_1},\ldots,v_{l_{n-m}})$ be the topological order, where indices are defined as in the proof of Theorem \ref{theorem:enumeration}.
+The strategy initially pebbles all axioms, making no node available for unpebbling.
+Only after pebbling one additional node, two axioms can be unpebbled.
+Therefore, we have that $n_\delta = m + 1$.
+
+Let $\gamma$ be the strategy that processes $\varphi_m$ from left to right.
+We show by induction on $m: n_\gamma = \log_2(m)+2$.
+The base case is $m = 2$.
+The strategy $\gamma$ has to pebble both axioms first, before being able to pebble the root node.
+Therefore, we have $n_\gamma = 3 = \log_2(2) + 2$ for $\varphi_2$.
+
+Let $\varphi_m$ be a perfect tree with $m=m'*2$ axioms, which has a left and a right subproof, which are perfect bianry trees with $m'$ axioms.
+By induction hypothesis, we have that $\gamma$ needs $\log_2(m') + 2$ pebbles on the left subproof.
+One pebble remains on the root of the left subproof, while processing the right subproof.
+Therefore, we have $n_\gamma = \log_2(m') + 3 = \log_2(\frac{m}{2}) + 3 = \log_2(m) + 2$ for $\varphi_m$.
+
+We have $n_\delta = m + 1 = O(2^{\log_2(m)+2}) = O(2^{n_\gamma})$.
+
+\noindent\qed
+\end{proof}
