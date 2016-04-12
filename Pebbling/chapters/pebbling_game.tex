@@ -17,6 +17,7 @@ In the following definition we present the Pebbling Game that we use to model sp
 
 \begin{definition}[Bounded Pebbling Game]
 \label{def:pebbling-game}
+
 The \emph{Bounded Pebbling Game} is played by one player in rounds on a DAG $G = (V,E)$ with one distinguished node $\n \in V$.
 The goal of the game is to pebble $\n$, respecting the following rules:
 \begin{enumerate}
@@ -101,9 +102,9 @@ The antisymmetry together with the fact that $V = \{v_1,\dots,v_n\}$ correspond 
 Theorem \ref{theorem:canonical} shows that the rounds for unpebbling moves are predefined by the pebbling moves, when the goal is to find strategies with small pebbling numbers.
 Therefore, there is a bijection between topological orders and canonical pebbling strategies.
 
-\begin{definition}[Canonical Topological Pebbling Strategy]
+\begin{definition}[Canonical Pebbling Strategy]
 \label{def:canonstrat}
-The \emph{canonical topological pebbling strategy} $\sigma$ for a proof $\varphi$, its root node $s$ and a topological order $\prec$ represented as a sequence $(v_1,\dots,v_n)$ is defined recursively:
+The \emph{canonical pebbling strategy} $\sigma$ for a proof $\varphi$, its root node $s$ and a topological order $\prec$ represented as a sequence $(v_1,\dots,v_n)$ is defined recursively:
 $$
 \begin{array}{l}
 \sigma_1 = p(v_1) \\
@@ -144,9 +145,7 @@ Strategies $\sigma$ and $\gamma$ respect the same topological order $\prec$.
 Therefore, nodes are available for unpebbling in the same sequence for the two strategies.
 Strategy $\sigma$ prioritizes unpebbling over pebbling moves, i.e. it does the maximum amount of unpebbling moves possible.
 Thus for every $i$ we have $\#U^{\sigma}_i \geq \#U^{\gamma}_i$, which implies $|Peb^{\sigma}_i| \leq |Peb^{\gamma}_i|$.
-Since we have the property for every $i$, it also holds for the maximum over all $i$, which is the desired property. 
-
-\noindent\qed
+Since we have the property for every $i$, it also holds for the maximum over all $i$, which is the desired property.  \hspace*{\fill} \qed
 
 %Since the pebbling number (i.e. the maximum number of simultaneously pebbled nodes) is surely reached after a pebbling move, reordering unpebbling move in this manner does not change the pebbling number of the strategy.
 %
@@ -216,7 +215,7 @@ We are now ready to define another measure on proofs, which we call space.
 \begin{definition}[Space of a Proof]
 \label{def:space measure}
 The \emph{space} $\pspace{\varphi}{\prec}$ 
-of a proof $\varphi$ and a topological order $\prec$ is the pebbling number of the canonical topological pebbling strategy of $\varphi$, its root and $\prec$.
+of a proof $\varphi$ and a topological order $\prec$ is the pebbling number of the canonical pebbling strategy of $\varphi$, its root and $\prec$.
 \end{definition}
 
 Note that the space $\pspace{\varphi}{\prec}$ of a proof $\varphi$ and a topological order $\prec$ is an abstract idealized approximation of the memory consumption needed by a proof comsumer processing $\varphi$ according to the canonical strategy corresponding to $\prec$. It is a good approximation, because the size of non-leaf nodes can be assumed to be constant, since non-tautological resolvents (cf. Definition \ref{def:resolvent}) are uniquely determined by their premises and do not need to be explicitly stored in memory. Only the size of leaf nodes varies depending on the size of the input clauses they contain.
@@ -242,44 +241,43 @@ The problem of compressing the space of a proof $\varphi$ and a topological orde
 
 \begin{theorem}
 \label{theorem:enumeration}
-There is a sequence of proofs $(\varphi_1,\varphi_2,\ldots)$ such that $\plength{\varphi_m} \in O(m)$ and $|T(\varphi_m)| \in \Omega(m!)$, where $T(\varphi_m)$ is the set of possible topological orders for $\varphi_m$.
+There is a sequence of proofs $(\varphi_1,\varphi_2,\ldots)$ such that $|T(\varphi_m)| \in \Omega(\plength{\varphi_m}!)$, where $T(\varphi_m)$ is the set of possible topological orders for $\varphi_m$.
 \end{theorem}
 \begin{proof}
-Let $\varphi_m$ be a perfect binary tree with $m$ axioms. Clearly, $\plength{\varphi_m} = 2m-1$.
+Let $\varphi_m$ be a perfect binary tree with $2^m$ axioms.
+We can calculate the length of the tree as $n := \plength{\varphi_m} = 2*{2^m}-1$.
 Let $(v_1,\ldots,v_n)$ be a topological order for $\varphi_m$. 
-Let $\Axioms{\varphi_m} = \{v_{k_1},\ldots,v_{k_m}\}$, then $(v_{k_1},\ldots,v_{k_m},v_{l_1},\ldots,v_{l_{n-m}})$, 
-where the indexes are such that $(l_1,\ldots,l_{n-m}) = (1,\ldots,n) \setminus (k_1,\ldots,k_m)$, is a topological order as well. 
+Let $\Axioms{\varphi_m} = \{v_{k_1},\ldots,v_{k_{2^m}}\}$, then $(v_{k_1},\ldots,v_{k_{2^m}},v_{i_1},\ldots,v_{i_{n-{2^m}}})$, 
+where the indexes are such that $(i_1,\ldots,i_{n-{2^m}}) = (1,\ldots,n) \setminus (k_1,\ldots,k_{2^m})$, is a topological order as well. 
 
-Likewise, $(v_{\pi({k_1})},\ldots,v_{\pi({k_m})},v_{l_1},\ldots,v_{l_{n-m}})$ is a topological order, for every permutation $\pi$ of $\{k_1,\ldots,k_m\}$. There are $m!$ such permutations, so the overall number of topological orders is at least factorial in $m$ (and also in $n$).
-
-\noindent\qed
+Likewise, for every permutation $\pi$ of $\{k_1,\ldots,k_{2^m}\}$, $(v_{\pi({k_1})},\ldots,v_{\pi({k_{2^m}})},v_{i_1},\ldots,v_{i_{n-{2^m}}})$ is a topological order. 
+%Likewise, $(v_{\pi({k_1})},\ldots,v_{\pi({k_{2^m}})},v_{i_1},\ldots,v_{i_{n-{2^m}}})$ is a topological order, for every permutation $\pi$ of $\{k_1,\ldots,k_{2^m}\}$. 
+There are ${2^m}!$ such permutations, so the overall number of topological orders is at least factorial in ${2^m}$, thereby also in $n = \plength{\varphi_m}$. \hspace*{\fill} \qed
 \end{proof}
 
 There might not only be many possible topological orders, their pebbling numbers might also be substantially different.
 
 \begin{theorem}
 \label{theorem:enumeration}
-There is a sequence of proofs $(\varphi_2,\varphi_4,\ldots)$ such that there are topological orders $\delta, \gamma$ for $\varphi_m$ with pebbling numbers $n_\delta$ and $n_\gamma$, such that $n_\delta = O(2^{n_\gamma})$.
+There is a sequence of proofs $(\varphi_1,\varphi_2,\ldots)$ such that there are topological orders $\delta, \gamma$ for $\varphi_m$ with pebbling numbers $n_\delta$ and $n_\gamma$, such that $n_\delta = O(2^{n_\gamma})$.
 \end{theorem}
 \begin{proof}
-Again let $\varphi_m$ be a perfect binary tree with $m$ axioms, where $m > 1$.
-Let $\delta = (v_{k_1},\ldots,v_{k_m},v_{l_1},\ldots,v_{l_{n-m}})$ be the topological order, where indices are defined as in the proof of Theorem \ref{theorem:enumeration}.
+Again, let $\varphi_m$ be a perfect binary tree with $2^{m}$ axioms.
+Let $\delta = (v_{k_1},\ldots,v_{k_{2^m}},v_{l_1},\ldots,v_{l_{n-{2^m}}})$ be the topological order, where indices are defined as in the proof of Theorem \ref{theorem:enumeration}.
 The strategy initially pebbles all axioms, making no node available for unpebbling.
-Only after pebbling one additional node, two axioms can be unpebbled.
-Therefore, we have that $n_\delta = m + 1$.
+Only after pebbling one additional node, two axiom nodes can be unpebbled.
+Therefore, we have that $n_\delta = 2^m + 1$.
 
 Let $\gamma$ be the strategy that processes $\varphi_m$ from left to right.
-We show by induction on $m: n_\gamma = \log_2(m)+2$.
-The base case is $m = 2$.
-The strategy $\gamma$ has to pebble both axioms first, before being able to pebble the root node.
-Therefore, we have $n_\gamma = 3 = \log_2(2) + 2$ for $\varphi_2$.
+We show by induction on $m: n_\gamma = m+2$.
+The base case is $m = 1$.
+The strategy $\gamma$ has to pebble both axioms first, before it is able to pebble the root node.
+Therefore, we have $n_\gamma = 3 = 1 + 2$ for $\varphi_1$.
 
-Let $\varphi_m$ be a perfect tree with $m=m'*2$ axioms, which has a left and a right subproof, which are perfect bianry trees with $m'$ axioms.
-By induction hypothesis, we have that $\gamma$ needs $\log_2(m') + 2$ pebbles on the left subproof.
-One pebble remains on the root of the left subproof, while processing the right subproof.
-Therefore, we have $n_\gamma = \log_2(m') + 3 = \log_2(\frac{m}{2}) + 3 = \log_2(m) + 2$ for $\varphi_m$.
+Let $\varphi_m$ be a perfect tree with $2^m$ axioms, which has a left and a right subproof, which are perfect bianry trees with $2^{m-1}$ axioms.
+By induction hypothesis, we have that $\gamma$ needs $(m -1) + 2$ pebbles on the left and right subproofs.
+After processing the left subproof, one pebble remains on the root of the left subproof, while processing the right subproof.
+Therefore, we have $n_\gamma = (m - 1) + 3 = m + 2$ for $\varphi_m$.
 
-We have $n_\delta = m + 1 = O(2^{\log_2(m)+2}) = O(2^{n_\gamma})$.
-
-\noindent\qed
+We have $n_\delta = 2^m + 1 = O(2^{m+2}) = O(2^{n_\gamma})$. \hspace*{\fill} \qed
 \end{proof}
