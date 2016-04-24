@@ -73,12 +73,13 @@ Other common measures of proofs that are not discussed in this work are for exam
 
 \begin{example}
 
-Consider the unsatisfiable propositional logic formula $\Phi$ displayed in clause notation.
+Consider the propositional logic formula $\Phi$, displayed in clause notation.
 $$\Phi := {\langle \{x_1, x_2, \neg x_3\}, \{x_1, \neg x_2\}, \{x_1, x_3\}, \{\neg x_1\} \rangle}$$
 %$$\Phi := (x_1 \vee x_2 \vee \neg x_3) \wedge (x_1 \vee \neg x_2) \wedge (x_1 \vee x_3) \wedge (\neg x_1)$$
 %In clause notation of this ${\langle \{x_1, x_2, \neg x_3\}, \{x_1, \neg x_2\}, \{x_1, x_3\}, \{\neg x_1\} \rangle}$.
 By resolving the clauses $\{x_1, x_2, \neg x_3\}$ and $\{x_1, \neg x_2\}$, we obtain the clause $\{x_1,\neg x_3\}$, which we can resolve with $\{x_1, x_3\}$ to obtain $\{x_1\}$.
-Finally, we obtain the empty clause $\bot$ by resolving $\{x_1\}$ with $\{\neg x_1\}$.
+Finally, we obtain the empty clause $\bot$ by resolving $\{x_1\}$ with $\{\neg x_1\}$,
+which proofs that $\Phi$ is unsatisfiable.
 The resulting proof is displayed in Figure \ref{fig:resolutionexample}.
 
 \begin{figure}[!h]
@@ -111,7 +112,7 @@ The \emph{apply function} $\ap: V \times \mathcal{F} \rightarrow T$ is defined r
 $$
 \ap(v,f) = 
 \begin{cases}
-	f(v,\ap(pr_1,f),\ap(pr_2,f)) &\text{if } \Premises{v}{\varphi} = \{pr_1,pr_2\} \\
+	f(v,\ap(p_1,f),\ap(p_2,f)) &\text{if } \Premises{v}{\varphi} = \{p_1,p_2\} \\
 	g_f(v) &\text{otherwise}\\
 \end{cases}
 $$
@@ -132,9 +133,9 @@ f(v,w_1,w_2) =
 								 %&\quad pr_1, pr_2 \text{ and}\\
 								 %&\quad \mathcal{L}(v) \text{ is the resolvent of}\\
 								 %&\quad \mathcal{L}(pr_1) \text{ and } \mathcal{L}(pr_2)\\
-	w_1 \wedge w_2 &\text{if } \Premises{v}{\varphi} = \{pr_1,pr_2\} \text{ and}\\
+	w_1 \wedge w_2 &\text{if } \Premises{v}{\varphi} = \{p_1,p_2\} \text{ and}\\
 								 &\quad \mathcal{L}(v) \text{ is the resolvent of} \\
-								 &\quad \mathcal{L}(pr_1) \text{ and } \mathcal{L}(pr_2)\\
+								 &\quad \mathcal{L}(p_1) \text{ and } \mathcal{L}(p_2)\\
 	\bot & \text{ otherwise}
 \end{cases}
 $$

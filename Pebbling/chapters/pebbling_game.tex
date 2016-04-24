@@ -8,9 +8,9 @@ On top of the number of rounds played to achieve the goal, an interesting charac
 The latter characteristic is the one we are interested in, because it models space requirements, when marking a node is interpreted as loading it into memory.
 In the context of pebbling games it is common to use the phrase to (un)pebble a node for (un)marking it.
 
-Pebbling games were introduced in the 1970's to model programming language expressiveness \cite{Pippenger1980,Walker1973} and compiler construction \cite{Sethi1975}. 
-More recently, pebbling games have been used to investigate various questions in parallel complexity \cite{Chan2013} and proof complexity \cite{Ben-Sasson2009,Esteban2001,Nordstroem2009}. 
-They are used to obtain bounds for space- and time-requirements and trade-offs between the two measures \cite{EmdeBoas1979,Ben-Sasson2002}.
+Pebbling games were introduced in the 1970's to model the expressive power of programming languages \cite{Pippenger1980,Walker1973} and compiler construction \cite{Sethi1975}. 
+More recently, they have been used to investigate various questions in parallel complexity \cite{Chan2013} and proof complexity \cite{Ben-Sasson2009,Esteban2001,Nordstroem2009}. 
+Pebbling games are used to obtain bounds for space- and time- requirements and trade-offs between the two measures \cite{EmdeBoas1979,Ben-Sasson2002}.
 
 There is a variety of different Pebbling Games that differ in the rules and how many types of pebbles are used.
 In the following definition we present the Pebbling Game that we use to model space requirements of proofs, which uses a single kind of pebbles.
@@ -57,7 +57,7 @@ Furthermore, we denote the set of nodes that are ready to be unpebbled in round 
 
 \end{definition}
 
-The following definition allows to measure how many pebbles are required to play the Bounded Pebbling Game on a given graph.
+The following definition allows us to measure the amount of pebbles necessary to play the Bounded Pebbling Game on a given graph.
 
 \begin{definition}[Pebbling number]
 The \emph{pebbling number of a pebbling strategy} $(\sigma_1,\ldots,\sigma_n)$ is defined as the maximum number of pebbled nodes in all rounds, 

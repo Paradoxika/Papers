@@ -9,21 +9,39 @@ proof exchange for theorem proving
 \cite{PxTP2013,PxTP2015} is routinely used to
 enable verified cooperation among a vast variety of proof-producing
 automated deduction tools \cite{APPA}, as exemplified in systems such
-as Sledgehammer \cite{ToDo:Sledgehammer} and
+as Sledgehammer \cite{paulson2010three} and
 HOLyHammer\cite{zbMATH06419295}. 
 
-%\marginpar{ToDo: throughout the paper, the QED (box) symbol is often appearing after a line break, in the left side. It should appear in the right side without a line break.}
+SAT- and SMT- Solvers are widely used as subroutines to solve problems in various domains.
+Clearly solvers are not immune to bugs \cite{brummayer2009fuzzing,brummayer2010automated} that result in wrong results.
+Luckily, there is a straight forward way to certify the output of such solvers and 
+prevent the potential dangerous propagation of an error in them.
 
+In case of the positive result "satisfiable formula", the certificate is a model of the formula.
+Checking a model for spuriousness, can be done by substituting the variables of the formula with the respective values in the model and 
+calculating the truth value of the resulting variable free formula.
+
+In case of the negative result "unsatisfiable formula", the certificate is a proof of unsatisfiability.
+Checking a proof for spuriousness, can be done by replaying the proof and validating the correct application of every proof rule.
+Typically this is a much more expensive task than checking whether a model is spurious.
+%Typically, a proof is much larger than a model and thereby checking the proof is a much more expensive task than checking the correctness of a model.
+To this end, the yearly SAT competition\footnote{\url{http://baldur.iti.kit.edu/sat-competition-2016/}} has introduced a Certified UNSAT track in 2013.
+
+%\marginpar{ToDo: throughout the paper, the QED (box) symbol is often appearing after a line break, in the left side. It should appear in the right side without a line break.}
 An example of application where certified correctness is crucial is the verification and synthesis of software \cite{Biere2009,Hofferek2013}. 
-SAT- and SMT-solvers are among the most efficient tools for this task, but the proofs they generate can be huge. 
-Checking their correctness or extracting information (e.g. unsatisfiable cores, interpolants) from them can not only take a long time but also consume a lot of memory. 
+%SAT- and SMT-solvers are among the most efficient tools for this task, but the proofs they generate can be huge. 
+%Checking their correctness or extracting information (e.g. unsatisfiable cores, interpolants) from them can not only take a long time but also consume a lot of memory. 
 In an ongoing project for interpolant-based controller synthesis \cite{Hofferek2013}, 
 for example, extracting an interpolant from an SMT-proof took hours and reached the limit of memory (256GB) available in a single node of the computer cluster used in the project. 
-This issue is relevant in any application scenario in which proof consumers, who are interested in independently processing proofs, might have less available memory than the proof producer.
+
+The example shows one big issue with proofs, that they tend to become huge.
+So huge, that they easily fill up all available memory and are thereby impossible to process.
+%This issue is relevant in any application scenario in which proof consumers, who are interested in independently processing proofs, might have less available memory than the proof producer.
 
 Typically, proof formats do not allow proof producers to inform the proof consumer when proof nodes (containing clauses) could be released from memory. Consequently, every proof node loaded into memory has to be kept there until the whole proof is completely processed, because the proof consumer does not know whether the proof node will still be needed. To address this issue, recently proposed formats for SAT-proofs such as DRAT and BDRUP enrich the older RUP format with node deletion instructions \cite{raey}. Other proof formats, such as the TraceCheck format \cite{BiereHeuleAPPA} or formats for SMT-proofs \cite{BarrettFontaineMouraAPPA}, could also be enriched analogously. When generating a proof file eagerly (i.e. writing learned clauses immediately to the proof file) a SAT- or SMT-solver can add a deletion instruction for every clause that is deleted by the periodic clean-up of its database of derived learned clauses.
 
-This paper explores the possibility of post-processing a proof in order to increase the amount of deletion instructions in the proof file. The more deletion instructions, the less memory the proof consumer will need. 
+This paper explores the possibility of post processing a proof in order to increase the amount of deletion instructions in the proof file. 
+The more deletion instructions, the less memory the proof consumer will need.
 
 %Therefore, this \emph{deletion-during-proof-postprocessing} approach ought to be seen not as a replacement but rather as an independent complement to the \emph{deletion-during-proof-search} already performed by state-of-the-art proof-generating SAT-solvers.
 
