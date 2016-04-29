@@ -11,7 +11,7 @@ These proofs are in a proof format that resembles SMT-LIB's problem format and t
 %%%%%%%%%%%%%%% Benchmarks table &&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{table}[tb]
+\begin{table}[h]
 	\centering
 	\setlength{\tabcolsep}{8pt}
 	\caption{Proof Benchmark Sets, where length is measured in number of nodes}
@@ -22,10 +22,10 @@ These proofs are in a proof format that resembles SMT-LIB's problem format and t
 		\textbf{Name} & \textbf{\#Proofs} & \textbf{Max} & \textbf{Avg} \\ 
 		              &    & \textbf{length}  & \textbf{length} \\
 		\midrule
-		TraceCheck$_1$ & 2239 & 90756   & 5423   \\
-		TraceCheck$_2$ & 215	& 1768249 & 268863 \\
-    SMT$_1$ & 4187 & 2241042 & 103162 \\
-    SMT$_2$ & 914  & 120075  & 5391  \\ 
+		TraceCheck$_1$ & 2,239 & 90,756   & 5,423   \\
+		TraceCheck$_2$ & 215	& 176,8249 & 268,863 \\
+    SMT$_1$ & 4,187 & 224,1042 & 103,162 \\
+    SMT$_2$ & 914  & 12,0075  & 5,391  \\ 
 		\bottomrule   
 	\end{tabular}
 
@@ -34,7 +34,7 @@ These proofs are in a proof format that resembles SMT-LIB's problem format and t
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%% Results table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{table}[tb]
+\begin{table}[h]
 \centering
 %\setlength{\tabcolsep}{8pt}
 \caption{Experimental Results, where \textbf{RP} denotes the relative performance according to Formula \ref{eq:space}}
@@ -113,8 +113,8 @@ Both columns show the best and worst result in boldface.
 Table \ref{tab:results} shows that the Bottom-Up algorithm constructs topological orders with much smaller space measures than the Top-Down algorithm. 
 This fact is visualized in Figure \ref{fig:BUvsTD}, where each point represents a proof $\varphi$.
 The $x$ and $y$ coordinates are the smallest space measure among all heuristics obtained for $\varphi$ using, respectively, the Top-Down and Bottom-Up algorithm.
-The results for Top-Down range far beyond 15000, but to display the discrepancy between the two algorithms the plot scales from 0 to 15000 on both axis.
-The largest best space measure for Top-Down is 131 451, whereas this number is 11 520 for the Bottom-Up algorithm.
+The results for Top-Down range far beyond 15,000, but to display the discrepancy between the two algorithms the plot scales from 0 to 15,000 on both axis.
+The largest best space measure for Top-Down is 131,451, whereas this number is 11,520 for the Bottom-Up algorithm.
 The LastChild heuristic produces the best results and the Children heuristic also performs well.
 The Distance heuristic produces the worst results, which could be due to the fact that the radius is too small for large proofs with thousands of  nodes.
 

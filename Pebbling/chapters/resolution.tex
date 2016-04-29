@@ -128,17 +128,18 @@ Checking the correctness of some proof (i.e. checking for the absence of faulty 
 $$
 f(v,w_1,w_2) = 
 \begin{cases}
-	\top & \text{if} v \text{has no premises} \\
+	\top & \text{if } v \text{ has no premises} \\
 	%w_1 \wedge w_2 &\text{if } v \text{ has premises }\\
 								 %&\quad pr_1, pr_2 \text{ and}\\
 								 %&\quad \mathcal{L}(v) \text{ is the resolvent of}\\
 								 %&\quad \mathcal{L}(pr_1) \text{ and } \mathcal{L}(pr_2)\\
 	w_1 \wedge w_2 &\text{if } \Premises{v}{\varphi} = \{p_1,p_2\} \text{ and}\\
-								 &\quad \mathcal{L}(v) \text{ is the resolvent of} \\
+								 &\quad \mathcal{L}(v) \text{ is a resolvent of} \\
 								 &\quad \mathcal{L}(p_1) \text{ and } \mathcal{L}(p_2)\\
 	\bot & \text{ otherwise}
 \end{cases}
 $$
+
 Processing a proof with processing function $f$ yields $\top$ if and only if the proof is a correct resolution proof.
 \end{example}
 
