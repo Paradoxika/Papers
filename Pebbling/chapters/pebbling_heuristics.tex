@@ -1,7 +1,8 @@
 \section{Heuristics}
 \label{sec:heuristics}
 
-Heuristics are used in both pebbling algorithms to choose one node out of a set $N$. 
+The presented algorithms are parametrized by a heuristic, selecting one node $\n$ out of a set of nodes $N$.
+%Heuristics are used in both pebbling algorithms to choose one node out of a set $N$. 
 For Top-Down Pebbling, $N$ is the set of pebbleable nodes, and for Bottom-Up Pebbling, $N$ is the set of unprocessed premises of a node. 
 
 \begin{definition}[Heuristic]
@@ -87,15 +88,15 @@ The heuristic uses the following functions based on the spheres:
 where $\prec$ denotes the order of previously pebbled nodes.
 So $S_h = \mathbb{Z} \cup \{\infty\} \times \mathbb{N} \times P$ together with the lexicographic order using, respectively, the natural smaller relation $<$ on $\mathbb{N}$ and $\mathbb{Z}$, where $\infty$ is an element that is bigger than all others, and $\prec$ on $N$. The spheres $K_r(v)$ can grow exponentially in $r$. Therefore the maximum radius has to be kept small.
 
-\subsection{Decay Heuristics (``$Dc(h_u,\gamma,d,com)$'') }
+\subsection{Decay Heuristics (``$Dc(h_u,\gamma,d,c)$'') }
 \label{sec:decay}
 Decay heuristics denote a family of meta heuristics. 
 The idea is to not only use the evaluation of a single node, but also to include the evaluations of its premises.
-Such a heuristic has four parameters: an underlying heuristic $h_u$ defined by an evaluation function $e_u$ together with a well ordered set $S_u$, a decay factor $\gamma \in \mathbb{R}^+ \cup \{0\}$, a recursion depth $d \in \mathbb{N}$ and a combining function $com: S_u^n \rightarrow S_u$ for $n \in \mathbb{N}$.
+Such a heuristic has four parameters: an underlying heuristic $h_u$ defined by an evaluation function $e_u$ together with a well ordered set $S_u$, a decay factor $\gamma \in \mathbb{R}^+ \cup \{0\}$, a recursion depth $d \in \mathbb{N}$ and a combining function $c: S_u^n \rightarrow S_u$ for $n \in \mathbb{N}$.
 The resulting heuristic node evaluation function $e_h$ is defined recursively, using function $r$:
 \begin{align*}
 	r(v,0) &\defeq e_u(v) \\
-	r(v,k) &\defeq e_u(v) + com(r(p_1,k-1), \ldots,r(p_n,k-1)) * \gamma\\
+	r(v,k) &\defeq e_u(v) + c(r(p_1,k-1), \ldots,r(p_n,k-1)) * \gamma\\
 	& \text{ where } \Premises{v}{\varphi} = \{p_1,\ldots,p_n\}\\
 	% & \text{ and } k \in \{1,\ldots,d\} \\
 	%rec(\n,k) &\defeq com(h_u(\n), rec(p_1,k-1)*\gamma,\ldots,rec(p_{n-1},k-1) * \gamma)\\ %might be better - I will try this in the experiments

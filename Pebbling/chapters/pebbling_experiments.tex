@@ -11,7 +11,7 @@ These proofs are in a proof format that resembles SMT-LIB's problem format and t
 %%%%%%%%%%%%%%% Benchmarks table &&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{table}[tb]
+\begin{table}[h]
 	\centering
 	\setlength{\tabcolsep}{8pt}
 	\caption{Proof Benchmark Sets, where length is measured in number of nodes}
@@ -22,10 +22,10 @@ These proofs are in a proof format that resembles SMT-LIB's problem format and t
 		\textbf{Name} & \textbf{\#Proofs} & \textbf{Max} & \textbf{Avg} \\ 
 		              &    & \textbf{length}  & \textbf{length} \\
 		\midrule
-		TraceCheck$_1$ & 2239 & 90756   & 5423   \\
-		TraceCheck$_2$ & 215	& 1768249 & 268863 \\
-    SMT$_1$ & 4187 & 2241042 & 103162 \\
-    SMT$_2$ & 914  & 120075  & 5391  \\ 
+		TraceCheck$_1$ & 2,239 & 90,756   & 5,423   \\
+		TraceCheck$_2$ & 215	& 176,8249 & 268,863 \\
+    SMT$_1$ & 4,187 & 224,1042 & 103,162 \\
+    SMT$_2$ & 914  & 12,0075  & 5,391  \\ 
 		\bottomrule   
 	\end{tabular}
 
@@ -34,7 +34,7 @@ These proofs are in a proof format that resembles SMT-LIB's problem format and t
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%% Results table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{table}[tb]
+\begin{table}[h]
 \centering
 %\setlength{\tabcolsep}{8pt}
 \caption{Experimental Results, where \textbf{RP} denotes the relative performance according to Formula \ref{eq:space}}
@@ -76,7 +76,7 @@ Distance(3) & \textbf{-74.33} & \textbf{0.1}\\
 \begin{tabular}{c c c c c}
 \toprule
 \textbf{Decay} & \textbf{Depth} &  \textbf{Combin.} & \textbf{PI} & \textbf{Speed}\\ 
-$\gamma$ &$d$ &  $com$ &  (\%) & (nodes/ms)\\ 
+$\gamma$ &$d$ &  $c$ &  (\%) & (nodes/ms)\\ 
 \midrule
 0.5&1& mean & 0.50 & 47.7\\ 
 0.5& 1& maximum & 0.40 & 47.0 \\
@@ -113,16 +113,16 @@ Both columns show the best and worst result in boldface.
 Table \ref{tab:results} shows that the Bottom-Up algorithm constructs topological orders with much smaller space measures than the Top-Down algorithm. 
 This fact is visualized in Figure \ref{fig:BUvsTD}, where each point represents a proof $\varphi$.
 The $x$ and $y$ coordinates are the smallest space measure among all heuristics obtained for $\varphi$ using, respectively, the Top-Down and Bottom-Up algorithm.
-The results for Top-Down range far beyond 15000, but to display the discrepancy between the two algorithms the plot scales from 0 to 15000 on both axis.
-The largest best space measure for Top-Down is 131 451, whereas this number is 11 520 for the Bottom-Up algorithm.
+The results for Top-Down range far beyond 15,000, but to display the discrepancy between the two algorithms the plot scales from 0 to 15,000 on both axis.
+The largest best space measure for Top-Down is 131,451, whereas this number is 11,520 for the Bottom-Up algorithm.
 The LastChild heuristic produces the best results and the Children heuristic also performs well.
 The Distance heuristic produces the worst results, which could be due to the fact that the radius is too small for large proofs with thousands of  nodes.
 
 Table \ref{tab:decay} summarizes results of the Decay Heuristic with the best results highlighted in boldface.
-Decay Heuristics were tested with the Bottom-Up algorithm, using LastChild as underlying heuristic.
+Decay heuristics were tested with the Bottom-Up algorithm, using LastChild as underlying heuristic.
 For the parameters decay factor, recursion depth and combining function two values and all their combinations have been tested.
 The performance improvement is calculated using Formula \ref{eq:space} with $G$ being the singleton set of the Bottom-Up algorithm with the LastChild heuristic.
-The results show, that Decay Heuristics can improve the result, but not by a landslide.
+The results show that Decay heuristics can improve the result, but not by a landslide.
 The improvement comes at the cost of slower speed, especially when the recursion depth is high.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -142,7 +142,7 @@ For Bottom-Up the set $N$ of possible choices consists of the premises of a sing
 For Top-Down the set $N$ is the set of currently pebbleable nodes, which can be large (e.g. for a perfect binary tree with $2n -1$ nodes, initially $|N| = n$). 
 Possibly for some heuristics, Top-Down algorithms could be made more efficient by using, instead of a set, an ordered sequence of pebbleable nodes together with their memorized heuristic evaluations.
 
-Unsurprisingly the radius used for the Distance Heuristic has a severe impact on the speed, which decreases rapidly as the maximum radius increases. 
+The radius used for the Distance heuristic has a severe impact on the speed, which decreases rapidly as the maximum radius increases. 
 With radius 5, only a few small proofs were processed in a reasonable amount of time.
 
 On average the smallest space measure of a proof is 44.1 times smaller than its length. 

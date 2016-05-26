@@ -189,7 +189,7 @@ Also previously visited nodes are not visited again.
   %\label{algo:BUpebbling}
 %\end{algorithm}
 
-\begin{algorithm}[h]
+\begin{algorithm}[b]
   \KwIn{proof $\varphi$}
 	\KwIn{node $v$}
 	\KwIn{set of visited nodes $D$} 
@@ -215,7 +215,7 @@ Also previously visited nodes are not visited again.
 
 %\newcommand{\nodedistance2}{0.6cm}
 \begin{example}
-Figure \ref{fig:BUP} shows part of an execution of Bottom-Up Pebbling on the same proof as presented in Figure \ref{fig:TDP}.
+Figure \ref{fig:BUP} shows part of an execution of the Bottom-Up Pebbling algorithm on the same proof as presented in Figure \ref{fig:TDP}.
 Nodes chosen by the heuristic, to be processed before the respective other premise, are marked dashed. 
 Suppose that similarly to the Top-Down Pebbling scenario, nodes have been chosen in such a way that the initial pebbling sequence is $(1,2,3)$.
 However, the choice of where to go next is predefined by the dashed nodes. 
@@ -362,9 +362,16 @@ At no point more than five pebbles will be used for pebbling the root node, whic
 \label{example:BUP}
 \end{example}
 
+Note that Bottom-Up pebbling creates a memory overhead for storing the premise decisions in nodes until all alternatives are expanded.
+The number of decisions to be stored is limited by the depth of the proof.
+Furthermore, it is not necessary to store all information contained in a proof node.
+The algorithm only needs to remember which premises were already processed.
+The aim of our work is the post processing of proofs and construction of proof node orders.
+We are interested in the memory consumption when using such an order for proof processing.
+The memory requirements of producing it is not our main focus.
+Therefore, we ignore the memory overhead in the further discussion.
 
-
-\subsection{Remarks about Top-Down and Bottom-Up Pebbling} %or: Which way to go?
+\subsection{Remarks on Top-Down and Bottom-Up Pebbling} %or: Which way to go?
 \label{sec:TDvsBU}
 
 The experiments presented in Section \ref{sec:experiments} show that in practice, Bottom-Up Pebbling performs much better than Top-Down.
@@ -377,7 +384,7 @@ Bottom-Up Pebbling makes local choices by design, because premises are queued up
 Top-Down Pebbling does not have knowledge about the recursive structure of child nodes, therefore it is hard to make local choices.
 The algorithm simply does not know which pebbleable nodes are close to other pebbled ones.
 
-Secondly, pebbling strategies should pebble subproofs with a high pebbling number early.
+Secondly, pebbling strategies should process subproofs with a high pebbling number early.
 Pebbling such subproofs late will result in other pebbles staying on nodes for a high number of rounds.
 This likely results in increasing the overall pebbling number, as this adds extra pebbles to the already high pebbling number of the subproof.
 The principle is more subtle than the first one, because pebbling one subproof can influence the number of pebbles used for another subproof in situations where nodes are shared between subproofs.

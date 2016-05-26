@@ -1,7 +1,7 @@
 \section{Pebbling as a Satisfiability Problem}
 \label{sec:pebblingSAT}
 
-Pebbling is a graph problem and many graph problems can be encoded as SAT problems and, at least in principle, solved by running a SAT solver \cite{ToDo: Handbook of Satisifiability?}. \marginpar{add citation here.} 
+Pebbling is a graph problem and many graph problems can be encoded as SAT problems and, at least in principle, solved by running a SAT solver \cite{Biere2009}.
 Not surprisingly, there exists a SAT encoding for the problem of deciding whether a proof can be pebbled using no more than $k$ pebbles, and the pebble number of a proof could in principle be found by trying increasingly larger values of $k$. In this section, we present the SAT encoding and briefly discuss its complexity, in order to argue that finding the pebble number through SAT encodings is not a practical solution.
 
 
@@ -46,7 +46,7 @@ The sets $\Axioms{\varphi}$ and $\Premises{j}{\varphi}$ are to be understood as 
 
 \noindent
 This encoding is polynomial, both in $n$ and $k$. However constraint \ref{c:pebble} accounts to $O(n^3*k^2)$ clauses. 
-Even small resolution proofs have more than $1000$ nodes and pebble numbers larger than $100$, which adds up to $10^{13}$ clauses for constraint \ref{c:pebble} alone. 
+Even small resolution proofs have more than $1,000$ nodes and pebble numbers larger than $100$, which adds up to $10^{13}$ clauses for constraint \ref{c:pebble} alone. 
 Therefore, although theoretically possible to play the pebbling game via SAT-solving, this is practically infeasible for compressing proof space.
 The following theorem states the correctness of the encoding.
 
