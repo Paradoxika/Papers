@@ -1,0 +1,60 @@
+
+\centering
+\begin{tikzpicture}[node distance=1.5cm]
+
+\node(c1){$\hat{c}_1$};
+
+\node[right =.5cm of c1] (t1x1) {$t_1(\hat{x}_1)$};
+
+\draw [-] (c1) to (t1x1);
+
+\node[right =.5cm of t1x1] (t11) {$t_1(\top_1)$};
+
+\draw [dashed] (t1x1) to (t11);
+
+\node[right =.5cm of t11](c2){$\hat{c}_2$};
+
+\draw [-] (c2) to (t11);
+
+\node[right =.5cm of c2]  (f2x2) {$f_2(\hat{x}_2)$};
+
+\draw [-] (c2) to (f2x2);
+
+\node[right =.5cm of f2x2] (f22) {$f_2(\bot_2)$};
+
+\draw [dashed] (f2x2) to (f22);
+
+\node[right = .5cm of f22](c3){$\hat{c}_3$};
+
+\draw [-] (c3) to (f22);
+
+\node[right =.5cm of c3] (f3x2) {$f_3(\hat{x}_2)$};
+
+\draw [-] (c3) to (f3x2);
+
+\node[right =.5cm of f3x2] (f32) {$f_3(\bot_2)$};
+
+\draw [dashed] (f3x2) to (f32);
+
+\node[right =.5cm of f32](c4){$\hat{c}_4$};
+
+\draw [-] (c4) to (f32);
+
+\node [below =.5cm of f2x2] (x1) {$\hat{x}_1$};
+\node [below =.5cm of x1] (x2) {$\hat{x}_2$};
+\node [below =.5cm of x2] (x3) {$\hat{x}_3$};
+
+\node [right = of x1] (t1) {$\top_1$};
+
+\draw [-] (x1) to (t1);
+
+\node [left = of x2] (f2) {$\bot_2$};
+
+\draw [-] (x2) to (f2);
+
+\node [right = of x3] (t3) {$\top_3$};
+
+\draw [-] (x3) to (t3);
+
+\end{tikzpicture}
+
