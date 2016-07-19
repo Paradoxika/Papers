@@ -233,7 +233,7 @@ $\eta_1$'s literal $q(f(a, V), U)$, which would be resolved with $\eta_8$'s lite
 \end{block}
 
 \begin{block}{Regularization Unifiability}
-Let $\eta$ be a node with safe literals $\phi$ that is marked for regularization with parents $\eta_1$ and $\eta_2$, where 
+Let $\eta$ be a node with safe literals $\mathcal{S}(\eta)=\phi$ that is marked for regularization with parents $\eta_1$ and $\eta_2$, where 
 %without loss generality 
 $\eta_2$ is marked as a \texttt{deletedNode}
 in a proof $\psi$. $\eta$ is said to satisfy the \emph{regularization unifiability property} in $\psi$ if there exists a substitution $\sigma$ such that $\eta_1\sigma \subseteq \phi$.
@@ -280,7 +280,7 @@ in a proof $\psi$. $\eta$ is said to satisfy the \emph{regularization unifiabili
     \begin{itemize}
     \item Larger evaluation - more proofs, bigger proofs
     \item Identify properties that would enable all irregular first-order proofs to be compressed
-    \item Is it possible to lift other propositional proof compression techniques to firs-order logic?
+    \item Is it possible to lift other propositional proof compression techniques to first-order logic?
     \end{itemize}
     	\end{block}
     
