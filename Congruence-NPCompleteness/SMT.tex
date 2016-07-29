@@ -1,38 +1,45 @@
-\documentclass{easychair}
+\documentclass[smallextended]{svjour3}
 
 %\title{A note on conflict set generation\\ for congruence closure\\\small Extended abstract}
 %\titlerunning{A note on congruence closure}
-\title{NP-completeness of small conflict set generation for congruence closure}
+\title{NP-completeness of small conflict set generation for congruence closure\thanks{This work has been partially supported by the project ANR-13-IS02-0001 of the Agence Nationale de la Recherche, by the European Union Seventh Framework Programme under grant agreement no. 295261 (MEALS), by an ÖAW APART Stipendium, by the STIC AmSud MISMT, by FWF S11407-N23 (RiSE/SHiNE), and by ERC Start Grant (279307: Graph Games).}}
 \titlerunning{Conflict generation for congruence closure}
 
 
-\author{Andreas Fellner\inst{1,2}
-   \and Pascal Fontaine\inst{3}
+\author{Andreas Fellner%\inst{1,2}
+   \and Pascal Fontaine%\inst{3}
    %\and\\ Georg Hofferek\inst{4}
-   \and Bruno Woltzenlogel Paleo\inst{2,5}\thanks{This work has been partially supported by the project ANR-13-IS02-0001 of the Agence Nationale de la Recherche, by the European Union Seventh Framework Programme under grant agreement no. 295261 (MEALS), by an ÖAW APART Stipendium, by the STIC AmSud MISMT, by FWF S11407-N23 (RiSE/SHiNE), and by ERC Start Grant (279307: Graph Games).}
+   \and Bruno Woltzenlogel Paleo%\inst{2,5}
 }
-\institute{Austrian Institute of Technology (Austria)
-\and Vienna University of Technology (Austria)
-\and Inria, Loria, U. of Lorraine (France)
+\institute{
+A. Fellner \at
+  Austrian Institute of Technology and
+  Vienna University of Technology (Austria)
+\and
+P. Fontaine \at
+  Inria, Loria, U. of Lorraine (France)
+\and
+B. Woltzenlogel Paleo \at
 %\and IAIK, Graz University of Technology (Austria)
-\and Australian National University (Australia)
+  Australian National University (Australia)
 }
 
 \authorrunning{Fellner et al.}
 
 \usepackage{amssymb}
+\usepackage{amsmath}
 \usepackage{graphicx}            			% Figures
 \usepackage{tikz}					% tikz graphics
 \usetikzlibrary{arrows,automata,positioning}
 \usetikzlibrary{fit}
 %\usepackage{hyperref}
 
-\newtheorem{example}{Example}
-\newtheorem{definition}{Definition}
-\newtheorem{corollary}{Corollary}
-\newtheorem{theorem}{Theorem}
-\newtheorem{lemma}{Lemma}
-\newtheorem{proposition}[theorem]{Proposition}
+%\newtheorem{example}{Example}
+%\newtheorem{definition}{Definition}
+%\newtheorem{corollary}{Corollary}
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{lemma}{Lemma}
+%\newtheorem{proposition}[theorem]{Proposition}
 
 \begin{document}
 
@@ -40,6 +47,7 @@
 
 \begin{abstract}
 The efficiency of Satisfiability Modulo Theories (SMT) solvers is dependent on the capability of theory reasoners to provide small conflict sets, i.e.\ small unsatisfiable subsets from unsatisfiable sets of literals.  Decision procedures for uninterpreted symbols (i.e.\ congruence closure algorithms) date back from the very early days of SMT.  Nevertheless, to our best knowledge, the complexity of the smallest conflict set generation for sets of literals with uninterpreted symbols and equalities had not yet been determined, although it is believed to be NP-complete.  We provide here an NP-hardness proof, using a simple reduction from SAT.
+\keywords{Satisfiability Modulo Théories \and Decision procedures \and Congruence closure \and Complexity}
 \end{abstract}
 
 
@@ -170,11 +178,11 @@ A tuple $\Sigma = \langle \mathcal{F}, arity \rangle$ is a \emph{signature}.
 A function symbol with arity zero is a \emph{constant}, one with arity one is a \emph{unary} function symbol and one with arity two is \emph{binary}.
 For a given signature $\Sigma$, the set of \emph{terms} $\mathcal{T}^{\Sigma}$ is defined inductively.
 
-\begin{align*}
+\begin{align}
 	\mathcal{T}^{\Sigma}_0 &= \{a \in \mathcal{F} \mid arity(a) = 0\}\\
 	\mathcal{T}^{\Sigma}_{i+1} &= \{g(t_1,\ldots,t_n) \mid arity(g) = n \text{ and } t_1, \ldots, t_n \in \mathcal{T}_{i}\} \\
 	\mathcal{T}^{\Sigma} &= \bigcup_{i\in \mathbb{N}} \mathcal{T}^{\Sigma}_{i}
-\end{align*}
+\end{align}
 
 \noindent Let $g(t_1,\ldots,t_n) \in \mathcal{T}^{\Sigma}$, then $t_1,\ldots,t_n$ are \emph{direct subterms} of $g(t_1,\ldots,t_n)$.
 The \emph{subterm} relation is the reflexive, transitive closure of the direct subterm relation.
@@ -555,8 +563,11 @@ and find the smallest conflict in one run.
 \vspace*{5pt}\noindent
 {\bf Acknowledgment.} We would like to thank Roberto Nieuwenhuis and Ashish
 Tiwari for discussions and some preliminary ideas that led us to this proof.
+We are grateful to the anonymous reviewers of~\cite{Fellner1} for their comments.
 
+% Sorry but the spbasic style is not looking great
 \bibliographystyle{plain}
+%\bibliographystyle{spbasic}
 \bibliography{biblio}
 
 \end{document}
