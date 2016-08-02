@@ -106,29 +106,29 @@ Our interest in this problem arose from our work on Skeptik \cite{Boudou1}, a to
 
 \section*{Preliminaries}
 
-We assume knowledge of propositional logic and quantifier-free first order logic
-with equality and uninterpreted symbols.  We only enumerate the notions and
+We assume knowledge of propositional logic and quantifier-free first-order logic
+with equality and uninterpreted symbols, and only enumerate the notions and
 notations used in this paper.
 %TODO Propositional logic studies formulas written  $\vee$, $\wedge$, $\neg$
 A literal is either a propositional variable or the negation of a propositional
 variable.  A clause is a disjunctive set of literals.  A propositional variable
 $x$ appears positively (negatively) in a clause $C$ if $x \in C$ (resp.\ $\neg x
 \in C$).  The notations $\{\ell_1, \dots \ell_n\}$ and $\ell_1 \vee \dots \vee
-\ell_n$ will be used interchangeably.  A clause is tautological if it contains a variable both positively and negatively; it is non-tautological otherwise.  We will mainly work with non-tautological clauses, except explicitly stated.  Clauses being sets, they can not contain multiple occurrences of the same literal.  
-A formula in conjunctive normal form (CNF
-for short) is a conjunctive set of clauses.  A total (partial) assignment $\cal
-I$ for a formula in propositional logic associates a value in $\{\top, \bot\}$
-to each (resp.\ some) propositional variable(s) in the formula.  An assignment
-$\cal I$ for a formula $F$ is a model of $F$, denoted ${\cal I}\models F$, if it makes
-the formula $F$ true.  A formula is satisfiable if it has a model, it is
-unsatisfiable otherwise.  A total or partial assignment can be perfectly
-defined by the set of literals it makes true.  By default, an assignment is
-total unless explicitly said to be partial.
+\ell_n$ will be used interchangeably.  A clause is tautological if it contains a
+variable both positively and negatively; it is non-tautological otherwise.  We
+will mainly work with non-tautological clauses, except explicitly stated.
+Clauses being sets, they can not contain multiple occurrences of the same
+literal.  A formula in conjunctive normal form (CNF for short) is a conjunctive
+set of clauses.  A total (partial) assignment $\cal I$ for a formula in
+propositional logic assigns a value in $\{\top, \bot\}$ to each (resp.\ some)
+propositional variable(s) in the formula.  An assignment $\cal I$ for a formula
+$F$ is a model of $F$, denoted ${\cal I}\models F$, if it makes the formula $F$
+true.  A formula is satisfiable if it has a model, it is unsatisfiable
+otherwise.  A total or partial assignment is perfectly defined by the set of
+literals it makes true.  By default, an assignment is total unless explicitly
+said to be partial.  A set of formulas $E$ entails a (set of) formula(s) $E'$,
+denoted $E\models E'$, if every model of $E$ is a model of $E'$.
 
-We use the usual notions of (un)satisfiability and model also for
-quantifier-free first-order logic.  
-A set of formulas $E$ entails a (set of) formula(s) $E'$, denoted $E\models E'$, if every
-model of $E$ is a model of $E'$.
 
 %\vspace*{5pt}
 %\noindent \textbf{Congruence closure and congruence graph}
@@ -167,28 +167,25 @@ model of $E$ is a model of $E'$.
 %To this end we define terms and equations, which are notions that will be used throughout this chapter.
 %We close this section by proving some elementary properties of congruence relations.
 
-The notion of assignments, models and the $\models$ relation is extended to quantifier free first order logic via the notion of congruence closure, 
+We use the usual notions of assignments, model, (un)satisfiability also for
+quantifier-free first-order logic.  
+
+
+The notion of assignments, models and the $\models$ relation is extended to quantifier-free first-order logic via the notion of congruence closure, 
 which is defined below.
 In order to define congruence closure, we first need to define what literals in this logic are.
 
-\begin{definition}[Terms and Subterms]
-
-Let $\mathcal{F}$ be a finite set of function symbols and $arity: \mathcal{F} \rightarrow \mathbb{N}$.
-A tuple $\Sigma = \langle \mathcal{F}, arity \rangle$ is a \emph{signature}.
-A function symbol with arity zero is a \emph{constant}, one with arity one is a \emph{unary} function symbol and one with arity two is \emph{binary}.
-For a given signature $\Sigma$, the set of \emph{terms} $\mathcal{T}^{\Sigma}$ is defined inductively.
-
-\begin{align}
-	\mathcal{T}^{\Sigma}_0 &= \{a \in \mathcal{F} \mid arity(a) = 0\}\\
-	\mathcal{T}^{\Sigma}_{i+1} &= \{g(t_1,\ldots,t_n) \mid arity(g) = n \text{ and } t_1, \ldots, t_n \in \mathcal{T}_{i}\} \\
-	\mathcal{T}^{\Sigma} &= \bigcup_{i\in \mathbb{N}} \mathcal{T}^{\Sigma}_{i}
-\end{align}
-
-\noindent Let $g(t_1,\ldots,t_n) \in \mathcal{T}^{\Sigma}$, then $t_1,\ldots,t_n$ are \emph{direct subterms} of $g(t_1,\ldots,t_n)$.
-The \emph{subterm} relation is the reflexive, transitive closure of the direct subterm relation.
-A term of the form $g(t_1,\ldots,t_n)$ is a \emph{compound term}.
-
+\begin{definition}[Terms and subterms]
+A \emph{signature} $\Sigma$ is a finite set of function symbols $\mathcal{F}$
+equipped with an \emph{arity} function $\mathcal{F} \rightarrow \mathbb{N}$.  A
+\emph{constant} is a function with null arity.  A \emph{unary} function has
+arity one.  Given a signature $\Sigma$, the set of \emph{terms}
+$\mathcal{T}^{\Sigma}$ is the smallest set containing all constants in
+$\mathcal{F}$ and all terms of the form $g(t_1,\ldots, t_n)$, where $g$ is a
+function symbol of arity $n$ in $\mathcal{F}$ and $t_1,\ldots,t_n$ are terms in $\mathcal{T}^{\Sigma}$.
 \end{definition}
+
+The terms $t_1,\ldots,t_n$ are \emph{direct subterms} of $g(t_1,\ldots,t_n)$.  The \emph{subterm} relation is the reflexive and transitive closure of the direct subterm relation.
 
 %Our definition of terms corresponds to what is usually called ground term in the context of first order logic.
 %Ground terms are terms that contain no first order logic variables.
@@ -196,49 +193,39 @@ A term of the form $g(t_1,\ldots,t_n)$ is a \emph{compound term}.
 %
 %\noindent Should $\Sigma$ be clear from context or of no relevance, we will omit it and write $\mathcal{T}$ instead of $\mathcal{T}^{\Sigma}$.
 %
-Let $\mathcal{T}$ be a set of terms.
-An \emph{equation} of termset $\mathcal{T}$ is a tuple of terms $(s,t) \in \mathcal{T} \times \mathcal{T}$, which we write as $s=t$.
-For a set of equations $E$ we denote by $\mathcal{T}_E$ the set of terms used in $E$.
-$$\mathcal{T}_E := \{t \mid t \text{ is subterm of some } u \text{, such that for some } v: (u,v) \in E \text{ or } (v,u) \in E\}$$
-A quantifier free first order logic literal is a propositional variable, an equation or the negation of any of the first two.
+An \emph{equation} $s = t$ on terms in a set $\mathcal{T}$ can also be see as a singleton relation $(s,t) \in \mathcal{T} \times \mathcal{T}$.  By extension, a set of equation can also be seen as a relation, that is, the union of the singleton relations.  A quantifier-free first-order logic literal is a propositional variable, an equation or the negation of any of the first two.
 
-\begin{definition}[Congruence Relation]
-
-Let $\mathcal{T}$ be a set of terms.
-A relation $R \subseteq \mathcal{T} \times \mathcal{T}$ is a congruence relation, if has the following four properties:
+\begin{definition}[Congruence relation]  Given a set of terms $\mathcal{T}$ closed under the subterm relation, a relation $R \subseteq \mathcal{T} \times \mathcal{T}$ is a congruence if it is
 \begin{itemize}
-	\item reflexivity: for all $t \in \mathcal{T}: (t,t) \in R$
-	\item symmetry: $(s,t) \in R$ then $(t,s) \in R$
-	\item transitivity: $(r,s) \in R$ and $(s,t) \in R$ then $(r,t) \in R$
-	\item compatibility: $g$ is a n-ary function symbol and for all $i = 1,\ldots,n$ $(t_i,s_i) \in R$ then $(g(t_1,\ldots,t_n),g(s_1,\ldots,s_n)) \in R$
+	\item reflexive: $(t,t) \in R$ for each $t \in \mathcal{T}$
+	\item symmetric: $(s,t) \in R$ if $(t,s) \in R$
+	\item transitive:  $(r,t) \in R$ if $(r,s) \in R$ and $(s,t) \in R$
+	\item compatible: $(g(t_1,\ldots,t_n),g(s_1,\ldots,s_n)) \in R$ if $(t_i,s_i) \in R$  for all $i = 1,\ldots,n$ (and $g$ is a n-ary function symbol)
 \end{itemize}
 
 \end{definition}
-
-Clearly every congruence relation is also an equivalence relation (which is a reflexive, transitive and symmetric relation).
-Therefore every congruence relation partitions its underlying set of terms $\mathcal{T}$ into congruence classes, such that two terms $(s,t)$ belong to the same class if and only if $(s,t) \in R$.
-The relations $\emptyset$ and $\mathcal{T} \times \mathcal{T}$ are trivial congruence relations.
+\noindent A congruence relation is also an equivalence relation, since it is
+reflexive, transitive and symmetric.  Therefore a congruence relation partitions
+its underlying set of terms $\mathcal{T}$ into congruence classes, such that two
+terms $(s,t)$ belong to the same class if and only if $(s,t) \in R$.  The
+relations $\emptyset$ and $\mathcal{T} \times \mathcal{T}$ are trivial
+congruence relations.
 
 %In this work we are interested in congruence relations induced by sets of equations.
 %In other words, we compute the partitioning of the terms such that two terms in the same partition are proven to be equal by the input set of equations.
 %To this end we define the notion of congruence closure of a set of equations.
 
-\begin{definition}[Congruence Closure]
-
-Let $E$ be a set of equations.
-The set $E^* \supseteq E$ is the \emph{congruence closure} of $E$, 
-if $E^*$ is a congruence relation on $\mathcal{T}_E$ and for every congruence relation $C$, such that $C \supseteq E$ follows $C \supseteq E^*$.
-We write $E \models s = t$ if $(s,t) \in E^*$ and say that $E$ is an \emph{explanation} for $s = t$.
+\begin{definition}[Congruence closure]
+The congruence closure $E^*$ of a set of equations $E$ on a set of terms closed under the subterm relation $\mathcal{T}$ is the smallest congruence relation containing $E$.
 %We call a pair $(s,t)$ in a congruence closure an \emph{equality} and we call an equality of compound terms $(g(t_1,\ldots,t_n),g(s_1,\ldots,s_n))$ such that for all $i = 1,\ldots,n$: $E \models t_i \thickapprox s_i$ a \emph{deduced equality}.
 %For a term $t \in \mathcal{T}_E$ the set of congruent terms $\{s \in \mathcal{T}_E \mid E \models s \thickapprox t\}$ is the \emph{congruence class} of $t$.
 
 \end{definition}
+\noindent
+Since congruence relations are closed under intersection, the congruence closure of a set of equations always exists.  Also notice that, if  $(s,t) \in E^*$, then $E \models s = t$.  We say that $E$ is an \emph{explanation} for $s = t$.
 
-It is easily seen that congruence relations are closed under intersection.
-Therefore $E^*$ always exists.
-
-An assignment ${\cal I}$ for a quantifier free first order logic maps terms to some universe $\mathcal{U}$ and literals to $\{\top,\bot\}$.
-Such an assignment is a model for $F$, if 
+An assignment ${\cal I}$ for a quantifier-free first-order logic maps terms to some universe $\mathcal{U}$ and literals to $\{\top,\bot\}$.
+Such an assignment is a model for a formula $F$, if 
 \begin{itemize}
 \item ${\cal I}$ is a model of formula $F$, when every equation is treated as a propositional variable
 \item For every pairs of terms $(s,t)$ in the congruence closure of $\{s=t\mid {\cal I} \models s = t\}$ we have $\mathcal{I}(s) = \mathcal{I}(t)$
