@@ -167,25 +167,30 @@ denoted $E\models E'$, if every model of $E$ is a model of $E'$.
 %To this end we define terms and equations, which are notions that will be used throughout this chapter.
 %We close this section by proving some elementary properties of congruence relations.
 
-We use the usual notions of assignments, model, (un)satisfiability also for
-quantifier-free first-order logic.  
-
-
-The notion of assignments, models and the $\models$ relation is extended to quantifier-free first-order logic via the notion of congruence closure, 
-which is defined below.
-In order to define congruence closure, we first need to define what literals in this logic are.
-
-\begin{definition}[Terms and subterms]
+We now define the necessary notions for quantifier-free first-order logic.
+\begin{definition}[Terms and equations]
 A \emph{signature} $\Sigma$ is a finite set of function symbols $\mathcal{F}$
 equipped with an \emph{arity} function $\mathcal{F} \rightarrow \mathbb{N}$.  A
 \emph{constant} is a function with null arity.  A \emph{unary} function has
 arity one.  Given a signature $\Sigma$, the set of \emph{terms}
 $\mathcal{T}^{\Sigma}$ is the smallest set containing all constants in
 $\mathcal{F}$ and all terms of the form $g(t_1,\ldots, t_n)$, where $g$ is a
-function symbol of arity $n$ in $\mathcal{F}$ and $t_1,\ldots,t_n$ are terms in $\mathcal{T}^{\Sigma}$.
+function symbol of arity $n$ in $\mathcal{F}$ and $t_1,\ldots,t_n$ are terms in $\mathcal{T}^{\Sigma}$.  An \emph{equation} between two terms $s,t$ in $\mathcal{T}^{\Sigma}$ is noted as $s=t$.
 \end{definition}
+Signatures commonly include predicate symbols.  Everything extends smoothly to
+signatures with predicates, but to simplify, a quantifier-free first-order logic
+formula is here just a Boolean combination of equalities between terms; a
+literal is either an equation or the negation of an equation.
 
 The terms $t_1,\ldots,t_n$ are \emph{direct subterms} of $g(t_1,\ldots,t_n)$.  The \emph{subterm} relation is the reflexive and transitive closure of the direct subterm relation.
+
+An assignment ${\cal I}$ for a quantifier-free first-order logic on some
+signature maps each constant to an element in a universe $\mathcal{U}$, and each
+function symbol to a function of appropriate arity on $\mathcal{U}$.  By
+extension, it assigns a value to every equation $s=t$, namely $\top$ if
+$\mathcal{I}(s) = \mathcal{I}(t)$ and $\bot$ otherwise.  Like in propositional
+logic, an assignment on some signature thus gives a truth value to every formula
+on the same signature.
 
 %Our definition of terms corresponds to what is usually called ground term in the context of first order logic.
 %Ground terms are terms that contain no first order logic variables.
@@ -193,8 +198,6 @@ The terms $t_1,\ldots,t_n$ are \emph{direct subterms} of $g(t_1,\ldots,t_n)$.  T
 %
 %\noindent Should $\Sigma$ be clear from context or of no relevance, we will omit it and write $\mathcal{T}$ instead of $\mathcal{T}^{\Sigma}$.
 %
-An \emph{equation} $s = t$ on terms in a set $\mathcal{T}$ can also be see as a singleton relation $(s,t) \in \mathcal{T} \times \mathcal{T}$.  By extension, a set of equation can also be seen as a relation, that is, the union of the singleton relations.  A quantifier-free first-order logic literal is a propositional variable, an equation or the negation of any of the first two.
-
 \begin{definition}[Congruence relation]  Given a set of terms $\mathcal{T}$ closed under the subterm relation, a relation $R \subseteq \mathcal{T} \times \mathcal{T}$ is a congruence if it is
 \begin{itemize}
 	\item reflexive: $(t,t) \in R$ for each $t \in \mathcal{T}$
@@ -209,14 +212,15 @@ reflexive, transitive and symmetric.  Therefore a congruence relation partitions
 its underlying set of terms $\mathcal{T}$ into congruence classes, such that two
 terms $(s,t)$ belong to the same class if and only if $(s,t) \in R$.  The
 relations $\emptyset$ and $\mathcal{T} \times \mathcal{T}$ are trivial
-congruence relations.
+congruence relations.  An assignment $\cal I$ on a signature $\Sigma$ defines a congruence relation on any subset $\mathcal{T}\subseteq\mathcal{T}^\Sigma$, that is, $R = \{(s,t) \ |\ \mathcal{I}(s = t) = \top \}$.
 
+An equation $s = t$ on terms in a set $\mathcal{T}$ can be seen as a singleton relation $\{(s,t)\} \subseteq \mathcal{T} \times \mathcal{T}$.  By extension, a set of equations can also be seen as a relation, i.e., the union of the singleton relations.  
 %In this work we are interested in congruence relations induced by sets of equations.
 %In other words, we compute the partitioning of the terms such that two terms in the same partition are proven to be equal by the input set of equations.
 %To this end we define the notion of congruence closure of a set of equations.
 
 \begin{definition}[Congruence closure]
-The congruence closure $E^*$ of a set of equations $E$ on a set of terms closed under the subterm relation $\mathcal{T}$ is the smallest congruence relation containing $E$.
+The congruence closure $E^*$ of a set of equations $E$ on a set of terms closed under the subterm relation $\mathcal{T}$ is the smallest congruence relation on $\mathcal{T}$ containing $E$.
 %We call a pair $(s,t)$ in a congruence closure an \emph{equality} and we call an equality of compound terms $(g(t_1,\ldots,t_n),g(s_1,\ldots,s_n))$ such that for all $i = 1,\ldots,n$: $E \models t_i \thickapprox s_i$ a \emph{deduced equality}.
 %For a term $t \in \mathcal{T}_E$ the set of congruent terms $\{s \in \mathcal{T}_E \mid E \models s \thickapprox t\}$ is the \emph{congruence class} of $t$.
 
@@ -224,13 +228,7 @@ The congruence closure $E^*$ of a set of equations $E$ on a set of terms closed 
 \noindent
 Since congruence relations are closed under intersection, the congruence closure of a set of equations always exists.  Also notice that, if  $(s,t) \in E^*$, then $E \models s = t$.  We say that $E$ is an \emph{explanation} for $s = t$.
 
-An assignment ${\cal I}$ for a quantifier-free first-order logic maps terms to some universe $\mathcal{U}$ and literals to $\{\top,\bot\}$.
-Such an assignment is a model for a formula $F$, if 
-\begin{itemize}
-\item ${\cal I}$ is a model of formula $F$, when every equation is treated as a propositional variable
-\item For every pairs of terms $(s,t)$ in the congruence closure of $\{s=t\mid {\cal I} \models s = t\}$ we have $\mathcal{I}(s) = \mathcal{I}(t)$
-\item For every equation $s = t$, such that ${\cal I} \models s \neq t\}$ we have $\mathcal{I}(s) \neq \mathcal{I}(t)$
-\end{itemize}
+An algorithm computing congruence closure is also a decision procedure for sets of equalities and disequalities in first-order logic with uninterpreted (predicates and) functions.  It suffices indeed to compute the congruence closure of all equalities on the terms and subterms (i.e.\ this set of terms is closed under the subterm relation) in the literals.  Then, the set of literals is satisfiable if and only if there is no disequality with both terms in the same class.  A model can be built from the congruence closure, on a universe with cardinality equal to the number of classes in the congruence.
 
 %\begin{proposition}[Properties of the $\models$ relation]
 %\label{prop:models}
