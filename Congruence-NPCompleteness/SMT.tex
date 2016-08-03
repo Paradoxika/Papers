@@ -248,7 +248,7 @@ An algorithm computing congruence closure is also a decision procedure for sets 
 %
 %\end{proof}
 
-\section{A congruence closure algorithm}
+\section{Decision procedures for ground first-order logic}
 
 The algorithms we consider in the following take as input a set of literals $E$. % \marginpar{Andreas: I replaced literals S by equations E and hope that this is general enough while remaining clear}
 When we consider complexity, not only the cardinality of the set is important, but also the number of terms and subterms as well as the number of their occurrences. 
@@ -256,6 +256,47 @@ Congruence closure algorithms in modern SMT solvers also typically work on Direc
 same literal could matter for complexity. 
 Let us assume however here that the input is a set $E$, that terms are DAGs with maximal sharing (identity of two terms can be checked in constant time), and that identity of two function symbols can be checked in constant time. 
 Therefore, we characterize complexity results in terms of number of literals, terms and subterms of the input set, i.e. $|E| + |\mathcal{T}(E)|$.
+
+Remember that a congruence relation is basically a partition of terms that
+furthermore has the compatibility property.  It is therefore unsurprising that
+practical congruence closure algorithms, or decision procedures for ground sets
+of first-order logic literals, are based on some kind of union-find
+data-structure.  Terms (and subterms) are put into equivalence classes,
+according to the equalities in the input.  The algorithms furthermore check,
+every time two classes of the partition are merged, if some new equality induced
+by compatibility has to be taken into account.  Also, it checks that the
+congruence is consistent with the set of disequalities.  We refer the reader
+to~\cite{Nelson2,Downey1,Nieuwenhuis6} for more details.
+
+The generation of conflict sets is based on the congruence graph: its nodes are
+the set of terms (closed under the subterm relation) considered by the
+algorithm.  Every time the decision procedure merges two classes, it is either
+because of an input equality $s = t$ or because an equality $g(t_1,\ldots,t_n) =
+g(s_1,\ldots,s_n)$ is deduced by compatibility.  In those two cases, the graph
+is added an edge, labeled by the equality, between the two terms in the
+equality.  The edge is said to be a congruence edge (a dotted edge in the
+figures in this paper) in case of an equality deduced by compatibility.  Two
+terms are in the same class if and only if there is a unique path in the graph
+between those two terms.  The equality between two terms in the same class is a
+logic consequence of the set of equalities labeling the path.  To get an
+explanation that two terms in a same class are equal, that is, a set of input
+equalities implying the equality of the two terms, it thus suffices to collect
+the set of equalities labeling the path, and recursively replace any
+compatibility equality $g(t_1,\ldots,t_n) = g(s_1,\ldots,s_n)$ by the
+explanations of $t_1=s_1$,\dots, $t_n=s_n$.  There is no guarantee that this
+explanation is the smallest one.  Indeed, it may happen that the algorithm
+considers, e.g.\ equations $a =b$ and $b =c$ before $a=c$: in that case, $a=c$
+would have been the smallest proof that $a$ and $c$ are equal, but the
+congruence graph would only consider the two other equalities.  There is not
+even a guarantee that the explanation is minimal.  Again, the congruence closure
+algorithm can prove that $a = f(b)$ from the input equalities $b = f(a)$, $f(a)
+= f(b)$ and $a = b$, but the equality $f(a) = f(b)$ would only be recorded in
+the congruence graph if it is considered before $a = b$.
+
+In practice, the conflicts provided by decision procedures implemented in SMT
+solvers are giving good results.  But they are not optimal, i.e.\ they are not
+always the smallest or even minimal.  The next section proves it is deceptive to
+look for low complexity techniques to provide optimal conflicts.
 
 \section{NP-completeness of small conflict set generation problem}
 \label{sec:npcomplete}
