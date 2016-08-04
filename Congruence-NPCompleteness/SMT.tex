@@ -275,19 +275,19 @@ solvers have complexity $\mathcal{O}(|E| + |\mathcal{T}(E)|\ \log
 induced by compatibility.
 
 The generation of conflict sets or explanations is based on the congruence
-graph: its nodes are the set of terms (closed under the subterm relation)
-considered by the algorithm.  An edge in the graph is either a full edge,
-linking two nodes $s$ and $t$ and labeled by an input equality $s=t$, or a
-congruence edge (a dotted edge in the figures in this paper), between two terms
-with the same leading function symbol and labeled by the compatibility-deduced equality
-between both terms.  The graph has a path between two terms if and only if they
-belong to the same congruence class.  The equality between two terms in the same
-class is a logic consequence of the set of equalities labeling the path.  To get
-an explanation of the equality of two terms in a same class, that is, a set of
-input equalities implying the equality of the two terms, it thus suffices to
-collect the set of equalities labeling a path, and recursively replace any
-compatibility equality $g(t_1,\ldots,t_n) = g(s_1,\ldots,s_n)$ by the
-explanations of $t_1=s_1$,\dots, $t_n=s_n$.
+graph: its nodes are the terms and subterms considered by the algorithm.  An
+edge in the graph is either a full edge, linking two nodes $s$ and $t$ and
+labeled by an input equality $s=t$, or a congruence edge (a dotted edge in the
+figures in this paper), between two terms with the same leading function symbol
+and labeled by the compatibility-deduced equality between both terms.  The graph
+has a path between two terms if and only if they belong to the same congruence
+class.  The equality between two terms in the same class is a logic consequence
+of the set of equalities labeling the path.  To get an explanation of the
+equality of two terms in a same class, that is, a set of input equalities
+implying the equality of the two terms, it thus suffices to collect the set of
+equalities labeling a path, and recursively replace any compatibility equality
+$g(t_1,\ldots,t_n) = g(s_1,\ldots,s_n)$ by the explanations of $t_1=s_1$,\dots,
+$t_n=s_n$.
 
 Practical congruence closure algorithms with explanation build a congruence
 graph while computing the congruence closure.  Every time the decision procedure
