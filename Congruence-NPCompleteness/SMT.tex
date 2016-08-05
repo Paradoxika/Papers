@@ -251,12 +251,20 @@ An algorithm computing the congruence closure of a relation is also a decision p
 
 \section{Congruence closure in practice}
 
-The algorithms we consider in the following take as input a set of literals $E$. % \marginpar{Andreas: I replaced literals S by equations E and hope that this is general enough while remaining clear}
-When we consider complexity, not only the cardinality of the set is important, but also the number of terms and subterms as well as the number of their occurrences. 
-Congruence closure algorithms in modern SMT solvers also typically work on Directed Acyclic Graphs (DAGs), not on trees, to represent terms. In that case, what matters is not the number of term and subterm occurrences, but only the number of (sub)terms. However, the input is also typically not a set, but successive calls to an assertion function with a literal as argument. In that case, every repetition of the
-same literal could matter for complexity. 
-Let us assume however here that the input is a set $E$, that terms are DAGs with maximal sharing (identity of two terms can be checked in constant time), and that identity of two function symbols can be checked in constant time. 
-Therefore, we characterize complexity results in terms of number of literals, terms and subterms of the input set, i.e. $|E|$ and $|\mathcal{T}(E)|$.
+The algorithms we consider in the following take as input a set of literals $E$.
+Considering complexity, not only the cardinality of the set is important, but
+also the number of terms and subterms as well as the number of their
+occurrences.  Congruence closure algorithms in modern SMT solvers typically
+represent terms with Directed Acyclic Graphs (DAGs) using maximal sharing, and
+not trees.  The number of term and subterm occurrences does not matter, but only
+the number of different (sub)terms.  The input is also typically not a set, but
+successive calls to an assertion function with a literal as argument: every
+repetition of the same literal then matters for complexity.  Let us assume
+however here that the input is a set $E$, that terms are DAGs with maximal
+sharing (identity of two terms can be checked in constant time), and that
+identity of two function symbols can be checked in constant time.  Therefore, we
+characterize complexity results in terms of number of literals, terms and
+subterms of the input set, i.e. $|E|$ and $|\mathcal{T}(E)|$.
 
 Remember that a congruence relation is basically a partition of terms that
 furthermore has the compatibility property.  It is therefore unsurprising that
@@ -312,13 +320,14 @@ solvers are giving good results, and are produced extremely efficiently: the
 complexity of the explanation production is linear with respect to the
 explanation size, which is at most equal to the number of input equalities.  But
 the explanations are not optimal, i.e.\ they are not always the smallest or even
-minimal. 
-One could hope to conceive a different congruence closure algorithm that produces 
-the smallest explanation in polynomial time.
-For example, edges to the congruence graph could also be added between nodes that are already in the same congruence class, 
-and then the shortest path could be considered as an explanation.
-However, the next section proves it is impossible to find a low complexity
-technique to provide the smallest conflict.
+minimal.  It is possible to compute minimal explanations in polynomial time; it
+suffices for instance to compute again the congruence closure successively
+removing every equality in the explanation, to see if it is redundant or not.
+One could hope to conceive a different congruence closure algorithm generating
+the smallest explanation in polynomial time, for instance on the basis of
+shortest path algorithms applied to congruence graphs containing even redundant
+equalities.  But, the next section proves that computing the smallest conflict
+is NP-hard.
 
 \section{NP-completeness of small conflict set generation problem}
 \label{sec:npcomplete}
@@ -381,8 +390,7 @@ with
 \end{eqnarray*}
 where constants $c_{1},\dots c_{n},c_{1}', \dots c_{n}',
 \hat{x}_1, \dots \hat{x}_m, \top_1, \dots \top_m, \bot_1, \dots \bot_m$ are distinct, and $t_1, \dots t_n$ are
-distinct unary functions.
-
+distinct unary functions.\footnote{It is possible to use a construction without $c_i'$ variables, but they ease the presentation.}
 \end{definition}
 
 \noindent This translation is illustrated by the following example.
