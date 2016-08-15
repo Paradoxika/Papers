@@ -285,8 +285,7 @@ to~\cite{Nelson2,Downey1,Nieuwenhuis6} for more details.  The complexity of
 those algorithms depend on the internal data-structures and on the
 representation of terms~\cite{Downey1}.  Algorithms typically implemented in SMT
 solvers have complexity $\mathcal{O}(|E| + |\mathcal{T}(E)|\ \log
-|\mathcal{T}(E)|)$ on average, a hash table being used to detect new equalities
-induced by compatibility.
+|\mathcal{T}(E)|)$ assuming constant time operations on the hash table being used to detect new equalities induced by compatibility.
 
 The generation of conflict sets or explanations is based on the congruence
 graph: its nodes are the terms and subterms considered by the algorithm.  An
@@ -641,8 +640,7 @@ conflict size, at a cost of less efficient solving. Thanks to the
 NP-completeness, one option could be to iteratively encode the small conflict
 problem into SAT, and use a SAT-solver to find successively smaller conflicts,
 until the smallest is found. Perhaps a Max-SAT solver could be used instead, 
-to avoid repeated calls to the SAT-solver
-and find the smallest conflict in one run.
+to avoid repeated calls to the SAT-solver and find the smallest conflict in one run.
 %\marginpar{note that we would have to encode and call a SAT-solver many times, with progressively smaller values of $k$, until we find a value of $k$ for which the encoded problem is unsatisfiable. this would guarantee a \emph{minimum} conflict, but would probably be less efficient than the iterative addition/removal of literals from the explanation, which only guarantees a \emph{minimal} conflict.} 
 
 \vspace*{5pt}\noindent
