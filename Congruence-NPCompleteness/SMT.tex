@@ -639,8 +639,12 @@ sensitive to proof size may benefit from other methods prioritizing small
 conflict size, at a cost of less efficient solving. Thanks to the
 NP-completeness, one option could be to iteratively encode the small conflict
 problem into SAT, and use a SAT-solver to find successively smaller conflicts,
-until the smallest is found. Perhaps a Max-SAT solver could be used instead, 
-to avoid repeated calls to the SAT-solver and find the smallest conflict in one run.
+until the smallest is found. 
+Perhaps an encoding of the problem can be found that differentiates between hard constraints representing relevant instantiations of the axioms of equality as well as the target equation,
+and soft constraints representing the inclusion of input equations to an explanation.
+In that case, Max-SAT solvers could be used to find small explanations, 
+in order to leverage efforts that combine decision procedures and optimization techniques. %\cite{schiex1995valued,davies2013solving}.
+%to avoid repeated calls to the SAT-solver and find the smallest conflict in one run.
 %\marginpar{note that we would have to encode and call a SAT-solver many times, with progressively smaller values of $k$, until we find a value of $k$ for which the encoded problem is unsatisfiable. this would guarantee a \emph{minimum} conflict, but would probably be less efficient than the iterative addition/removal of literals from the explanation, which only guarantees a \emph{minimal} conflict.} 
 
 \vspace*{5pt}\noindent
