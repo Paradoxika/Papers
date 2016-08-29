@@ -66,7 +66,7 @@ spurious models of the abstraction, until either unsatisfiability is reached, or
 a model of the SMT formula is found.  Refinements can be done by refuting models
 of the propositional abstraction one at a time.  It is, however, much more
 productive to refute all propositional models that are spurious for the same
-reason.  A model of the abstraction is spurious if the set of concrete literals
+reason at once.  A model of the abstraction is spurious if the set of concrete literals
 corresponding to the abstracted literals satisfied by this model is
 unsatisfiable modulo the theory.  Given such an unsatisfiable set of concrete literals, the
 disjunction of the negations of any unsatisfiable subset (a.k.a. \emph{core}) is a suitable
@@ -179,7 +179,7 @@ equipped with an \emph{arity} function $\mathcal{F} \rightarrow \mathbb{N}$.  A
 arity one.  Given a signature $\Sigma$, the set of \emph{terms}
 $\mathcal{T}^{\Sigma}$ is the smallest set containing all constants in
 $\mathcal{F}$ and all terms of the form $g(t_1,\ldots, t_n)$, where $g$ is a
-function symbol of arity $n$ in $\mathcal{F}$ and $t_1,\ldots,t_n$ are terms in $\mathcal{T}^{\Sigma}$.  An \emph{equation} between two terms $s,t$ in $\mathcal{T}^{\Sigma}$ is noted as $s=t$.
+function symbol of arity $n$ in $\mathcal{F}$ and $t_1,\ldots,t_n$ are terms in $\mathcal{T}^{\Sigma}$.  An \emph{equation} between two terms $s,t$ in $\mathcal{T}^{\Sigma}$ is denoted by $s=t$.
 \end{definition}
 Signatures commonly include predicate symbols.  Everything extends smoothly to
 signatures with predicates, but to simplify, a quantifier-free first-order logic
@@ -187,6 +187,7 @@ formula is here just a Boolean combination of equalities between terms; a
 literal is either an equation or the negation of an equation.
 
 The terms $t_1,\ldots,t_n$ are \emph{direct subterms} of $g(t_1,\ldots,t_n)$.  The \emph{subterm} relation is the reflexive and transitive closure of the direct subterm relation.
+Given a set of equations $E$, we denote by $\mathcal{T}(E)$ the set of terms and subterms occurring in the equations.
 
 An assignment ${\cal I}$ on some signature maps each constant to an element in a
 universe $\mathcal{U}$, and each function symbol to a function of appropriate
@@ -218,7 +219,7 @@ terms $(s,t)$ belong to the same class if and only if $(s,t) \in R$.  The
 relations $\emptyset$ and $\mathcal{T} \times \mathcal{T}$ are trivial
 congruence relations.  An assignment $\cal I$ on a signature $\Sigma$ defines a congruence relation on any subset $\mathcal{T}\subseteq\mathcal{T}^\Sigma$, that is, $R = \{(s,t) \ |\ \mathcal{I}(s = t) = \top \}$.
 
-An equation $s = t$ on terms in a set $\mathcal{T}$ can be seen as a singleton relation $\{(s,t)\} \subseteq \mathcal{T} \times \mathcal{T}$.  By extension, a set of equations can also be seen as a relation, i.e., the union of the singleton relations.  
+An equation $s = t$ on terms in a set $\mathcal{T}$ can be seen as a singleton relation $\{(s,t)\} \subseteq \mathcal{T} \times \mathcal{T}$.  By extension, a set of equations can also be seen as a relation, i.e., the union of the singleton relations. 
 %In this work we are interested in congruence relations induced by sets of equations.
 %In other words, we compute the partitioning of the terms such that two terms in the same partition are proven to be equal by the input set of equations.
 %To this end we define the notion of congruence closure of a set of equations.
@@ -290,48 +291,49 @@ solvers have complexity $\mathcal{O}(|E| + |\mathcal{T}(E)|\ \log
 The generation of conflict sets or explanations is based on the congruence
 graph: its nodes are the terms and subterms considered by the algorithm.  An
 edge in the graph is either a full edge, linking two nodes $s$ and $t$ and
-labeled by an input equality $s=t$, or a congruence edge (a dotted edge in the
+labeled by an input equation $s=t$, or a congruence edge (a dotted edge in the
 figures in this paper), linking two terms with the same leading function symbol
 and labeled by the compatibility-deduced equality between both terms.  The graph
 has a path between two terms if and only if they belong to the same congruence
 class.  The equality between two terms in the same class is a logic consequence
-of the set of equalities labeling the path.  To get an explanation for the
-equality of two terms in the same class, that is, a set of input equalities
+of the set of equations labeling the path.  To get an explanation for the
+equality of two terms in the same class, that is, a set of input equations
 implying the equality of the two terms, it thus suffices to collect the set of
-equalities labeling a path, and recursively replace any compatibility equality
+equations labeling a path, and recursively replace any compatibility equation
 $g(t_1,\ldots,t_n) = g(s_1,\ldots,s_n)$ by the explanations of $t_1=s_1$,\dots,
 $t_n=s_n$.
 
 Practical congruence closure algorithms with explanation build a congruence
 graph while computing the congruence closure.  Every time the decision procedure
-merges two classes, either because of an input equality or because an equality was deduced due to compatibility,
+merges two classes, either because of an input equation or because an equality was deduced due to compatibility,
 a full- or congruence- edge is added to the graph.  
 Since edges between nodes are only added when their respective congruence classes are merged, 
 the path between two terms in the same class is unique.  The
 explanation that two terms are equal is also unique, but there is no guarantee
 that this explanation is the smallest one.  Indeed, it may happen that the
 algorithm considers, e.g.\ equations $a=b$ and $b=c$ before $a=c$, merging $a$,
-$b$ and $c$ before getting the last equality, and thus discarding $a=c$ as
+$b$ and $c$ before considering the last equation, and thus discarding $a=c$ as
 redundant: in that case, $a=c$ would have been the smallest proof that $a$ and
 $c$ are equal, but the congruence graph would only consider the two other
 equalities. 
 There is not even a guarantee that the explanation is minimal.
 Again, the congruence closure algorithm can prove that $a = f(b)$ from the input
-equalities $b = f(a)$, $a = b$ and $f(a) = f(b)$, but the redundant equality $f(a) = f(b)$
-would only be recorded in the congruence graph if it were considered before $a = b$.
+equations $b = f(a)$, $f(a) = f(b)$ and $a = b$.
+The redundant equality $f(a) = f(b)$
+would be recorded in the congruence graph, and thus be part of the explanation, if it is considered before $a = b$.
 
 In practice, the congruence closure procedures implemented in SMT
 solvers produce explanations efficiently: the
 complexity of the explanation production is linear with respect to the
-explanation size, which is at most equal to the number of input equalities.  But
+explanation size, which is at most equal to the number of input equations.  But
 the explanations are not optimal, i.e.\ they are not always the smallest or even
 minimal.  It is possible to compute minimal explanations in polynomial time; it
 suffices for instance to compute again the congruence closure successively
-removing every equality in the explanation, to see if it is redundant or not.
+removing every equation in the explanation, to see if it is redundant or not.
 One could hope to conceive a different congruence closure algorithm generating
 the smallest explanation in polynomial time, for instance on the basis of
 shortest path algorithms applied to congruence graphs containing even redundant
-equalities.  But, the next section proves that the corresponding decision problem
+equations as labels.  However, the next section proves that the corresponding decision problem
 is NP-hard.
 
 \section{NP-Completeness of the Small Conflict Set Problem}
@@ -361,7 +363,7 @@ $E' \subseteq E$ with $|E'| \leq k$.
 the smallest conflict set for any unsatisfiable set $E$, 
 then we could decide in polynomial time any instance of the small conflict set 
 problem by applying $\alpha$ to $E$ and checking whether $\alpha(E)$ has size smaller than $k$. 
-But, as proven below, the small conflict set problem is NP-complete and, therefore, 
+However, as proven below, the small conflict set problem is NP-complete and, therefore, 
 polynomial time generation of conflict sets with minimum size is not possible (unless P = NP).
 %
 Our proof reduces the problem
@@ -380,14 +382,16 @@ is the problem of answering whether there exists a set $E'$ such that $E'
 \noindent The small explanation problem and the small conflict set
 problem are closely related: there is a small explanation of size $k$ of $s=t$
 from $E$ if and only if there is a small conflict of size $k+1$ for $E \cup
-\{s\neq t\}$.  The proof of hardness is based on a (polynomial) translation of
-the propositional satisfiability problem to the small explanation problem.
+\{s\neq t\}$.  
+%The proof of hardness is based on a (polynomial) translation of
+%the propositional satisfiability problem to the small explanation problem.
 
 \newcommand{\Assignment}{{\it Assignment}}
 \newcommand{\Clause}{{\it Clause}}
 \newcommand{\Connect}{{\it Connect}}
 
-The translation of the propositional satisfiability problem consists of two
+In the following we describe a polynomial translation from instances of the propositional satisfiability problem to instances of the small explanation problem.
+The translation consists of two
 parts: a translation of propositional formulas, here assumed, without loss
 of generality, to be in CNF (as shown in Definition \ref{def:CNFCongruenceTranslation}), and a translation of assignments (as shown in Definition \ref{def:AssignmentCongruenceTranslation}).
 
@@ -419,7 +423,7 @@ Note that the constants $\top_i$ and $\bot_i$ (for $1 \leq i \leq m)$) should no
 \end{remark}
 
 
-\noindent This translation is illustrated by the following example.
+\noindent The translation of clauses is illustrated by the following example.
 % and a subset of the translation corresponding to a satisfying assignment.
 %We use the standard notion of satisfiability and present variable assignments as sets of those propositional variables being mapped to true.
 
