@@ -1,4 +1,6 @@
-\documentclass[smallextended]{svjour3}
+\RequirePackage{amsmath}
+\RequirePackage{fix-cm}
+\documentclass[smallcondensed]{svjour3}
 
 %\title{A note on conflict set generation\\ for congruence closure\\\small Extended abstract}
 %\titlerunning{A note on congruence closure}
@@ -32,7 +34,7 @@ B. Woltzenlogel Paleo \at
 \journalname{Formal Methods in System Design - Recent topics in SMT}
 
 \usepackage{amssymb}
-\usepackage{amsmath}
+
 \usepackage{graphicx}            			% Figures
 \usepackage{tikz}					% tikz graphics
 \usetikzlibrary{arrows,automata,positioning}
@@ -208,7 +210,7 @@ formula on this signature.
 %
 %\noindent Should $\Sigma$ be clear from context or of no relevance, we will omit it and write $\mathcal{T}$ instead of $\mathcal{T}^{\Sigma}$.
 %
-%\newpage
+\newpage
 \begin{definition}[Congruence relation]  Given a set of terms $\mathcal{T}$ closed under the subterm relation, a relation $R \subseteq \mathcal{T} \times \mathcal{T}$ is a congruence if it is
 \begin{itemize}
 \item reflexive: $(t,t) \in R$ for each $t \in \mathcal{T}$;
@@ -443,9 +445,58 @@ $\mathcal{C}$ graphically, an edge between two nodes meaning that the set
 contains an equation between the terms labeling the two nodes.
 
 \begin{figure}[htb]
-\input{figures/npexamplebig2}
-\caption{The congruence translation $E_{\mathcal{C}} = \Connect \cup \bigcup_{1 \leq i \leq n}\Clause_i$ of $\mathcal{C}$.}
-\label{fig:npexamplebig}
+	\centering
+	\begin{tikzpicture}[node distance=.3cm,scale=0.9, every node/.style={transform shape}]
+		\small
+		\node(c1){$c_1\phantom{'}$};
+
+		\node[right =.25cm of c1] (t1x2) {$t_1(\hat{x}_2)$};
+		\node[above =.8cm of t1x2] (t1x1) {$t_1(\hat{x}_1)$};
+		\node[below =.8cm of t1x2] (f1x3) {$t_1(\hat{x}_3)$};
+		\draw [-] (c1) to (t1x2);
+		\draw [-] (c1) to (t1x1);
+		\draw [-] (c1) to (f1x3);
+
+		\node[right = 3.1cm of c1](c1p){$c_1'$};
+
+		\node[left =.25cm of c1p] (t12) {$t_1(\top_2)$};
+		\node[above=.8cm of t12] (t11) {$t_1(\top_1)$};
+		\node[below=.8cm of t12] (f13) {$t_1(\bot_3)$};
+		\draw [-] (c1p) to (t11);
+		\draw [-] (c1p) to (t12);
+		\draw [-] (c1p) to (f13);
+
+		\node[right = .3cm of c1p](c2){$c_2\phantom{'}$};
+		\draw [-] (c1p) to (c2);
+
+		\node[right=.25cm of c2, yshift=.8cm]  (f2x2) {$t_2(\hat{x}_2)$};
+		\node[right=.25cm of c2, yshift=-.8cm] (t2x3) {$t_2(\hat{x}_3)$};
+		\draw [-] (c2) to (f2x2);
+		\draw [-] (c2) to (t2x3);
+
+		\node[right = 3.1cm of c2](c2p){$c_2'$};
+		\node[left =.25cm of c2p, yshift=.8cm]  (f22) {$t_2(\bot_2)$};
+		\node[left =.25cm of c2p, yshift=-.8cm] (t23) {$t_2(\top_3)$};
+		\draw [-] (c2p) to (t23);
+		\draw [-] (c2p) to (f22);
+
+		\node[right = .3cm of c2p](c3){$c_3\phantom{'}$};
+		\draw [-] (c2p) to (c3);
+		\node[right =.25cm of c3, yshift=.8cm] (f3x1) {$t_3(\hat{x}_1)$};
+		\node[right =.25cm of c3, yshift=-.8cm] (f3x2) {$t_3(\hat{x}_2)$};
+		\draw [-] (c3) to (f3x1);
+		\draw [-] (c3) to (f3x2);
+
+		\node[right = 3.1cm of c3](c3p){$c_3'$};
+		\node[left =.25cm of c3p, yshift=.8cm] (f31) {$t_3(\bot_1)$};
+		\node[left =.25cm of c3p, yshift=-.8cm] (f32) {$t_3(\bot_2)$};
+		\draw [-] (c3p) to (f31);
+		\draw [-] (c3p) to (f32);
+
+	\end{tikzpicture}
+
+	\caption{The congruence translation $E_{\mathcal{C}} = \Connect \cup \bigcup_{1 \leq i \leq n}\Clause_i$ of $\mathcal{C}$.}
+	\label{fig:npexamplebig}
 \end{figure}
 
 \end{example}
@@ -479,19 +530,134 @@ and $c_1$ and $c'_3$ are connected in the congruence graph
 of $E_{\mathcal{C}} \cup E_{\mathcal{I}}$ (Figure~\ref{fig:npmodel}), the path containing both full edges corresponding to equalities in $E_{\mathcal{C}} \cup E_{\mathcal{I}}$, and dotted edged corresponding to equalities due to the compatibility property of the congruence relation.
 
 \begin{figure}[ht]
-\input{figures/npassignment2}
-\caption{Congruence translation of $\mathcal{I}$}
-\label{fig:npassignment}
+
+	\centering
+	\begin{tikzpicture}[node distance=.75cm,scale=0.9, every node/.style={transform shape}]
+
+		\node [below =.5cm of f2x2] (x1) {$\hat{x}_1$};
+		\node [below =.5cm of x1] (x2) {$\hat{x}_2$};
+		\node [below =.5cm of x2] (x3) {$\hat{x}_3$};
+
+		\node [right = of x1] (t1) {$\top_1$};
+
+		\draw [-] (x1) to (t1);
+
+		\node [left = of x2] (f2) {$\bot_2$};
+
+		\draw [-] (x2) to (f2);
+
+		\node [right = of x3] (t3) {$\top_3$};
+
+		\draw [-] (x3) to (t3);
+
+	\end{tikzpicture}
+	\caption{Congruence translation of $\mathcal{I}$}
+	\label{fig:npassignment}
 \end{figure}
 
 \begin{figure}[ht]
-\input{figures/npassignmentstar2}
+	\centering
+	\begin{tikzpicture}[node distance=.75cm,scale=0.9, every node/.style={transform shape}]
+
+		\node (x1) {$\hat{x}_1$};
+		\node [below =.5cm of x1] (x2) {$\hat{x}_2$};
+		\node [below =.5cm of x2] (x3) {$\hat{x}_3$};
+
+		\node [right = of x1] (t1) {$\top_1$};
+		\node [left = of x1] (f1) {$\bot_1$};
+
+		\draw [-] (x1) to (t1);
+		\draw [-] (x1) to (f1);
+
+		\node [right = of x2] (t2) {$\top_2$};
+		\node [left = of x2] (f2) {$\bot_2$};
+
+		\draw [-] (x2) to (t2);
+		\draw [-] (x2) to (f2);
+
+		\node [right = of x3] (t3) {$\top_3$};
+		\node [left = of x3] (f3) {$\bot_3$};
+
+		\draw [-] (x3) to (t3);
+		\draw [-] (x3) to (f3);
+
+	\end{tikzpicture}
 \caption{$\Assignment^\star$}
 \label{fig:npassignmentstar}
 \end{figure}
 
 \begin{figure}[ht]
-\input{figures/npmodel2}
+	\centering
+	\begin{tikzpicture}[node distance=.75cm,scale=0.9, every node/.style={transform shape}]
+		\small
+		\node(c1){$c_1\phantom{'}$};
+
+		\node[right =.25cm of c1] (t1x2) {$t_1(\hat{x}_2)$};
+		\node[above =.8cm of t1x2] (t1x1) {$t_1(\hat{x}_1)$};
+		\node[below =.8cm of t1x2] (t1x3) {$t_1(\hat{x}_3)$};
+		\draw [-] (c1) to (t1x2);
+		\draw [-] (c1) to (t1x1);
+		\draw [-] (c1) to (t1x3);
+
+		\node[right = 3.1cm of c1](c1p){$c_1'$};
+
+		\node[left =.25cm of c1p] (t12) {$t_1(\top_2)$};
+		\node[above=.8cm of t12] (t11) {$t_1(\top_1)$};
+		\node[below=.8cm of t12] (t13) {$t_1(\bot_3)$};
+		\draw [-] (c1p) to (t11);
+		\draw [-] (c1p) to (t12);
+		\draw [-] (c1p) to (t13);
+
+		\node[right = .3cm of c1p](c2){$c_2\phantom{'}$};
+		\draw [-] (c1p) to (c2);
+
+		\node[right=.25cm of c2, yshift=.8cm]  (t2x2) {$t_2(\hat{x}_2)$};
+		\node[right=.25cm of c2, yshift=-.8cm] (t2x3) {$t_2(\hat{x}_3)$};
+		\draw [-] (c2) to (t2x2);
+		\draw [-] (c2) to (t2x3);
+
+		\node[right = 3.1cm of c2](c2p){$c_2'$};
+		\node[left =.25cm of c2p, yshift=.8cm]  (t22) {$t_2(\bot_2)$};
+		\node[left =.25cm of c2p, yshift=-.8cm] (t23) {$t_2(\top_3)$};
+		\draw [-] (c2p) to (t23);
+		\draw [-] (c2p) to (t22);
+
+		\node[right = .3cm of c2p](c3){$c_3\phantom{'}$};
+		\draw [-] (c2p) to (c3);
+		\node[right =.25cm of c3, yshift=.8cm] (t3x1) {$t_3(\hat{x}_1)$};
+		\node[right =.25cm of c3, yshift=-.8cm] (t3x2) {$t_3(\hat{x}_2)$};
+		\draw [-] (c3) to (t3x1);
+		\draw [-] (c3) to (t3x2);
+
+		\node[right = 3.1cm of c3](c3p){$c_3'$};
+		\node[left =.25cm of c3p, yshift=.8cm] (t31) {$t_3(\bot_1)$};
+		\node[left =.25cm of c3p, yshift=-.8cm] (t32) {$t_3(\bot_2)$};
+		\draw [-] (c3p) to (t31);
+		\draw [-] (c3p) to (t32);
+
+		\node [below =1.3cm of c2, xshift=1.5cm] (x1) {$\hat{x}_1$};
+		\node [below =.5cm of x1] (x2) {$\hat{x}_2$};
+		\node [below =.5cm of x2] (x3) {$\hat{x}_3$};
+
+		\node [right = of x1] (t1) {$\top_1$};
+
+		\draw [-] (x1) to (t1);
+
+		\node [left = of x2] (t2) {$\bot_2$};
+
+		\draw [-] (x2) to (t2);
+
+		\node [right = of x3] (t3) {$\top_3$};
+
+		\draw [-] (x3) to (t3);
+
+		\draw [dotted] (t1x1) to (t11);
+		\draw [dotted] (t1x3) to (t13);
+		\draw [dotted] (t2x2) to (t22);
+		\draw [dotted] (t2x3) to (t23);
+		\draw [dotted] (t3x2) to (t32);
+
+	\end{tikzpicture}
 \caption{The congruence graph for $E_{\mathcal{C}} \cup E_{\mathcal{I}}$}
 \label{fig:npmodel}
 \end{figure}
