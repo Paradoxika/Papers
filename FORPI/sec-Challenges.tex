@@ -98,7 +98,7 @@ Satisfying the pre-regularization unifiability property is not sufficient. Consi
 \AxiomC{$\eta_6$: $\e p(c,d)$\hspace{-4.5cm}}
 \AxiomC{$\eta_1$: $p(U,V)\e q(f(a,V),U)$}
 \AxiomC{$\eta_2$: $q(f(a,X),Y),q(T,X)\e q(f(a,Z),Y)$}
-\BinaryInfC{$\eta_3$: $p(U,V),Q(T,V)\e q(f(a,Z),U)$\hspace{-1cm}}
+\BinaryInfC{$\eta_3$: $p(U,V),q(T,V)\e q(f(a,Z),U)$\hspace{-1cm}}
 \AxiomC{\hspace{-1cm} $\eta_4$: $\e q(R,S)$}
 \BinaryInfC{$\eta_5$: $p(U,V)\e q(f(a,Z),U)$}
 \BinaryInfC{$\eta_7$: $\e q(f(a,Z),c)$}
@@ -112,10 +112,10 @@ $\eta_3$'s pivot $q(f(a,V),U)$ is unifiable to (and even more general than) the 
 \begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_8$: $Q(f(a,e),c)\e$}
-\AxiomC{$\eta_6$: $\e P(c,d)$}
-\AxiomC{$\eta_1$: $P(U,V)\e Q(f(a,V),U)$}
-\BinaryInfC{$\eta_7'$: $\e Q(f(a,d),c)$}
+\AxiomC{$\eta_8$: $q(f(a,e),c)\e$}
+\AxiomC{$\eta_6$: $\e p(c,d)$}
+\AxiomC{$\eta_1$: $p(U,V)\e q(f(a,V),U)$}
+\BinaryInfC{$\eta_7'$: $\e q(f(a,d),c)$}
 \BinaryInfC{$\psi'$: ??}
 \end{prooftree}
 \end{scriptsize}
