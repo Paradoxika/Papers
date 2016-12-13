@@ -1,10 +1,9 @@
-setwd("D:/Research Scripts/GSoC14/November 2016 - Charts - R")
+#setwd("D:/Research Scripts/GSoC14/November 2016 - Charts - R")
+setwd("D:/Git Repositories/Papers/FORPI/scripts charts and data")
 
 #get all data
-alldata = read.csv("D:/Research Scripts/GSoC14/November 2016 - Charts - R/random-all-data-dec1.txt")
-#alldata[1:6,]
+alldata = read.csv("D:/Git Repositories/Papers/FORPI/scripts charts and data/random-all-data-dec1s.txt")
 someData <- subset(alldata, select=rpiProofsize:totalTime)
-#someData[1:2,]
 num <- length(someData)
 num 
 
@@ -121,7 +120,7 @@ rpiluPoints <-cbind(lengthRPILU, compressedLengthFinalRPILU )
 points(rpiluPoints,col="blue",pch=2)
 lurpiPoints <-cbind(lengthLURPI, compressedLengthFinalLURPI)
 points(lurpiPoints,col="green",pch=3)
-legend("topleft",c("FORPI(p)", "GFOLU(p)", "FORPI(GFOLU(p))", "GFOLU(FORPI(p))"), pch=c(1,4,2,3), col=c("black","red", "blue", "green"))
+legend("topleft",c("FORPI(p)", "GFOLU(p)", "FORPI(GFOLU(p))", "GFOLU(FORPI(p))"), pch=c(1,4,2,3), col=c("black","red", "blue", "green"), bty="n")
 
 
 points(lurpiPointstptp,col="green",pch=3)

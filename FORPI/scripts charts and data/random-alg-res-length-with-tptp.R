@@ -1,7 +1,8 @@
-setwd("D:/Research Scripts/GSoC14/November 2016 - Charts - R")
+#setwd("D:/Research Scripts/GSoC14/November 2016 - Charts - R")
+setwd("D:/Git Repositories/Papers/FORPI/scripts charts and data")
 
 #get all data
-alldata = read.csv("D:/Research Scripts/GSoC14/November 2016 - Charts - R/random-all-data-dec1.txt")
+alldata = read.csv("D:/Git Repositories/Papers/FORPI/scripts charts and data/random-all-data-dec1s.txt")
 someData <- subset(alldata, select=rpiProofsize:totalTime)
 
 #Get the data
@@ -30,8 +31,8 @@ axisLimitX = max(rpiluYlim, lurpiYlim)
 axisLimitY = max(rpiluYlim, lurpiYlim)
 axisLimit = max(axisLimitX, axisLimitY)
 
-pdf('combined-alg-res.pdf', height=5, width=5)
-par(mar=c(5.1,4.1,1,2.1))
+pdf('combined-alg-res.pdf', height=6, width=6)
+par(mar=c(5.1,5.1,1,2.1))
 
 plot(compressedLengthFinalRPILU,compressedLengthFinalLURPI ,  xlim=c(0,axisLimit), ylim=c(0,axisLimit ),axes=FALSE, xlab="Compressed Resolutions (FORPI(GFOLU(p)))", ylab="Compressed Resolutions (GFOLU(FORPI(p)))",yaxs="i", xaxs="i")
 
@@ -69,7 +70,7 @@ lengthRPILUtptp <- dataRPILUtptp[,"resOnlyLength"]
 tptpPoints <- cbind(compressedLengthRPILUFinaltptp,compressedLengthLURPIFinaltptp)
 points(tptpPoints,col="red",pch=3)
 
-legend("topleft",c("TPTP Data", "Random Data"), pch=c(3,1), col=c("red","black"))
+legend("topleft",c("TPTP Data", "Random Data"), pch=c(3,1), col=c("red","black"), bty="n")
 
 dev.off()
 

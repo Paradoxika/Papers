@@ -1,7 +1,8 @@
-setwd("D:/Research Scripts/GSoC14/November 2016 - Charts - R")
+#setwd("D:/Research Scripts/GSoC14/November 2016 - Charts - R")
+setwd("D:/Git Repositories/Papers/FORPI/scripts charts and data")
 
 #get all data
-alldata = read.csv("D:/Research Scripts/GSoC14/November 2016 - Charts - R/random-all-data-dec1.txt")
+alldata = read.csv("D:/Git Repositories/Papers/FORPI/scripts charts and data/random-all-data-dec1s.txt")
 #alldata[1:6,]
 someData <- subset(alldata, select=rpiProofsize:totalTime)
 #someData[1:2,]
@@ -313,8 +314,8 @@ allYaxis <- max(max(rpiLine[,2]),max(max(luLine[,2]),max(max(rpiluLine[,2]),max(
 allXaxis <- max(rpiluXaxis,lurpiXaxis,rpiXaxis,luXaxis)
 allYaxis <- max(rpiluYaxis,lurpiYaxis,rpiYaxis,luYaxis)
 
-pdf('combined-all-cumulative-res-nodes-diff.pdf', height=5, width=5)
-par(mar=c(5.1,4.1,1,2.1))
+pdf('combined-all-cumulative-res-nodes-diff.pdf', height=6, width=6)
+par(mar=c(5.1,5.1,1,2.1))
 
 plot(rpiluLine[,1],rpiluLine[,2],type="n",  xlim=c(0,allXaxis), ylim=c(0,allYaxis ),axes=FALSE, xlab="Number of Proofs", ylab="Number of Resolutions (x10^3)",yaxs="i", xaxs="i")
 
@@ -335,7 +336,7 @@ abline(v=allXaxis)
 abline(h=0)
 abline(v=0)
 abline(h=allYaxis)
-legend("topleft",c("FOLU(p)", "FORPI(p)", "FORPI(FOLU(p))", "FOLU(FORPI(p))"), lty=c(1,1,1,1), col=c("blue", "red", "green", "orange"))
+legend("topleft",c("FOLU(p)", "FORPI(p)", "FORPI(FOLU(p))", "FOLU(FORPI(p))"), lty=c(1,1,1,1), col=c("blue", "red", "green", "orange"), bty="n")
 
 scaleFactor <- 1 
 heightOffset <- 20000

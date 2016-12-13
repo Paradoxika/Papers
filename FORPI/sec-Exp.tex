@@ -37,14 +37,24 @@ Figure \ref{fig:ex} (b) shows that the order of compression may matter less than
 {\SPASS} required approximately 40 minutes to solve and generate the proofs; the total time for {\GFOLU} and {\FORPI} to be executed on all 308 proofs was just under 8 seconds (both include parsing time).
 
 \begin{figure}[bt]
-\vspace{-0.75cm}
 \centering
-    \subfloat[\scriptsize Length: Compressed vs. Original]{{\includegraphics[scale=0.5]{images/everything-forpi-folu-length_vs_compress_length_all_proofs.pdf}}}
-%    \subfloat[Compressed length against input length (resolutions)]{{\includegraphics[scale=0.5]{images/everything-forpi-folu-res_length_vs_compress_res_length_all_proofs.pdf} }}
-\subfloat[\scriptsize \FORPI(\GFOLU(p)) vs. \GFOLU(\FORPI(p))]{{\includegraphics[scale=0.5]{images/forpi-folu-vs-folu-forpi-length_vs_compress_length_all_proofs.pdf} }}
-\caption{Scatter Plots of Experimental Results}
+  \includegraphics[scale=0.5]{images/final-random-forpi-compress_ratio_res_vs_proof_res_length.pdf}
+  
+    \caption{Compression Ratio (\FORPI)}
+    \label{fig:forpimean}
+    \end{figure}
+
+\begin{figure}[p]
+    
+    \hspace{-2cm}\subfloat[Number of (non-)compressed proofs]{{\includegraphics[scale=0.5]{images/combined-all-num_compressed_stacked.pdf} }}
+   \subfloat[Compressed length against input length]{{\includegraphics[scale=0.5]{images/combined-all-res-length-vs-compressed-res-length.pdf} }}   
+   
+  \hspace{-2cm}\subfloat[Cumulative proof compression]{{\includegraphics[scale=0.5]{images/combined-all-cumulative-res-nodes-diff.pdf} }}   
+\subfloat[\FORPI(\GFOLU(p)) vs. \GFOLU(\FORPI(p))]{{\includegraphics[scale=0.5]{images/combined-alg-res.pdf} }}
+
+ \caption{\GFOLU \& \FORPI Combination Results}
 \label{fig:ex}
-\vspace{-0.5cm}
+
 \end{figure}
 
 
