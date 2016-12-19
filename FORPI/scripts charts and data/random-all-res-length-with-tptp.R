@@ -112,7 +112,7 @@ axisLimit = max(axisLimitX, axisLimitY)
 pdf('combined-all-res-length-vs-compressed-res-length.pdf', height=6, width=6)
 par(mar=c(5.1,5.1,1,2.1))
 
-plot(lengthRPI,compressedLengthFinalRPI ,  xlim=c(0,axisLimit), ylim=c(0,axisLimit ),axes=FALSE, xlab="Proof Length (Resolutions)", ylab="Compressed Length (Resolutions)",yaxs="i", xaxs="i")
+plot(lengthRPI,compressedLengthFinalRPI ,  xlim=c(0,axisLimit), ylim=c(0,axisLimit ),axes=FALSE, xlab="Proof Length (Resolutions)", ylab="Compressed Length (Resolutions)",yaxs="i", xaxs="i", pch=c(1), col=c("red"))
 
 luPoints <-cbind(lengthLU, compressedLengthFinalLU )
 points(luPoints,col="red",pch=4)
@@ -120,13 +120,13 @@ rpiluPoints <-cbind(lengthRPILU, compressedLengthFinalRPILU )
 points(rpiluPoints,col="blue",pch=2)
 lurpiPoints <-cbind(lengthLURPI, compressedLengthFinalLURPI)
 points(lurpiPoints,col="green",pch=3)
-legend("topleft",c("FORPI(p)", "GFOLU(p)", "FORPI(GFOLU(p))", "GFOLU(FORPI(p))"), pch=c(1,4,2,3), col=c("black","red", "blue", "green"), bty="n")
+legend("topleft",c("FORPI(p)", "GFOLU(p)", "FORPI(GFOLU(p))", "GFOLU(FORPI(p))"), pch=c(1,4,2,3), col=c("red","blue", "green", "orange"), bty="n")
 
 
-points(lurpiPointstptp,col="green",pch=3)
-points(rpiPointstptp,col="black",pch=7) #TODO: change
-points(luPointstptp,col="red",pch=4)
-points(rpiluPointstptp,col="blue",pch=2)
+points(lurpiPointstptp,col="orange",pch=3)
+points(rpiPointstptp,col="red",pch=7) 
+points(luPointstptp,col="blue",pch=4)
+points(rpiluPointstptp,col="green",pch=2)
 
 abline(0,1)
 countVal = 15
@@ -168,10 +168,10 @@ segments(inlayWidth,inlayHeight,horizontalOffset+inlayWidthScaled+5, verticalOff
 #also does the border
 rect(horizontalOffset,verticalOffset, horizontalOffset+inlayWidthScaled+5, verticalOffset+inlayHeightScaled+5,col='white')
 
-points(lurpiPointstptpScaled,col="green",pch=3)
-points(rpiPointstptpScaled,col="black",pch=7) #TODO: change
-points(luPointstptpScaled,col="red",pch=4)
-points(rpiluPointstptpScaled,col="blue",pch=2)
+points(lurpiPointstptpScaled,col="orange",pch=3)
+points(rpiPointstptpScaled,col="red",pch=7) 
+points(luPointstptpScaled,col="blue",pch=4)
+points(rpiluPointstptpScaled,col="green",pch=2)
 
 #inlay y=x line
 segments(horizontalOffset , verticalOffset, horizontalOffset+inlayWidthScaled+5, verticalOffset+inlayHeightScaled+5)

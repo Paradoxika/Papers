@@ -128,13 +128,19 @@ rpiluLine <- makeLineData(indexVector, diffLengthsRPILU)
 ###---
 
 
+#make BEST line
+bestLen<- pmin(compressedLengthFinalRPILU, compressedLengthFinalLURPI)
+diffLengthsBest <- (lengthRPI - bestLen)
+
+bestLine <- makeLineData(indexVector, diffLengthsBest)
+
 #--------------------------------------TPTP stuff
 
 
 
 #Get the data
 #get RPI-only data
-alldataRPI = read.csv("D:/Research Scripts/GSoC14/November 2016 - Charts - R/cade-forpi.txt")
+alldataRPI = read.csv("D:/Git Repositories/Papers/FORPI/scripts charts and data/cade-forpi.txt")
 #alldataRPI[1:10,]
 dataRPI <- subset(alldataRPI, select=proof:numFOSub)
 #dataRPI[1:10,]
@@ -167,7 +173,7 @@ rpiLineTPTP <- makeLineData(indexVectorTPTP, diffLengthsRPITPTP)
 
 #Get the data
 #get LU-only data
-alldataLU = read.csv("D:/Research Scripts/GSoC14/November 2016 - Charts - R/cade-folu.txt")
+alldataLU = read.csv("D:/Git Repositories/Papers/FORPI/scripts charts and data/cade-folu.txt")
 #alldataLU[1:10,]
 dataLU <- subset(alldataLU, select=proof:numFOSub)
 #dataLU[1:10,]
@@ -199,7 +205,7 @@ luLineTPTP <- makeLineData(indexVectorTPTP, diffLengthsLUTPTP)
 
 #Get the data
 #get LURPI-only data
-alldataLURPI = read.csv("D:/Research Scripts/GSoC14/November 2016 - Charts - R/cade-folurpi.txt")
+alldataLURPI = read.csv("D:/Git Repositories/Papers/FORPI/scripts charts and data/cade-folurpi.txt")
 #alldataLURPI[1:10,]
 dataLURPI <- subset(alldataLURPI, select=proof:numFOSub)
 #dataLURPI[1:10,]
@@ -233,7 +239,7 @@ lurpiLineTPTP <- makeLineData(indexVectorTPTP, diffLengthsLURPITPTP)
 
 #Get the data
 #get RPILU-only data
-alldataRPILU = read.csv("D:/Research Scripts/GSoC14/November 2016 - Charts - R/cade-forpilu.txt")
+alldataRPILU = read.csv("D:/Git Repositories/Papers/FORPI/scripts charts and data/cade-forpilu.txt")
 #alldataRPILU[1:10,]
 dataRPILU <- subset(alldataRPILU, select=proof:numFOSub)
 #dataRPILU[1:10,]
@@ -245,26 +251,32 @@ numFOSubsRPILUTPTP <- dataRPILU[,"numFOSub"]
 compressedLengthRPILUFinalTPTP <- compressedLengthRPILUTPTP #(compressedLengthRPILU  - numFOSubsRPILU )
 lengthRPILUTPTP <- dataRPILU[,"resOnlyLength"]
 ###---
-cleanDataPoints <- cbind(lengthRPILUTPTP,compressedLengthRPILUFinalTPTP)
-cleanDataPointsLen <- length(cleanDataPoints[,1])
+cleanDataPointsRPILU <- cbind(lengthRPILUTPTP,compressedLengthRPILUFinalTPTP)
+cleanDataPointsRPILULen <- length(cleanDataPointsRPILU[,1])
 indexVectorTPTP <- c(1:cleanDataPointsLen)  #Note: this is for ALL data sets (okay since all are on same proofs)
 baseLine <- makeLineData(indexVectorTPTP, lengthRPILUTPTP ) #Note: this is for ALL data sets (okay since all are on same proofs)
 for(i in 1:cleanDataPointsLen){
-	oL <- cleanDataPoints[i,1]
-	cL <- cleanDataPoints[i,2]
+	oL <- cleanDataPointsRPILU[i,1]
+	cL <- cleanDataPointsRPILU[i,2]
     
 	if (cL <= 0){ #If the compressed length was 0, it was an error;
-       cleanDataPoints[i,2] <- oL 
+       cleanDataPointsRPILU[i,2] <- oL 
 	}
     
 }
-compressedLengthRPILUFinal <- cleanDataPoints[,2]
+compressedLengthRPILUFinalTPTP <- cleanDataPointsRPILU[,2]
 diffLengthsRPILUTPTP <- (lengthRPILUTPTP - compressedLengthRPILUFinalTPTP)
 
 rpiluLineTPTP <- makeLineData(indexVectorTPTP, diffLengthsRPILUTPTP)
 ###---
 
+#Get the data
+#make BEST line
+bestLenTPTP <- pmin(compressedLengthRPILUFinalTPTP, compressedLengthLURPIFinalTPTP)
+diffLengthsBestTPTP <- (lengthRPILUTPTP - bestLenTPTP)
 
+bestLineTPTP <- makeLineData(indexVectorTPTP, diffLengthsBestTPTP)
+###---
 
 
 #ALL
@@ -311,8 +323,14 @@ allYaxis <- max(max(rpiLine[,2]),max(max(luLine[,2]),max(max(rpiluLine[,2]),max(
 
 #All with TPTP data
 
+rpiluYaxis <- max(rpiluLine[,2])
+lurpiYaxis <- max(lurpiLine[,2])
+luYaxis <- max(luLine[,2])
+rpiYaxis <- max(rpiLine[,2])
+bestYaxis <- max(bestLine[,2])
+
 allXaxis <- max(rpiluXaxis,lurpiXaxis,rpiXaxis,luXaxis)
-allYaxis <- max(rpiluYaxis,lurpiYaxis,rpiYaxis,luYaxis)
+allYaxis <- max(rpiluYaxis,lurpiYaxis,rpiYaxis,luYaxis,bestYaxis,40000)
 
 pdf('combined-all-cumulative-res-nodes-diff.pdf', height=6, width=6)
 par(mar=c(5.1,5.1,1,2.1))
@@ -323,7 +341,7 @@ lines(rpiLine[,1],rpiLine[,2], type='l',col='blue')
 lines(luLine[,1],luLine[,2], type='l',col='red') 
 lines(rpiluLine[,1],rpiluLine[,2], type='l',col='green') 
 lines(lurpiLine[,1],lurpiLine[,2], type='l',col='orange') 
-
+lines(bestLine[,1],bestLine[,2], type='l', col='black')
 
 XbyVal <- 100
 YbyVal <- 2000
@@ -336,15 +354,16 @@ abline(v=allXaxis)
 abline(h=0)
 abline(v=0)
 abline(h=allYaxis)
-legend("topleft",c("FOLU(p)", "FORPI(p)", "FORPI(FOLU(p))", "FOLU(FORPI(p))"), lty=c(1,1,1,1), col=c("blue", "red", "green", "orange"), bty="n")
+legend("topleft",c("FOLU(p)", "FORPI(p)", "FORPI(FOLU(p))", "FOLU(FORPI(p))", "Best"), lty=c(1,1,1,1), col=c("blue", "red", "green", "orange", "black"), bty="n")
 
-scaleFactor <- 1 
+scaleFactor <- 2 
 heightOffset <- 20000
-horizontalOffset <- 500
-vScaleFactor <- 50
+horizontalOffset <- 275
+vScaleFactor <- 100
 
-inlayXlabelPositions <- c(0,100,200,300) + horizontalOffset
+inlayXlabelPositions <- c(0,100,200,300)*scaleFactor + horizontalOffset
 inlayWidth <- 308 #todo: find using data
+inlayWidthScaled <- inlayWidth *scaleFactor 
 
 axis(1, at=inlayXlabelPositions , labels=seq(0,300, by =100),las=2, pos=c(heightOffset,horizontalOffset))
 rpiYinlayMax <- max(rpiLineTPTP[,2]*vScaleFactor +heightOffset)
@@ -359,27 +378,30 @@ rpiluYinlayMaxNS <- max(rpiluLineTPTP[,2])
 lurpiYinlayMaxNS <- max(lurpiLineTPTP[,2])
 inlayYmaxNS <- max(max(rpiYinlayMaxNS, luYinlayMaxNS), max(rpiluYinlayMaxNS, lurpiYinlayMaxNS))
 
+inlayXmax <- max(bestLineTPTP[,1]*scaleFactor)  + horizontalOffset
+
+
 #connecting lines
 segments(0, 0, horizontalOffset, heightOffset,lty='dotted') #bottom left
-segments(inlayWidth , 0, horizontalOffset+inlayWidth , heightOffset,lty='dotted') #bottom right
+segments(inlayWidth , 0, inlayXmax , heightOffset,lty='dotted') #bottom right
 segments(0,inlayYmaxNS , horizontalOffset, inlayYmax,lty='dotted') #top left
-segments(inlayWidth , inlayYmaxNS , horizontalOffset+inlayWidth, inlayYmax,lty='dotted') #top right
+segments(inlayWidth , inlayYmaxNS , inlayXmax , inlayYmax,lty='dotted') #top right
 
-rect(horizontalOffset, heightOffset, horizontalOffset+inlayWidth, inlayYmax, col='white')
+rect(horizontalOffset, heightOffset, inlayXmax, inlayYmax, col='white')
 
 lines(luLineTPTP[,1]*scaleFactor + horizontalOffset,jitter(luLineTPTP[,2]*vScaleFactor +heightOffset), type='l',col='blue') 
 lines(rpiLineTPTP[,1]*scaleFactor + horizontalOffset,jitter(rpiLineTPTP[,2]*vScaleFactor +heightOffset), type='l',col='red') 
-lines(rpiluLineTPTP[,1]*scaleFactor + horizontalOffset,jitter(rpiluLineTPTP[,2]*vScaleFactor +heightOffset), type='l',col='green') 
-lines(lurpiLineTPTP[,1]*scaleFactor + horizontalOffset,jitter(lurpiLineTPTP[,2]*vScaleFactor +heightOffset), type='l',col='orange') 
+lines(rpiluLineTPTP[,1]*scaleFactor + horizontalOffset,jitter(rpiluLineTPTP[,2]*vScaleFactor +heightOffset), type='l',col='green',lty=2) 
+lines(lurpiLineTPTP[,1]*scaleFactor + horizontalOffset,jitter(lurpiLineTPTP[,2]*vScaleFactor +heightOffset), type='l',col='orange',lty=2) 
+lines(bestLineTPTP[,1]*scaleFactor + horizontalOffset,jitter(bestLineTPTP[,2]*vScaleFactor +heightOffset), type='l',col='black',lty=2) 
 
 
 
 
-
-segments(horizontalOffset, inlayYmax, horizontalOffset+inlayWidth, inlayYmax)
-segments(horizontalOffset, heightOffset, horizontalOffset+inlayWidth, heightOffset)
-segments(horizontalOffset, heightOffset, horizontalOffset, inlayYmax)
-segments(horizontalOffset+inlayWidth, heightOffset, horizontalOffset+inlayWidth, inlayYmax)
+#segments(horizontalOffset, inlayYmax, horizontalOffset+inlayWidth, inlayYmax)
+#segments(horizontalOffset, heightOffset, horizontalOffset+inlayWidth, heightOffset)
+#segments(horizontalOffset, heightOffset, horizontalOffset, inlayYmax)
+#segments(horizontalOffset+inlayWidth, heightOffset, horizontalOffset+inlayWidth, inlayYmax)
 
 
 
@@ -388,8 +410,8 @@ segments(inlayWidth , 0, inlayWidth, inlayYmaxNS , lty='dotted')
 segments(0 , inlayYmaxNS , inlayWidth, inlayYmaxNS , lty='dotted')
 
 
-axis(2, at=seq(heightOffset,25000, by =2000), labels=seq(0,100, by =40),las=2, pos=c(horizontalOffset, heightOffset))
-mtext("                 Resolutions", side = 2, line = -2)
+axis(2, at=c(0,30,60,90)*vScaleFactor + heightOffset, labels=seq(0,90, by =30),las=2, pos=c(horizontalOffset, heightOffset))
+mtext("                              Resolutions", side = 2, line = -1.00)
 
 
 dev.off()

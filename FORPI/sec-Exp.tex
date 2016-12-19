@@ -20,9 +20,11 @@ Figure \ref{fig:ex} (a) shows the number of proofs (compressed and uncompressed)
 
 Figure \ref{fig:ex} (b) shows a scatter plot comparing the number resolutions of the input proof against the number of resolutions in the compressed proof. The data resulting from the TPTP data is magnified by the internal plot. For the randomly generated proofs (points to the left of the blown-up area), it is often the case that the length of the compressed proof is significantly lesser than the length of the input proof. In some cases, {\FORPI} is able to reduce the number of resolutions from the hundreds to single digit values. Interestingly, {\GFOLU} appears to reduce the the number of resolutions by a linear factor. We conjecture that this is due to the method by which the data was generated: specifically, ... TODO
 
-Figure \ref{fig:ex} (c) shows a scatter plot comparing the difference in the cumulative number resolutions of the first $x$ input proofs against the cumulative number of resolutions in the first $x$ compressed proofs. Again, the TPTP data is magnified in the sub-plot. Where, we see that the use of both algorithms is always better than using a single algorithm, and further that applying {\FORPI} after {\GFOLU} appears to be the best option.
+Figure \ref{fig:ex} (c) shows a scatter plot comparing the size of compression obtained by applying {\FORPI} before {\GFOLU} versus {\GFOLU} before {\FORPI}. Data generated from the TPTP data set is marked in red; the rest are obtained from random proofs. Points that lie on the line $y=x$ have the same size after both combinations. The suggests that {\FORPI} should be applied after {\GFOLU}: X points lie beneath the line, while X are above the line to maximize the likelihood of compression. However, the applying {\FORPI} first may result in greater compression.
 
-Figure \ref{fig:ex} (d) shows a scatter plot comparing the size of compression obtained by applying {\FORPI} before {\GFOLU} versus {\GFOLU} before {\FORPI}. Data generated from the TPTP data set is marked in red; the rest are obtained from random proofs. Points that lie on the line $y=x$ have the same size after both combinations. The data confirms(denies) the suggestion from Figure \ref{fig:ex} (c) that {\FORPI} should be applied after {\GFOLU}: X points lie beneath the line, while X are above the line to maximize the likelihood of compression. However, the applying {\FORPI} first may result in greater compression.
+Figure \ref{fig:ex} (d) shows a plot comparing the difference in the cumulative number resolutions of the first $x$ input proofs against the cumulative number of resolutions in the first $x$ compressed proofs. Again, the TPTP data is magnified in the sub-plot. Where, we see that the use of both algorithms is always better than using a single algorithm, and further that applying {\FORPI} after {\GFOLU} appears to be the best option.
+
+
 
 {\SPASS} required approximately 40 minutes (running on a cluster and including proof generation time for each problem) to solve the generated proofs. The total time for {\GFOLU} and {\FORPI} to be executed on all 308 TPTP proofs was just under X seconds on a simple laptop. The random proofs were generated in X seconds, and took approximately X minutes to compress, both measured on a laptop.
 All times including parsing time. These compression algorithms continue to be very fast, and may simplify the proof considerably for a relatively quick time cost.
@@ -69,8 +71,9 @@ All times including parsing time. These compression algorithms continue to be ve
     \hspace{-2cm}\subfloat[Number of (non-)compressed proofs]{{\includegraphics[scale=0.5]{images/combined-all-num_compressed_stacked.pdf} }}
    \subfloat[Compressed length against input length]{{\includegraphics[scale=0.5]{images/combined-all-res-length-vs-compressed-res-length.pdf} }}   
    
-  \hspace{-2cm}\subfloat[Cumulative proof compression]{{\includegraphics[scale=0.5]{images/combined-all-cumulative-res-nodes-diff.pdf} }}   
-\subfloat[\FORPI(\GFOLU(p)) vs. \GFOLU(\FORPI(p))]{{\includegraphics[scale=0.5]{images/combined-alg-res.pdf} }}
+  \hspace{-2cm}\subfloat[\FORPI(\GFOLU(p)) vs. \GFOLU(\FORPI(p))]{{\includegraphics[scale=0.5]{images/combined-alg-res.pdf} }}
+  \subfloat[Cumulative proof compression]{{\includegraphics[scale=0.5]{images/combined-all-cumulative-res-nodes-diff.pdf} }}   
+
 
  \caption{\GFOLU \& \FORPI Combination Results}
 \label{fig:ex}

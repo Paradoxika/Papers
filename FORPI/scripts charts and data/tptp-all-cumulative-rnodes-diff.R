@@ -1,7 +1,8 @@
 #setwd("D:/Research Scripts/GSoC14/November 2016 - Charts - R")
+setwd("D:/Git Repositories/Papers/FORPI/scripts charts and data")
 
 #get all data
-#alldata = read.csv("D:/Research Scripts/GSoC14/November 2016 - Charts - R/random-all-data.txt")
+alldata = read.csv("D:/Git Repositories/Papers/FORPI/scripts charts and data/random-all-data.txt")
 #alldata[1:6,]
 someData <- subset(alldata, select=rpiProofsize:totalTime)
 #someData[1:2,]
@@ -23,7 +24,7 @@ makeLineData <- function(xVals, yVals){
 
 #Get the data
 #get RPI-only data
-#alldataRPI = read.csv("D:/Research Scripts/GSoC14/November 2016 - Charts - R/cade-forpi.txt")
+alldataRPI = read.csv("D:/Git Repositories/Papers/FORPI/scripts charts and data/cade-forpi.txt")
 #alldataRPI[1:10,]
 dataRPI <- subset(alldataRPI, select=proof:numFOSub)
 #dataRPI[1:10,]
@@ -56,7 +57,7 @@ rpiLine <- makeLineData(indexVector, diffLengthsRPI)
 
 #Get the data
 #get LU-only data
-#alldataLU = read.csv("D:/Research Scripts/GSoC14/November 2016 - Charts - R/cade-folu.txt")
+alldataLU = read.csv("D:/Research Scripts/GSoC14/November 2016 - Charts - R/cade-folu.txt")
 alldataLU[1:10,]
 dataLU <- subset(alldataLU, select=proof:numFOSub)
 dataLU[1:10,]
@@ -88,7 +89,7 @@ luLine <- makeLineData(indexVector, diffLengthsLU)
 
 #Get the data
 #get LURPI-only data
-#alldataLURPI = read.csv("D:/Research Scripts/GSoC14/November 2016 - Charts - R/cade-folurpi.txt")
+alldataLURPI = read.csv("D:/Git Repositories/Papers/FORPI/scripts charts and data/cade-folurpi.txt")
 alldataLURPI[1:10,]
 dataLURPI <- subset(alldataLURPI, select=proof:numFOSub)
 dataLURPI[1:10,]
@@ -122,12 +123,9 @@ lurpiLine <- makeLineData(indexVector, diffLengthsLURPI)
 
 #Get the data
 #get RPILU-only data
-#alldataRPILU = read.csv("D:/Research Scripts/GSoC14/November 2016 - Charts - R/cade-forpilu.txt")
-alldataRPILU[1:10,]
+alldataRPILU = read.csv("D:/Git Repositories/Papers/FORPI/scripts charts and data/cade-forpilu.txt")
 dataRPILU <- subset(alldataRPILU, select=proof:numFOSub)
-dataRPILU[1:10,]
 num <- length(dataRPILU)
-num 
 compressedLengthRPILU <- dataRPILU[,"compressedLengthResOnly"]
 numFOSubsRPILU <- dataRPILU[,"numFOSub"]
 
@@ -270,8 +268,8 @@ plot(rpiluLine[,1],rpiluLine[,2],type="n",  xlim=c(0,allXaxis), ylim=c(0,allYaxi
 
 lines(luLine[,1],luLine[,2], type='l',col='blue') 
 lines(rpiLine[,1],rpiLine[,2], type='l',col='orange') 
-lines(rpiluLine[,1],rpiluLine[,2], type='l',col='red') 
-lines(lurpiLine[,1],lurpiLine[,2], type='l',col='green') 
+lines(rpiluLine[,1],rpiluLine[,2], type='l',col='red',lty=2) 
+lines(lurpiLine[,1],lurpiLine[,2], type='l',col='green',lty=2) 
 
 XbyVal <- 25
 YbyVal <- 10
