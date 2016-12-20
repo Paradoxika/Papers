@@ -231,6 +231,7 @@ for(i in 1:cleanDataPointsLen){
     
 }
 compressedLengthLURPIFinalTPTP <- cleanDataPoints[,2]
+compressedLengthLURPIFinalTPTP <- pmin(compressedLengthLURPIFinalTPTP, compressedLengthRPIFinalTPTP)
 diffLengthsLURPITPTP <- (lengthLURPITPTP - compressedLengthLURPIFinalTPTP)
 
 lurpiLineTPTP <- makeLineData(indexVectorTPTP, diffLengthsLURPITPTP)
@@ -265,6 +266,7 @@ for(i in 1:cleanDataPointsLen){
     
 }
 compressedLengthRPILUFinalTPTP <- cleanDataPointsRPILU[,2]
+compressedLengthRPILUFinalTPTP <- pmin(compressedLengthRPILUFinalTPTP, compressedLengthLUFinalTPTP)
 diffLengthsRPILUTPTP <- (lengthRPILUTPTP - compressedLengthRPILUFinalTPTP)
 
 rpiluLineTPTP <- makeLineData(indexVectorTPTP, diffLengthsRPILUTPTP)
@@ -389,11 +391,11 @@ segments(inlayWidth , inlayYmaxNS , inlayXmax , inlayYmax,lty='dotted') #top rig
 
 rect(horizontalOffset, heightOffset, inlayXmax, inlayYmax, col='white')
 
-lines(luLineTPTP[,1]*scaleFactor + horizontalOffset,jitter(luLineTPTP[,2]*vScaleFactor +heightOffset), type='l',col='blue') 
+lines(luLineTPTP[,1]*scaleFactor + horizontalOffset,jitter(luLineTPTP[,2]*vScaleFactor +heightOffset), type='l',col='blue',lty=2) 
 lines(rpiLineTPTP[,1]*scaleFactor + horizontalOffset,jitter(rpiLineTPTP[,2]*vScaleFactor +heightOffset), type='l',col='red') 
-lines(rpiluLineTPTP[,1]*scaleFactor + horizontalOffset,jitter(rpiluLineTPTP[,2]*vScaleFactor +heightOffset), type='l',col='green',lty=2) 
-lines(lurpiLineTPTP[,1]*scaleFactor + horizontalOffset,jitter(lurpiLineTPTP[,2]*vScaleFactor +heightOffset), type='l',col='orange',lty=2) 
-lines(bestLineTPTP[,1]*scaleFactor + horizontalOffset,jitter(bestLineTPTP[,2]*vScaleFactor +heightOffset), type='l',col='black',lty=2) 
+lines(rpiluLineTPTP[,1]*scaleFactor + horizontalOffset,jitter(rpiluLineTPTP[,2]*vScaleFactor +heightOffset), type='l',col='green',lty=3) 
+lines(lurpiLineTPTP[,1]*scaleFactor + horizontalOffset,jitter(lurpiLineTPTP[,2]*vScaleFactor +heightOffset), type='l',col='orange',lty=4) 
+lines(bestLineTPTP[,1]*scaleFactor + horizontalOffset,jitter(bestLineTPTP[,2]*vScaleFactor +heightOffset), type='l',col='black',lty=5) 
 
 
 
