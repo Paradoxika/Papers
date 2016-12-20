@@ -1,6 +1,8 @@
-setwd("D:/Research Scripts/GSoC14/November 2016 - Charts - R")
+#setwd("D:/Research Scripts/GSoC14/November 2016 - Charts - R")
+setwd("D:/Git Repositories/Papers/FORPI/scripts charts and data")
 
-allNCdataSepRaw = read.csv("D:/Research Scripts/GSoC14/November 2016 - Charts - R/combined-all-nc-sep-data-dec1s-res.txt")
+#allNCdataSepRaw = read.csv("D:/Research Scripts/GSoC14/November 2016 - Charts - R/combined-all-nc-sep-data-dec1s-res.txt")
+allNCdataSepRaw = read.csv("D:/Git Repositories/Papers/FORPI/scripts charts and data/combined-all-nc-sep-data-dec1s-res.txt")
 
 
 yAdd <- 50
@@ -49,7 +51,7 @@ colVect <- c("springgreen", "springgreen4", "palevioletred", "palevioletred3", "
 a<-barplot(compressedVnot  , border=NA, 
     xlab="", ylab="Number of Proofs", xaxt="n",las=2,axes=FALSE, ylim=c(0,yMax),  col=colVect)
 mtext("Proof Length Before Compression (Resolutions)", side=1,line=3.5)
-legend("topleft", legend = rownames(compressedVnot ), fill=colVect, bty="n", border="white" )
+legend("topleft", legend = rownames(compressedVnot ), fill=colVect, bty="n", border="white",cex=0.62)
 axis(1, at=a, binNames, las=2,cex.axis=0.75)
 axis(2, at=seq(0,425, by=25), seq(0,425,by=25), las=2)
 
