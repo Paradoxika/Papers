@@ -50,8 +50,17 @@ colVect <- c("springgreen", "springgreen4", "palevioletred", "palevioletred3", "
 
 a<-barplot(compressedVnot  , border=NA, 
     xlab="", ylab="Number of Proofs", xaxt="n",las=2,axes=FALSE, ylim=c(0,yMax),  col=colVect)
+
+firstOffset <- c(50, 15, rep.int(0, 12))
+percentPos <- compressedVnot[1,]+compressedVnot[2,]+30 + firstOffset 
+library('scales')
+
+totalNumProofs <- compressedVnot[1,] + compressedVnot[2,] + compressedVnot[3,] + compressedVnot[4,] + compressedVnot[5,] + compressedVnot[6,]
+percentLabels <- percent(1 - (compressedVnot[5,] + compressedVnot[6,])/totalNumProofs )
+text(a,percentPos ,labels=percentLabels ,cex=.8,srt = 90)
+
 mtext("Proof Length Before Compression (Resolutions)", side=1,line=3.5)
-legend("topleft", legend = rownames(compressedVnot ), fill=colVect, bty="n", border="white",cex=0.62)
+legend("topleft", legend = rownames(compressedVnot ), fill=colVect, bty="n", border="white",cex=0.75)
 axis(1, at=a, binNames, las=2,cex.axis=0.75)
 axis(2, at=seq(0,425, by=25), seq(0,425,by=25), las=2)
 
