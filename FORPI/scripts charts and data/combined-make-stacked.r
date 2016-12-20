@@ -43,8 +43,8 @@ yMax <- max(everythingAdded) + yAdd
 
 allfileName <- 'combined-all-num_compressed_stacked.pdf'
 compressedVnot <- rbind("Compressed (Random)"=numNonUniqueCompressedVect, "Always Compressed (Random)"=numAllCompressedVect, "Compressed (TPTP)"=numNonUniqueCompressedVectTPTP, "Always Compressed (TPTP)"=numAllCompressedVectTPTP, "Not Compressed (Random)"=numNotCompressedVect, "Not Compressed (TPTP)"=numNotCompressedVectTPTP  )
-pdf(allfileName, height=5, width=5)
-par(mar=c(5.1,4.1,1,2.1))
+pdf(allfileName, height=6, width=6)
+par(mar=c(5.1,5.1,1,2.1))
 
 colVect <- c("springgreen", "springgreen4", "palevioletred", "palevioletred3", "slategray2", "slategray3")
 
