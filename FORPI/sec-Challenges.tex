@@ -14,12 +14,12 @@ Consider the following proof $\psi$. When computed as in the propositional case,
 \begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_6$: $p(Y,b)$ \e \hspace{-2cm}}
 \AxiomC{$\eta_1$: \e $p(W,X)$}
 \AxiomC{$\eta_2$: $p(W,X)$ \e $q(c)$}
-\BinaryInfC{$\eta_3$: \e $q(c)$}
+\BinaryInfC{$\eta_3$: \e $q(c)$  \hspace{-1.5cm}}
 \AxiomC{$\eta_4$: $q(c)$ \e $p(a,X)$}
 \BinaryInfC{$\eta_5$: \e $p(a,X)$}
-\AxiomC{$\eta_6$: $p(Y,b)$ \e }
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{scriptsize}
@@ -49,16 +49,34 @@ Again, the safe literals for $\eta_3$, when computed as in the propositional cas
 \begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_6$: $p(Y,b)$ \e \hspace{-2cm}}
 \AxiomC{$\eta_1$: \e $p(a,c)$}
 \AxiomC{$\eta_2$: $p(a,c)$ \e $q(c)$}
 \BinaryInfC{$\eta_3$: \e $q(c)$}
 \AxiomC{$\eta_4$: $q(c)$ \e $p(a,X)$}
 \BinaryInfC{$\eta_5$: \e $p(a,X)$}
-\AxiomC{$\eta_6$: $p(Y,b)$ \e }
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{scriptsize}
 
+\begin{figure*}
+\begin{small}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_8$: $q(f(a,e),c)\e$}
+\AxiomC{$\eta_6$: $\e p(c,d)$ \hspace{-2cm}}
+\AxiomC{$\eta_1$: $p(U,V)\e q(f(a,V),U)$}
+\AxiomC{$\eta_2$: $q(f(a,X),Y),q(T,X)\e q(f(a,Z),Y)$}
+\BinaryInfC{$\eta_3$: $p(U,V),q(T,V)\e q(f(a,Z),U)$}
+\AxiomC{\hspace{-1cm} $\eta_4$: $\e q(R,S)$}
+\BinaryInfC{$\eta_5$: $p(U,V)\e q(f(a,Z),U)$}
+\BinaryInfC{$\eta_7$: $\e q(f(a,Z),c)$}
+\BinaryInfC{$\psi$: $\bot$}
+\end{prooftree}
+\end{small}
+\caption{An example where pre-regularization unifiability is not sufficient.}
+\label{fig:ex-unifcheck}
+\end{figure*}
 
 \noindent
 However, if we attempt to regularize the proof, the same series of actions as in Example \ref{ex:unif} would 
@@ -89,30 +107,17 @@ One way to ensure this property is met is to slightly modify the notion of safe 
 %TODO: continue from here
 %extra check example
 \begin{example}\label{ex:unifcheck}
-Satisfying the pre-regularization unifiability property is not sufficient. Consider the proof $\psi$ below. After collecting the safe literals, $\eta_3$'s safe literals are $\{q(T,V),p(c,d)\vdash q(f(a,e),c)\}$.
 
-\begin{scriptsize}
-\begin{prooftree}
-\def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_8$: $q(f(a,e),c)\e$\hspace{-1cm}}
-\AxiomC{$\eta_6$: $\e p(c,d)$\hspace{-4.5cm}}
-\AxiomC{$\eta_1$: $p(U,V)\e q(f(a,V),U)$}
-\AxiomC{$\eta_2$: $q(f(a,X),Y),q(T,X)\e q(f(a,Z),Y)$}
-\BinaryInfC{$\eta_3$: $p(U,V),q(T,V)\e q(f(a,Z),U)$\hspace{-1cm}}
-\AxiomC{\hspace{-1cm} $\eta_4$: $\e q(R,S)$}
-\BinaryInfC{$\eta_5$: $p(U,V)\e q(f(a,Z),U)$}
-\BinaryInfC{$\eta_7$: $\e q(f(a,Z),c)$}
-\BinaryInfC{$\psi$: $\bot$}
-\end{prooftree}
-\end{scriptsize}
 
-\noindent
+Satisfying the pre-regularization unifiability property is not sufficient. Consider the proof $\psi$ in Figure \ref{fig:ex-unifcheck}. After collecting the safe literals, $\eta_3$'s safe literals are $\{q(T,V),p(c,d)\vdash q(f(a,e),c)\}$.
+%\noindent
 $\eta_3$'s pivot $q(f(a,V),U)$ is unifiable to (and even more general than) the safe literal $q(f(a,e),c)$. Attempting to regularize $\eta_3$ would lead to the removal of $\eta_2$, the replacement of $\eta_3$ by $\eta_1$ and the removal of $\eta_4$ (because $\eta_1$ does not contain the pivot required by $\eta_5$), with $\eta_5$ also being replaced by $\eta_1$. Then resolution between $\eta_1$ and $\eta_6$ results in $\eta_7'$, which cannot be resolved with $\eta_8$, as shown below.
 
+
 \begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_8$: $q(f(a,e),c)\e$}
+\AxiomC{$\eta_8$: $q(f(a,e),c)\e$ \hspace{-0.5cm}}
 \AxiomC{$\eta_6$: $\e p(c,d)$}
 \AxiomC{$\eta_1$: $p(U,V)\e q(f(a,V),U)$}
 \BinaryInfC{$\eta_7'$: $\e q(f(a,d),c)$}
@@ -146,30 +151,7 @@ This property ensures that the remainder of the proof does not expect a variable
 %In this example, $\eta_1$ does not satisfy this property. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
 
 
-\newcommand{\la}{\leftarrow}
-\begin{algorithm}[bt]
-\begin{footnotesize}
-\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-\SetKwData{units}{unitsQueue}
-\SetKwData{fixedUnits}{fixedUnitsQueue}
 
-\Input{A first-order proof $\psi$}
-\Output{A possibly less-irregular first-order proof $\psi'$}
-
-\BlankLine
-
-$\psi'$ $\la$ $\psi$\;
-traverse $\psi'$ bottom-up and \ForEach{node $\eta$ in $\psi'$}{
-   \If{$\eta$ is a resolvent node}{
-     setSafeLiterals($\eta$) \;
-     regularizeIfPossible($\eta$)
-   }
-  }
-$\psi'$ $\la$ fix($\psi'$) \;
-\Return {$\psi'$}\;
-\caption{\label{algo:FORPI} \texttt{\FORPI}}
-\end{footnotesize}
-\end{algorithm}
 
 
 %intersection example?

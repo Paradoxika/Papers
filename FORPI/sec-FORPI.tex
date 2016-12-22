@@ -7,6 +7,32 @@ This section presents {\FirstOrderRPI} ({\FORPI}), Algorithm \ref{algo:FORPI}, a
 {\FORPI} traverses the proof in a bottom-up manner, storing for every node a set of safe literals. The set of safe literals for a node $\psi$ is computed from the set of safe literals of its children (cf.\ Algorithm~\ref{algo:foSetSafeLiterals}), similarly to the propositional case, but additionally applying unifiers to the resolved pivots (cf. Example \ref{ex:pairwise}).
 If one of the node's resolved literals can be unified to a literal in the set of safe literals, then it may be possible to regularize the node by replacing it by one of its parents.  
 
+
+\newcommand{\la}{\leftarrow}
+\begin{algorithm}[bt]
+\begin{footnotesize}
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\SetKwData{units}{unitsQueue}
+\SetKwData{fixedUnits}{fixedUnitsQueue}
+
+\Input{A first-order proof $\psi$}
+\Output{A possibly less-irregular first-order proof $\psi'$}
+
+\BlankLine
+
+$\psi'$ $\la$ $\psi$\;
+traverse $\psi'$ bottom-up and \ForEach{node $\eta$ in $\psi'$}{
+   \If{$\eta$ is a resolvent node}{
+     setSafeLiterals($\eta$) \;
+     regularizeIfPossible($\eta$)
+   }
+  }
+$\psi'$ $\la$ fix($\psi'$) \;
+\Return {$\psi'$}\;
+\caption{\label{algo:FORPI} \texttt{\FORPI}}
+\end{footnotesize}
+\end{algorithm}
+
 %NOTE: FORPPI desciption has been moved to challenges file to optimize whitespace use
 
 In the first-order case, we additionally check for the regularization property (cf. lines 2 and 6 of Algorithm~\ref{algo:foRegularize}).
