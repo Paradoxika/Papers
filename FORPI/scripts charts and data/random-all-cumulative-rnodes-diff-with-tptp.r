@@ -337,7 +337,7 @@ allYaxis <- max(rpiluYaxis,lurpiYaxis,rpiYaxis,luYaxis,bestYaxis,40000)
 pdf('combined-all-cumulative-res-nodes-diff.pdf', height=6, width=6)
 par(mar=c(5.1,5.1,1,2.1))
 
-plot(rpiluLine[,1],rpiluLine[,2],type="n",  xlim=c(0,allXaxis), ylim=c(0,allYaxis ),axes=FALSE, xlab="Number of Proofs", ylab="Number of Resolutions (x10^3)",yaxs="i", xaxs="i")
+plot(rpiluLine[,1],rpiluLine[,2],type="n",  xlim=c(0,allXaxis), ylim=c(0,allYaxis ),axes=FALSE, xlab="Number of Proofs", ylab="Number of Removed Resolutions (x10^3)",yaxs="i", xaxs="i")
 
 lines(rpiLine[,1],rpiLine[,2], type='l',col='blue') 
 lines(luLine[,1],luLine[,2], type='l',col='red') 
@@ -412,8 +412,8 @@ segments(inlayWidth , 0, inlayWidth, inlayYmaxNS , lty='dotted')
 segments(0 , inlayYmaxNS , inlayWidth, inlayYmaxNS , lty='dotted')
 
 
-axis(2, at=c(0,30,60,90)*vScaleFactor + heightOffset, labels=seq(0,90, by =30),las=2, pos=c(horizontalOffset, heightOffset))
-mtext("                              Resolutions", side = 2, line = -1.00)
+axis(2, at=c(0,30,60,90)*vScaleFactor + heightOffset, labels=seq(0,0.09, by =0.03),las=2, pos=c(horizontalOffset, heightOffset))
+#mtext("                       Removed Resolutions", side = 2, line = -1.00)
 
 
 dev.off()
