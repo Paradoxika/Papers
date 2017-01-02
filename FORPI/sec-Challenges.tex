@@ -127,8 +127,8 @@ $\eta_3$'s pivot $q(f(a,V),U)$ is unifiable to (and even more general than) the 
 
 \noindent
 $\eta_1$'s literal $q(f(a, V), U)$, which would be resolved with $\eta_8$'s literal, was changed to $q(f(a,d),c)$ due to the resolution between $\eta_1$ and $\eta_6$.
-
 \end{example}
+
 
 
 %ToDo: The following paragraph is not understandable. It must be made clearer. It must be made more formal (as a definition) and more mathematically precise (with the same level of detail as definition 2). It must explain \textbf{why} this additional check suffices.
@@ -152,6 +152,69 @@ This property ensures that the remainder of the proof does not expect a variable
 
 
 
+An alternative to the regularization property may also be useful for proof compression in some cases. This alternative relies on knowledge of how literals are changed after the deletion of a node in a proof (similar to the \emph{post-deletion unifiability} property observed for {\FOLowerUnits} in \cite{GFOLU}).  
+\begin{definition}
+Let $\eta$ be a node with safe literals $\mathcal{S}(\eta)$. Consider $p\in \mathcal{S}(\eta)$ and let $\eta_1$, \ldots, $\eta_n$ be subproofs that are resolved using $p$ in a proof $\psi$, respectively, with resolved literals $\ell_1$, \ldots, $\ell_m$. 
+The node $\eta$ is said to satisfy the \emph{post-deletion unifiability property} in $\psi$ if, for all $p\in \mathcal{S}(\eta)$, $\ell_1^{\dagger}$,\ldots,$\ell_m^{\dagger}$, and $\dual{p^{\dagger}}$ are unifiable, where $\ell^{\dagger}$ is the literal in $\dn{\psi}{\eta}$ corresponding to $\ell$ in $\psi$.
+\end{definition}
+
+
+\begin{example}
+This example illustrates the usefulness of the post-deletion unifiability property as an alternative to the regularization property. In the proof below, note that $\eta_8$ does not satisfy the regularization property: there is no unifier $\sigma$ such that $\sigma \eta_8 \subseteq \mathcal{S}(\eta_8)=\{q(Y),r(Z),p(W)\}$.
+\begin{scriptsize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_1$: $\e p(U)$ \hspace{-2cm}}
+\AxiomC{$\eta_5$: $p(Z) \e q(Z)$ \hspace{-0.5cm}}
+\AxiomC{$\eta_8$: $p(X),q(X),r(X)\e$}
+\AxiomC{$\eta_7$: $\e p(Y)$  \hspace{-1cm}}
+\BinaryInfC{$\eta_6$: $q(Y),r(Y)\e$ }
+\BinaryInfC{$\eta_4$: $p(Z),r(Z)\e$ \hspace{-2cm} }
+\AxiomC{ \hspace{-1cm} $\eta_3$: $\e r(W)$}
+\BinaryInfC{ $\eta_2$: $p(W)\e$}
+
+\BinaryInfC{$\psi$: $\bot$}
+\end{prooftree}
+
+\end{scriptsize}
+\noindent
+We show that this proof satisfies the requirements of the post-deletion unifiability property, and that $\eta_7$ can be removed. To do this, first observe that $\eta_8$ satisfies the pre-regularization unifiability property, since $p(X)\in \eta_8$ is in $\mathcal{S}(\eta_8)$. Consider the following proof of $\psi \setminus \{\eta_7\}$:
+\begin{scriptsize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_1$: $\e p(U)$ \hspace{-1.75cm}}
+\AxiomC{$\eta_8$: $p(X),q(X),r(X)\e$}
+\AxiomC{$\eta_5$: $p(Z) \e q(Z)$}
+\BinaryInfC{$\eta_4'$: $p(Z), p(Z),r(Z)\e$}
+\UnaryInfC{$\eta_4$: $p(Z),r(Z)\e$}
+\AxiomC{$\eta_3$: $\e r(W)$}
+\BinaryInfC{$\eta_2$: $p(W)\e$}
+\BinaryInfC{$\psi$: $\bot$}
+\end{prooftree}
+\end{scriptsize}
+Now observe that for each $p\in \mathcal{S}(\eta_8)=\{q(Y),r(Z),p(W)\}$, the post-deletion unifiability property is satisfied:
+\begin{itemize}
+\item $p=q(Y)$: $p^\dagger = q(X)$ which is unifiable with $\dual{p^\dagger}=q(Z)$
+\item $p=r(Z)$: $p^\dagger = r(Z)$ which is unifiable with $\dual{p^\dagger}=r(W)$
+\item $p=p(W)$: $p^\dagger = p(W)$ which is unifiable with $\dual{p^\dagger}=p(U)$
+\end{itemize}
+\end{example}
+
+The post-deletion unifiability property is implied by the previous two properties, as shown in the next theorem.
+
+\begin{thm}
+Let $\eta$ be a node in some proof that satisfies the pre-regularization and regularization unifiability properties. Then $\eta$ satisfies the post-deletion unifiability property.
+\end{thm}
+
+\begin{proof}
+Let $\eta$ be a node that satisfies the pre-regularization and regularization unifiability properties.
+Let $p\in \mathcal{S}(\eta)$ be a safe literal of $\eta$ such that for some node $\eta'$, there exists a literal $\ell' \in \eta'$ such that $(p,\ell')$ are unifiable in $\psi$. We will show that $(p^\dagger,\ell'^\dagger)$ is unifiable in $\psi\setminus\{\eta\}$. 
+Let $\sigma_0$ be a most general unifier of $(p,\ell')$ in $\psi$ (note that $\sigma_0$ exists since $\eta$ satisfies the pre-regularization property), and let $\sigma_1,\ldots,\sigma_n$ be the unifiers applied to $p$ in $\psi$ between $\eta$ and $\eta'$, so that in $\psi$, $p=\sigma_n\sigma_{n-1}\ldots\sigma_1\sigma_0\dual{\ell'}$. Since $\eta$ satisfies the regularization property, if $\eta_1$ is the parent to replace $\eta$, we must have $\sigma\eta_1\subseteq \phi = \mathcal{S}(\eta)$, and in particular, $\sigma p_1 = p = \sigma_n\ldots\sigma_1\sigma_0\dual{\ell'}$ for some $p_1\in \eta_1$. 
+%Thus there is some subset $\mathcal{I}\subseteq [1,n]$ such that $\sigma p_1 = \sigma_m'\ldots\sigma_1'\dual{\ell'}$ since FO-delete uses the same unifiers. 
+Note that $p^\dagger = \sigma_p p = \sigma_p\sigma_n\ldots\sigma_1\sigma_0\dual{\ell'}$ (where the first equality holds since $p^\dagger$ corresponds to $p$, and thus the two literals are unifiable) but also that $\dual{\ell'} = \sigma_\ell\ell'$ for some $\sigma_\ell$ (by definition as $\ell$ as a pivot). So now we have $p^\dagger =  \sigma_p\sigma_n\ldots\sigma_1\sigma_0\sigma_\ell\ell'$, so letting $\sigma''=\sigma_p\sigma_m'\ldots\sigma_1'\sigma_\ell$ we have that $p^\dagger = \sigma'' \ell$, i.e. that $(p^\dagger,\ell^\dagger)$ are unifiable via $\sigma''$.
+
+%Note that $p^\dagger =  \sigma_m'\ldots\sigma_1'\dual{\ell'}$ but also that $\dual{\ell'} = \sigma_\ell\ell'$ for some $\sigma_\ell$ (by definition as $\ell$ as a pivot). So now we have $p^\dagger =  \sigma_m'\ldots\sigma_1'\sigma''\ell$, so letting $\sigma''=\sigma_m'\ldots\sigma_1'\sigma_\ell$ we have that $p^\dagger = \sigma'' \ell$, i.e. that $(p^\dagger,\ell^\dagger)$ are unifiable via $\sigma''$, a contradiction.
+\end{proof}
 
 
 %intersection example?
