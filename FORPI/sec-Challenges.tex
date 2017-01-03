@@ -230,11 +230,13 @@ Let $\eta$ be a node with parents $\eta_1$ and $\eta_2$ in some proof that satis
 \end{thm}
 
 \begin{proof}
-Let $\eta$ be a node that satisfies the pre-regularization and regularization unifiability properties, and is such that  there exists nodes $\eta_1$ and $\eta_2$ and resolved literal $\ell'$ such that $\eta_1 \xrightarrow[\sigma']{\{\ell'\} } \eta$ and $\eta_2 \xrightarrow[\sigma'']{\{\dual{\ell'}\} } \eta$. Assume without loss of generality that $\eta_1\sigma \subseteq \mathcal{S}(\eta)$.
+Let $\eta$ be a node that satisfies the pre-regularization and regularization unifiability properties with parents $\eta_1$ and $\eta_2$.
+%, and is such that  there exists nodes $\eta_1$ and $\eta_2$ and resolved literal $\ell'$ such that $\eta_1 \xrightarrow[\sigma']{\{\ell'\} } \eta$ and $\eta_2 \xrightarrow[\sigma'']{\{\dual{\ell'}\} } \eta$. 
+Assume without loss of generality that $\eta_1\sigma \subseteq \mathcal{S}(\eta)$.
 
 
 Let $\ell \in \mathcal{S}(\eta_1)$ be a safe literal of $\eta_1$, and let $\eta_\ell$ be the lowest node on the path from $\eta_1$ to the root of the proof such that $\ell$ is used as the pivot.
-Let $\mathcal{R}(\eta_\ell)$ be the set of all resolved literals $\dual{\ell}$ such that $\eta_2' \xrightarrow[\sigma_2]{\{\ell\} } \eta_\ell$ and $\eta_1 \xrightarrow[\sigma_1]{\{\dual{\ell}\} } \eta_\ell$ for some node $\eta_2'$. Let $\mathcal{R}^\dagger(\eta_\ell)$ be defined as in Definition \ref{def:postdelprop}.
+Let $\mathcal{R}(\eta_\ell)$ be the set of all resolved literals $\dual{\ell}$ such that $\eta_2' \xrightarrow[\sigma_2]{\{\ell\} } \eta_\ell$ and $\eta_1' \xrightarrow[\sigma_1]{\{\dual{\ell}\} } \eta_\ell$ for some nodes $\eta_1'$ and $\eta_2'$. Let $\mathcal{R}^\dagger(\eta_\ell)$ be defined as in Definition \ref{def:postdelprop}.
 Consider $\dual{\ell} \in \mathcal{R}(\eta_\ell)$: $\ell$ and $\dual{\ell}$ are unifiable in $\psi$. We will show that $\ell^\dagger$ and $\dual{\ell}^\dagger$ are unifiable in $\psi\setminus\{\eta_2\}$ (note that $\dual{\ell}^\dagger\in \mathcal{R}^\dagger(\eta_\ell)$). 
 
 
