@@ -96,15 +96,26 @@ require resolution between $\eta_1$ and $\eta_6$, which is not possible.
 \noindent
 One way to prevent the problem depicted above would be to require the pivot to be not only unifiable but in fact more general than a safe literal. A weaker (and better) requirement is possible, however, as defined below.
 
+%old - kept for reference/readability.
+%\begin{definition}
+%\label{prop:pair}
+%Let $\eta$ be a node with safe literals $\mathcal{S}(\eta)$ such that resolved literal $\ell'$ is unifiable with a safe literal $\ell \in \mathcal{S}(\eta)$ where $\ell'$ is resolved against literals $\ell_1$, \ldots, $\ell_n$ in a proof $\psi$. The node $\eta$ is said to satisfy the \emph{pre-regularization unifiability property} in $\psi$ if $\ell_1$,\ldots,$\ell_n$, and $\dual{\ell'}$ are unifiable.
+%\end{definition}
+
 \begin{definition}
 \label{prop:pair}
-Let $\eta$ be a node with pivot $\ell'$ unifiable with safe literal $\ell$ such that $\ell'$ is resolved against literals $\ell_1$, \ldots, $\ell_n$ in a proof $\psi$. The node $\eta$ is said to satisfy the \emph{pre-regularization unifiability property} in $\psi$ if $\ell_1$,\ldots,$\ell_n$, and $\dual{\ell'}$ are unifiable.
+Let $\eta$ be a node with safe literals $\mathcal{S}(\eta)$ and parents $\eta_1$ and $\eta_2$, assuming without loss of generality, $\eta_2 \xrightarrow[\sigma_2]{\{\ell_2\} } \eta$ such that $\ell_2$ is unifiable with a safe literal $\ell \in \mathcal{S}(\eta)$. Let $\mathcal{P}(\eta)$ be the set 
+of all nodes $\eta_1$ such that $\eta_2 \xrightarrow[\sigma_2]{\{\ell_2\} } \eta'$ and $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta'$ for some $\eta'$.
+Let $\mathcal{R}(\eta)$ be the set of resolved literals $\dual{\ell_2}$ contained in some conclusion of a node in $\mathcal{P}(\eta)$.
+The node $\eta$ is said to satisfy the \emph{pre-regularization unifiability property} in the proof $\psi$ if all elements in $\mathcal{R}(\eta)\cup\{\ell_2\}$ are unifiable.
 \end{definition}
 
 \noindent
+This property states that a node satisfies the pre-regularization unifibaility property if, for a safe resolved literal $\ell'$ which is resolved against literals $\ell_1$, \ldots, $\ell_n$ in a proof $\psi$, $\ell_1$,\ldots,$\ell_n$, and $\dual{\ell'}$ are unifiable.
+
 One way to ensure this property is met is to slightly modify the notion of safe literals, by applying the unifier of the resolution step to the each pivot before adding it to the set of safe literals (cf. algorithm 3, lines 8 and 10). In the case of Example \ref{ex:pairwise}, this would result in $\eta_3$ having the safe literals $\{q(c),~p(a,b)\}$, where clearly the pivot $p(a,c)$ in $\eta_1$ is not safe.
 
-%TODO: continue from here
+
 %extra check example
 \begin{example}\label{ex:unifcheck}
 
@@ -137,12 +148,13 @@ $\eta_1$'s literal $q(f(a, V), U)$, which would be resolved with $\eta_8$'s lite
 Thus we additionally require that the following property be satisfied.
 \begin{definition}
 \label{prop:extracheck}
-Let $\eta$ be a node satisfying the pre-regularization unifiability property and having safe literals $\mathcal{S}(\eta)$ and parents $\eta_1$ and $\eta_2$, assuming without loss of generality that
+Let $\eta$ be a node satisfying the pre-regularization unifiability property, with safe literals $\mathcal{S}(\eta)$ and parents $\eta_1$ and $\eta_2$, assuming without loss of generality that
 %without loss generality 
-$\eta_2 \xrightarrow[\sigma_2]{\{\ell_2\} } \n$ and TODO \marginpar{explain, mathematically, what is assumed about $\eta_2$ and $\ell_2$ here} 
+$\eta_2 \xrightarrow[\sigma_2]{\{\ell_2\} } \eta$ and $\dual{\ell_2} = \ell_1 \in \mathcal{S}(\eta)$. 
+%TODO \marginpar{explain, mathematically, what is assumed about $\eta_2$ and $\ell_2$ here}  %Done? This used to say that $\eta_2$ was a deleted node, so that must mean that $\eta_1$ contains the resolved literal that is safe, i.e. $\eta_1$ contains $\ell_1 \in \mathcal{S}(\eta)$, and we have that $\ell_1 = \dual{\ell_2}$
 %is marked as a \texttt{deletedNode}
 %in a proof $\psi$
-. $\eta$ is said to satisfy the \emph{regularization unifiability property} in $\psi$ if there exists a substitution $\sigma$ such that $\eta_1\sigma \subseteq \mathcal{S}(\eta)$.
+The node $\eta$ is said to satisfy the \emph{regularization unifiability property} in $\psi$ if there exists a substitution $\sigma$ such that $\eta_1\sigma \subseteq \mathcal{S}(\eta)$.
 \end{definition}
 %we ensure that the replacement parent is (possibly after unification) contained entirely in the safe literals. 
 This property ensures that the remainder of the proof does not expect a variable in $\eta_1$ to be unified to different values simultaneously. This property is not necessary in the propositional case, as the replacement node would not change lower in the proof. 
@@ -156,10 +168,21 @@ This property ensures that the remainder of the proof does not expect a variable
 
 An alternative to the regularization property may also be useful for proof compression in some cases. This alternative relies on knowledge of how literals are changed after the deletion of a node in a proof (similar to the \emph{post-deletion unifiability} property observed for {\FOLowerUnits} in \cite{GFOLU}).  
 \begin{definition}
-Let $\eta$ be a node with safe literals $\mathcal{S}(\eta)$. Consider $p\in \mathcal{S}(\eta)$ and let $\eta_1$, \ldots, $\eta_n$ be subproofs that are resolved using $p$ in a proof $\psi$, respectively, with resolved literals $\ell_1$, \ldots, $\ell_m$. 
-The node $\eta$ is said to satisfy the \emph{post-deletion unifiability property} in $\psi$ if, for all $p\in \mathcal{S}(\eta)$, $\ell_1^{\dagger}$,\ldots,$\ell_m^{\dagger}$, and $\dual{p^{\dagger}}$ are unifiable, where $\ell^{\dagger}$ is the literal in $\dn{\psi}{\eta}$ corresponding to $\ell$ in $\psi$.
+Let $\eta$ be a node with safe literals $\mathcal{S}(\eta)$.
+For each literal $\ell \in \mathcal{S}(\eta)$, let $\eta_\ell$ be a node on the path from $\eta$ to the root of the proof such that $\ell$ is used as the pivot.
+% and parents $\eta_1$ and $\eta_2$, assuming without loss of generality, $\eta_2 \xrightarrow[\sigma_2]{\{\ell_2\} } \eta$ such that $\ell_2$ is unifiable with a safe literal $\ell \in \mathcal{S}(\eta)$. 
+Let $\mathcal{P}(\eta_\ell)$ be the set of all nodes $\eta_1$ such that there exists $\eta_2 \xrightarrow[\sigma_2]{\{\ell\} } \eta_\ell$ and $\eta_1 \xrightarrow[\sigma_1]{\{\dual{\ell}\} } \eta_\ell$.
+Let $\mathcal{R}(\eta_\ell)$ be the set of resolved literals $\dual{\ell}$ contained in some conclusion of a node in $\mathcal{P}(\eta_\ell)$.
+The node $\eta$ is said to satisfy the \emph{post-deletion unifiability property} in $\psi$ if, for all $\ell \in \mathcal{S}(\eta)$, all elements in $\mathcal{R}^{\dagger}(\eta_\ell) \cup \{\ell^{\dagger}\}$ are unifiable, where $\mathcal{R}^{\dagger}(\eta_\ell)$ is the set of literals in $\dn{\psi}{\eta}$ corresponding to literals of $\mathcal{R}(\eta_\ell)$ in $\psi$.
 \end{definition}
 
+
+%old
+%Let $\mathcal{R}(\eta)$ be the set of resolved literals $\dual{\ell_2}$ contained in some conclusion of a node in $\mathcal{P}(\eta)$.
+%Let $\eta$ be a node with safe literals $\mathcal{S}(\eta)$. Consider $p\in \mathcal{S}(\eta)$ and let $\eta_1$, \ldots, $\eta_n$ be subproofs that are resolved using $p$ in a proof $\psi$, respectively, with resolved literals $\ell_1$, \ldots, $\ell_m$. 
+%The node $\eta$ is said to satisfy the \emph{post-deletion unifiability property} in $\psi$ if, for all $p\in \mathcal{S}(\eta)$, $\ell_1^{\dagger}$,\ldots,$\ell_m^{\dagger}$, and $\dual{p^{\dagger}}$ are unifiable, where $\ell^{\dagger}$ is the literal in $\dn{\psi}{\eta}$ corresponding to $\ell$ in $\psi$.
+
+Informally, a node $\eta$ satisfies the \emph{post-deletion unifiability property} in a proof if, after deleting the node from the proof, all of its safe literals can still be used as resolved pivots in order to complete the proof.
 
 \begin{example}
 This example illustrates the usefulness of the post-deletion unifiability property as an alternative to the regularization property. In the proof below, note that $\eta_8$ does not satisfy the regularization property: there is no unifier $\sigma$ such that $\sigma \eta_8 \subseteq \mathcal{S}(\eta_8)$ (where $\mathcal{S}(\eta_8) =\{q(Y),r(Z),p(W)\}$).
@@ -194,11 +217,11 @@ We show that this proof satisfies the requirements of the post-deletion unifiabi
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{scriptsize}
-Now observe that for each $p\in \mathcal{S}(\eta_8)=\{q(Y),r(Z),p(W)\}$, the post-deletion unifiability property is satisfied:
+Now observe that for each $\ell \in \mathcal{S}(\eta_8)=\{q(Y),r(Z),p(W)\}$, the post-deletion unifiability property is satisfied:
 \begin{itemize}
-\item $p=q(Y)$: $p^\dagger = q(X)$ which is unifiable with $\dual{p^\dagger}=q(Z)$
-\item $p=r(Z)$: $p^\dagger = r(Z)$ which is unifiable with $\dual{p^\dagger}=r(W)$
-\item $p=p(W)$: $p^\dagger = p(W)$ which is unifiable with $\dual{p^\dagger}=p(U)$
+\item $\ell=q(Y)$: $\ell^\dagger = q(X)$ which is unifiable with $\dual{\ell^\dagger}=q(Z)$
+\item $\ell=r(Z)$: $\ell^\dagger = r(Z)$ which is unifiable with $\dual{\ell^\dagger}=r(W)$
+\item $\ell=p(W)$: $\ell^\dagger = p(W)$ which is unifiable with $\dual{\ell^\dagger}=p(U)$
 \end{itemize}
 \end{example}
 
