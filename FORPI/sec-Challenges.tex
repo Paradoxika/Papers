@@ -168,9 +168,10 @@ This property ensures that the remainder of the proof does not expect a variable
 
 An alternative to the regularization property may also be useful for proof compression in some cases. This alternative relies on knowledge of how literals are changed after the deletion of a node in a proof (similar to the \emph{post-deletion unifiability} property observed for {\FOLowerUnits} in \cite{GFOLU}).  
 \begin{definition}\label{def:postdelprop}
-Let $\eta_1$ be a node with safe literals $\mathcal{S}(\eta)$ such that there exists nodes $\eta_2$ and $\eta$ and resolved literal $\ell'$ such that $\eta_1 \xrightarrow[\sigma']{\{\ell'\} } \eta$ and $\eta_2 \xrightarrow[\sigma'']{\{\dual{\ell'}\} } \eta$.
+Let $\eta$ be a node with parents $\eta_1$ and $\eta_2$. 
+%$\eta_1$ be a node with safe literals $\mathcal{S}(\eta)$ such that there exists nodes $\eta_2$ and $\eta$ and resolved literal $\ell'$ such that $\eta_1 \xrightarrow[\sigma']{\{\ell'\} } \eta$ and $\eta_2 \xrightarrow[\sigma'']{\{\dual{\ell'}\} } \eta$.
 For each literal $\ell \in \mathcal{S}(\eta_1)$, let $\eta_\ell$ be the lowest node on the path from $\eta_1$ to the root of the proof such that $\ell$ is used as the pivot. % (i.e. $\eta_\ell$ is the node below $\eta$ such that $\ell$ does not appear as a safe literal for any literal between $\eta_\ell$ and the root).
-Let $\mathcal{R}(\eta_\ell)$ be the set of all resolved literals $\dual{\ell}$ such that $\eta_2' \xrightarrow[\sigma_2]{\{\ell\} } \eta_\ell$ and $\eta_1' \xrightarrow[\sigma_1]{\{\dual{\ell}\} } \eta_\ell$ for some nodes $\eta_2'$ and $\eta'$.
+Let $\mathcal{R}(\eta_\ell)$ be the set of all resolved literals $\dual{\ell}$ such that $\eta_2' \xrightarrow[\sigma_2]{\{\ell\} } \eta_\ell$ and $\eta_1' \xrightarrow[\sigma_1]{\{\dual{\ell}\} } \eta_\ell$ for some nodes $\eta_2'$ and $\eta_1'$.
 The node $\eta_1$ is said to satisfy the \emph{post-deletion unifiability property} in $\psi$ if, for all $\ell \in \mathcal{S}(\eta_1)$, all elements in $\mathcal{R}^{\dagger}(\eta_\ell) \cup \{\ell^{\dagger}\}$ are unifiable, where $\ell^{\dagger}$ is the literal in $\dn{\psi}{\eta_2}$ corresponding to $\ell$ in $\psi$ and $\mathcal{R}^{\dagger}(\eta_\ell)$ is the set of literals in $\dn{\psi}{\eta_2}$ corresponding to literals of $\mathcal{R}(\eta_\ell)$ in $\psi$.
 \end{definition}
 
