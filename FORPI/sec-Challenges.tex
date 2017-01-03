@@ -6,7 +6,7 @@ In this section, we describe challenges that have to be overcome in order to suc
 
 %straightforward example
 \begin{example}\label{ex:unif} 
-Consider the following proof $\psi$. When computed as in the propositional case, the safe literals for $\eta_3$ are $\{ \vdash q(c), ~ p(a,X)\}$.
+Consider the following proof $\psi$. When computed as in the propositional case, the safe literals for $\eta_3$ are $\{ q(c), ~ p(a,X)\}$.
 %$\eta_1$'s literal is unifiable with $p(a,X)$, which is inherited from $\eta_3$'s safe literals. 
 %Thus the proof can be regularized by recycling $\eta_1$.
 %$\eta_1$ and $\eta_5$ and these two literals are unifiable. Further, the safe literals for $\eta_1$ includes $\eta_5$. Thus the proof can be regularized by recycling $\eta_1$.
@@ -44,7 +44,7 @@ Unlike in the propositional case, where a pivot must be syntactically equal to a
 %unification necessary example
 \begin{example}\label{ex:pairwise}
 
-Again, the safe literals for $\eta_3$, when computed as in the propositional case, are $\{ \vdash q(c), ~ p(a,X)\}$, and as the pivot $p(a,c)$ is unifiable with the safe literal $p(a,X)$, $\eta_3$ appears to be a candidate for regularization. 
+Again, the safe literals for $\eta_3$, when computed as in the propositional case, are $\{q(c), ~ p(a,X)\}$, and as the pivot $p(a,c)$ is unifiable with the safe literal $p(a,X)$, $\eta_3$ appears to be a candidate for regularization. 
 
 \begin{scriptsize}
 \begin{prooftree}
@@ -98,18 +98,18 @@ One way to prevent the problem depicted above would be to require the pivot to b
 
 \begin{definition}
 \label{prop:pair}
-Let $\eta$ be a node with pivot $\ell'$ unifiable with safe literal $\ell$ which is resolved against literals $\ell_1$, \ldots, $\ell_n$ in a proof $\psi$. $\eta$ is said to satisfy the \emph{pre-regularization unifiability property} in $\psi$ if $\ell_1$,\ldots,$\ell_n$, and $\dual{\ell'}$ are unifiable.
+Let $\eta$ be a node with pivot $\ell'$ unifiable with safe literal $\ell$ such that $\ell'$ is resolved against literals $\ell_1$, \ldots, $\ell_n$ in a proof $\psi$. The node $\eta$ is said to satisfy the \emph{pre-regularization unifiability property} in $\psi$ if $\ell_1$,\ldots,$\ell_n$, and $\dual{\ell'}$ are unifiable.
 \end{definition}
 
 \noindent
-One way to ensure this property is met is to slightly modify the notion of safe literals, by applying the unifier of the resolution step to the each pivot before adding it to the set of safe literals (cf. algorithm 3, lines 8 and 10). In the case of Example \ref{ex:pairwise}, this would result in $\eta_3$ having the safe literals $\{ \vdash q(c),~p(a,b)\}$, where clearly the pivot $p(a,c)$ in $\eta_1$ is not safe.
+One way to ensure this property is met is to slightly modify the notion of safe literals, by applying the unifier of the resolution step to the each pivot before adding it to the set of safe literals (cf. algorithm 3, lines 8 and 10). In the case of Example \ref{ex:pairwise}, this would result in $\eta_3$ having the safe literals $\{q(c),~p(a,b)\}$, where clearly the pivot $p(a,c)$ in $\eta_1$ is not safe.
 
 %TODO: continue from here
 %extra check example
 \begin{example}\label{ex:unifcheck}
 
 
-Satisfying the pre-regularization unifiability property is not sufficient. Consider the proof $\psi$ in Figure \ref{fig:ex-unifcheck}. After collecting the safe literals, $\eta_3$'s safe literals are $\{q(T,V),p(c,d)\vdash q(f(a,e),c)\}$.
+Satisfying the pre-regularization unifiability property is not sufficient. Consider the proof $\psi$ in Figure \ref{fig:ex-unifcheck}. After collecting the safe literals, $\eta_3$'s safe literals are $\{\lnot q(T,V),\lnot p(c,d), q(f(a,e),c)\}$.
 %\noindent
 $\eta_3$'s pivot $q(f(a,V),U)$ is unifiable to (and even more general than) the safe literal $q(f(a,e),c)$. Attempting to regularize $\eta_3$ would lead to the removal of $\eta_2$, the replacement of $\eta_3$ by $\eta_1$ and the removal of $\eta_4$ (because $\eta_1$ does not contain the pivot required by $\eta_5$), with $\eta_5$ also being replaced by $\eta_1$. Then resolution between $\eta_1$ and $\eta_6$ results in $\eta_7'$, which cannot be resolved with $\eta_8$, as shown below.
 
@@ -213,7 +213,7 @@ Let $\eta$ be a node that satisfies the pre-regularization and regularization un
 Let $p\in \mathcal{S}(\eta)$ be a safe literal of $\eta$ such that for some node $\eta'$, there exists a literal $\ell' \in \eta'$ such that $(p,\ell')$ are unifiable in $\psi$. We will show that $(p^\dagger,\ell'^\dagger)$ is unifiable in $\psi\setminus\{\eta\}$. 
 Let $\sigma_0$ be a most general unifier of $(p,\ell')$ in $\psi$ (note that $\sigma_0$ exists since $\eta$ satisfies the pre-regularization property), and let $\sigma_1,\ldots,\sigma_n$ be the unifiers applied to $p$ in $\psi$ between $\eta$ and $\eta'$, so that in $\psi$, $p=\sigma_n\sigma_{n-1}\ldots\sigma_1\sigma_0\dual{\ell'}$. Since $\eta$ satisfies the regularization property, if $\eta_1$ is the parent to replace $\eta$, we must have $\sigma\eta_1\subseteq \phi = \mathcal{S}(\eta)$, and in particular, $\sigma p_1 = p = \sigma_n\ldots\sigma_1\sigma_0\dual{\ell'}$ for some $p_1\in \eta_1$. 
 %Thus there is some subset $\mathcal{I}\subseteq [1,n]$ such that $\sigma p_1 = \sigma_m'\ldots\sigma_1'\dual{\ell'}$ since FO-delete uses the same unifiers. 
-Note that $p^\dagger = \sigma_p p = \sigma_p\sigma_n\ldots\sigma_1\sigma_0\dual{\ell'}$ (where the first equality holds since $p^\dagger$ corresponds to $p$, and thus the two literals are unifiable) but also that $\dual{\ell'} = \sigma_\ell\ell'$ for some $\sigma_\ell$ (by definition as $\ell$ as a pivot). So now we have $p^\dagger =  \sigma_p\sigma_n\ldots\sigma_1\sigma_0\sigma_\ell\ell'$, so letting $\sigma''=\sigma_p\sigma_m'\ldots\sigma_1'\sigma_\ell$ we have that $p^\dagger = \sigma'' \ell$, i.e. that $(p^\dagger,\ell^\dagger)$ are unifiable via $\sigma''$.
+Note that $p^\dagger = \sigma_p p = \sigma_p\sigma_n\ldots\sigma_1\sigma_0\dual{\ell'}$ (where the first equality holds since $p^\dagger$ corresponds to $p$, and thus the two literals are unifiable) but also that $\dual{\ell'} = \sigma_\ell\ell'$ for some $\sigma_\ell$ (by definition as $\ell$ is a pivot). So now we have $p^\dagger =  \sigma_p\sigma_n\ldots\sigma_1\sigma_0\sigma_\ell\ell'$, so letting $\sigma''=\sigma_p\sigma_m'\ldots\sigma_1'\sigma_\ell$ we have that $p^\dagger = \sigma'' \ell$, i.e. that $(p^\dagger,\ell^\dagger)$ are unifiable via $\sigma''$.
 
 %Note that $p^\dagger =  \sigma_m'\ldots\sigma_1'\dual{\ell'}$ but also that $\dual{\ell'} = \sigma_\ell\ell'$ for some $\sigma_\ell$ (by definition as $\ell$ as a pivot). So now we have $p^\dagger =  \sigma_m'\ldots\sigma_1'\sigma''\ell$, so letting $\sigma''=\sigma_m'\ldots\sigma_1'\sigma_\ell$ we have that $p^\dagger = \sigma'' \ell$, i.e. that $(p^\dagger,\ell^\dagger)$ are unifiable via $\sigma''$, a contradiction.
 \end{proof}
