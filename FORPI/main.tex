@@ -2,6 +2,7 @@
 \documentclass{iosart2x}
 \usepackage{etex}
 
+\usepackage{mathtools}
 \usepackage{xcolor}
 \usepackage{enumitem,amsmath,amssymb}
 %\usepackage{breakurl}    % used for \url and \burl
@@ -49,6 +50,7 @@
 
 \newcommand{\pedge}[3]{\ensuremath{\raiz{#1} \xrightarrow{#2} \raiz{#3}}}
 
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
 
 \newcommand\inlineeqno{\stepcounter{equation}\ (\theequation)}
 
