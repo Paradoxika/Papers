@@ -168,9 +168,9 @@ This property ensures that the remainder of the proof does not expect a variable
 
 An alternative to the regularization property may also be useful for proof compression in some cases. This alternative relies on knowledge of how literals are changed after the deletion of a node in a proof (similar to the \emph{post-deletion unifiability} property observed for {\FOLowerUnits} in \cite{GFOLU}).  
 \begin{definition}\label{def:postdelprop}
-Let $\eta$ be a node with parents $\eta_1$ and $\eta_2$. 
-For each literal $\ell \in \mathcal{S}(\eta_1)$, let $\eta_\ell$ be a node on the path from $\eta_1$ to the root of the proof such that $\abs{\ell}$ is the pivot of $\eta_\ell$.
-Let $\mathcal{R}(\eta_\ell)$ be the set of all resolved literals $\ell^*$ such that $\eta_2' \xrightarrow[\sigma_2]{\{\ell\} } \eta_\ell$ and $\eta_1' \xrightarrow[\sigma_1]{\{\ell^*\} } \eta_\ell$ such that $\dual{\ell}$ and $\ell^*$ are unifiable, for some nodes $\eta_2'$ and $\eta_1'$.
+Let $\eta$ be a node with parents $\eta_1$ and $\eta_2$, assuming without loss of generality that $\eta_1 \xrightarrow[\sigma_1]{\{\ell'\} } \eta$ and $\eta_2 \xrightarrow[\sigma_2]{\{\dual{\ell'}\} } \eta$ such that $\ell'$ is unifiable with some $\ell'' \in \mathcal{S}(\eta)$.
+For each literal $\ell \in \mathcal{S}(\eta_1)$, let $\eta_\ell$ be a node on the path from $\eta$ to the root of the proof such that $\abs{\ell}$ is the pivot of $\eta_\ell$.
+Let $\mathcal{R}(\eta_\ell)$ be the set of all resolved literals $\ell^*$ such that $\eta_2' \xrightarrow[\sigma_2]{\{\ell\} } \eta_\ell$ and $\eta_1' \xrightarrow[\sigma_1]{\{\ell^*\} } \eta_\ell$ where $\dual{\ell}$ and $\ell^*$ are unifiable, for some nodes $\eta_2'$ and $\eta_1'$.
 The node $\eta$ is said to satisfy the \emph{post-deletion unifiability property} in $\psi$ if, for all $\ell \in \mathcal{S}(\eta_1)$, all elements in $\mathcal{R}^{\dagger}(\eta_\ell) \cup \{\ell^{\dagger}\}$ are unifiable, where $\ell^{\dagger}$ is the literal in $\dn{\psi}{\eta_2}$ corresponding to $\ell$ in $\psi$ and $\mathcal{R}^{\dagger}(\eta_\ell)$ is the set of literals in $\dn{\psi}{\eta_2}$ corresponding to literals of $\mathcal{R}(\eta_\ell)$ in $\psi$.
 \end{definition}
 
@@ -186,7 +186,9 @@ Informally, a node $\eta$ satisfies the \emph{post-deletion unifiability propert
 Note that there is always at least one node $\eta_\ell$ as used in the definition: the node which resulted in $\ell$ being marked as safe for the path from $\eta_1$ to the root of the proof.
 
 \begin{example}
-This example illustrates the usefulness of the post-deletion unifiability property as an alternative to the regularization property. In the proof below, note that $\eta_8$ does not satisfy the regularization property: there is no unifier $\sigma$ such that $\sigma \eta_8 \subseteq \mathcal{S}(\eta_8)$ (where $\mathcal{S}(\eta_8) =\{\lnot q(Y),\lnot r(Z),\lnot p(W)\}$).
+This example illustrates the usefulness of the post-deletion unifiability property as an alternative to the regularization property. 
+%In the proof below, note that $\eta_8$ does not satisfy the regularization property: there is no unifier $\sigma$ such that $\sigma \eta_8 \subseteq \mathcal{S}(\eta_8)$ (where $\mathcal{S}(\eta_8) =\{\lnot q(Y),\lnot r(Z),\lnot p(W)\}$).
+In the proof below, note that $\eta_6$ does not satisfy the regularization property: there is no unifier $\sigma$ such that $\sigma \eta_6 \subseteq \mathcal{S}(\eta_6)$ (where $\mathcal{S}(\eta_6) =\{\lnot q(Y),\lnot r(Z)\}$).
 \begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
@@ -204,7 +206,9 @@ This example illustrates the usefulness of the post-deletion unifiability proper
 
 \end{scriptsize}
 \noindent
-We show that this proof satisfies the requirements of the post-deletion unifiability property, and that $\eta_7$ can be removed. To do this, first observe that $\eta_8$ satisfies the pre-regularization unifiability property, since $\lnot  p(X)\in \eta_8$ is in $\mathcal{S}(\eta_8)$. Consider the following proof of $\psi \setminus \{\eta_7\}$:
+We show that this proof satisfies the requirements of the post-deletion unifiability property, and that $\eta_7$ can be removed. 
+%Note also that $\eta_6$ satisfies the pre-regularization unifiability property, since $\lnot  p(X)\in \eta_8$ is in $\mathcal{S}(\eta_8)$. 
+Consider the following proof of $\psi \setminus \{\eta_7\}$:
 \begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
@@ -229,7 +233,7 @@ Now observe that for each $\ell \in \mathcal{S}(\eta_8)=\{\lnot  q(Y), \lnot r(Z
 The post-deletion unifiability property is implied by the previous two properties, as shown in the next theorem.
 
 \begin{thm}
-Let $\eta$ be a node with parents $\eta_1$ and $\eta_2$ in some proof that satisfies the pre-regularization and regularization unifiability properties. Then one of $\eta_1$ and $\eta_2$ satisfies the post-deletion unifiability property.
+Let $\eta$ be a node in some proof that satisfies the pre-regularization and regularization unifiability properties. Then $\eta$ satisfies the post-deletion unifiability property.
 \end{thm}
 
 \begin{proof}
@@ -238,8 +242,9 @@ Let $\eta$ be a node that satisfies the pre-regularization and regularization un
 Assume without loss of generality that $\eta_1\sigma \subseteq \mathcal{S}(\eta)$.
 
 
-Let $\ell \in \mathcal{S}(\eta_1)$ be a safe literal of $\eta_1$, and let $\eta_\ell$ be the lowest node on the path from $\eta_1$ to the root of the proof such that $\ell$ is used as the pivot.
-Let $\mathcal{R}(\eta_\ell)$ be the set of all resolved literals $\dual{\ell}$ such that $\eta_2' \xrightarrow[\sigma_2]{\{\ell\} } \eta_\ell$ and $\eta_1' \xrightarrow[\sigma_1]{\{\dual{\ell}\} } \eta_\ell$ for some nodes $\eta_1'$ and $\eta_2'$. Let $\mathcal{R}^\dagger(\eta_\ell)$ be defined as in Definition \ref{def:postdelprop}.
+Let $\ell \in \mathcal{S}(\eta_1)$ be a safe literal of $\eta_1$, and let $\eta_\ell$ be a node on the path from $\eta_1$ to the root of the proof such that $\abs{\ell}$ is used as the pivot. At least one such node $\eta_\ell$ exists: there must be a node below $\eta$ that used $\abs{\ell}$ as a pivot in order to have $\ell \in \mathcal{S}(\eta_1)$.
+%Let $\mathcal{R}(\eta_\ell)$ be the set of all resolved literals $\dual{\ell}$ such that $\eta_2' \xrightarrow[\sigma_2]{\{\ell\} } \eta_\ell$ and $\eta_1' \xrightarrow[\sigma_1]{\{\dual{\ell}\} } \eta_\ell$ for some nodes $\eta_1'$ and $\eta_2'$. Let $\mathcal{R}^\dagger(\eta_\ell)$ be defined as in Definition \ref{def:postdelprop}.
+Let $\mathcal{R}(\eta_\ell)$ and $\mathcal{R}^\dagger(\eta_\ell)$ be defined as in Definition \ref{def:postdelprop} with literal $\ell$.
 Consider $\dual{\ell} \in \mathcal{R}(\eta_\ell)$: $\ell$ and $\dual{\ell}$ are unifiable in $\psi$. We will show that $\ell^\dagger$ and $\dual{\ell}^\dagger$ are unifiable in $\psi\setminus\{\eta_2\}$ (note that $\dual{\ell}^\dagger\in \mathcal{R}^\dagger(\eta_\ell)$). 
 
 
@@ -247,7 +252,10 @@ Consider $\dual{\ell} \in \mathcal{R}(\eta_\ell)$: $\ell$ and $\dual{\ell}$ are 
 %If $\dual{\ell}\notin \eta_2$ (i.e. $\dual{\ell}$ was in some node $\eta_2'\neq \eta_2$), then we are done, as removing $\eta_2$ does not apply a substitution to $\eta_1$, and thus $\ell^\dagger = \ell$ and $\dual{\ell}^\dagger=\dual{\ell}$, so that $\ell^\dagger$ and $\dual{\ell}^\dagger$ are unifiable with $\sigma_0$. %no - some other path might lead from $\eta_2$ to $\eta_2'$.
 
 %Thus we may assume that $\dual{\ell}\in \eta_2$. 
-Recall that $\eta$ satisfies the regularization property and by assumption, $\sigma\eta_1\subseteq \mathcal{S}(\eta)$. Therefore there exists some literal $\dual{\ell}'$ below $\eta$ unifiable with $\ell$, as otherwise $\ell \notin \mathcal{S}(\eta)$ (in particular, the resolved literal of node $\eta_\ell$). Note that $\dual{\ell}'=\dual{\ell}^\dagger$ as it corresponds to the opposite literal of $\ell$ in $\psi \setminus \{\eta_2\}$.  Furthermore, as $\dual{\ell}'$ is in $\psi$, $\dual{\ell}'\in \mathcal{R}(\eta)$. Thus, since $\eta$ satisfies the pre-regularization property $\dual{\ell}'$ is unifiable with $\dual{\ell}$ by some $\sigma'$. Thus $\sigma'\dual{\ell}'=\dual{\ell}$, and we have that $\sigma_0\ell = \sigma'\dual{\ell}'=\sigma'\dual{\ell}^\dagger$ so that $\sigma'\sigma_0\ell = \dual{\ell}^\dagger$, as required.
+Recall that $\eta$ satisfies the regularization property and by assumption, $\sigma\eta_1\subseteq \mathcal{S}(\eta)$. 
+%Therefore there exists some literal $\dual{\ell}'$ below $\eta$ unifiable with $\ell$, as otherwise $\ell \notin \mathcal{S}(\eta)$ (in particular, the resolved literal of node $\eta_\ell$). 
+Let $\dual{\ell}'$ be the resolved literal of $\eta_\ell$ such that $\dual{\ell}'$ and $\dual{\ell}$ are unifiable.
+Note that $\dual{\ell}'=\dual{\ell}^\dagger$ as it corresponds to the opposite literal of $\ell$ in $\psi \setminus \{\eta_2\}$.  Furthermore, as $\dual{\ell}'$ is in $\psi$, $\dual{\ell}'\in \mathcal{R}(\eta)$. Thus, since $\eta$ satisfies the pre-regularization property $\dual{\ell}'$ is unifiable with $\dual{\ell}$ by some $\sigma'$. Thus $\sigma'\dual{\ell}'=\dual{\ell}$, and we have that $\sigma_0\ell = \sigma'\dual{\ell}'=\sigma'\dual{\ell}^\dagger$ so that $\sigma'\sigma_0\ell = \dual{\ell}^\dagger$, as required.
 
 \end{proof}
 
