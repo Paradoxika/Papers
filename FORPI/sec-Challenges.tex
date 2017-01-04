@@ -101,13 +101,13 @@ One way to prevent the problem depicted above would be to require the pivot to b
 %\label{prop:pair}
 %Let $\eta$ be a node with safe literals $\mathcal{S}(\eta)$ such that resolved literal $\ell'$ is unifiable with a safe literal $\ell \in \mathcal{S}(\eta)$ where $\ell'$ is resolved against literals $\ell_1$, \ldots, $\ell_n$ in a proof $\psi$. The node $\eta$ is said to satisfy the \emph{pre-regularization unifiability property} in $\psi$ if $\ell_1$,\ldots,$\ell_n$, and $\dual{\ell'}$ are unifiable.
 %\end{definition}
+%Let $\mathcal{P}(\eta)$ (resp. $\mathcal{R}(\eta)$) be the set of all nodes $\eta_1$ (resp. resolved literals $\ell_1$) such that $\eta_2 \xrightarrow[\sigma_2]{\{\ell_2\} } \eta'$ and $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta'$ for some $\eta'$.
 
 \begin{definition}
 \label{prop:pair}
-Let $\eta$ be a node with safe literals $\mathcal{S}(\eta)$ and parents $\eta_1$ and $\eta_2$, assuming without loss of generality, $\eta_2 \xrightarrow[\sigma_2]{\{\ell_2\} } \eta$ such that $\ell_2$ is unifiable with a safe literal $\ell \in \mathcal{S}(\eta)$. 
-%Let $\mathcal{P}(\eta)$ (resp. $\mathcal{R}(\eta)$) be the set of all nodes $\eta_1$ (resp. resolved literals $\ell_1$) such that $\eta_2 \xrightarrow[\sigma_2]{\{\ell_2\} } \eta'$ and $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta'$ for some $\eta'$.
-Let $\mathcal{R}(\eta)$ be the set of all resolved literals $\ell_1$ such that $\eta_2 \xrightarrow[\sigma_2]{\{\ell_2\} } \eta'$ and $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta'$ for some $\eta_1$ and $\eta'$.
-The node $\eta$ is said to satisfy the \emph{pre-regularization unifiability property} in the proof $\psi$ if all elements in $\mathcal{R}(\eta)\cup\{\ell_2\}$ are unifiable.
+Let $\eta$ be a node with safe literals $\mathcal{S}(\eta)$ and parents $\eta_1$ and $\eta_2$, assuming without loss of generality, $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta$ such that $\ell_1$ is unifiable with a safe literal $\ell \in \mathcal{S}(\eta)$. 
+Let $\mathcal{R}(\eta)$ be the set of all resolved literals $\dual{\ell_1}$ such that $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta'$ and $\eta_2' \xrightarrow[\sigma_2]{\{\dual{\ell_1}\} } \eta'$ and  for some $\eta_2'$ and $\eta'$.
+The node $\eta$ is said to satisfy the \emph{pre-regularization unifiability property} in the proof $\psi$ if all elements in $\mathcal{R}(\eta)$ are unifiable with $\ell_1$.
 \end{definition}
 
 \noindent
