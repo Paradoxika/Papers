@@ -169,10 +169,9 @@ This property ensures that the remainder of the proof does not expect a variable
 An alternative to the regularization property may also be useful for proof compression in some cases. This alternative relies on knowledge of how literals are changed after the deletion of a node in a proof (similar to the \emph{post-deletion unifiability} property observed for {\FOLowerUnits} in \cite{GFOLU}).  
 \begin{definition}\label{def:postdelprop}
 Let $\eta$ be a node with parents $\eta_1$ and $\eta_2$. 
-%$\eta_1$ be a node with safe literals $\mathcal{S}(\eta)$ such that there exists nodes $\eta_2$ and $\eta$ and resolved literal $\ell'$ such that $\eta_1 \xrightarrow[\sigma']{\{\ell'\} } \eta$ and $\eta_2 \xrightarrow[\sigma'']{\{\dual{\ell'}\} } \eta$.
-For each literal $\ell \in \mathcal{S}(\eta_1)$, let $\eta_\ell$ be the lowest node on the path from $\eta_1$ to the root of the proof such that $\ell$ is used as the pivot. % (i.e. $\eta_\ell$ is the node below $\eta$ such that $\ell$ does not appear as a safe literal for any literal between $\eta_\ell$ and the root).
-Let $\mathcal{R}(\eta_\ell)$ be the set of all resolved literals $\dual{\ell}$ such that $\eta_2' \xrightarrow[\sigma_2]{\{\ell\} } \eta_\ell$ and $\eta_1' \xrightarrow[\sigma_1]{\{\dual{\ell}\} } \eta_\ell$ for some nodes $\eta_2'$ and $\eta_1'$.
-The node $\eta_1$ is said to satisfy the \emph{post-deletion unifiability property} in $\psi$ if, for all $\ell \in \mathcal{S}(\eta_1)$, all elements in $\mathcal{R}^{\dagger}(\eta_\ell) \cup \{\ell^{\dagger}\}$ are unifiable, where $\ell^{\dagger}$ is the literal in $\dn{\psi}{\eta_2}$ corresponding to $\ell$ in $\psi$ and $\mathcal{R}^{\dagger}(\eta_\ell)$ is the set of literals in $\dn{\psi}{\eta_2}$ corresponding to literals of $\mathcal{R}(\eta_\ell)$ in $\psi$.
+For each literal $\ell \in \mathcal{S}(\eta_1)$, let $\eta_\ell$ be a node on the path from $\eta_1$ to the root of the proof such that $\abs{\ell}$ is the pivot of $\eta_\ell$.
+Let $\mathcal{R}(\eta_\ell)$ be the set of all resolved literals $\ell^*$ such that $\eta_2' \xrightarrow[\sigma_2]{\{\ell\} } \eta_\ell$ and $\eta_1' \xrightarrow[\sigma_1]{\{\ell^*\} } \eta_\ell$ such that $\dual{\ell}$ and $\ell^*$ are unifiable, for some nodes $\eta_2'$ and $\eta_1'$.
+The node $\eta$ is said to satisfy the \emph{post-deletion unifiability property} in $\psi$ if, for all $\ell \in \mathcal{S}(\eta_1)$, all elements in $\mathcal{R}^{\dagger}(\eta_\ell) \cup \{\ell^{\dagger}\}$ are unifiable, where $\ell^{\dagger}$ is the literal in $\dn{\psi}{\eta_2}$ corresponding to $\ell$ in $\psi$ and $\mathcal{R}^{\dagger}(\eta_\ell)$ is the set of literals in $\dn{\psi}{\eta_2}$ corresponding to literals of $\mathcal{R}(\eta_\ell)$ in $\psi$.
 \end{definition}
 
 
@@ -181,7 +180,10 @@ The node $\eta_1$ is said to satisfy the \emph{post-deletion unifiability proper
 %Let $\eta$ be a node with safe literals $\mathcal{S}(\eta)$. Consider $p\in \mathcal{S}(\eta)$ and let $\eta_1$, \ldots, $\eta_n$ be subproofs that are resolved using $p$ in a proof $\psi$, respectively, with resolved literals $\ell_1$, \ldots, $\ell_m$. 
 %The node $\eta$ is said to satisfy the \emph{post-deletion unifiability property} in $\psi$ if, for all $p\in \mathcal{S}(\eta)$, $\ell_1^{\dagger}$,\ldots,$\ell_m^{\dagger}$, and $\dual{p^{\dagger}}$ are unifiable, where $\ell^{\dagger}$ is the literal in $\dn{\psi}{\eta}$ corresponding to $\ell$ in $\psi$.
 
-Informally, a node $\eta$ satisfies the \emph{post-deletion unifiability property} in a proof if it is the parent of a resolution and we can delete the opposite parent of that same resolution, replacing the resolution node with the initial node such that all of its safe literals can still be used as pivots in order to complete the proof.
+%TODO: change
+%Informally, a node $\eta$ satisfies the \emph{post-deletion unifiability property} in a proof if it is the parent of a resolution and we can delete the opposite parent of that same resolution, replacing the resolution node with the initial node such that all of its safe literals can still be used as pivots in order to complete the proof. 
+Informally, a node $\eta$ satisfies the \emph{post-deletion unifiability property} in a proof if one of it can be replaced by one of its parents $\eta_1$, such that $\abs{\ell}$ for each $\ell \in \mathcal{S}(\eta_1)$ can still be used as pivots in order to complete the proof.
+Note that there is always at least one node $\eta_\ell$ as used in the definition: the node which resulted in $\ell$ being marked as safe for the path from $\eta_1$ to the root of the proof.
 
 \begin{example}
 This example illustrates the usefulness of the post-deletion unifiability property as an alternative to the regularization property. In the proof below, note that $\eta_8$ does not satisfy the regularization property: there is no unifier $\sigma$ such that $\sigma \eta_8 \subseteq \mathcal{S}(\eta_8)$ (where $\mathcal{S}(\eta_8) =\{\lnot q(Y),\lnot r(Z),\lnot p(W)\}$).
