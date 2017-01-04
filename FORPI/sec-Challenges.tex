@@ -182,8 +182,8 @@ The node $\eta$ is said to satisfy the \emph{post-deletion unifiability property
 
 %TODO: change
 %Informally, a node $\eta$ satisfies the \emph{post-deletion unifiability property} in a proof if it is the parent of a resolution and we can delete the opposite parent of that same resolution, replacing the resolution node with the initial node such that all of its safe literals can still be used as pivots in order to complete the proof. 
-Informally, a node $\eta$ satisfies the \emph{post-deletion unifiability property} in a proof if one of it can be replaced by one of its parents $\eta_1$, such that $\abs{\ell}$ for each $\ell \in \mathcal{S}(\eta_1)$ can still be used as pivots in order to complete the proof.
-Note that there is always at least one node $\eta_\ell$ as used in the definition: the node which resulted in $\ell$ being marked as safe for the path from $\eta_1$ to the root of the proof.
+Informally, a node $\eta$ satisfies the \emph{post-deletion unifiability property} in a proof if one of it can be replaced by one of its parents $\eta_1$, such that $\abs{\ell}$ for each $\ell \in \mathcal{S}(\eta_1)$ can still be used as pivots in order to complete the proof. This property differs from the regularization property by not requiring the entire parent $\eta_1$ replacing the resolution $\eta$ to be simultaneously unified to a subset of $\mathcal{S}(\eta)$, and requires knowledge of how literals will be instantiated after the removal of $\eta_2$ and $\eta$ from the proof.
+Note that there is always at least one node $\eta_\ell$ as used in the definition: the node which resulted in $\ell$ being marked as safe for the path from $\eta$ to the root of the proof.
 
 \begin{example}
 This example illustrates the usefulness of the post-deletion unifiability property as an alternative to the regularization property. 
