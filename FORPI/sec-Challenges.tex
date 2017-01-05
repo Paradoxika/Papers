@@ -252,21 +252,14 @@ If $\ell \notin \eta_1$, then $\ell^\dagger =\ell$ and $\dual{\ell}^\dagger=\dua
 
 Consider $\dual{\ell} \in \mathcal{R}(\eta_\ell)$: $\ell$ and $\dual{\ell}$ are unifiable in $\psi$ by definition of $\mathcal{R}(\eta_\ell)$. We will show that $\ell^\dagger$ and $\dual{\ell}^\dagger$ are unifiable in $\psi\setminus\{\eta_2\}$ (note that $\dual{\ell}^\dagger\in \mathcal{R}^\dagger(\eta_\ell)$). 
 
-
-Let the resolved literals of $\eta_\ell$ be $\ell'\sigma'$ and $\ell''\sigma''$ for some literals $\ell',\ell''$ and unifiers $\sigma',\sigma''$, so that $\ell'\sigma'=\dual{\ell''}\sigma''$.
- 
-%Let $\dual{\ell}'$ be the resolved literal of $\eta_\ell$ such that $\dual{\ell}'$ and $\dual{\ell}$ are unifiable.
-%Note that $\dual{\ell}'=\dual{\ell}^\dagger$ as it corresponds to the opposite literal of $\ell$ in $\psi \setminus \{\eta_2\}$.  
-We have that $\dual{\ell}^\dagger=\dual{\ell}'$ as $\dual{\ell}'$ is unchanged in $\psi \setminus\{\eta_2\}$.
+Let $\ell_s \in \mathcal{S}(\eta)$ be the literal such that $\ell\sigma=\ell_s$, which exists since $\eta$ is strongly regularizable. By definition, $\ell_s$ is the resolved literal of $\eta_\ell$: $\eta_\ell$ was chosen so that $\ell$ was the resolved literal, so if $\ell$ and $\ell_s$ are unifiable, they must be the same literal. Thus we can write
+$$\ell_s\sigma'=\dual{\ell_s}\sigma''$$
+for some $\sigma',\sigma''$. 
+We have that $\dual{\ell}^\dagger=\dual{\ell_s}'$ as $\dual{\ell_s}'$ is unchanged in $\psi \setminus\{\eta_2\}$.
 Since $\eta_1$ replaces $\eta$ in $\psi\setminus\{\eta_2\}$, we have that $\ell^\dagger=\ell$. 
-% and $\dual{\ell}'$ is unifiable with $\dual{\ell}$ (as $\eta_\ell$ was chosen to have the resolved literal $\ell$, and therefore $\dual{\ell}$).
-
-Let $\ell_s \in \mathcal{S}(\eta)$ be the literal such that $\ell\sigma=\ell_s$, which exists since $\eta$ is strongly regularizable. By definition, $\ell_s$ is the resolved literal of $\eta_\ell$ ($\eta_\ell$ was chosen so that $\ell$ was the resolved literal, so if $\ell$ and $\ell_s$ are unifiable, they must be the same literal), so we can write
-$$\ell_s\sigma_s'=\dual{\ell_s}\sigma_s''$$
-for some $\sigma_s',\sigma_s''$. 
 Now $\ell^\dagger$ is unifiable with $\dual{\ell}^\dagger$ since
-$$\ell_s\sigma_s' = \ell\sigma\sigma_s' =  \ell^\dagger\sigma\sigma_s'$$
-$$\dual{\ell_s}\sigma_s'' = \dual{\ell}'\sigma_s'' = \dual{\ell}^\dagger\sigma_s''$$
+$$\ell_s\sigma' = \ell\sigma\sigma' =  \ell^\dagger\sigma\sigma'$$
+$$\dual{\ell_s}\sigma'' = \dual{\ell}^\dagger\sigma''$$
 where the first expression on each line are equal, so the last must be too.
 
 \end{proof}
