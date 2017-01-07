@@ -94,11 +94,15 @@ require resolution between $\eta_1$ and $\eta_6$, which is not possible.
 \end{example}
 One way to prevent the problem depicted above would be to require the pivot to be not only unifiable but in fact more general than a safe literal. A weaker (and better) requirement is possible, and requires a slight modification to the concept of safe literals. 
 
+%\begin{definition}
+%\emph{First-order safe literals} for a node $\eta$, denoted $\mathcal{S}(\eta)$, are a set of instantiated resolved literals used as pivots in all paths below $\eta$ in the proof, or that occur in the root clause of the proof.
+%\end{definition}
+
 \begin{definition}
-\emph{First-order safe literals} for a node $\eta$, denoted $\mathcal{S}(\eta)$, are a set of instantiated resolved literals used as pivots in all paths below $\eta$ in the proof, or that occur in the root clause of the proof.
+\emph{First-order safe literals} for a node $\eta$ in a proof $\psi$, denoted $\mathcal{S}(\eta)$, are a set of instantiated resolved literals $\ell\sigma$ such that $\abs{\ell\sigma}$ is the pivot for some node $\eta'$ below $\eta$ on all paths below $\eta$, or $\ell\sigma \in \rho(\psi)$ where $\rho(\psi)$ denotes the root node of $\psi$.
 \end{definition}
 
-First-order safe literals are obtained by applying the unifier of the resolution step to the each pivot before adding it to the set of safe literals (cf. algorithm 3, lines 8 and 10). First-order safe literals will be referred to simply as safe literals when it is clear that we are dealing with first-order proofs.
+First-order safe literals are initially set to the root of the proof, and further safe literals are obtained by applying the unifier of the resolution step to the each pivot before adding it to the set of safe literals (cf. algorithm 3, lines 8 and 10). Note that a safe literal $\ell\sigma$ may be such that $\sigma=\emptyset$, e.g. as in those instantiated literals contained in the root of the proof. First-order safe literals will be referred to simply as safe literals when context implies a first-order setting.
 
 
  In the case of Example \ref{ex:pairwise}, computing safe literals as defined above would result in $\eta_3$ having the safe literals $\{q(c),~p(a,b)\}$, where clearly the pivot $p(a,c)$ in $\eta_1$ is not safe. This requirement is formalized below.
