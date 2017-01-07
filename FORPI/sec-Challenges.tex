@@ -95,7 +95,7 @@ require resolution between $\eta_1$ and $\eta_6$, which is not possible.
 One way to prevent the problem depicted above would be to require the pivot to be not only unifiable but in fact more general than a safe literal. A weaker (and better) requirement is possible, and requires a slight modification to the concept of safe literals. 
 
 \begin{definition}
-(First-order) safe literals for a node $\eta$, denoted $\mathcal{S}(\eta)$, are a set of instantiated resolved literals used as pivots in all paths below $\eta$ in the proof, or that occur in the root clause of the proof.
+\emph{First-order safe literals} for a node $\eta$, denoted $\mathcal{S}(\eta)$, are a set of instantiated resolved literals used as pivots in all paths below $\eta$ in the proof, or that occur in the root clause of the proof.
 \end{definition}
 
 First-order safe literals are obtained by applying the unifier of the resolution step to the each pivot before adding it to the set of safe literals (cf. algorithm 3, lines 8 and 10). First-order safe literals will be referred to simply as safe literals when it is clear that we are dealing with first-order proofs.
@@ -246,7 +246,7 @@ Now observe that for each $\ell \in \mathcal{S}(\eta_8)=\{\lnot  q(Y), \lnot r(Z
 \end{itemize}
 \end{example}
 
-Weakly regularizable is implied by the previous two properties, as shown in the next theorem.
+If a node is pre-regularizable, then it is also weakly regularizable. Thus strongly regularizable nodes are also weakly regularizable nodes.
 
 \begin{thm}
 Let $\eta$ be a node that is pre-regularizable in some proof. Then $\eta$ is weakly regularizable.
