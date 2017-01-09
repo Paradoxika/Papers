@@ -250,38 +250,37 @@ Now observe that for each $\ell \in \mathcal{S}(\eta_8)=\{\lnot  q(Y), \lnot r(Z
 \end{itemize}
 \end{example}
 
-If a node is pre-regularizable and $\eta$ can be removed, then it is also weakly regularizable. Thus strongly regularizable nodes are also weakly regularizable nodes.
+%If a node is pre-regularizable and $\eta$ can be removed, then it is also weakly regularizable. Thus strongly regularizable nodes are also weakly regularizable nodes.
 
-\begin{thm}
-Let $\eta$ be a node that is pre-regularizable in some proof such that $\psi\setminus\{\eta_2\}$ is a proof with the same conclusion clause. Then $\eta$ is weakly regularizable.
+%\begin{thm}
+%Let $\eta$ be a node that is pre-regularizable in some proof such that $\psi\setminus\{\eta_2\}$ is a proof with the same conclusion clause. Then $\eta$ is weakly regularizable.
 %Let $\eta$ be a node that is strongly regularizable in some proof. Then $\eta$ is weakly regularizable.
-\end{thm}
+%\end{thm}
 
-\begin{proof}
+%\begin{proof}
 %Let $\eta$ be a strongly regularizable node with parents $\eta_1$ and $\eta_2$. By definition, $\eta$ is also pre-regularizable.
 %Assume without loss of generality that $\eta_1\sigma \subseteq \mathcal{S}(\eta)$.
 
-Let $\eta$ be a pre-regularizable node with parents $\eta_1$ and $\eta_2$. Let $\mathcal{R}(\eta_\ell)$ and $\mathcal{R}^\dagger(\eta_\ell)$ be defined as in Definition \ref{def:postdelprop} for a safe literal literal $\ell \in \mathcal{S}(\eta_1)$.
+%Let $\eta$ be a pre-regularizable node with parents $\eta_1$ and $\eta_2$. Let $\mathcal{R}(\eta_\ell)$ and $\mathcal{R}^\dagger(\eta_\ell)$ be defined as in Definition \ref{def:postdelprop} for a safe literal literal $\ell \in \mathcal{S}(\eta_1)$.
 
-Let $\ell \in \mathcal{S}(\eta_1)$ be a safe literal of $\eta_1$ that is contained in the root clause of the proof such that there does not exists a node $\eta_\ell$ below $\eta$ whose pivot is $\abs{\ell}$. Then $\mathcal{R}^\dagger(\eta_\ell)\cup\{\dual{\ell}\}=\emptyset\cup\{\dual{\ell}\}=\{\dual{\ell}\}$ is trivially unifiable. Thus we may assume that for all $\ell\in\mathcal{S}(\eta_1)$, such a node $\eta_\ell$ exists.
+%Let $\ell \in \mathcal{S}(\eta_1)$ be a safe literal of $\eta_1$ that is contained in the root clause of the proof such that there does not exists a node $\eta_\ell$ below $\eta$ whose pivot is $\abs{\ell}$. Then $\mathcal{R}^\dagger(\eta_\ell)\cup\{\dual{\ell}\}=\emptyset\cup\{\dual{\ell}\}=\{\dual{\ell}\}$ is trivially unifiable. Thus we may assume that for all $\ell\in\mathcal{S}(\eta_1)$, such a node $\eta_\ell$ exists.
 
+%old
 %Let $\ell \in \mathcal{S}(\eta_1)$ be a safe literal of $\eta_1$ that is not contained in the root clause of the proof, and let $\eta_\ell$ be a node on the path from $\eta_1$ to the root of the proof such that $\abs{\ell}$ is used as the pivot. We claim that at least one such node $\eta_\ell$ exists. To see this, recall that since $\eta$ is strongly regularizable, the resolved literal of $\eta$ was unifiable with some $\ell^*\in \mathcal{S}(\eta)$, so $\eta$ could not have provided a literal to $\mathcal{S}(\eta_1)$ that does not also appear below $\eta$. Thus $\mathcal{S}(\eta_1)\subseteq \mathcal{S}(\eta)$. Note that we cannot have $\mathcal{S}(\eta)\subsetneq \mathcal{S}(\eta_1)$, as otherwise a literal $\ell \in \mathcal{S}(\eta_1)$ have been added from a path from $\eta_1$ to the root avoiding $\eta$, contradicting $\ell$ appearing in all paths below $\eta_1$, or $\ell$ appearing in the root clause (as if this were the case, then we would also have $\ell \in \mathcal{S}(\eta)$). Since $\mathcal{S}(\eta_1)\subseteq \mathcal{S}(\eta)$, there must be a node below $\eta$ that used $\abs{\ell}$ as a pivot in order to have $\ell \in \mathcal{S}(\eta_1)$. 
 
 
-If $\ell \notin \eta_1$, then $\ell^\dagger =\ell$ and $\dual{\ell}^\dagger=\dual{\ell}$, there is nothing to prove (neither $\ell$ or $\dual{\ell}$ have changed in $\psi\setminus\{\eta_2\}$). So we may assume $\ell\in \eta_1$.
+%If $\ell \notin \eta_1$, then $\ell^\dagger =\ell$ and $\dual{\ell}^\dagger=\dual{\ell}$, there is nothing to prove (neither $\ell$ or $\dual{\ell}$ have changed in $\psi\setminus\{\eta_2\}$). So we may assume $\ell\in \eta_1$.
 
-Consider $\dual{\ell} \in \mathcal{R}(\eta_\ell)$: $\ell$ and $\dual{\ell}$ are unifiable in $\psi$ by definition of $\mathcal{R}(\eta_\ell)$. We will show that $\ell^\dagger$ and $\dual{\ell}^\dagger$ are unifiable in $\psi\setminus\{\eta_2\}$, where $\dual{\ell}^\dagger\in \mathcal{R}^\dagger(\eta_\ell)$.
+%Consider $\dual{\ell} \in \mathcal{R}(\eta_\ell)$: $\ell$ and $\dual{\ell}$ are unifiable in $\psi$ by definition of $\mathcal{R}(\eta_\ell)$. We will show that $\ell^\dagger$ and $\dual{\ell}^\dagger$ are unifiable in $\psi\setminus\{\eta_2\}$, where $\dual{\ell}^\dagger\in \mathcal{R}^\dagger(\eta_\ell)$.
 
-%Let $\ell_s = \ell_s'\sigma_s' \in \mathcal{S}(\eta)$ be the safe literal such that $\ell\sigma=\ell_s$, which exists since $\eta$ is strongly regularizable.
-Since $\eta_\ell$ exists (with $\abs{\ell}$ as a pivot by definition), there exists nodes $\eta_L$ and $\eta_R$ such that $\eta_L \xrightarrow[\sigma_L]{\{\ell_L\} } \eta_\ell$ and $\eta_R \xrightarrow[\sigma_R]{\{\ell_R\} } \eta_\ell$ for some $\ell_L,\ell_R,\sigma_L$, and $\sigma_R$.
-Since $\abs{\ell}$ was the pivot, we have that $\abs{\ell}=\abs{\ell_L\sigma_L}$ or $\abs{\ell}=\abs{\ell_R\sigma_R}$. Without loss of generality, assume that  $\abs{\ell}=\abs{\ell_L\sigma_L}$.
-Thus we can write
-$$\ell = \ell_L\sigma_L =\dual{\ell_R}\sigma_R$$
-Note that $\dual{\ell}^\dagger=\dual{\ell_R}$ as $\dual{\ell_R}$ is unchanged in $\psi \setminus\{\eta_2\}$.
-Since $\eta_1$ replaces $\eta$ in $\psi\setminus\{\eta_2\}$, we have that $\ell^\dagger=\ell$. 
+%Since $\eta_\ell$ exists (with $\abs{\ell}$ as a pivot by definition), there exists nodes $\eta_L$ and $\eta_R$ such that $\eta_L \xrightarrow[\sigma_L]{\{\ell_L\} } \eta_\ell$ and $\eta_R \xrightarrow[\sigma_R]{\{\ell_R\} } \eta_\ell$ for some $\ell_L,\ell_R,\sigma_L$, and $\sigma_R$.
+%Since $\abs{\ell}$ was the pivot, we have that $\abs{\ell}=\abs{\ell_L\sigma_L}$ or $\abs{\ell}=\abs{\ell_R\sigma_R}$. Without loss of generality, assume that  $\abs{\ell}=\abs{\ell_L\sigma_L}$.
+%Thus we can write
+%$$\ell = \ell_L\sigma_L =\dual{\ell_R}\sigma_R$$
+%Note that $\dual{\ell}^\dagger=\dual{\ell_R}$ as $\dual{\ell_R}$ is unchanged in $\psi \setminus\{\eta_2\}$.
+%Since $\eta_1$ replaces $\eta$ in $\psi\setminus\{\eta_2\}$, we have that $\ell^\dagger=\ell$. 
 
-
-\end{proof}
+%\end{proof}
 
 
 %intersection example?
