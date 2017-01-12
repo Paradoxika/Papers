@@ -182,7 +182,7 @@ This condition ensures that the remainder of the proof does not expect a variabl
 
 
 
-As the name suggests, strong regularizability is stronger than necessary. In some cases, nodes may be regularizable even if they are not strongly regularizable. A weaker condition is presented below. This alternative relies on knowledge of how literals are changed after the deletion of a node in a proof (and it is inspired by the \emph{post-deletion unifiability condition} described for {\FOLowerUnits} in \cite{GFOLU}).  
+As the name suggests, strong regularizability is stronger than necessary. In some cases, nodes may be regularizable even if they are not strongly regularizable. A weaker condition is presented below. This alternative relies on knowledge of how literals are changed after the deletion of a node in a proof (and it is inspired by the \emph{post-deletion unifiability condition} described for {\FOLowerUnits} in \cite{GFOLU}). However, since weak regularizability is more complciated to check, it is not as suitable for implementation as strong regularizability.
 \begin{definition}\label{def:postdelprop}
 Let $\eta$ be a pre-regularizable node with parents $\eta_1$ and $\eta_2$, assuming without loss of generality that $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta$ 
 %and $\eta_2 \xrightarrow[\sigma_2]{\{\ell_2\} } \eta$ 

@@ -1,10 +1,10 @@
-\section{First-Order RecyclePivotsWithIntersection}
+\section{Implementation}
 \label{sec:FORPI}
 %\vspace{-0.5cm}
 %TODO: this section
-This section presents {\FirstOrderRPI} ({\FORPI}), Algorithm \ref{algo:FORPI}, a first-order generalization of {\RPI}.
+{\FirstOrderRPI} ({\FORPI}), shown as Algorithm \ref{algo:FORPI}, is a first-order generalization of the propositional {\RPI}.
 %\footnote{A generalization of {\RP} could be obtained by setting the safe literals to the empty set in lines 11 and 2 of Algorithm~\ref{algo:foSetSafeLiterals}.}. 
-{\FORPI} traverses the proof in a bottom-up manner, storing for every node a set of safe literals. The set of safe literals for a node $\psi$ is computed from the set of safe literals of its children (cf.\ Algorithm~\ref{algo:foSetSafeLiterals}), similarly to the propositional case, but additionally applying unifiers to the resolved pivots (cf. Example \ref{ex:pairwise}).
+{\FORPI} traverses the proof in a bottom-up manner, storing for every node a set of safe literals. The set of safe literals for a node $\psi$ is computed from the set of safe literals of its children (cf.\ Algorithm~\ref{algo:foSetSafeLiterals}), similarly to the propositional case, but additionally applying unifiers to the resolved literals (cf. Example \ref{ex:pairwise}).
 If one of the node's resolved literals can be unified to a literal in the set of safe literals, then it may be possible to regularize the node by replacing it by one of its parents.  
 
 
@@ -72,7 +72,7 @@ During fixing, the irregular node is actually replaced by the parent that is not
       mark $\psi$ as regularized
 }
     }
-\caption{\label{algo:foRegularize} \texttt{FOregularizeIfPossible}}
+\caption{\label{algo:foRegularize} \texttt{regularizeIfPossible}}
 \end{footnotesize}
 \end{algorithm}
 \DecMargin{0.5em}    
@@ -109,7 +109,7 @@ During fixing, the irregular node is actually replaced by the parent that is not
       $\psi$.safeLiterals $\la$ $\bigcap_{\psi' \in \psi\textrm{.children}}$ safeLiteralsFrom($\psi'$)
     }
 
-\caption{\label{algo:foSetSafeLiterals} \texttt{FOsetSafeLiterals}}
+\caption{\label{algo:foSetSafeLiterals} \texttt{setSafeLiterals}}
 \end{footnotesize}
 \end{algorithm}
 \DecMargin{0.5em}    
