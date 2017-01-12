@@ -2,7 +2,7 @@
 \label{sec:FORPI}
 %\vspace{-0.5cm}
 %TODO: this section
-{\FirstOrderRPI} ({\FORPI}), shown as Algorithm \ref{algo:FORPI}, is a first-order generalization of the propositional {\RPI}.
+{\FirstOrderRPI} ({\FORPI}) (cf. Algorithm \ref{algo:FORPI}) is a first-order generalization of the propositional {\RPI}.
 %\footnote{A generalization of {\RP} could be obtained by setting the safe literals to the empty set in lines 11 and 2 of Algorithm~\ref{algo:foSetSafeLiterals}.}. 
 {\FORPI} traverses the proof in a bottom-up manner, storing for every node a set of safe literals. The set of safe literals for a node $\psi$ is computed from the set of safe literals of its children (cf.\ Algorithm~\ref{algo:foSetSafeLiterals}), similarly to the propositional case, but additionally applying unifiers to the resolved literals (cf. Example \ref{ex:pairwise}).
 If one of the node's resolved literals can be unified to a literal in the set of safe literals, then it may be possible to regularize the node by replacing it by one of its parents.  
@@ -45,6 +45,8 @@ its other parent is marked as a \texttt{deletedNode}, as shown in Algorithm~\ref
 As in the propositional case, fixing of the proof is postponed to another (single) traversal, as regularization proceeds top-down and only nodes below a regularized node may require fixing.
 During fixing, the irregular node is actually replaced by the parent that is not marked as \texttt{deletedNode}. During proof fixing, factoring inferences can be applied, in order to compress the proof further.
 %Further, if a resolution is rebuilt where either either resolvent contains multiple literals that are unifiable with the pivot, then that resolvent is first contracted, to reduce the number of resolutions required and increase the compression achieved.
+
+Note that, in order to reduce notation clutter in the pseudocodes, we slightly abuse notation and identify proofs, their root nodes and the clauses stored in their root nodes.
 
 
 %Unchanged from propositional case? %TODO: or should the $\in$ relation be unification?
