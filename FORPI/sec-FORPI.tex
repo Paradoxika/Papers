@@ -9,6 +9,7 @@ If one of the node's resolved literals can be unified to a literal in the set of
 
 
 \newcommand{\la}{\leftarrow}
+\IncMargin{0.5em}
 \begin{algorithm}[bt]
 \begin{footnotesize}
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
@@ -32,6 +33,7 @@ $\psi'$ $\la$ fix($\psi'$) \;
 \caption{\label{algo:FORPI} \texttt{\FORPI}}
 \end{footnotesize}
 \end{algorithm}
+\DecMargin{0.5em}    
 
 %NOTE: FORPPI desciption has been moved to challenges file to optimize whitespace use
 
@@ -46,6 +48,7 @@ During fixing, the irregular node is actually replaced by the parent that is not
 
 
 %Unchanged from propositional case? %TODO: or should the $\in$ relation be unification?
+\IncMargin{0.5em}
 \begin{algorithm}[bt]
 \begin{footnotesize}
 
@@ -72,10 +75,12 @@ During fixing, the irregular node is actually replaced by the parent that is not
 \caption{\label{algo:foRegularize} \texttt{FOregularizeIfPossible}}
 \end{footnotesize}
 \end{algorithm}
+\DecMargin{0.5em}    
 
-
+\IncMargin{0.5em}
 \begin{algorithm}[bt]
 \begin{footnotesize}
+
 
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 \SetKwData{units}{unitsQueue}
@@ -95,18 +100,19 @@ During fixing, the irregular node is actually replaced by the parent that is not
           safeLiteralsFrom($\psi'$) $\la$ $\psi'$.safeLiterals \;}
 %        \uElseIf{$\eta$ is left parent of $\eta'$}{ 
           \uElseIf{$\psi' = \psi  \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$ for some $\psi_R$}{ 
-        	safeLiteralsFrom($\psi'$) $\la$ $\psi'$.safeLiterals $\cup$ \{ $\ell_R\sigma_R  \}$ %\;
+        	safeLiteralsFrom($\psi'$) $\la$ $\psi'$.safeLiterals $\cup$ $\{\ell_R\sigma_R  \}$ %\;
         }
         \ElseIf{$\psi' = \psi_L  \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi$ for some $\psi_L$}{ 
-	safeLiteralsFrom($\psi'$) $\la$ $\psi'$.safeLiterals $\cup$ \{ $\ell_L\sigma_L \}$%\;
+	safeLiteralsFrom($\psi'$) $\la$ $\psi'$.safeLiterals $\cup$ $\{ \ell_L\sigma_L \}$%\;
         }
       }
       $\psi$.safeLiterals $\la$ $\bigcap_{\psi' \in \psi\textrm{.children}}$ safeLiteralsFrom($\psi'$)
     }
+
 \caption{\label{algo:foSetSafeLiterals} \texttt{FOsetSafeLiterals}}
 \end{footnotesize}
 \end{algorithm}
-
+\DecMargin{0.5em}    
 
 %original
 %\begin{algorithm}[bt]

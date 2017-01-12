@@ -35,7 +35,7 @@ $\psi[ \eta \tRes_p \psi'[ \eta''] ]$ might not subsume the clause $\psi[ \eta
 \tRes_p \psi'[\eta' \tRes_p \eta''] ]$. Therefore, it is only safe to do the
 replacement if the literal $\neg p$ gets resolved in all paths from $\eta''$ to the root or if it already occurs in the root clause of the original proof $\psi[ \eta \tRes_p \psi'[\eta' \tRes_p \eta''] ]$.
 
-
+\IncMargin{0.5em}
 \begin{algorithm}[b]
 \begin{footnotesize}
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
@@ -67,7 +67,7 @@ $\psi'$ $\la$ fix($\psi'$) \;
 \caption{\label{algo:RPI} \texttt{\RPI}}
 \end{footnotesize}
 \end{algorithm}
-
+\DecMargin{0.5em}
 %\begin{code}
 %  function recyclePivotsWithIntersection(p: Proof): Proof = {
 %    traverseBottomUp(p)(
@@ -97,7 +97,7 @@ its other parent is marked as \texttt{deletedNode}, as shown in Algorithm~\ref{a
 the irregular node is actually replaced by its surviving parent (i.e. the parent that is not marked as \texttt{deletedNode}).
 
 
-
+\IncMargin{0.5em}
 \begin{algorithm}[p]
 \begin{footnotesize}
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
@@ -119,9 +119,9 @@ the irregular node is actually replaced by its surviving parent (i.e. the parent
 \caption{\label{algo:Regularize} \texttt{regularizeIfPossible}}
 \end{footnotesize}
 \end{algorithm}
+\DecMargin{0.5em}
 
-
-
+\IncMargin{0.5em}
 \begin{algorithm}[p]
 \begin{footnotesize}
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
@@ -152,7 +152,7 @@ the irregular node is actually replaced by its surviving parent (i.e. the parent
 \caption{\label{algo:SetSafeLiterals} \texttt{setSafeLiterals}}
 \end{footnotesize}
 \end{algorithm}
-
+\DecMargin{0.5em}
 %\begin{code}
 %  function setSafeLiterals(n: Resolvent) = {
 %    if (n is a root node with no children) {
@@ -189,7 +189,7 @@ And being HashSets, membership checking is done in constant time in the average 
 and set intersection (line 12) can be done in $O(k.s)$, where $k$ is the number of sets and $s$ is the size of the smallest set.
 
 
-
+\IncMargin{0.5em}
 \begin{algorithm}[p]
 \begin{footnotesize}
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
@@ -222,7 +222,7 @@ and set intersection (line 12) can be done in $O(k.s)$, where $k$ is the number 
 \caption{\label{algo:SetSafeLiteralsRP} \texttt{setSafeLiterals} for \RP}
 \end{footnotesize}
 \end{algorithm}
-
+\DecMargin{0.5em}
 %
 %\begin{code}
 %  function setSafeLiterals(n: Resolvent) = {
