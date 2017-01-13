@@ -108,11 +108,11 @@ the irregular node is actually replaced by its surviving parent (i.e. the parent
 \Output{nothing (but the proof containing $\eta$ may be changed)}
 
 \BlankLine
-    \uIf{$\eta${\upshape.rightResolvedLiteral} $\in$ $\eta${\upshape.safeLiterals}}{
+    \uIf{$\eta${\upshape.rightResolvedLiteral} $\in$ $\mathcal{S}(\eta)$}{
       mark left parent of $\eta$ as \texttt{deletedNode} \;
       mark $\eta$ as regularized
     }
-    \ElseIf{\textrm{$\eta${\upshape.leftResolvedLiteral} $\in$ $\eta${\upshape.safeLiterals}}}{
+    \ElseIf{\textrm{$\eta${\upshape.leftResolvedLiteral} $\in$  $\mathcal{S}(\eta)$}}{
       mark right parent of $\eta$ as \texttt{deletedNode} \;
       mark $\eta$ as regularized
     }
@@ -134,20 +134,22 @@ the irregular node is actually replaced by its surviving parent (i.e. the parent
 \BlankLine
 
     \uIf{$\eta$ is a root node with no children}{
-      $\eta$.safeLiterals $\la$ $\eta$.clause  
+      $\mathcal{S}(\eta)$ $\la$ $\eta$.clause  
     }
     \Else{
       \ForEach{$\eta'$ $\in$ $\eta${\upshape.children}}{
         \uIf{$\eta'$ is marked as regularized}{ 
-          safeLiteralsFrom($\eta'$) $\la$ $\eta'$.safeLiterals \;}
+          safeLiteralsFrom($\eta'$) $\la$  $\mathcal{S}(\eta')$ \;}
         \uElseIf{$\eta$ is left parent of $\eta'$}{ 
-        	safeLiteralsFrom($\eta'$) $\la$ $\eta'$.safeLiterals $\cup$ \{ $\eta'$.rightResolvedLiteral \} \;
+        	safeLiteralsFrom($\eta'$) $\la$  $\mathcal{S}(\eta')$ $\cup$ \\
+        	$~~~~$ \{ $\eta'$.rightResolvedLiteral \} \;
         }
         \ElseIf{$\eta$ is right parent of $\eta'$}{ 
-			safeLiteralsFrom($\eta'$) $\la$ $\eta'$.safeLiterals $\cup$ \{ $\eta'$.leftResolvedLiteral \} \;
+			safeLiteralsFrom($\eta'$) $\la$ $\mathcal{S}(\eta')$ $\cup$ \\
+			$~~~~$ \{ $\eta'$.leftResolvedLiteral \} \;
         }
       }
-      $\eta$.safeLiterals $\la$ $\bigcap_{\eta' \in \eta\textrm{.children}}$ safeLiteralsFrom($\eta'$)
+       $\mathcal{S}(\eta)$ $\la$ $\bigcap_{\eta' \in \eta\textrm{.children}}$ safeLiteralsFrom($\eta'$)
     }
 \caption{\label{algo:SetSafeLiterals} \texttt{setSafeLiterals}}
 \end{footnotesize}
@@ -202,21 +204,23 @@ and set intersection (line 12) can be done in $O(k.s)$, where $k$ is the number 
 \BlankLine
 
     \uIf{$\eta$ is a root node with no children}{
-      $\eta$.safeLiterals $\la$ $\emptyset$ 
+      $\mathcal{S}(\eta)$ $\la$ $\emptyset$ 
     }
     \Else{
       \uIf{$\eta$ has only one child $\eta'$}{
         \uIf{$\eta'$ is marked as regularized}{ 
-          $\eta$.safeLiterals $\la$ $\eta'$.safeLiterals \;}
+          $\eta$.safeLiterals $\la$  $\mathcal{S}(\eta')$ \;}
         \uElseIf{$\eta$ is left parent of $\eta'$}{ 
-        	$\eta$.safeLiterals $\la$ $\eta'$.safeLiterals $\cup$ \{ $\eta'$.rightResolvedLiteral \} \;
+        	$\eta$.safeLiterals $\la$  $\mathcal{S}(\eta')$ $\cup$ \\
+        	$~~~~$ \{ $\eta'$.rightResolvedLiteral \} \;
         }
         \ElseIf{$\eta$ is right parent of $\eta'$}{ 
-			$\eta$.safeLiterals $\la$ $\eta'$.safeLiterals $\cup$ \{ $\eta'$.leftResolvedLiteral \} \;
+			$\eta$.safeLiterals $\la$  $\mathcal{S}(\eta')$ $\cup$\\
+			$~~~~$ \{ $\eta'$.leftResolvedLiteral \} \;
         }
       }
       \Else{
-      	$\eta$.safeLiterals $\la$ $\emptyset$
+      	 $\mathcal{S}(\eta)$ $\la$ $\emptyset$
       }
     }
 \caption{\label{algo:SetSafeLiteralsRP} \texttt{setSafeLiterals} for \RP}
