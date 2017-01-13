@@ -141,12 +141,12 @@ the irregular node is actually replaced by its surviving parent (i.e. the parent
         \uIf{$\eta'$ is marked as regularized}{ 
           safeLiteralsFrom($\eta'$) $\la$  $\mathcal{S}(\eta')$ \;}
         \uElseIf{$\eta$ is left parent of $\eta'$}{ 
-        	safeLiteralsFrom($\eta'$) $\la$  $\mathcal{S}(\eta')$ $\cup$ \\
-        	$~~~~$ \{ $\eta'$.rightResolvedLiteral \} \;
+        	safeLiteralsFrom($\eta'$) $\la$  $\mathcal{S}(\eta')$ $\cup$ 
+        	\hspace{6cm} $~~~~$ \{ $\eta'$.rightResolvedLiteral \} \;
         }
         \ElseIf{$\eta$ is right parent of $\eta'$}{ 
-			safeLiteralsFrom($\eta'$) $\la$ $\mathcal{S}(\eta')$ $\cup$ \\
-			$~~~~$ \{ $\eta'$.leftResolvedLiteral \} \;
+			safeLiteralsFrom($\eta'$) $\la$ $\mathcal{S}(\eta')$ $\cup$ 
+			\hspace{6cm} $~~~~$ \{ $\eta'$.leftResolvedLiteral \} \;
         }
       }
        $\mathcal{S}(\eta)$ $\la$ $\bigcap_{\eta' \in \eta\textrm{.children}}$ safeLiteralsFrom($\eta'$)
@@ -209,14 +209,14 @@ and set intersection (line 12) can be done in $O(k.s)$, where $k$ is the number 
     \Else{
       \uIf{$\eta$ has only one child $\eta'$}{
         \uIf{$\eta'$ is marked as regularized}{ 
-          $\eta$.safeLiterals $\la$  $\mathcal{S}(\eta')$ \;}
+          $\mathcal{S}(\eta)$ $\la$  $\mathcal{S}(\eta')$ \;}
         \uElseIf{$\eta$ is left parent of $\eta'$}{ 
-        	$\eta$.safeLiterals $\la$  $\mathcal{S}(\eta')$ $\cup$ \\
-        	$~~~~$ \{ $\eta'$.rightResolvedLiteral \} \;
+        	$\mathcal{S}(\eta)$ $\la$  $\mathcal{S}(\eta')$ $\cup$ 
+        	 \{ $\eta'$.rightResolvedLiteral \} \;
         }
         \ElseIf{$\eta$ is right parent of $\eta'$}{ 
-			$\eta$.safeLiterals $\la$  $\mathcal{S}(\eta')$ $\cup$\\
-			$~~~~$ \{ $\eta'$.leftResolvedLiteral \} \;
+			$\mathcal{S}(\eta)$ $\la$  $\mathcal{S}(\eta')$ $\cup$
+			 \{ $\eta'$.leftResolvedLiteral \} \;
         }
       }
       \Else{
