@@ -62,14 +62,14 @@ Note that, in order to reduce notation clutter in the pseudocodes, we slightly a
 \Output{nothing (but the proof containing $\psi$ may be changed)}
 
 \BlankLine
-    \uIf{$\exists \sigma$  and $\ell \in \psi${\upshape.safeLiterals} such that $\ell\sigma = \ell_R\sigma$ or $\ell\sigma= \ell_R\sigma$}{
-     \uIf{$\exists \sigma'$ such that $\psi_R\sigma' \subseteq\psi${\upshape.safeLiterals}} {
+    \uIf{$\exists \sigma$  and $\ell \in \mathcal{S}(\psi)$ such that $\ell\sigma = \ell_R\sigma$}{
+     \uIf{$\exists \sigma'$ such that $\psi_R\sigma' \subseteq \mathcal{S}(\psi)$} {
       mark $\psi_L$ as \texttt{deletedNode} \;
       mark $\psi$ as regularized
 }
     }
-    \ElseIf{$\exists \sigma$  and $\ell \in \psi${\upshape.safeLiterals} such that $\ell\sigma = \ell_L\sigma$ or $\ell\sigma=\ell_L\sigma$}{
-     \uIf{$\exists \sigma'$ such that $\psi_L\sigma' \subseteq\psi${\upshape.safeLiterals}} {
+    \ElseIf{$\exists \sigma$  and $\ell \in \mathcal{S}(\psi)$ such that $\ell\sigma = \ell_L\sigma$ }{
+     \uIf{$\exists \sigma'$ such that $\psi_L\sigma' \subseteq\mathcal{S}(\psi)$} {
       mark $\psi_R$ as \texttt{deletedNode} \;
       mark $\psi$ as regularized
 }
@@ -94,21 +94,21 @@ Note that, in order to reduce notation clutter in the pseudocodes, we slightly a
 \BlankLine
 
     \uIf{$\psi$ is a root node with no children}{
-      $\psi$.safeLiterals $\la$ $\psi$.clause  
+      $\mathcal{S}(\psi) \la$ $\psi$.clause  
     }
     \Else{
       \ForEach{$\psi'$ $\in$ $\psi${\upshape.children}}{
         \uIf{$\psi'$ is marked as regularized}{ 
-          safeLiteralsFrom($\psi'$) $\la$ $\psi'$.safeLiterals \;}
+          safeLiteralsFrom($\psi'$) $\la$ $\mathcal{S}(\psi')$ \;}
 %        \uElseIf{$\eta$ is left parent of $\eta'$}{ 
           \uElseIf{$\psi' = \psi  \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$ for some $\psi_R$}{ 
-        	safeLiteralsFrom($\psi'$) $\la$ $\psi'$.safeLiterals $\cup$ $\{\ell_R\sigma_R  \}$ %\;
+        	safeLiteralsFrom($\psi'$) $\la$ $\mathcal{S}(\psi')~ \cup $ $\{\ell_R\sigma_R  \}$ %\;
         }
         \ElseIf{$\psi' = \psi_L  \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi$ for some $\psi_L$}{ 
-	safeLiteralsFrom($\psi'$) $\la$ $\psi'$.safeLiterals $\cup$ $\{ \ell_L\sigma_L \}$%\;
+	safeLiteralsFrom($\psi'$) $\la$ $\mathcal{S}(\psi') ~\cup $ $\{ \ell_L\sigma_L \}$%\;
         }
       }
-      $\psi$.safeLiterals $\la$ $\bigcap_{\psi' \in \psi\textrm{.children}}$ safeLiteralsFrom($\psi'$)
+      $\mathcal{S}(\psi)$ $\la$ $\bigcap_{\psi' \in \psi\textrm{.children}}$ safeLiteralsFrom($\psi'$)
     }
 
 \caption{\label{algo:foSetSafeLiterals} \texttt{setSafeLiterals}}
