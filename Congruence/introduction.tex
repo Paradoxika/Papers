@@ -3,15 +3,70 @@
 ToDo:
 SMT... Equality... Congruence Closure... Interpolation... Applications... Motivation... Proof Compression (Post-Processing)...
 
+The Propositional Satisfiability (SAT) Problem and the Satisfiability
+Modulo Theories (SMT) Problem are among the key decision problems.
+Many other problems are solved by reducing them either to SAT or SMT
+instances. On top of simple SAT/UNSAT answers, many modern solvers
+can provide additional information: satisfying models in case of
+satisfiability, and refutation proofs in case of unsatisfiability.
+Refutation proofs allow an easy computation of Craig interpolants
+\cite{todo}\todo{Cite}, which in turn have widespread applications.
+They are used in quantifier elimination \cite{todo}\todo{Cite Jiang
+CAV}, symbolic model-checking \cite{todo}\todo{cite McMillan, IC3,
+etc.}, logic synthesis \cite{todo}\todo{Cite stuff by Jiang},
+property synthesis \cite{todo}\todo{Koenighofer FMCAD14}, and
+controller synthesis \cite{todo}\todo{Hofferek et al. FMCAD13}, to
+name just a few. In all these applications it is often desirable to
+work with small proofs, which in turn lead to small interpolants.
+Thus, compressing proofs can have significant effects for many
+different applications. 
 
-The main contribution of this paper is a novel method for compressing the length of SMT proofs containing equality reasoning based on congruence closure. Previous works \cite{ToDo: all Skeptik publications and others} on the compression of SMT proofs have focused exclusively on the propositional resolution parts of the proofs. Other works \cite{ToDo: Cut-introduction works} on proof compression beyond the propositional level have targeted sequent calculus proofs without special treatment of equality. This is, to the best of our knowledge, the first time that an algorithm for compressing congruence closure proofs is proposed.
 
-The proof compression algorithm proposed here is based on reproving the congruence closure lemmas with a more sophisticated congruence closure algorithm, which improves previous explanation-producing \cite{Nieuwenhuis2005,Nieuwenhuis2007} and proof-producing \cite{Fontaine2004} congruence closure algorithms by using a Dijkstra-inspired algorithm for searching for short paths in the congruence graph. Although this improved algorithm is computationally more expensive, the extra cost is affordable in a post-processing stage, where the number of lemmas in the proof is small in comparison to the number of lemmas considered during proof search.
+The main contribution of this paper is a novel method for compressing
+the length of SMT proofs containing equality reasoning based on
+congruence closure. Previous works \cite{Todo}\todo{Cite all Skeptik
+publications and others} on the compression of SMT proofs have
+focused exclusively on the propositional resolution parts of the
+proofs. Other works \cite{Todo}\todo{Cite Cut-introduction works} on
+proof compression beyond the propositional level have targeted
+sequent calculus proofs without special treatment of equality. This
+is, to the best of our knowledge, the first time that an algorithm
+for compressing congruence closure proofs is proposed.
 
-Another major contribution of this paper is a proof (in Section \ref{sec:npcomplete}) that deciding whether a shorter congruence closure explanation exists is an NP-complete problem. This implies that our Dijkstra-inspired algorithm finds only good explanations, though not optimal ones.
+The proof compression algorithm proposed here is based on reproving
+the congruence closure lemmas with a more sophisticated congruence
+closure algorithm, which improves previous explanation-producing
+\cite{Nieuwenhuis2005,Nieuwenhuis2007} and proof-producing
+\cite{Fontaine2004} congruence closure algorithms by using a
+Dijkstra-inspired algorithm for searching for short paths in the
+congruence graph. Although this improved algorithm is computationally
+more expensive, the extra cost is affordable in a post-processing
+stage, where the number of lemmas in the proof is small in comparison
+to the number of lemmas considered during proof search.
 
-A secondary contribution of this paper is a detailed description of the production of a resolution proof with equality axioms (as described in Sections \ref{sec:resolution} and \ref{sec:calculus}) from the congruence graph. Although this is probably folklore among developers of fine-grained proof-producing SMT-solvers (e.g. VeriT \cite{ToDo}), such a description (in Section \ref{sec:proofproduction}) seemed to be missing in the literature up to now. In \cite{Nieuwenhuis2005,Nieuwenhuis2007}, only the production of lemmas (explanations) is described, and in \cite{Fontaine2004} the described production of proofs uses a special purpose calculus different from resolution. 
+Another major contribution of this paper is a proof (in Section
+\ref{sec:npcomplete}) that deciding whether a shorter congruence
+closure explanation exists is an NP-complete problem. This implies
+that our Dijkstra-inspired algorithm finds only good explanations,
+though not optimal ones.
 
-Resolution is a desirable proof calculus, because it is already commonly used for the propositional parts of SMT proofs and also for SAT proofs \cite{ToDo:TraceCheckFormatArminBiere}. Simple and efficient proof checkers for resolution are easily implementable. Nevertheless, the methods described here are essentially independent of the underlying proof system. As long as a proof system is able to express congruence reasoning in a systematic way, these methods could be easily adapted to it.
+A secondary contribution of this paper is a detailed description of
+the production of a resolution proof with equality axioms (as
+described in Sections \ref{sec:resolution} and \ref{sec:calculus})
+from the congruence graph. Although this is probably folklore among
+developers of fine-grained proof-producing SMT-solvers (e.g. VeriT
+\cite{ToDo}\todo{Cite}), such a description (in Section
+\ref{sec:proofproduction}) seemed to be missing in the literature up
+to now. In \cite{Nieuwenhuis2005,Nieuwenhuis2007}, only the
+production of lemmas (explanations) is described, and in
+\cite{Fontaine2004} the described production of proofs uses a special
+purpose calculus different from resolution.
 
-
+Resolution is a desirable proof calculus, because it is already
+commonly used for the propositional parts of SMT proofs and also for
+SAT proofs \cite{ToDo}\todo{Cite TraceCheckFormatArminBiere}. Simple
+and efficient proof checkers for resolution are easily implementable.
+Nevertheless, the methods described here are essentially independent
+of the underlying proof system. As long as a proof system is able to
+express congruence reasoning in a systematic way, these methods could
+be easily adapted to it.

@@ -1,0 +1,130 @@
+
+\centering
+\begin{tikzpicture}[node distance=.8cm]
+\node(c1){$c_1\phantom{'}$};
+
+
+\node[right =.25cm of c1] (t1x2) {$t_1(\hat{x}_2)$};
+\node[above =.8cm of t1x2] (t1x1) {$t_1(\hat{x}_1)$};
+\node[below =.8cm of t1x2] (t1x3) {$t_1(\hat{x}_3)$};
+\draw [-] (c1) to (t1x1);
+\draw [-] (c1) to (t1x2);
+\draw [-] (c1) to (t1x3);
+
+\node[right = 3.1cm of c1](c1p){$c_1'$};
+
+\node[left =.25cm of c1p] (t12) {$t_1(\top_2)$};
+\node[above=.8cm of t12] (t11) {$t_1(\top_1)$};
+\node[below=.8cm of t12] (t13) {$t_1(\bot_3)$};
+
+\draw [-] (c1p) to (t11);
+\draw [-] (c1p) to (t12);
+\draw [-] (c1p) to (t13);
+
+\node[right = .3cm of c1p](c2){$c_2\phantom{'}$};
+\draw [-] (c1p) to (c2);
+
+\node[right=.25cm of c2, yshift=.8cm]  (t2x2) {$t_2(\hat{x}_2)$};
+\node[right=.25cm of c2, yshift=-.8cm] (t2x3) {$t_2(\hat{x}_3)$};
+\draw [-] (c2) to (t2x2);
+\draw [-] (c2) to (t2x3);
+
+\node[right = 3.1cm of c2](c2p){$c_2'$};
+
+\node[left =.25cm of c2p, yshift=.8cm]  (t22) {$t_2(\bot_2)$};
+\node[left =.25cm of c2p, yshift=-.8cm] (t23) {$t_2(\top_3)$};
+\draw [-] (c2p) to (t23);
+\draw [-] (c2p) to (t22);
+
+\node[right = .3cm of c2p](c3){$c_3\phantom{'}$};
+\draw [-] (c2p) to (c3);
+
+
+\node[right =.25cm of c3, yshift=.8cm] (t3x1) {$t_3(\hat{x}_1)$};
+\node[right =.25cm of c3, yshift=-.8cm] (t3x3) {$t_3(\hat{x}_3)$};
+\draw [-] (c3) to (t3x1);
+\draw [-] (t3x3) to (c3);
+
+\node[right = 3.1cm of c3](c3p){$c_3'$};
+
+\node[left =.25cm of c3p, yshift=.8cm] (t31) {$t_3(\bot_1)$};
+\node[left =.25cm of c3p, yshift=-.8cm] (t33) {$t_3(\bot_3)$};
+\draw [-] (c3p) to (t31);
+\draw [-] (c3p) to (t33);
+
+\node [below =2cm of c2] (x1) {$\hat{x}_1$};
+\node [below =.5cm of x1] (x2) {$\hat{x}_2$};
+\node [below =.5cm of x2] (x3) {$\hat{x}_3$};
+
+\node [right = of x1] (t1) {$\top_1$};
+\node [left = of x1] (f1) {$\bot_1$};
+
+\draw [-] (x1) to (t1);
+\draw [-] (x1) to (f1);
+
+\node [right = of x2] (t2) {$\top_2$};
+\node [left = of x2] (f2) {$\bot_2$};
+
+\draw [-] (x2) to (t2);
+\draw [-] (x2) to (f2);
+
+\node [right = of x3] (t3) {$\top_3$};
+\node [left = of x3] (f3) {$\bot_3$};
+
+\draw [-] (x3) to (t3);
+\draw [-] (x3) to (f3);
+
+%\uncover<5-6,9,12-14>{\draw [dotted,red,line width = 2pt] ($(t1x1.east) -(3pt,0)$) to ($(t11.west)+(3pt,0)$);}
+%\uncover<12-13>  {\draw [dotted,red,line width = 2pt] ($(t3x1.east) -(3pt,0)$) to ($(t31.west)+(3pt,0)$);}
+%\uncover<5-6,9,12-14>{\draw [dotted,red,line width = 2pt] ($(t2x2.east) -(3pt,0)$) to ($(t22.west)+(3pt,0)$);}
+%\uncover<5-6,14>{\draw [dotted,red,line width = 2pt] ($(t1x3.east) -(3pt,0)$) to ($(t13.west)+(3pt,0)$);}
+%\uncover<5-6,14>{\draw [dotted,red,line width = 2pt] ($(t3x3.east) -(3pt,0)$) to ($(t33.west)+(3pt,0)$);}
+
+%\uncover<2->{
+%\node [right =.3cm of t1, align=left,xshift=1.5cm] (assignments) {Assignment:};
+%}
+%
+%\uncover<3->{
+%\node [below =.05cm of assignments] (i1) {
+%\alt<7-13>{
+	%\alt<10-13>{
+		%\begin{tabular}{l}
+			%$\mathcal{I}_3 = \{x_1, \neg x_2\}$\\
+			%$\mathcal{I}_3 \not \models \phi$\\
+			%\color{red}{Problem}
+		%\end{tabular}
+		%}{
+		%\begin{tabular}{l}
+	  %$\mathcal{I}_2 = \{x_1,\neg x_2, x_3\}$\\
+		%$\mathcal{I}_2 \not\models \phi$\\
+		%\color{red}{No explanation}
+		%\end{tabular}
+	%}
+	%}{
+	%\begin{tabular}{l}
+		%$\mathcal{I}_1 = \{x_1,\neg x_2, \neg x_3\}$\\
+		%$\mathcal{I}_1 \models \phi$\\
+		%\color{red}{Explanation $E_1$}
+		%\end{tabular}
+	%}
+%};
+%}
+%
+%\uncover<13->{
+	%\node [below =.1cm of i1,xshift=1.5cm] (solution) {
+		%\alt<14>{
+			%\begin{tabular}{l}
+				%$n=3,m=3$\\
+				%$|E_1| = 11 = 3n + 4m - 1 (-3m)$
+			%\end{tabular}
+		%}{
+		%\begin{tabular}{l}
+			%Include clauses \\
+			%$(x_1 \vee \neg x_1)$,$(x_2 \vee \neg x_2)$,$(x_3 \vee \neg x_3)$
+			%\end{tabular}
+		%}
+	%};
+%}
+
+\end{tikzpicture}
+

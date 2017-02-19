@@ -1,0 +1,155 @@
+Comments:
+
+1) Maybe fixNodes needs to be modified, in order to take care of TheoryR, TheoryAxiom, TheoryLemma?
+
+2) The changes done on FibC between 22nd of january and 4th of March had a negative effect on PEQ020_size5_theory.
+
+3) It seems that the only causes of negative compression are: a) to return theory subproofs (this may create new nodes); b) the changes done between 22nd of january and 4th of march.
+
+
+With code from 22nd of january and
+"val resNode = if (true) {" and returning theory subproofs instead of just TheoryLemma.
+
+
+Proof                                                                length            coreSize         height          space           time            
+===========================================================================================================================================================
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory               68663             4432             373             2848            29340           
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-D             68550 (99.8%)     4432 (100.0%)    373 (100.0%)    2850 (100.1%)   1126 (3.8%)     
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-(D-PT)        35883 (52.3%)     2786 (62.9%)     360 (96.5%)     516 (18.1%)     1077 (3.7%)     
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-PT            35968 (52.4%)     2786 (62.9%)     360 (96.5%)     517 (18.2%)     492 (1.7%)      
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-FibC          78580 (114.4%)    13217 (298.2%)   370 (99.2%)     2687 (94.3%)    129889 (442.7%) 
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-(FibC-PT)     42779 (62.3%)     5906 (133.3%)    362 (97.1%)     649 (22.8%)     40772 (139.0%)  
+examples/proofs/VeriT/extremes/low/PEQ020_size5                      6409              566              124             365             1666            
+examples/proofs/VeriT/extremes/low/PEQ020_size5-D                    6409 (100.0%)     566 (100.0%)     124 (100.0%)    365 (100.0%)    98 (5.9%)       
+examples/proofs/VeriT/extremes/low/PEQ020_size5-(D-PT)               6409 (100.0%)     566 (100.0%)     124 (100.0%)    365 (100.0%)    111 (6.7%)      
+examples/proofs/VeriT/extremes/low/PEQ020_size5-PT                   6409 (100.0%)     566 (100.0%)     124 (100.0%)    365 (100.0%)    12 (0.7%)       
+examples/proofs/VeriT/extremes/low/PEQ020_size5-FibC                 7582 (118.3%)     1897 (335.2%)    101 (81.5%)     264 (72.3%)     16586 (995.6%)  
+examples/proofs/VeriT/extremes/low/PEQ020_size5-(FibC-PT)            7582 (118.3%)     1897 (335.2%)    101 (81.5%)     264 (72.3%)     15722 (943.7%)  
+examples/proofs/VeriT/extremes/low/iso_brn036                        2135              328              222             209             359             
+examples/proofs/VeriT/extremes/low/iso_brn036-D                      2123 (99.4%)      328 (100.0%)     222 (100.0%)    209 (100.0%)    29 (8.1%)       
+examples/proofs/VeriT/extremes/low/iso_brn036-(D-PT)                 2123 (99.4%)      328 (100.0%)     222 (100.0%)    209 (100.0%)    34 (9.5%)       
+examples/proofs/VeriT/extremes/low/iso_brn036-PT                     2135 (100.0%)     328 (100.0%)     222 (100.0%)    209 (100.0%)    3 (0.8%)        
+examples/proofs/VeriT/extremes/low/iso_brn036-FibC                   2386 (111.8%)     560 (170.7%)     222 (100.0%)    185 (88.5%)     7892 (2198.3%)  
+examples/proofs/VeriT/extremes/low/iso_brn036-(FibC-PT)              2386 (111.8%)     560 (170.7%)     222 (100.0%)    185 (88.5%)     7737 (2155.2%)  
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007             116418            4616             2342            2977            10439           
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007-D           113489 (97.5%)    4616 (100.0%)    2342 (100.0%)   3271 (109.9%)   7577 (72.6%)    
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007-(D-PT)      113489 (97.5%)    4616 (100.0%)    2342 (100.0%)   3271 (109.9%)   7995 (76.6%)    
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007-PT          116418 (100.0%)   4616 (100.0%)    2342 (100.0%)   2977 (100.0%)   337 (3.2%)      
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007-FibC        110981 (95.3%)    5819 (126.1%)    2338 (99.8%)    3172 (106.6%)   194463 (1862.9%)
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007-(FibC-PT)   110981 (95.3%)    5819 (126.1%)    2338 (99.8%)    3172 (106.6%)   189486 (1815.2%)
+
+
+
+With code from 22nd of january and
+"val resNode = if (hasNonEqChild(node,proof)) {":
+
+Proof                                                                length            coreSize        height          space           time            
+==========================================================================================================================================================
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory               68663             4432            373             2848            30597           
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-D             68550 (99.8%)     4432 (100.0%)   373 (100.0%)    2850 (100.1%)   1225 (4.0%)     
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-(D-PT)        35883 (52.3%)     2786 (62.9%)    360 (96.5%)     516 (18.1%)     1149 (3.8%)     
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-PT            35968 (52.4%)     2786 (62.9%)    360 (96.5%)     517 (18.2%)     479 (1.6%)      
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-FibC          59853 (87.2%)     4329 (97.7%)    372 (99.7%)     2425 (85.1%)    62817 (205.3%)  
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-(FibC-PT)     35169 (51.2%)     2786 (62.9%)    360 (96.5%)     511 (17.9%)     42574 (139.1%)  
+examples/proofs/VeriT/extremes/low/PEQ020_size5                      6409              566             124             365             1246            
+examples/proofs/VeriT/extremes/low/PEQ020_size5-D                    6409 (100.0%)     566 (100.0%)    124 (100.0%)    365 (100.0%)    96 (7.7%)         
+examples/proofs/VeriT/extremes/low/PEQ020_size5-FibC                 3941 (61.5%)      398 (70.3%)     90 (72.6%)      178 (48.8%)     15987 (1283.1%) 
+examples/proofs/VeriT/extremes/low/iso_brn036                        2135              328             222             209             312             
+examples/proofs/VeriT/extremes/low/iso_brn036-D                      2123 (99.4%)      328 (100.0%)    222 (100.0%)    209 (100.0%)    29 (9.3%)        
+examples/proofs/VeriT/extremes/low/iso_brn036-FibC                   1861 (87.2%)      303 (92.4%)     222 (100.0%)    184 (88.0%)     7963 (2552.2%)  
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007             116418            4616            2342            2977            10365           
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007-D           113489 (97.5%)    4616 (100.0%)   2342 (100.0%)   3271 (109.9%)   7480 (72.2%)    
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007-FibC        107188 (92.1%)    4089 (88.6%)    2338 (99.8%)    3137 (105.4%)   199583 (1925.5%)
+
+
+
+
+With code from 22nd of january and
+"val resNode = if (true) {" :
+
+
+Proof                                                                length            coreSize        height          space           time            
+==========================================================================================================================================================
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory               68663             4432            373             2848            32789           
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-D             68550 (99.8%)     4432 (100.0%)   373 (100.0%)    2850 (100.1%)   1647 (5.0%)     
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-(D-PT)        35883 (52.3%)     2786 (62.9%)    360 (96.5%)     516 (18.1%)     1167 (3.6%)     
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-PT            35968 (52.4%)     2786 (62.9%)    360 (96.5%)     517 (18.2%)     563 (1.7%)      
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-FibC          57027 (83.1%)     4706 (106.2%)   365 (97.9%)     2202 (77.3%)    141728 (432.2%) 
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-(FibC-PT)     35169 (51.2%)     2786 (62.9%)    360 (96.5%)     511 (17.9%)     42116 (128.4%)  
+examples/proofs/VeriT/extremes/low/PEQ020_size5                      6409              566             124             365             1199            
+examples/proofs/VeriT/extremes/low/PEQ020_size5-D                    6409 (100.0%)     566 (100.0%)    124 (100.0%)    365 (100.0%)    96 (8.0%)           
+examples/proofs/VeriT/extremes/low/PEQ020_size5-FibC                 3941 (61.5%)      398 (70.3%)     90 (72.6%)      178 (48.8%)     16145 (1346.5%) 
+examples/proofs/VeriT/extremes/low/iso_brn036                        2135              328             222             209             322             
+examples/proofs/VeriT/extremes/low/iso_brn036-D                      2123 (99.4%)      328 (100.0%)    222 (100.0%)    209 (100.0%)    26 (8.1%)     
+examples/proofs/VeriT/extremes/low/iso_brn036-PT                     2135 (100.0%)     328 (100.0%)    222 (100.0%)    209 (100.0%)    4 (1.2%)        
+examples/proofs/VeriT/extremes/low/iso_brn036-FibC                   1861 (87.2%)      303 (92.4%)     222 (100.0%)    184 (88.0%)     7550 (2344.7%) 
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007             116418            4616            2342            2977            10906           
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007-D           113489 (97.5%)    4616 (100.0%)   2342 (100.0%)   3271 (109.9%)   7649 (70.1%)    
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007-FibC        107188 (92.1%)    4089 (88.6%)    2338 (99.8%)    3137 (105.4%)   194489 (1783.3%)
+
+
+
+With Code from 22nd of january and
+"val resNode = if ((node.isInstanceOf[TheoryR] || node.isInstanceOf[TheoryAxiom] || node.isInstanceOf[TheoryLemma]) ) {" :
+
+Proof                                                                length            coreSize        height          space           time          
+========================================================================================================================================================
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory               68663             4432            373             2848            28120         
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-D             68550 (99.8%)     4432 (100.0%)   373 (100.0%)    2850 (100.1%)   1031 (3.7%)   
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-(D-PT)        35883 (52.3%)     2786 (62.9%)    360 (96.5%)     516 (18.1%)     1176 (4.2%)   
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-PT            35968 (52.4%)     2786 (62.9%)    360 (96.5%)     517 (18.2%)     560 (2.0%)    
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-FibC          57556 (83.8%)     4733 (106.8%)   365 (97.9%)     2217 (77.8%)    97668 (347.3%)
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-(FibC-PT)     35883 (52.3%)     2786 (62.9%)    360 (96.5%)     516 (18.1%)     1220 (4.3%)   
+examples/proofs/VeriT/extremes/low/PEQ020_size5                      6409              566             124             365             1190          
+examples/proofs/VeriT/extremes/low/PEQ020_size5-D                    6409 (100.0%)     566 (100.0%)    124 (100.0%)    365 (100.0%)    99 (8.3%)     
+examples/proofs/VeriT/extremes/low/PEQ020_size5-FibC                 6409 (100.0%)     566 (100.0%)    124 (100.0%)    365 (100.0%)    110 (9.2%)    
+examples/proofs/VeriT/extremes/low/iso_brn036                        2135              328             222             209             299           
+examples/proofs/VeriT/extremes/low/iso_brn036-D                      2123 (99.4%)      328 (100.0%)    222 (100.0%)    209 (100.0%)    26 (8.7%)     
+examples/proofs/VeriT/extremes/low/iso_brn036-FibC                   2123 (99.4%)      328 (100.0%)    222 (100.0%)    209 (100.0%)    30 (10.0%)    
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007             116418            4616            2342            2977            9900          
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007-D           113489 (97.5%)    4616 (100.0%)   2342 (100.0%)   3271 (109.9%)   7637 (77.1%)  
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007-FibC        113489 (97.5%)    4616 (100.0%)   2342 (100.0%)   3271 (109.9%)   8032 (81.1%)  
+
+
+
+With Code from 22nd of january (After commit 38c105c):
+(i.e. with "val resNode = if ((node.isInstanceOf[TheoryR] || node.isInstanceOf[TheoryAxiom] || node.isInstanceOf[TheoryLemma]) && hasNonEqChild(node,proof)) {")
+
+Proof                                                                length            coreSize        height          space           time         
+=======================================================================================================================================================
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory               68663             4432            373             2848            28416        
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-D             68550 (99.8%)     4432 (100.0%)   373 (100.0%)    2850 (100.1%)   1025 (3.6%)  
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-(D-PT)        35883 (52.3%)     2786 (62.9%)    360 (96.5%)     516 (18.1%)     914 (3.2%)   
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-PT            35968 (52.4%)     2786 (62.9%)    360 (96.5%)     517 (18.2%)     488 (1.7%)  
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-FibC          60155 (87.6%)     4329 (97.7%)    372 (99.7%)     2429 (85.3%)    21632 (76.1%)
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-(FibC-PT)     35883 (52.3%)     2786 (62.9%)    360 (96.5%)     516 (18.1%)     978 (3.4%)  
+examples/proofs/VeriT/extremes/low/PEQ020_size5                      6409              566             124             365             1237         
+examples/proofs/VeriT/extremes/low/PEQ020_size5-D                    6409 (100.0%)     566 (100.0%)    124 (100.0%)    365 (100.0%)    103 (8.3%)   
+examples/proofs/VeriT/extremes/low/PEQ020_size5-FibC                 6409 (100.0%)     566 (100.0%)    124 (100.0%)    365 (100.0%)    107 (8.6%)   
+examples/proofs/VeriT/extremes/low/iso_brn036                        2135              328             222             209             295          
+examples/proofs/VeriT/extremes/low/iso_brn036-D                      2123 (99.4%)      328 (100.0%)    222 (100.0%)    209 (100.0%)    26 (8.8%)    
+examples/proofs/VeriT/extremes/low/iso_brn036-FibC                   2123 (99.4%)      328 (100.0%)    222 (100.0%)    209 (100.0%)    33 (11.2%)   
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007             116418            4616            2342            2977            9808         
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007-D           113489 (97.5%)    4616 (100.0%)   2342 (100.0%)   3271 (109.9%)   7547 (76.9%) 
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007-FibC        113489 (97.5%)    4616 (100.0%)   2342 (100.0%)   3271 (109.9%)   7801 (79.5%) 
+
+
+With most recent code:
+
+Proof                                                                  length            coreSize        height          space           time          
+==========================================================================================================================================================
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory                 68663             4432            373             2848            24964         
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-D               68550 (99.8%)     4432 (100.0%)   373 (100.0%)    2850 (100.1%)   1055 (4.2%)   
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-(D-PT)          35883 (52.3%)     2786 (62.9%)    360 (96.5%)     516 (18.1%)     985 (3.9%)    
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-PT              35968 (52.4%)     2786 (62.9%)    360 (96.5%)     517 (18.2%)     422 (1.7%)    
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-FibC            75606 (110.1%)    9715 (219.2%)   373 (100.0%)    2759 (96.9%)    19893 (79.7%) 
+examples/proofs/VeriT/extremes/low/PEQ020_size5_theory-(FibC-PT)       48761 (71.0%)     8511 (192.0%)   368 (98.7%)     788 (27.7%)     19915 (79.8%) 
+examples/proofs/VeriT/extremes/low/PEQ020_size5                        6409              566             124             365             1582          
+examples/proofs/VeriT/extremes/low/PEQ020_size5-D                      6409 (100.0%)     566 (100.0%)    124 (100.0%)    365 (100.0%)    92 (5.8%)     
+examples/proofs/VeriT/extremes/low/PEQ020_size5-FibC                   6413 (100.1%)     569 (100.5%)    124 (100.0%)    364 (99.7%)     232 (14.7%)  
+examples/proofs/VeriT/extremes/low/iso_brn036                          2135              328             222             209             302           
+examples/proofs/VeriT/extremes/low/iso_brn036-D                        2123 (99.4%)      328 (100.0%)    222 (100.0%)    209 (100.0%)    27 (8.9%)     
+examples/proofs/VeriT/extremes/low/iso_brn036-FibC                     2123 (99.4%)      332 (101.2%)    222 (100.0%)    209 (100.0%)    92 (30.5%)    
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007               116418            4616            2342            2977            10406         
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007-D             113489 (97.5%)    4616 (100.0%)   2342 (100.0%)   3271 (109.9%)   7557 (72.6%)  
+examples/proofs/VeriT/extremes/high/iso_icl_repgen_sk007-FibC          113365 (97.4%)    4645 (100.6%)   2339 (99.9%)    3265 (109.7%)   10197 (98.0%) 

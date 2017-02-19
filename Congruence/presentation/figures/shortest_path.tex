@@ -1,0 +1,31 @@
+%\documentclass{standalone}
+%\usepackage{tikz}
+%\usetikzlibrary{positioning}
+%\usetikzlibrary{arrows}
+%\usetikzlibrary{calc}
+%
+%
+ %\begin{document}
+
+\centering
+\begin{tikzpicture}[node distance=.8cm]
+
+\node (fa) {$f(a)$};
+\node[below =of fa] (a) {$a$};
+\node[below =of a] (b) {$b$};
+\node[below =of b] (fb) {$f(b)$};
+
+\draw [-] (fa) to node[xshift=.2cm] {1} (a);
+
+\draw [-] (a) to node[xshift=.2cm] {1} (b);
+
+\draw [-] (b) to node[xshift=.2cm] {1} (fb);
+
+\draw [-,in=120,out=240] (fa) to node[xshift=-.2cm] {1} (fb);
+
+\draw [->,dotted,line width = 1.4pt]  ($(a) - (.6cm,.6cm)$) to ($(a) - (.1cm,.6cm)$);
+
+
+\end{tikzpicture}
+
+%\end{document}

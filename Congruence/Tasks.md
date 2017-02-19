@@ -1,7 +1,16 @@
-Remaining Tasks:
-----------------
+Open Tasks:
+-----------
 
-* Test Andreas' clean code (Bruno) [Due: 17/12/14]
+* Demonstrate that algorithm works for a small handcrafted proof (Andreas) [Due: 30/03/15]
+
+* Investigate PT before FC-LU (Andreas) [Due: 30/03/15]
+
+* Try to find compressible theory lemmas in Pascal's recent proof. (Georg) [Due: 30/03/15]
+
+
+
+Deferred Tasks:
+---------------
 
 * Introduction: story-line (Georg) [Originally Due: 24/11/14; Due: 17/12/14]
 
@@ -12,10 +21,6 @@ Remaining Tasks:
 * find good journals where the paper could be submitted - Is it good enough for JAR? (Pascal) [Due: 17/12/14]
 
 * n. log(n^2) - Downey-Sehti. (Pascal) [Due: 17/12/14]
-
-
-Deferred Tasks:
----------------
 
 * cite the reviewers (Pascal) [Discussed: 29/10/14]
 
@@ -39,6 +44,8 @@ removed. [Discussed: 29/10/14]
 
 Completed Tasks:
 ----------------
+
+* Test Andreas' clean code (Bruno) [Due: 17/12/14, Completed: 10/03/15]
 
 * Introduction: separate contributions from state of the start and related work (Bruno) [Completed: 24/11/14]
 

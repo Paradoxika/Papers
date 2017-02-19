@@ -1,0 +1,49 @@
+%\documentclass{standalone}
+%\usepackage{tikz}
+%\usetikzlibrary{positioning}
+%\usetikzlibrary{arrows}
+%\input{arrowsnew}
+%\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;} 
+
+ %\begin{document}
+
+\begin{tikzpicture}[node distance = 1.2cm]
+	\uncover<2->{\node (input) [draw,rectangle,rounded corners=2pt] {Input SMT problem $\Psi$};}
+	\uncover<3->{
+		\node (abstr) [draw,rectangle,rounded corners=2pt,below = of input] {Propositional logic abstraction $\phi$};
+		}
+	\uncover<4->{
+		\node (checksat) [draw,rectangle,rounded corners=2pt, below = of abstr,align=center] {Check satisfiability of $\phi$\\with SAT-solver};
+		}
+	\uncover<5->{
+		\node (unsat) [draw,rectangle,rounded corners=2pt, right=of checksat,xshift=1.6cm] {Report unsatisfiability of $\Psi$};
+		}
+	\uncover<6->{
+		\node (sat) [draw,rectangle,rounded corners=2pt,below=of checksat,align=center] {Check consistency of $\phi$\\with $\mathcal{T}$-solver (congruence closure)};
+		}
+	\uncover<7->{
+		\node (theoryconsistent) [draw,rectangle,rounded corners=2pt,right=of sat,xshift=1cm] {Report satisfiability of $\Psi$};
+		}
+	\uncover<8->{
+		\node (incon) [draw,rectangle,rounded corners=2pt,left=of checksat,align=center,yshift=1cm] {Add $C$ to $\phi$ as clause};
+		}
+	
+	\uncover<3->{
+		\draw [arrows={-latex},auto] (input) to node {Treat equations as propositional variables} (abstr);
+		}
+	
+	\uncover<4->{\draw [arrows={-latex},auto] (abstr) to node {} (checksat);}
+	
+	\uncover<5->{\draw [arrows={-latex},auto] (checksat) to node {UNSAT} (unsat);}
+	
+	\uncover<6->{\draw [arrows={-latex},auto] (checksat) to node {SAT} (sat);}
+	
+	\uncover<7->{\draw [arrows={-latex},auto] (sat) to node {consistent} (theoryconsistent);}
+	
+	\uncover<8->{\draw [arrows={-latex},midway,bend=45,out=180,in=270,align=center] (sat) to node[fill=white,yshift=.5cm,xshift=-.5cm] {inconsistent\\counterexample (conflict set) $C$} (incon);}
+	
+	\uncover<9->{\draw [arrows={-latex},auto,bend=45,out=90,in=180,align=center] (incon.north) to (abstr.west);}
+	
+\end{tikzpicture}
+
+ %\end{document}

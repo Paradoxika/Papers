@@ -1,0 +1,48 @@
+%\documentclass{standalone}
+%\usepackage{tikz}
+%\usetikzlibrary{positioning}
+%\usetikzlibrary{arrows}
+%\usetikzlibrary{calc}
+%
+%
+ %\begin{document}
+
+\centering
+\begin{tikzpicture}[node distance=.8cm]
+
+\node (a) {$a$};
+\node[below = of a] (b) {$b$};
+\node[below = of b] (t1) {$t_1$};
+\node[below = of t1] (t2) {$t_2$};
+\node[below = of t2] (t3) {$t_3$};
+\node[below = of t3] (c) {$c$};
+\node[below = of c] (d) {$d$};
+
+\node[right = of t1] (fac) {$f(a,c)$};
+\node[right = of t3] (fbd) {$f(b,d)$};
+
+\draw [-] (a) to node[xshift=-.2cm] {1} (b);
+
+\draw [-] (b) to node[xshift=-.2cm] {1} (t1);
+
+\draw [-] (t1) to node[xshift=-.2cm] {1} (t2);
+
+\draw [-] (t2) to node[xshift=-.2cm] {1} (t3);
+
+\draw [-] (t3) to node[xshift=-.2cm] {1} (c);
+
+\draw [-] (c) to node[xshift=-.2cm] {1} (d);
+
+\draw [-] (b) to node[xshift=.1cm,yshift=-.4cm] {1} (fac);
+
+\draw [-] (c) to node[xshift=.1cm,yshift=.4cm] {1} (fbd);
+
+\draw [-] (fac) to node[xshift=-.2cm] {2} (fbd);
+
+
+\draw [->,dotted,out=30,in=350,bend=90,line width = 1.4pt]  ($(fac) - (-.2cm,1.1cm)$) to ($(a) - (-.1cm,.6cm)$);
+\draw [->,dotted,out=330,in=10,bend=90,line width = 1.4pt]  ($(fac) - (-.2cm,1.3cm)$) to ($(c) - (-.1cm,.6cm)$);
+
+\end{tikzpicture}
+
+%\end{document}
