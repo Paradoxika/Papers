@@ -1,0 +1,175 @@
+Dear editors and reviewers,
+
+We thank you for your positive evaluation of our paper.
+
+Below is a list of changes made to address the reviewers' comments.
+
+
+============================
+
+Reviewer #1: 
+
+
+> Abstract: we provide here an NP-hardness proof --> by reading the abstract
+>          one could understand that the paper does not prove the problem
+>          to be in NP. I would replace hardness by completeness.
+
+Done.
+
+
+> Page 2, line 45: polynomial time algorithm --> polynomial-time algorithm
+
+Fixed.
+
+> Page 3, line 2: this short paper --> this paper
+
+Done.
+
+
+> Page 5: when explaining the congruence graph, I would add a small
+>        example with a figure including the resulting congruence graph
+
+
+TODO
+
+
+> Page 5, line 46: as far as I know, explanation production can only be
+>        done in time O(k \alpha(k,k)) for a proof with k literals.
+
+TODO
+
+
+> Page 7, Definition 7: the star in Assignment might confuse the reader
+>        since it is very similar to the asterisk in the congruence
+>        definition. I would use another symbol.
+
+TODO
+
+
+> Page 9, line 19: cardinality constraint on the explanation -->
+>                 cardinality constraint on the explanation size
+
+Done.
+
+
+> Page 9, Lemma 3: it would improve the readability to include an
+>        extension of Figure 4 (or a figure similar to it) where the
+>        tautological clauses are depicted.
+
+TODO
+
+
+> Page 10, line 36: Roberto Nieuwenhuis --> Robert Nieuwenhuis
+
+TODO
+
+
+> Page 11, line 5: Jovanovi --> Jovanovic
+
+Fixed.
+
+
+==========================
+
+Reviewer #2: 
+
+
+> Generally lemma 3 is the most important in the article, 
+> but in contrast to other parts of the article, it goes too fast. 
+> There is a crucial point there about enforcing each variable x to 
+> be exactly one of T or F, via an additional cardinality constraint 
+> and tautological clauses (x \/ !x). But it is not clear to me how 
+> this cardinality constraint looks like in EUF. It seems that what 
+> they want to achieve is 
+>
+> (x = T) + (x = F) = 1, 
+>
+> and they do it by adding 
+>
+> (x = T) + (x = F) <= 1 
+>
+> together with 
+>
+> (x = T) \/ (X = F).
+>
+> If yes, then how does the cardinality constraint fall into 
+> the conjunctive fragment of EUF? 
+
+TODO
+
+> Also, why isn't the inequality sufficient? (i.e., why enforce a full assignment ? ).
+
+TODO
+
+
+
+> abstract: "'to our best knowledge' => 'to the best of our knowledge' 
+> (see https://answers.yahoo.com/question/index?qid=20130720053631AAXDsHg)
+
+Fixed.
+
+> p 2: 'searching for short paths' => did you mean shortest paths ? 
+
+TODO
+
+> p 4: Def 2: is 'compatible' a standard term ? I always saw 'congruent'. 
+
+TODO
+
+
+> "(identity of two terms can be checked in
+> constant time), and identity of two function symbols can be checked in constant
+> time." since functions are terms then isn't this repetitive ? 
+
+We use the usual terminology of firtst-order logic. A term is either 
+a constant/variable symbol or an n-ary function symbol applied to n terms. 
+Therefore, a function symbol is generally not a term, except in the 
+case of nullary function symbols (i.e. constants). 
+
+TODO: Maybe we should add this to the preliminary section?
+
+
+> p 6: the sentence 'One could hope...' indeed raises the hopes that with 
+> such redundance it can be achieved. Perhaps you can show an example that 
+> demonstrates why this intuition is wrong ? 
+
+TODO
+
+
+> p 8: The bottom dotted edge on the left is wrong? (t1(x3) --- t1(\bot_3))
+
+TODO
+
+> Please use \qed at the end of proofs. 
+
+TODO
+
+==========================
+
+Reviewer #3: 
+
+
+> p3, 2: "short paper" -> "short article"
+
+Fixed to "article". Reviewer 1 request the removal of "short"
+
+
+> p3, 30: "null arity" -> "arity zero", or "zero-ary"/"nullary"
+
+Fixed to "nullary".
+
+
+> p4, 13: the empty set is not a congruence relation, the authors
+> probably mean the diagonal set { (x, x) | x in T }
+
+TODO
+
+> p5, 20: for functions of arity > 1, congruence edges have to be
+> labeled with a vector of equalities
+
+TODO
+
+> p5, 21: "logic" -> "logical"
+
+Fixed.
+
