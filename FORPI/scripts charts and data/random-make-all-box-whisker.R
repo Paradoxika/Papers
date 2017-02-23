@@ -1,7 +1,7 @@
-setwd("D:/Research Scripts/GSoC14/November 2016 - Charts - R")
+#setwd("D:/Research Scripts/GSoC14/November 2016 - Charts - R")
+setwd("D:/Git Repositories/Papers/FORPI/scripts charts and data")
 
-
-allRandomDataBW = read.csv("D:/Research Scripts/GSoC14/November 2016 - Charts - R/random-all-bw-data-dec1s.txt")
+allRandomDataBW = read.csv("D:/Git Repositories/Papers/FORPI/scripts charts and data/random-all-bw-data-dec1s.txt")
 
 
 lineUpPoints <- function(xLabels, dataPoints) {
@@ -28,8 +28,8 @@ makeBoxWhiskerRes <- function(alldata, fileName, lenCol, ratioCol){
     }
     binNames <- sort(unique(alldata[,'binDescription']))
 
-    pdf(fileName, height=5, width=5)
-    par(mar=c(5.1,4.1,1,2.1))
+    pdf(fileName, height=6, width=6)
+    par(mar=c(5.1,5.1,1,2.1))
     lengthsRaw <- alldata[,lenCol]
     lengths <- unique(alldata[,lenCol])  
 	numLengths <- length(lengths) 

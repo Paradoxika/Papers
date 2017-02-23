@@ -1,0 +1,118 @@
+% PLEASE USE THIS FILE AS A TEMPLATE
+% Check file iosart2x.tex for more examples
+%                   
+%%%% Journal title                                          (\documentclass optional parameter)
+%%   Applied Ontology                                       (ao)
+%%%% IOS Press
+%%%% Latex 2e
+
+% add. options: [seceqn,secthm,crcready,onecolumn]
+
+\documentclass[ao]{iosart2x}
+
+%\usepackage{dcolumn}
+%\usepackage{endnotes}
+
+%%%%%%%%%%% Put your definitions here
+
+
+%%%%%%%%%%% End of definitions
+
+\pubyear{0000}
+\volume{0}
+\firstpage{1}
+\lastpage{1}
+
+\begin{document}
+
+\begin{frontmatter}
+
+%\pretitle{}
+\title{Article Title}
+\runningtitle{Article Title}
+%\subtitle{}
+
+% For one author:
+%\author{\inits{N.}\fnms{Name1} \snm{Surname1}\ead[label=e1]{first@somewhere.com}}
+%\address{Department first, \institution{University or Company name},
+%Abbreviate US states, \cny{Country}\printead[presep={\\}]{e1}}
+%\runningauthor{N. Surname1}
+
+% Two or more authors:
+\author[A]{\inits{N.}\fnms{Name1} \snm{Surname1}\ead[label=e1]{first@somewhere.com}%
+\thanks{Corresponding author. \printead{e1}.}},
+\author[B]{\inits{N.N.}\fnms{Name2 Name2} \snm{Surname2}\ead[label=e2]{second@somewhere.com}}
+and
+\author[B]{\inits{N.-N.}\fnms{Name3-Name3} \snm{Surname3}\ead[label=e3]{third@somewhere.com}}
+\runningauthor{N. Surname1 et al.}
+\address[A]{Department first, \institution{University or Company name},
+Abbreviate US states, \cny{Country}\printead[presep={\\}]{e1}}
+\address[B]{Department first, \institution{University or Company name},
+Abbreviate US states, \cny{Country}\printead[presep={\\}]{e2,e3}}
+
+\begin{abstract}
+Abstract text.
+\end{abstract}
+
+\begin{keyword}
+\kwd{Keyword one}
+\kwd{keyword two}
+\end{keyword}
+
+\end{frontmatter}
+
+%%%%%%%%%%% The article body starts:
+
+%\section{}\label{s1}
+
+%\subsection{}\label{s1.1}
+
+
+
+
+
+
+%\begin{figure}[t]
+%\includegraphics{}
+%\caption{Figure caption.}\label{f1}
+%\end{figure}
+
+%\begin{table*}
+%\caption{} \label{t1}
+%\begin{tabular}{lll}
+%\hline
+%&&\\
+%&&\\
+%\hline
+%\end{tabular}
+%\end{table*}
+
+%%%%%%%%%%% The bibliography starts:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                  The Bibliography                       %%
+%%                                                         %%
+%%  ios2_nameyear.bst will be used to                      %%
+%%  create a .BBL file for submission.                     %%
+%%                                                         %%
+%%                                                         %%
+%%  Note that the displayed Bibliography will not          %%
+%%  necessarily be rendered by Latex exactly as specified  %%
+%%  in the online Instructions for Authors.                %%
+%%                                                         %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\nocite{*} 
+% if your bibliography is in bibtex format, use those commands:
+\bibliographystyle{ios2-nameyear} % Style BST file.
+\bibliography{ao_template}        % Bibliography file (usually '*.bib')
+
+% or include bibliography directly:
+%\begin{thebibliography}{0}
+%\bibitem[(Author, Year)]{r1} F. Author, Information about cited object.
+%
+%\bibitem[(Author and Author, Year)]{r2} S. Author and T. Author, Information about cited object.
+%\end{thebibliography}
+
+\end{document}

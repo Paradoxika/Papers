@@ -14,8 +14,7 @@ lengthLURPI <- someData[,sizeLURPI]
 compressedLengthLURPI <- someData[,cSizeLURPI]
 numFOSubsLURPI <- someData[,"lurpiCFO"]
 compressedLengthFinalLURPI <- compressedLengthLURPI #(compressedLengthLURPI  - numFOSubsLURPI )
-lurpiXlim <- max(unique(lengthLURPI)) + 1
-lurpiYlim <- max(unique(compressedLengthFinalLURPI)) + 1
+
 
 #RPI-LU
 sizeRPILU = "rpiluNumRes" 
@@ -24,31 +23,8 @@ lengthRPILU <- someData[,sizeRPILU]
 compressedLengthRPILU <- someData[,cSizeRPILU]
 numFOSubsRPILU <- someData[,"rpiluCFO"]
 compressedLengthFinalRPILU <- compressedLengthRPILU #(compressedLengthRPILU  - numFOSubsRPILU )
-rpiluXlim <- max(unique(lengthRPILU)) + 1
-rpiluYlim <- max(unique(compressedLengthFinalRPILU)) + 1
 
-axisLimitX = max(rpiluYlim, lurpiYlim)
-axisLimitY = max(rpiluYlim, lurpiYlim)
-axisLimit = max(axisLimitX, axisLimitY)
-
-pdf('combined-alg-res.pdf', height=6, width=6)
-par(mar=c(5.1,5.1,1,2.1))
-
-plot(compressedLengthFinalRPILU,compressedLengthFinalLURPI ,  xlim=c(0,axisLimit), ylim=c(0,axisLimit ),axes=FALSE, xlab="Compressed Resolutions (FORPI(GFOLU(p)))", ylab="Compressed Resolutions (GFOLU(FORPI(p)))",yaxs="i", xaxs="i")
-
-
-abline(0,1)
-countVal = 15
-byVal = 50 # max(someData[,size]) / countVal
-
-ylabelsV = seq(0,axisLimit, by =byVal)
-axis(1, at=ylabelsV , seq(0,axisLimit, by =byVal), las=2)
-ylabelsV = seq(0,axisLimit, by = byVal)
-axis(2, at=ylabelsV , labels=ylabelsV  , las=2)
-abline(v=axisLimit)
-abline(h=0)
-abline(v=0)
-abline(h=axisLimit)
+randomPoints <- cbind(compressedLengthFinalRPILU,compressedLengthFinalLURPI)
 
 #Get the data
 #get LURPI-only data
@@ -68,10 +44,53 @@ compressedLengthRPILUFinaltptp <- compressedLengthRPILUtptp
 lengthRPILUtptp <- dataRPILUtptp[,"resOnlyLength"]
 
 tptpPoints <- cbind(compressedLengthRPILUFinaltptp,compressedLengthLURPIFinaltptp)
-points(tptpPoints,col="red",pch=3)
+checkLenTPTP <- length(tptpPoints[,1])
 
-legend("topleft",c("TPTP Data", "Random Data"), pch=c(3,1), col=c("red","black"), bty="n")
+tptpAbove <- 0
+tptpBelow <-0
 
-dev.off()
+for(i in 1:checkLenTPTP){
+    x <- tptpPoints[i,1]
+	y <- tptpPoints[i,2]
+	if (x > y){
+        #below the line
+        tptpBelow <- tptpBelow + 1
+        
+    } else if (x < y){
+        #above the line
+        tptpAbove <- tptpAbove + 1
+        
+    }
+}
+
+
+randomPointsLenTPTP <- length(randomPoints[,1])
+
+randomPointsAbove <- 0
+randomPointsBelow <-0
+
+for(i in 1:randomPointsLenTPTP){
+    x <- randomPoints[i,1]
+	y <- randomPoints[i,2]
+	if (x > y){
+        #below the line
+        randomPointsBelow <- randomPointsBelow + 1
+        
+    } else if (x < y){
+        #above the line
+        randomPointsAbove <- randomPointsAbove + 1
+        
+    }
+}
+
+totalAbove <- tptpAbove + randomPointsAbove
+totalBelow <- tptpBelow + randomPointsBelow
+
+print(paste("TPTP above: ", tptpAbove))
+print(paste("TPTP below: ", tptpBelow))
+print(paste("Random above: ", randomPointsAbove))
+print(paste("Random below: ", randomPointsBelow))
+print(paste("Total above: ", totalAbove))
+print(paste("Total below: ", totalBelow))
 
 

@@ -1,7 +1,8 @@
-setwd("D:/Research Scripts/GSoC14/November 2016 - Charts - R")
+#setwd("D:/Research Scripts/GSoC14/November 2016 - Charts - R")
+setwd("D:/Git Repositories/Papers/FORPI/scripts charts and data")
 
 #get all data
-alldata = read.csv("D:/Research Scripts/GSoC14/November 2016 - Charts - R/random-all-data.txt")
+alldata = read.csv("D:/Git Repositories/Papers/FORPI/scripts charts and data/random-all-data-dec1s.txt")
 #alldata[1:6,]
 someData <- subset(alldata, select=rpiProofsize:totalTime)
 #someData[1:2,]

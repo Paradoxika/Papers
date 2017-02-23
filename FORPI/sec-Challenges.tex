@@ -6,7 +6,7 @@ In this section, we describe challenges that have to be overcome in order to suc
 
 %straightforward example
 \begin{example}\label{ex:unif} 
-Consider the following proof $\psi$. When computed as in the propositional case, the safe literals for $\eta_3$ are $\{ \vdash q(c), ~ p(a,X)\}$.
+Consider the following proof $\psi$. When computed as in the propositional case, the safe literals for $\eta_3$ are $\{ q(c), ~ p(a,X)\}$.
 %$\eta_1$'s literal is unifiable with $p(a,X)$, which is inherited from $\eta_3$'s safe literals. 
 %Thus the proof can be regularized by recycling $\eta_1$.
 %$\eta_1$ and $\eta_5$ and these two literals are unifiable. Further, the safe literals for $\eta_1$ includes $\eta_5$. Thus the proof can be regularized by recycling $\eta_1$.
@@ -14,18 +14,18 @@ Consider the following proof $\psi$. When computed as in the propositional case,
 \begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_6$: $p(Y,b)$ \e \hspace{-2cm}}
 \AxiomC{$\eta_1$: \e $p(W,X)$}
 \AxiomC{$\eta_2$: $p(W,X)$ \e $q(c)$}
-\BinaryInfC{$\eta_3$: \e $q(c)$}
+\BinaryInfC{$\eta_3$: \e $q(c)$  \hspace{-1.5cm}}
 \AxiomC{$\eta_4$: $q(c)$ \e $p(a,X)$}
 \BinaryInfC{$\eta_5$: \e $p(a,X)$}
-\AxiomC{$\eta_6$: $p(Y,b)$ \e }
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{scriptsize}
 
 \noindent
-As neither of $\eta_3$'s pivots is syntactically equal to a safe literal, the propositional {\RPI} algorithm would not change $\psi$. However, $\eta_3$'s left pivot $p(W,X)\in \eta_1$ is unifiable with the safe literal $p(a,X)$. Regularizing $\eta_3$, by deleting the edge between $\eta_2$ and $\eta_3$ and replacing $\eta_3$ by $\eta_1$, leads to further deletion of $\eta_4$ (because it is not resolvable with $\eta_1$) and finally to the much shorter proof below.
+As neither of $\eta_3$'s resolved literals is syntactically equal to a safe literal, the propositional {\RPI} algorithm would not change $\psi$. However, $\eta_3$'s left resolved literal $p(W,X)\in \eta_1$ is unifiable with the safe literal $p(a,X)$. Regularizing $\eta_3$, by deleting the edge between $\eta_2$ and $\eta_3$ and replacing $\eta_3$ by $\eta_1$, leads to further deletion of $\eta_4$ (because it is not resolvable with $\eta_1$) and finally to the much shorter proof below.
 
 \begin{footnotesize}
 \begin{prooftree}
@@ -39,26 +39,44 @@ As neither of $\eta_3$'s pivots is syntactically equal to a safe literal, the pr
 \end{example}
 
 \noindent
-Unlike in the propositional case, where a pivot must be syntactically equal to a safe literal for regularization to be possible, the example above suggests that, in the first-order case, it might suffice that a pivot be unifiable with a safe literal. However, there are cases, as shown in the example below, where mere unifiability is not enough and greater care is needed.
+Unlike in the propositional case, where a resolved literal must be syntactically equal to a safe literal for regularization to be possible, the example above suggests that, in the first-order case, it might suffice that the resolved literal be unifiable with a safe literal. However, there are cases, as shown in the example below, where mere unifiability is not enough and greater care is needed.
 
 %unification necessary example
 \begin{example}\label{ex:pairwise}
 
-Again, the safe literals for $\eta_3$, when computed as in the propositional case, are $\{ \vdash q(c), ~ p(a,X)\}$, and as the pivot $p(a,c)$ is unifiable with the safe literal $p(a,X)$, $\eta_3$ appears to be a candidate for regularization. 
+Again, the safe literals for $\eta_3$, when computed as in the propositional case, are $\{q(c), ~ p(a,X)\}$, and as the resolved literal $p(a,c)$ is unifiable with the safe literal $p(a,X)$, $\eta_3$ appears to be a candidate for regularization. 
 
 \begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_6$: $p(Y,b)$ \e \hspace{-2cm}}
 \AxiomC{$\eta_1$: \e $p(a,c)$}
 \AxiomC{$\eta_2$: $p(a,c)$ \e $q(c)$}
 \BinaryInfC{$\eta_3$: \e $q(c)$}
 \AxiomC{$\eta_4$: $q(c)$ \e $p(a,X)$}
 \BinaryInfC{$\eta_5$: \e $p(a,X)$}
-\AxiomC{$\eta_6$: $p(Y,b)$ \e }
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{scriptsize}
 
+\begin{figure*}
+\begin{small}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_8$: $q(f(a,e),c)\e$}
+\AxiomC{$\eta_6$: $\e p(c,d)$ \hspace{-2cm}}
+\AxiomC{$\eta_1$: $p(U,V)\e q(f(a,V),U)$}
+\AxiomC{$\eta_2$: $q(f(a,X),Y),q(T,X)\e q(f(a,Z),Y)$}
+\BinaryInfC{$\eta_3$: $p(U,V),q(T,V)\e q(f(a,Z),U)$}
+\AxiomC{\hspace{-1cm} $\eta_4$: $\e q(R,S)$}
+\BinaryInfC{$\eta_5$: $p(U,V)\e q(f(a,Z),U)$}
+\BinaryInfC{$\eta_7$: $\e q(f(a,Z),c)$}
+\BinaryInfC{$\psi$: $\bot$}
+\end{prooftree}
+\end{small}
+\caption{An example where pre-regularizability is not sufficient.}
+\label{fig:ex-unifcheck}
+\end{figure*}
 
 \noindent
 However, if we attempt to regularize the proof, the same series of actions as in Example \ref{ex:unif} would 
@@ -74,45 +92,59 @@ require resolution between $\eta_1$ and $\eta_6$, which is not possible.
 %\end{footnotesize}
 
 \end{example}
+One way to prevent the problem depicted above would be to require the resolved literal to be not only unifiable but in fact more general than a safe literal. A weaker (and better) requirement is possible, and requires a slight modification to the concept of safe literals, taking into account the unifications that occur on the paths from a node to the root. 
 
-\noindent
-One way to prevent the problem depicted above would be to require the pivot to be not only unifiable but in fact more general than a safe literal. A weaker (and better) requirement is possible, however, as defined below.
+%\begin{definition}
+%\emph{First-order safe literals} for a node $\eta$, denoted $\mathcal{S}(\eta)$, are a set of instantiated resolved literals used as pivots in all paths below $\eta$ in the proof, or that occur in the root clause of the proof.
+%\end{definition}
+
+\begin{definition}
+The set of \emph{safe literals} for a node $\eta$ in a proof $\psi$ with root clause $\Gamma$, denoted $\mathcal{S}(\eta)$, is such that $\ell \in \mathcal{S}(\eta)$ if and only if $\ell \in \Gamma$ or for all paths from $\eta$ to the root of $\psi$ there is an edge $\n_1
+\xrightarrow[\sigma]{\ell'} \n_2$ with $\ell' \sigma = \ell$.
+\end{definition}
+
+As in the propositional case, safe literals can be computed in a bottom-up traversal of the proof. Initially, at the root, the safe literals are exactly the literals that occur in the root clause. As we go up, the safe literals $\mathcal{S}(\eta')$ of a parent node $\eta'$ of $\eta$ where $\n'
+\xrightarrow[\sigma]{\ell} \n$ is set to $\mathcal{S}(\eta) \cup \{ \ell \sigma \}$. Note that we apply the substitution to the resolved literal before adding it to the set of safe literals (cf. algorithm 3, lines 8 and 10). In other words, in the first-order case, the set of safe literals has to be a set of \emph{instantiated} resolved literals.
+
+ In the case of Example \ref{ex:pairwise}, computing safe literals as defined above would result in $\mathcal{S}(\eta_3)=\{q(c),~p(a,b)\}$, where clearly the pivot $p(a,c)$ in $\eta_1$ is not safe. A generalization of this requirement is formalized below.
+
+%\noindent
+%Another way to prevent the problem depicted above would be to require the pivot to be not only unifiable but in fact more general than a safe literal. A weaker (and better) requirement is possible, however, as defined below.
+
+
+%old - kept for reference/readability.
+%\begin{definition}
+%\label{prop:pair}
+%Let $\eta$ be a node with safe literals $\mathcal{S}(\eta)$ such that resolved literal $\ell'$ is unifiable with a safe literal $\ell \in \mathcal{S}(\eta)$ where $\ell'$ is resolved against literals $\ell_1$, \ldots, $\ell_n$ in a proof $\psi$. The node $\eta$ is said to satisfy the \emph{pre-regularization unifiability property} in $\psi$ if $\ell_1$,\ldots,$\ell_n$, and $\dual{\ell'}$ are unifiable.
+%\end{definition}
+%Let $\mathcal{P}(\eta)$ (resp. $\mathcal{R}(\eta)$) be the set of all nodes $\eta_1$ (resp. resolved literals $\ell_1$) such that $\eta_2 \xrightarrow[\sigma_2]{\{\ell_2\} } \eta'$ and $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta'$ for some $\eta'$.
 
 \begin{definition}
 \label{prop:pair}
-Let $\eta$ be a node with pivot $\ell'$ unifiable with safe literal $\ell$ which is resolved against literals $\ell_1$, \ldots, $\ell_n$ in a proof $\psi$. $\eta$ is said to satisfy the \emph{pre-regularization unifiability property} in $\psi$ if $\ell_1$,\ldots,$\ell_n$, and $\dual{\ell'}$ are unifiable.
+Let $\eta$ be a node with safe literals $\mathcal{S}(\eta)$ and parents $\eta_1$ and $\eta_2$, assuming without loss of generality, $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta$ such that $\ell_1$ is unifiable with a safe literal $\ell^* \in \mathcal{S}(\eta)$. 
+Let $\mathcal{R}(\eta)$ be the set of all resolved literals $\ell_2$ such that $\eta_1 \xrightarrow[\sigma_1']{\{\ell_1\} } \eta'$, $\eta_2' \xrightarrow[\sigma_2']{\{\ell_2\} } \eta'$, and $\ell_1\sigma_1'=\dual{\ell_2}\sigma_2'$, for some nodes $\eta_2'$ and $\eta'$ and unifiers $\sigma_1'$ and $\sigma_2'$.
+The node $\eta$ is said to be \emph{pre-regularizable} in the proof $\psi$ if all literals in $\mathcal{R}(\eta) \cup \{ \dual{\ell_1}\}$ are unifiable.
 \end{definition}
 
 \noindent
-One way to ensure this property is met is to slightly modify the notion of safe literals, by applying the unifier of the resolution step to the each pivot before adding it to the safe literals (cf. algorithm 3, lines 8 and 10). In the case of Example \ref{ex:pairwise}, this would result in $\eta_3$ having the safe literals $\{ \vdash q(c),~p(a,b)\}$, where clearly the pivot $p(a,c)$ in $\eta_1$ is not safe.
+This property states that a node is pre-regularizable if, for a resolved literal $\ell'$ unifiable with a safe literal, which is resolved against literals $\ell_1$, \ldots, $\ell_n$ in a proof $\psi$, $\ell_1$,\ldots,$\ell_n$, and $\dual{\ell'}$ are unifiable.
 
-%TODO: continue from here
+
+
+
 %extra check example
 \begin{example}\label{ex:unifcheck}
-Satisfying the pre-regularization unifiability property is not sufficient. Consider the proof $\psi$ below. After collecting the safe literals, $\eta_3$'s safe literals are $\{q(T,V),p(c,d)\vdash q(f(a,e),c)\}$.
 
-\begin{scriptsize}
-\begin{prooftree}
-\def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_8$: $q(f(a,e),c)\e$\hspace{-1cm}}
-\AxiomC{$\eta_6$: $\e p(c,d)$\hspace{-4.5cm}}
-\AxiomC{$\eta_1$: $p(U,V)\e q(f(a,V),U)$}
-\AxiomC{$\eta_2$: $q(f(a,X),Y),q(T,X)\e q(f(a,Z),Y)$}
-\BinaryInfC{$\eta_3$: $p(U,V),q(T,V)\e q(f(a,Z),U)$\hspace{-1cm}}
-\AxiomC{\hspace{-1cm} $\eta_4$: $\e q(R,S)$}
-\BinaryInfC{$\eta_5$: $p(U,V)\e q(f(a,Z),U)$}
-\BinaryInfC{$\eta_7$: $\e q(f(a,Z),c)$}
-\BinaryInfC{$\psi$: $\bot$}
-\end{prooftree}
-\end{scriptsize}
 
-\noindent
+Satisfying the pre-regularizability is not sufficient. Consider the proof $\psi$ in Figure \ref{fig:ex-unifcheck}. After collecting the safe literals, $\mathcal{S}(\eta_3) = \{\lnot q(R,S),\lnot p(c,d), q(f(a,e),c)\}$.
+%\noindent
 $\eta_3$'s pivot $q(f(a,V),U)$ is unifiable to (and even more general than) the safe literal $q(f(a,e),c)$. Attempting to regularize $\eta_3$ would lead to the removal of $\eta_2$, the replacement of $\eta_3$ by $\eta_1$ and the removal of $\eta_4$ (because $\eta_1$ does not contain the pivot required by $\eta_5$), with $\eta_5$ also being replaced by $\eta_1$. Then resolution between $\eta_1$ and $\eta_6$ results in $\eta_7'$, which cannot be resolved with $\eta_8$, as shown below.
 
+
 \begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_8$: $q(f(a,e),c)\e$}
+\AxiomC{$\eta_8$: $q(f(a,e),c)\e$ \hspace{-0.5cm}}
 \AxiomC{$\eta_6$: $\e p(c,d)$}
 \AxiomC{$\eta_1$: $p(U,V)\e q(f(a,V),U)$}
 \BinaryInfC{$\eta_7'$: $\e q(f(a,d),c)$}
@@ -121,24 +153,27 @@ $\eta_3$'s pivot $q(f(a,V),U)$ is unifiable to (and even more general than) the 
 \end{scriptsize}
 
 \noindent
-$\eta_1$'s literal $q(f(a, V), U)$, which would be resolved with $\eta_8$'s literal, was changed to $Q(f(a,d),c)$ due to the resolution between $\eta_1$ and $\eta_6$.
-
+$\eta_1$'s literal $q(f(a, V), U)$, which would be resolved with $\eta_8$'s literal, was changed to $q(f(a,d),c)$ due to the resolution between $\eta_1$ and $\eta_6$.
 \end{example}
+
 
 
 %ToDo: The following paragraph is not understandable. It must be made clearer. It must be made more formal (as a definition) and more mathematically precise (with the same level of detail as definition 2). It must explain \textbf{why} this additional check suffices.
 
 \noindent
-Thus we additionally require the following property be satisfied.
+Thus we additionally require that the following condition be satisfied.
 \begin{definition}
 \label{prop:extracheck}
-Let $\eta$ be a node with safe literals $\phi$ that is marked for regularization with parents $\eta_1$ and $\eta_2$, where 
+Let $\eta$ be pre-regularizable, with safe literals $\mathcal{S}(\eta)$ and parents $\eta_1$ and $\eta_2$, with clauses $\Gamma_1$ and $\Gamma_2$ respectively, assuming without loss of generality that
 %without loss generality 
-$\eta_2$ is marked as a \texttt{deletedNode}
-in a proof $\psi$. $\eta$ is said to satisfy the \emph{regularization unifiability property} in $\psi$ if there exists a substitution $\sigma$ such that $\eta_1\sigma \subseteq \phi$.
+$\eta_2 \xrightarrow[\sigma_2]{\{\ell_2\} } \eta$ and $\dual{\ell_2}$ is unifiable with some $\ell^* \in \mathcal{S}(\eta)$. 
+%TODO \marginpar{explain, mathematically, what is assumed about $\eta_2$ and $\ell_2$ here}  %Done? This used to say that $\eta_2$ was a deleted node, so that must mean that $\eta_1$ contains the resolved literal that is safe, i.e. $\eta_1$ contains $\ell_1 \in \mathcal{S}(\eta)$, and we have that $\ell_1 = \dual{\ell_2}$
+%is marked as a \texttt{deletedNode}
+%in a proof $\psi$
+The node $\eta$ is said to be \emph{strongly regularizable} in $\psi$ if there exists a substitution $\sigma$ such that $\Gamma_1 \sigma \subseteq \mathcal{S}(\eta)$.
 \end{definition}
 %we ensure that the replacement parent is (possibly after unification) contained entirely in the safe literals. 
-This property ensures that the remainder of the proof does not expect a variable in $\eta_1$ to be unified to different values simultaneously. This property is not necessary in the propositional case, as the replacement node would not change lower in the proof. 
+This condition ensures that the remainder of the proof does not expect a variable in $\eta_1$ to be unified to different values simultaneously. This property is not necessary in the propositional case, as the literals of the replacement node would not change lower in the proof. 
 
 
 %In order to avoid these scenarios, we perform an additional check during inference removal. The node $\eta*$ which will replace a resolution $\eta$ (because $\eta$ would have a deleted parent), must be entirely contained, via unification which modifies only $\eta^*$'s variables, in the safe literals of $\eta$. 
@@ -146,30 +181,111 @@ This property ensures that the remainder of the proof does not expect a variable
 %In this example, $\eta_1$ does not satisfy this property. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
 
 
-\newcommand{\la}{\leftarrow}
-\begin{algorithm}[bt]
-\begin{footnotesize}
-\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-\SetKwData{units}{unitsQueue}
-\SetKwData{fixedUnits}{fixedUnitsQueue}
 
-\Input{A first-order proof $\psi$}
-\Output{A possibly less-irregular first-order proof $\psi'$}
+As the name suggests, strong regularizability is stronger than necessary. In some cases, nodes may be regularizable even if they are not strongly regularizable. A weaker condition is presented below. This alternative relies on knowledge of how literals are changed after the deletion of a node in a proof (and it is inspired by the \emph{post-deletion unifiability condition} described for {\FOLowerUnits} in \cite{GFOLU}). However, since weak regularizability is more complciated to check, it is not as suitable for implementation as strong regularizability.
+\begin{definition}\label{def:postdelprop}
+Let $\eta$ be a pre-regularizable node with parents $\eta_1$ and $\eta_2$, assuming without loss of generality that $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta$ 
+%and $\eta_2 \xrightarrow[\sigma_2]{\{\ell_2\} } \eta$ 
+such that $\ell_1$ is unifiable with some $\ell^* \in \mathcal{S}(\eta)$.
+For each safe literal $\ell = \ell_s\sigma_s \in \mathcal{S}(\eta_1)$, let $\eta_\ell$ be a node on the path from $\eta$ to the root of the proof such that $\abs{\ell}$ is the pivot of $\eta_\ell$.
+Let $\mathcal{R}(\eta_\ell)$ be the set of all resolved literals $\ell_s'$ such that $\eta_2' \xrightarrow[\sigma_s]{\{\ell_s\} } \eta_\ell$, $\eta_1' \xrightarrow[\sigma_s']{\{\ell_s'\} } \eta_\ell$, and $\ell_s\sigma_s=\dual{\ell_s'}\sigma_s'$, for some nodes $\eta_2'$ and $\eta_1'$ and unifier $\sigma_s'$; if no such node $\eta_\ell$ exists, define $\mathcal{R}(\eta_\ell)=\emptyset$.
+% and $\sigma_2'$.
+The node $\eta$ is said to be \emph{weakly regularizable} in $\psi$ if, for all $\ell \in \mathcal{S}(\eta_1)$, all elements in $\mathcal{R}^{\dagger}(\eta_\ell) \cup \{ \dual{\ell}^\dagger \}$ are unifiable, where $\dual{\ell}^{\dagger}$ is the literal in $\dn{\psi}{\eta_2}$ corresponding to $\dual{\ell}$ in $\psi$ and $\mathcal{R}^{\dagger}(\eta_\ell)$ is the set of literals in $\dn{\psi}{\eta_2}$ corresponding to literals of $\mathcal{R}(\eta_\ell)$ in $\psi$.
+\end{definition}
 
-\BlankLine
 
-$\psi'$ $\la$ $\psi$\;
-traverse $\psi'$ bottom-up and \ForEach{node $\eta$ in $\psi'$}{
-   \If{$\eta$ is a resolvent node}{
-     setSafeLiterals($\eta$) \;
-     regularizeIfPossible($\eta$)
-   }
-  }
-$\psi'$ $\la$ fix($\psi'$) \;
-\Return {$\psi'$}\;
-\caption{\label{algo:FORPI} \texttt{\FORPI}}
-\end{footnotesize}
-\end{algorithm}
+%old
+%Let $\mathcal{R}(\eta)$ be the set of resolved literals $\dual{\ell_2}$ contained in some conclusion of a node in $\mathcal{P}(\eta)$.
+%Let $\eta$ be a node with safe literals $\mathcal{S}(\eta)$. Consider $p\in \mathcal{S}(\eta)$ and let $\eta_1$, \ldots, $\eta_n$ be subproofs that are resolved using $p$ in a proof $\psi$, respectively, with resolved literals $\ell_1$, \ldots, $\ell_m$. 
+%The node $\eta$ is said to satisfy the \emph{post-deletion unifiability property} in $\psi$ if, for all $p\in \mathcal{S}(\eta)$, $\ell_1^{\dagger}$,\ldots,$\ell_m^{\dagger}$, and $\dual{p^{\dagger}}$ are unifiable, where $\ell^{\dagger}$ is the literal in $\dn{\psi}{\eta}$ corresponding to $\ell$ in $\psi$.
+
+
+Note that there is always at least one node $\eta_\ell$ as assumed in the definition for any safe literal which was not contained in the root clause of the proof: the node which resulted in $\ell = \ell_s\sigma_s \in \mathcal{S}(\eta)$ being a safe literal for the path from $\eta$ to the root of the proof. Furthermore, it does not matter which node $\eta_\ell$ is used. To see this, consider some node $\eta_\ell' \neq \eta_\ell$ with the same pivot $\abs{\ell}=\abs{\ell_s\sigma_s}$. Consider arbitrary nodes $\eta_1$ and $\eta_2$ such that  $\eta_2 \xrightarrow[\sigma_s]{\{\ell_s\} } \eta_\ell$ and $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta_\ell$ where $\ell_s\sigma_s=\dual{\ell_1}\sigma_1$. Now consider arbitrary nodes $\eta_1'$ and $\eta_2'$ such that  $\eta_2' \xrightarrow[\sigma_s]{\{\ell_s\} } \eta_\ell'$ and $\eta_1' \xrightarrow[\sigma_1']{\{\ell_1'\} } \eta_\ell'$ where $\ell_s\sigma_s=\dual{\ell_1'}\sigma_1'$. Since the pivots for $\eta_\ell$ and $\eta_\ell'$ are equal, we must have that %$\abs{\ell\sigma_2}=\abs{\ell\sigma_2'}$ and furthermore that 
+$\abs{\ell_s\sigma_s}=\abs{\ell_1\sigma_1}$ and $\abs{\ell_s\sigma_s}=\abs{\ell_1'\sigma_1'}$, and thus $\abs{\ell_1\sigma_1}=\abs{\ell_1'\sigma_1'}$. This shows that it does not matter which $\eta_\ell$ we use; the instantiated resolved literals will always be equal implying that both of the resolved literals $\ell_1$ and $\ell_1'$ will be contained in both $\mathcal{R}(\eta_\ell)$ and $\mathcal{R}(\eta_\ell')$.
+
+
+Informally, a node $\eta$ is weakly regularizable in a proof if it can be replaced by one of its parents $\eta_1$, such that for each $\ell \in \mathcal{S}(\eta_1)$, $\abs{\ell}$ can still be used as a pivot in order to complete the proof. Weakly regularizable nodes differ from strongly regularizable nodes by not requiring the entire parent $\eta_1$ replacing the resolution $\eta$ to be simultaneously matched to a subset of $\mathcal{S}(\eta)$, and requires knowledge of how literals will be instantiated after the removal of $\eta_2$ and $\eta$ from the proof.
+
+
+%wrong:
+%since $\eta$ is assumed to be pre-regularizable, we have that one literal $\ell' \in \mathcal{R}(\eta)$ of $\eta_\ell$ (recall that the resolved literals of $\eta$ and $\eta_\ell$ are the same) is unifiable with $\dual{\ell}$.
+
+\begin{example}
+This example illustrates a case where a node is weakly regularizable but not strongly regularizable. 
+In the proof below, note that $\eta_6$ is not strongly regularizable: there is no unifier $\sigma$ such that $\{ \lnot q(Y), \lnot r(Y)\} \sigma \subseteq \mathcal{S}(\eta_6)$ (where $\mathcal{S}(\eta_6) =\{ \lnot p(W), \lnot r(W), \lnot q(Z)\}$).
+\begin{scriptsize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_1$: $\e p(U)$ \hspace{-2cm}}
+\AxiomC{$\eta_5$: $p(Z) \e q(Z)$ \hspace{-0.5cm}}
+\AxiomC{$\eta_8$: $p(X),q(X),r(X)\e$}
+\AxiomC{$\eta_7$: $\e p(Y)$  \hspace{-1cm}}
+\BinaryInfC{$\eta_6$: $q(Y),r(Y)\e$ }
+\BinaryInfC{$\eta_4$: $p(Z),r(Z)\e$ \hspace{-2cm} }
+\AxiomC{ \hspace{-1cm} $\eta_3$: $\e r(W)$}
+\BinaryInfC{ $\eta_2$: $p(W)\e$}
+
+\BinaryInfC{$\psi$: $\bot$}
+\end{prooftree}
+
+\end{scriptsize}
+\noindent
+We show that $\eta_6$ is weakly regularizable, and that $\eta_7$ can be removed. To do this, first observe that $\eta_6$ is pre-regularizable, since $\lnot p(X)$ is unifiable with $\lnot p(W)\in \mathcal{S}(\eta_6)$ and $\mathcal{R}(\eta_6) \cup \{\dual{\lnot p(W)}\}$ is unifiable (where $\mathcal{R}(\eta_6)=\{p(U), p(Y)\}$).
+Consider the following proof of $\psi \setminus \{\eta_7\}$:
+\begin{scriptsize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_1$: $\e p(U)$ \hspace{-1.75cm}}
+\AxiomC{$\eta_8$: $p(X),q(X),r(X)\e$}
+\AxiomC{$\eta_5$: $p(Z) \e q(Z)$}
+\BinaryInfC{$\eta_4'$: $p(Z), p(Z),r(Z)\e$}
+\UnaryInfC{$\eta_4$: $p(Z),r(Z)\e$}
+\AxiomC{$\eta_3$: $\e r(W)$}
+\BinaryInfC{$\eta_2$: $p(W)\e$}
+\BinaryInfC{$\psi$: $\bot$}
+\end{prooftree}
+\end{scriptsize}
+Now observe that for each $\ell \in \mathcal{S}(\eta_8)=\{\lnot  q(Z), \lnot r(W), \lnot p(W)\}$ we have the following, so that $\eta_6$ is weakly regularizable:
+\begin{itemize}
+\item $\ell=\lnot  q(Y)$: $\ell^\dagger = \lnot q(X)$ which is unifiable with $\dual{\ell}^\dagger=q(Z)$
+\item $\ell=\lnot r(Z)$: $\ell^\dagger = \lnot r(Z)$ which is unifiable with $\dual{\ell}^\dagger=r(W)$
+\item $\ell=\lnot p(W)$: $\ell^\dagger = \lnot p(W)$ which is unifiable with $\dual{\ell}^\dagger=p(U)$
+\end{itemize}
+\end{example}
+
+If a node $\eta$ with parents $\eta_1$ and $\eta_2$ is pre-regularizable and strongly regularizable in $\psi$, then $\eta$ is also weakly regularizable in $\psi$.
+
+%If a node is pre-regularizable and $\eta$ can be removed, then it is also weakly regularizable. Thus strongly regularizable nodes are also weakly regularizable nodes.
+
+%\begin{thm}
+%Let $\eta$ be a node that is pre-regularizable in some proof such that $\psi\setminus\{\eta_2\}$ is a proof with the same conclusion clause. Then $\eta$ is weakly regularizable.
+%Let $\eta$ be a node that is strongly regularizable in some proof. Then $\eta$ is weakly regularizable.
+%\end{thm}
+
+%\begin{proof}
+%Let $\eta$ be a strongly regularizable node with parents $\eta_1$ and $\eta_2$. By definition, $\eta$ is also pre-regularizable.
+%Assume without loss of generality that $\eta_1\sigma \subseteq \mathcal{S}(\eta)$.
+
+%Let $\eta$ be a pre-regularizable node with parents $\eta_1$ and $\eta_2$. Let $\mathcal{R}(\eta_\ell)$ and $\mathcal{R}^\dagger(\eta_\ell)$ be defined as in Definition \ref{def:postdelprop} for a safe literal literal $\ell \in \mathcal{S}(\eta_1)$.
+
+%Let $\ell \in \mathcal{S}(\eta_1)$ be a safe literal of $\eta_1$ that is contained in the root clause of the proof such that there does not exists a node $\eta_\ell$ below $\eta$ whose pivot is $\abs{\ell}$. Then $\mathcal{R}^\dagger(\eta_\ell)\cup\{\dual{\ell}\}=\emptyset\cup\{\dual{\ell}\}=\{\dual{\ell}\}$ is trivially unifiable. Thus we may assume that for all $\ell\in\mathcal{S}(\eta_1)$, such a node $\eta_\ell$ exists.
+
+%old
+%Let $\ell \in \mathcal{S}(\eta_1)$ be a safe literal of $\eta_1$ that is not contained in the root clause of the proof, and let $\eta_\ell$ be a node on the path from $\eta_1$ to the root of the proof such that $\abs{\ell}$ is used as the pivot. We claim that at least one such node $\eta_\ell$ exists. To see this, recall that since $\eta$ is strongly regularizable, the resolved literal of $\eta$ was unifiable with some $\ell^*\in \mathcal{S}(\eta)$, so $\eta$ could not have provided a literal to $\mathcal{S}(\eta_1)$ that does not also appear below $\eta$. Thus $\mathcal{S}(\eta_1)\subseteq \mathcal{S}(\eta)$. Note that we cannot have $\mathcal{S}(\eta)\subsetneq \mathcal{S}(\eta_1)$, as otherwise a literal $\ell \in \mathcal{S}(\eta_1)$ have been added from a path from $\eta_1$ to the root avoiding $\eta$, contradicting $\ell$ appearing in all paths below $\eta_1$, or $\ell$ appearing in the root clause (as if this were the case, then we would also have $\ell \in \mathcal{S}(\eta)$). Since $\mathcal{S}(\eta_1)\subseteq \mathcal{S}(\eta)$, there must be a node below $\eta$ that used $\abs{\ell}$ as a pivot in order to have $\ell \in \mathcal{S}(\eta_1)$. 
+
+
+%If $\ell \notin \eta_1$, then $\ell^\dagger =\ell$ and $\dual{\ell}^\dagger=\dual{\ell}$, there is nothing to prove (neither $\ell$ or $\dual{\ell}$ have changed in $\psi\setminus\{\eta_2\}$). So we may assume $\ell\in \eta_1$.
+
+%Consider $\dual{\ell} \in \mathcal{R}(\eta_\ell)$: $\ell$ and $\dual{\ell}$ are unifiable in $\psi$ by definition of $\mathcal{R}(\eta_\ell)$. We will show that $\ell^\dagger$ and $\dual{\ell}^\dagger$ are unifiable in $\psi\setminus\{\eta_2\}$, where $\dual{\ell}^\dagger\in \mathcal{R}^\dagger(\eta_\ell)$.
+
+%Since $\eta_\ell$ exists (with $\abs{\ell}$ as a pivot by definition), there exists nodes $\eta_L$ and $\eta_R$ such that $\eta_L \xrightarrow[\sigma_L]{\{\ell_L\} } \eta_\ell$ and $\eta_R \xrightarrow[\sigma_R]{\{\ell_R\} } \eta_\ell$ for some $\ell_L,\ell_R,\sigma_L$, and $\sigma_R$.
+%Since $\abs{\ell}$ was the pivot, we have that $\abs{\ell}=\abs{\ell_L\sigma_L}$ or $\abs{\ell}=\abs{\ell_R\sigma_R}$. Without loss of generality, assume that  $\abs{\ell}=\abs{\ell_L\sigma_L}$.
+%Thus we can write
+%$$\ell = \ell_L\sigma_L =\dual{\ell_R}\sigma_R$$
+%Note that $\dual{\ell}^\dagger=\dual{\ell_R}$ as $\dual{\ell_R}$ is unchanged in $\psi \setminus\{\eta_2\}$.
+%Since $\eta_1$ replaces $\eta$ in $\psi\setminus\{\eta_2\}$, we have that $\ell^\dagger=\ell$. 
+
+%\end{proof}
 
 
 %intersection example?
