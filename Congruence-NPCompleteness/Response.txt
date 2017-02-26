@@ -30,7 +30,7 @@ Done.
 >        example with a figure including the resulting congruence graph
 
 
-TODO
+TODO  Pascal: f(f(f(a))) = f(f(f(f(f(a))))) and f(f(a)) = a ==> f(a) = a
 
 
 > Page 5, line 46: as far as I know, explanation production can only be
@@ -38,6 +38,9 @@ TODO
 
 TODO
 
+Pascal: This refers to "the explanation production is linear with respect to the
+explanation size,"
+We are considering the full size, not only the number of literals, so I believe we are on the safe side.  It seems strange the an explanation production does not depend at all on the size of the terms.
 
 > Page 7, Definition 7: the star in Assignment might confuse the reader
 >        since it is very similar to the asterisk in the congruence
@@ -45,6 +48,7 @@ TODO
 
 TODO
 
+Pascal: What about "Valuations"
 
 > Page 9, line 19: cardinality constraint on the explanation -->
 >                 cardinality constraint on the explanation size
@@ -61,7 +65,7 @@ TODO
 
 > Page 10, line 36: Roberto Nieuwenhuis --> Robert Nieuwenhuis
 
-TODO
+Fixed.
 
 
 > Page 11, line 5: Jovanovi --> Jovanovic
@@ -142,7 +146,7 @@ TODO
 
 > Please use \qed at the end of proofs. 
 
-TODO
+PF: Fixed
 
 ==========================
 
@@ -162,7 +166,7 @@ Fixed to "nullary".
 > p4, 13: the empty set is not a congruence relation, the authors
 > probably mean the diagonal set { (x, x) | x in T }
 
-TODO
+PF Fixed
 
 > p5, 20: for functions of arity > 1, congruence edges have to be
 > labeled with a vector of equalities

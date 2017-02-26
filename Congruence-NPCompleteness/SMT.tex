@@ -15,7 +15,7 @@
 A. Fellner \at
   Austrian Institute of Technology and
   Vienna University of Technology (Austria)\\
-	\email{andreas.fellner.fl@ait.ac.at}
+        \email{andreas.fellner.fl@ait.ac.at}
 \and
 P. Fontaine \at
   Inria, Loria, U. of Lorraine (France)
@@ -37,8 +37,8 @@ B. Woltzenlogel Paleo \at
 
 \usepackage{amssymb}
 \usepackage{amsmath}
-\usepackage{graphicx}            			% Figures
-\usepackage{tikz}					% tikz graphics
+\usepackage{graphicx}                                   % Figures
+\usepackage{tikz}                                       % tikz graphics
 \usetikzlibrary{arrows,automata,positioning}
 \usetikzlibrary{fit}
 %\usepackage{hyperref}
@@ -230,7 +230,7 @@ formula on this signature.
 reflexive, transitive and symmetric.  Therefore a congruence relation partitions
 its underlying set of terms $\mathcal{T}$ into congruence classes, such that two
 terms $(s,t)$ belong to the same class if and only if $(s,t) \in R$.  The
-relations $\emptyset$ and $\mathcal{T} \times \mathcal{T}$ are trivial
+relations $\left\{{\left({t, t}\right): t \in \mathcal{T}}\right\}$ and $\mathcal{T} \times \mathcal{T}$ are trivial
 congruence relations.  An assignment $\cal I$ on a signature $\Sigma$ defines a congruence relation on any subset $\mathcal{T}\subseteq\mathcal{T}^\Sigma$, that is, $R = \{(s,t) \ |\ \mathcal{I}(s = t) = \top \}$.
 
 An equation $s = t$ on terms in a set $\mathcal{T}$ can be seen as a singleton relation $\{(s,t)\} \subseteq \mathcal{T} \times \mathcal{T}$.  By extension, a set of equations can also be seen as a relation, i.e., the union of the singleton relations. 
@@ -419,7 +419,7 @@ E_{\mathcal{C}} = \Connect \cup \bigcup_{1 \leq i \leq n}\Clause_i
 \end{equation*}
 with
 \begin{eqnarray*}
-	\Connect &=& \{ c_{i}' = c_{i+1} \ \mid\ 1 \leq i < n\}\\
+        \Connect &=& \{ c_{i}' = c_{i+1} \ \mid\ 1 \leq i < n\}\\
         \Clause_i &=& \{ c_i = t_i(\hat{x}_j) \ \mid\ x_j \text{ appears in } C_i \}\\
            & & \cup\ \{ t_i(\top_j) = c_i' \ \mid\ x_j \text{ appears positively in } C_i \}\\
            & & \cup\ \{ t_i(\bot_j) = c_i' \ \mid\ x_j \text{ appears negatively in } C_i \}
@@ -529,7 +529,7 @@ t_i(\hat{x}_j) = t_i(\top_j)$, and $E_{\mathcal{I}} \cup \Clause_i
 \models c_i = c_i'$.  This is true for each $i$, and
 thanks to the equations in \Connect, one can deduce using transitivity that
 $E_{\mathcal{I}} \cup E_\mathcal{C} \models c_1 = c_n'$.
-
+\qed
 \end{proof}
 
 \begin{lemma}
@@ -546,6 +546,7 @@ For every $i$, the set $\Clause_i$ contains at most $2m$ equations, resulting in
 In total, we thus have $|E_{\mathcal{I}} \cup E_\mathcal{C}| \leq n-1 + m + 2mn$.
 
 $E_{\mathcal{I}} \cup E_\mathcal{C}$ contains at most $2n + 3m + 3mn$ terms: $2n$ for $c_i,c_i'$, $3m$ for $\hat{x}_j,\top_j,\bot_j$ and $3mn$ for all possible combinations of $t_i(\hat{x}_j),t_i(\top_j),t_i(\bot_j)$.
+\qed
 \end{proof}
 
 \noindent 
@@ -601,6 +602,7 @@ constraint requires that the explanation contains at most one $\hat{x}_j =
 explanation exists, Lemma~\ref{lemma:eqv} guarantees the existence of a model
 for $\mathcal{C'}$, or equivalently for the original set of clauses
 $\mathcal{C}$.
+\qed
 \end{proof}
 
 \begin{corollary}[NP-hardness]
@@ -609,6 +611,7 @@ The small explanation problem is NP-hard.
 \end{corollary}
 \begin{proof}
 Propositional satisfiability is NP-hard, and can be reduced in polynomial time to the small explanation problem.
+\qed
 \end{proof}
 
 \begin{lemma}[NP]
@@ -621,7 +624,7 @@ A solution to the explanation problem for some $k \in \mathbb{N}$ is a subset $E
 Let $n = |\mathcal{T}(E)| + |E|$ and $n' = |\mathcal{T}(E')| + |E'|$.
 We have $n' \leq n$, since $E' \subseteq E$ and every term in $E'$ appears also in $E$.
 Checking whether $E'$ is an explanation of $s=t$ can be done by computing its congruence closure, which is possible in polynomial time in $n'$ \cite{Nelson2} and thereby also in $n$.
-
+\qed
 \end{proof}
 
 
@@ -630,6 +633,7 @@ The small explanation problem is NP-complete.
 \end{theorem}
 \begin{proof}
 By corollary~\ref{lemma:nphardness} and lemma~\ref{lemma:innp}.
+\qed
 \end{proof}
 
 \begin{theorem}[Small conflict NP-completeness]
@@ -637,6 +641,7 @@ The small conflict set problem is NP-complete.
 \end{theorem}
 \begin{proof}
 The small conflict set problem is at least as hard as the small explanation problem since the small explanation problem has been showed to be reducible to the small conflict set problem.  It is also in NP for exactly the same reason that the small explanation problem is.
+\qed
 \end{proof}
 
 
@@ -662,10 +667,10 @@ in order to leverage efforts that combine decision procedures and optimization t
 %to avoid repeated calls to the SAT-solver and find the smallest conflict in one run.
 %\marginpar{note that we would have to encode and call a SAT-solver many times, with progressively smaller values of $k$, until we find a value of $k$ for which the encoded problem is unsatisfiable. this would guarantee a \emph{minimum} conflict, but would probably be less efficient than the iterative addition/removal of literals from the explanation, which only guarantees a \emph{minimal} conflict.} 
 
-\vspace*{5pt}\noindent
-{\bf Acknowledgment.} We would like to thank Robert Nieuwenhuis and Ashish
-Tiwari for discussions and some preliminary ideas that led us to this proof.
-We are grateful to the anonymous reviewers of~\cite{Fellner1} for their comments.
+\vspace*{5pt}\noindent {\bf Acknowledgment.} We would like to thank Robert
+Nieuwenhuis and Ashish Tiwari for discussions and some preliminary ideas that
+led us to this proof.  We are grateful to the anonymous reviewers of this paper
+and of~\cite{Fellner1} for their comments.
 
 % Sorry but the spbasic style is not looking great
 \bibliographystyle{plain}
