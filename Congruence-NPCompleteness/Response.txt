@@ -30,7 +30,7 @@ Done.
 >        example with a figure including the resulting congruence graph
 
 
-TODO
+TODO  Pascal: f(f(f(a))) = f(f(f(f(f(a))))) and f(f(a)) = a ==> f(a) = a
 
 
 > Page 5, line 46: as far as I know, explanation production can only be
@@ -38,13 +38,18 @@ TODO
 
 TODO
 
+Pascal: This refers to "the explanation production is linear with respect to the
+explanation size,"
+We are considering the full size, not only the number of literals, so I believe we are on the safe side.  It seems strange the an explanation production does not depend at all on the size of the terms.
 
 > Page 7, Definition 7: the star in Assignment might confuse the reader
 >        since it is very similar to the asterisk in the congruence
 >        definition. I would use another symbol.
 
-TODO
+ Indeed the overload is possibly confusing and unnecessary.
+ We changed Assignment* to AssignmentEqs.
 
+Pascal: What about "Valuations"
 
 > Page 9, line 19: cardinality constraint on the explanation -->
 >                 cardinality constraint on the explanation size
@@ -61,8 +66,7 @@ TODO
 
 > Page 10, line 36: Roberto Nieuwenhuis --> Robert Nieuwenhuis
 
-TODO
-
+Fixed.
 
 > Page 11, line 5: Jovanovi --> Jovanovic
 
@@ -95,14 +99,18 @@ Reviewer #2:
 > If yes, then how does the cardinality constraint fall into 
 > the conjunctive fragment of EUF? 
 
-TODO
+The cardinality constraint is not part of the encoded problem.
+It is part of the proof as one side of the if and only if statement.
+When the cardinality constraint |E'| <= 3n + 4m - 1 is assumed (together with the structure of E' and the congruence closure problem), 
+it follows that either (x = T) or (x = F) is in an explanation.
+
+Andreas: Probably we should make the proof more explicit
 
 > Also, why isn't the inequality sufficient? (i.e., why enforce a full assignment ? ).
 
-TODO
-
-
-
+We need to have equality in order to rule out sets of equations as explanations that have x=T and x=F in them,
+and thereby do not correspond to assignments.
+  
 > abstract: "'to our best knowledge' => 'to the best of our knowledge' 
 > (see https://answers.yahoo.com/question/index?qid=20130720053631AAXDsHg)
 
@@ -110,7 +118,15 @@ Fixed.
 
 > p 2: 'searching for short paths' => did you mean shortest paths ? 
 
-TODO
+The algorithm we use is not guaranteed to find the shortest paths.
+This is due to accurate weights of congruence edges not being known statically, but are updated dynamically.
+The algorithm finds the shortest path in case no congruence edges are in the congruence graph.
+
+TODO Andreas: should we describe this in the paper?
+
+We now explicitly state that we use a weighted congruence graph.
+
+
 
 > p 4: Def 2: is 'compatible' a standard term ? I always saw 'congruent'. 
 
@@ -134,15 +150,20 @@ TODO: Maybe we should add this to the preliminary section?
 > demonstrates why this intuition is wrong ? 
 
 TODO
-
+Andreas:
+We could either add an example showing why the removing algorithm does not produce shortest explanations,
+or the shortest path in a weighted congruence graph idea does not.
+However, the statement we make clearly is stronger than "this does not work and that does not work either".
+Nothing works, so the question is whether such an example really makes sense.
 
 > p 8: The bottom dotted edge on the left is wrong? (t1(x3) --- t1(\bot_3))
 
-TODO
+Well spotted.
+Fixed.
 
 > Please use \qed at the end of proofs. 
 
-TODO
+PF: Fixed
 
 ==========================
 
@@ -162,12 +183,17 @@ Fixed to "nullary".
 > p4, 13: the empty set is not a congruence relation, the authors
 > probably mean the diagonal set { (x, x) | x in T }
 
-TODO
+PF Fixed
 
 > p5, 20: for functions of arity > 1, congruence edges have to be
 > labeled with a vector of equalities
 
-TODO
+The label of a congruence edge is the equality itself, 
+e.g. if there is a congruence edge between terms f(a,b) and f(c,d), then the label is f(a,b) = f(c,d).
+It is also an option to use explanations as labels, e.g. <a=c,b=d>.
+However, there can be multiple explanations for a congruence edge.
+Ideally, we would like to label it with the shortest one, but we do not know which is the shortest one before solving the problem.
+If we would know, a shortest path algorithm could find shortest explanations, if the weights correspond to size of explanations.
 
 > p5, 21: "logic" -> "logical"
 
