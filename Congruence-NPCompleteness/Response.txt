@@ -172,7 +172,7 @@ Reviewer #3:
 
 > p3, 2: "short paper" -> "short article"
 
-Fixed to "article". Reviewer 1 request the removal of "short"
+Fixed to "article". Reviewer 1 requested the removal of "short"
 
 
 > p3, 30: "null arity" -> "arity zero", or "zero-ary"/"nullary"
@@ -193,7 +193,7 @@ e.g. if there is a congruence edge between terms f(a,b) and f(c,d), then the lab
 It is also an option to use explanations as labels, e.g. <a=c,b=d>.
 However, there can be multiple explanations for a congruence edge.
 Ideally, we would like to label it with the shortest one, but we do not know which is the shortest one before solving the problem.
-If we would know, a shortest path algorithm could find shortest explanations, if the weights correspond to size of explanations.
+If we would know, a shortest path algorithm could find shortest explanations, if the weights correspond to sizes of explanations.
 
 > p5, 21: "logic" -> "logical"
 
