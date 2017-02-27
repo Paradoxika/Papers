@@ -123,6 +123,7 @@ This is due to accurate weights of congruence edges not being known statically, 
 The algorithm finds the shortest path in case no congruence edges are in the congruence graph.
 
 TODO Andreas: should we describe this in the paper?
+TODO: @Bruno look at Andreas' changes to this
 
 We now explicitly state that we use a weighted congruence graph.
 
@@ -130,7 +131,8 @@ We now explicitly state that we use a weighted congruence graph.
 
 > p 4: Def 2: is 'compatible' a standard term ? I always saw 'congruent'. 
 
-TODO
+TODO, Bruno: Write sentence saying that the two terms are used synonymously
+Remark: What does Pascal say? Which term is more frequently used among people doing congruence closure?
 
 
 > "(identity of two terms can be checked in
@@ -143,7 +145,7 @@ Therefore, a function symbol is generally not a term, except in the
 case of nullary function symbols (i.e. constants). 
 
 TODO: Maybe we should add this to the preliminary section?
-
+@Bruno: maybe shorten the answer a bit and then put it there.
 
 > p 6: the sentence 'One could hope...' indeed raises the hopes that with 
 > such redundance it can be achieved. Perhaps you can show an example that 
@@ -155,6 +157,7 @@ We could either add an example showing why the removing algorithm does not produ
 or the shortest path in a weighted congruence graph idea does not.
 However, the statement we make clearly is stronger than "this does not work and that does not work either".
 Nothing works, so the question is whether such an example really makes sense.
+@Bruno: improve/reformulate answer somehow rewrite paragraph making transition between minimality and NP completeness smoother
 
 > p 8: The bottom dotted edge on the left is wrong? (t1(x3) --- t1(\bot_3))
 
