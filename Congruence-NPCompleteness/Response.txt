@@ -118,16 +118,13 @@ Fixed.
 
 > p 2: 'searching for short paths' => did you mean shortest paths ? 
 
-The algorithm we use is not guaranteed to find the shortest paths.
-This is due to accurate weights of congruence edges not being known statically, but are updated dynamically.
-The algorithm finds the shortest path in case no congruence edges are in the congruence graph.
+Yes and no.
+We used an adaptation of a shortest path algorithm, but since the weights of the graph dynamically changed, 
+we were not guaranteed to construct shortest paths in the final graph.
+It is beyond the scope of this paper to describe in all detail of this method.
+However, we re-wrote the paragraph to make the method more explicit.
 
-TODO Andreas: should we describe this in the paper?
 TODO: @Bruno look at Andreas' changes to this
-
-We now explicitly state that we use a weighted congruence graph.
-
-
 
 > p 4: Def 2: is 'compatible' a standard term ? I always saw 'congruent'. 
 
