@@ -29,9 +29,7 @@ Done.
 > Page 5: when explaining the congruence graph, I would add a small
 >        example with a figure including the resulting congruence graph
 
-
-TODO  Pascal: f(f(f(a))) = f(f(f(f(f(a))))) and f(f(a)) = a ==> f(a) = a
-
+This was indeed lacking.  Fixed.
 
 > Page 5, line 46: as far as I know, explanation production can only be
 >        done in time O(k \alpha(k,k)) for a proof with k literals.
