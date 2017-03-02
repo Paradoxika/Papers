@@ -324,6 +324,27 @@ equations labeling a path, and recursively replace any compatibility equation
 $g(t_1,\ldots,t_n) = g(s_1,\ldots,s_n)$ by the explanations of $t_1=s_1$,\dots,
 $t_n=s_n$.
 
+\begin{figure}[ht]
+\input{figures/congruenceexample.tex}
+\caption{An example congruence graph}
+\label{fig:congruenceexample}
+\end{figure}
+
+\begin{example}
+A congruence graph for two input equations $a = f(f(f(a)))$ and $a =
+f(f(f(f(f(a)))))$ is given on Figure~\ref{fig:congruenceexample}.  Labeling
+equations are omitted for simplicity.  There is a path between $a$ and $f(a)$,
+so both terms are equal if the input equations hold.  To compute an explanation
+for $a=f(a)$, it suffices to collect the equalities on the path, that is, the
+input equation $a=f(f(f(a))))$ and the compatibility equation $f(a)=f(f(f(a)))$.
+This last equation should then be replaced by the equation between the
+arguments, i.e., $a=f(f(a)))$ which is consequence, by transitivity, of another
+compatibility equation and of the other input equation $a = f(f(f(f(f(a)))))$.
+Hence the explanation will contain both equations.
+\end{example}
+
+
+
 Practical congruence closure algorithms with explanation build a congruence
 graph while computing the congruence closure.  Every time the decision procedure
 merges two classes, either because of an input equation or because an equality was deduced due to compatibility,
@@ -343,19 +364,18 @@ equations $b = f(a)$, $f(a) = f(b)$ and $a = b$.
 The redundant equality $f(a) = f(b)$
 would be recorded in the congruence graph, and thus be part of the explanation, if it is considered before $a = b$.
 
-In practice, the congruence closure procedures implemented in SMT
-solvers produce explanations efficiently: the
-complexity of the explanation production is linear with respect to the
-explanation size, which is at most equal to the number of input equations.  But
-the explanations are not optimal, i.e.\ they are not always the smallest or even
-minimal.  It is possible to compute minimal explanations in polynomial time; it
-suffices for instance to compute again the congruence closure successively
-removing every equation in the explanation, to see if it is redundant or not.
-One could hope to conceive a different congruence closure algorithm generating
-the smallest explanation in polynomial time, for instance on the basis of
-shortest path algorithms applied to congruence graphs containing even redundant
-equations as labels.  However, the next section proves that the corresponding decision problem
-is NP-hard.
+In practice, the congruence closure procedures implemented in SMT solvers
+produce explanations efficiently: the complexity of the explanation production
+is quasi-linear with respect to the explanation size, which is at most equal to
+the size of the input~\cite{Nieuwenhuis6}.  But the explanations are not optimal, i.e.\ they are not
+always the smallest or even minimal.  It is possible to compute minimal
+explanations in polynomial time; it suffices for instance to compute again the
+congruence closure successively removing every equation in the explanation, to
+see if it is redundant or not.  One could hope to conceive a different
+congruence closure algorithm generating the smallest explanation in polynomial
+time, for instance on the basis of shortest path algorithms applied to
+congruence graphs containing even redundant equations as labels.  However, the
+next section proves that the corresponding decision problem is NP-hard.
 
 \section{NP-Completeness of the Small Conflict Set Problem}
 \label{sec:npcomplete}

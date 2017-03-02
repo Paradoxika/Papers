@@ -1,6 +1,6 @@
 Dear editors and reviewers,
 
-We thank you for your positive evaluation of our paper.
+We thank you for your positive evaluation of our paper and your comments.
 
 Below is a list of changes made to address the reviewers' comments.
 
@@ -36,11 +36,10 @@ TODO  Pascal: f(f(f(a))) = f(f(f(f(f(a))))) and f(f(a)) = a ==> f(a) = a
 > Page 5, line 46: as far as I know, explanation production can only be
 >        done in time O(k \alpha(k,k)) for a proof with k literals.
 
-TODO
+The previous sentence "the explanation production is linear with respect to the
+explanation size" was indeed a bit bold.  We are now more precise, explicitely refering to the work of Nieuwenhuis and Oliveras for details.
 
-Pascal: This refers to "the explanation production is linear with respect to the
-explanation size,"
-We are considering the full size, not only the number of literals, so I believe we are on the safe side.  It seems strange the an explanation production does not depend at all on the size of the terms.
+Our implementation in veriT might be linear, but to state it, a proof would be needed, with a precise description of the algorithm, and this is outside the scope of the paper.
 
 > Page 7, Definition 7: the star in Assignment might confuse the reader
 >        since it is very similar to the asterisk in the congruence
