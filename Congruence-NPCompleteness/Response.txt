@@ -136,7 +136,7 @@ It is beyond the scope of this paper to describe this method in detail.
 However, we re-wrote the paragraph to make the method more explicit.
 
 TODO: @Bruno look at Andreas' changes to this
-Bruno's comment: you seem to conclude that the NP-completeness is a negative answer to whether the dynamically weighted shortest path algorithm can find the shortest path. But this conclusion is only possible if you additionally argue/mention that the dynamically weighted shortest path algorithm is polynomial-time. Is it?
+Bruno's comment: you seem to conclude that the NP-completeness is a negative answer to whether the dynamically weighted shortest path algorithm can find the shortest path. But this conclusion is only possible if you additionally argue/mention that the dynamically weighted shortest path algorithm is polynomial-time. Is it? If so, this has to be mentioned in your paragraph.
 
 
 > p 4: Def 2: is 'compatible' a standard term ? I always saw 'congruent'. 
