@@ -58,8 +58,10 @@ Done.
 >        extension of Figure 4 (or a figure similar to it) where the
 >        tautological clauses are depicted.
 
-TODO
-
+Good suggestion.
+We added such an example and two figures.
+We also rewrote the proof to improve clarity.
+TODO: proof read the proof
 
 > Page 10, line 36: Roberto Nieuwenhuis --> Robert Nieuwenhuis
 
@@ -101,12 +103,13 @@ It is part of the proof as one side of the if and only if statement.
 When the cardinality constraint |E'| <= 3n + 4m - 1 is assumed (together with the structure of E' and the congruence closure problem), 
 it follows that either (x = T) or (x = F) is in an explanation.
 
-Andreas: Probably we should make the proof more explicit
+We rewrote the proof to clarify this issue and improve clarity in general.
 
 > Also, why isn't the inequality sufficient? (i.e., why enforce a full assignment ? ).
 
 We need to have equality in order to rule out sets of equations as explanations that have x=T and x=F in them,
 and thereby do not correspond to assignments.
+We added an example right after the proof of Lemma 3 making this argument explicit.
   
 > abstract: "'to our best knowledge' => 'to the best of our knowledge' 
 > (see https://answers.yahoo.com/question/index?qid=20130720053631AAXDsHg)
