@@ -2,7 +2,7 @@
 
 %\title{A note on conflict set generation\\ for congruence closure\\\small Extended abstract}
 %\titlerunning{A note on congruence closure}
-\title{NP-completeness of small conflict set generation for congruence closure\thanks{This work has been partially supported by the project ANR-13-IS02-0001 of the Agence Nationale de la Recherche, by the H2020-FETOPEN-2016-2017-CSA project SC$^2$ (712689), by an ÖAW APART Stipendium, by FWF S11407-N23 (RiSE/SHiNE), and by ERC Start Grant (279307: Graph Games).}}
+\title{NP-completeness of small conflict set generation for congruence closure\thanks{This work has been partially supported by the project ANR-13-IS02-0001 of the Agence Nationale de la Recherche, by the H2020-FETOPEN-2016-2017-CSA project SC$^2$ (712689), by an ÖAW APART Stipendium, by FWF S11407-N23 (RiSE/SHiNE), by ERC Start Grant (279307: Graph Games), and by FFG project number 845582 (TRUCONF).}}
 \titlerunning{NP-completeness of small conflict set generation for congruence closure}
 
 
@@ -15,7 +15,7 @@
 A. Fellner \at
   Austrian Institute of Technology and
   Vienna University of Technology (Austria)\\
-        \email{andreas.fellner.fl@ait.ac.at}
+        \email{andreas.fellner@ait.ac.at}
 \and
 P. Fontaine \at
   Inria, Loria, U. of Lorraine (France)
@@ -604,6 +604,7 @@ belong to the explanation.
 
 
 \begin{lemma}
+\label{lemma:satreduction}
 A set of non-tautological clauses $\mathcal{C}= \{C_1, \dots C_n\}$ using
 variables $x_1,\dots, x_m$ is satisfiable if and only if there is a subset $E'
 \subseteq \Assignment \cup E_{\mathcal{C}'}$ such that $E'\models
@@ -612,25 +613,62 @@ $\mathcal{C}$ augmented with the tautological clauses $C_{n+i} = x_i \vee \neg
 x_i$ for $i=1,\dots m$.
 \end{lemma}
 \begin{proof}
-($\Rightarrow$)  Consider a total model $\mathcal{I}$ for
-$\mathcal{C}$: $E_{\mathcal{I}} \subset \Assignment$ contains exactly $m$
-elements.  For each clause $i$ ($i= 1\dots n + m$), collect in $E\subset
-E_{\mathcal{C}'}$ both equations relative to one satisfied literal (that is $2(n
-+m)$ equations in total), as well as the $n + m - 1$ equations from $\Connect$.
-The equation $c_1 = c'_{n+m}$ is a consequence of the disjoint union
-$E \cup E_{\mathcal{I}}$, which contains $3n + 4m - 1$ elements.
+($\Rightarrow$)  Consider a total model $\mathcal{I}$ for $\mathcal{C}$.
+We show that there is a set $E \subset E_{\mathcal{C}'}$, such that together with the congruence translation $E_{\mathcal{I}}$ of $\mathcal{I}$ we have $E' = E \cup E_{\mathcal{I}} \models c_1 = c'_{n+m}$ and $|E'| \leq 3n+4m-1$.
 
-($\Leftarrow$)  An explanation of $c_1 = c'_{n+m}$ has to contain $2(n + m)$ equations from $\Clause_i$ 
-($i= 1\dots n + m$) and $n + m - 1$ equations from $\Connect$.  Thanks to the tautological
-clauses, any explanation also has to contain at least $\hat{x}_j = \top_j$ or
-$\hat{x}_j = \bot_j$ for each $j\in\{1\dots m\}$.  Therefore, the cardinality
-constraint requires that the explanation contains at most one $\hat{x}_j =
-\top_j$ or $\hat{x}_j = \bot_j$ for each $j\in\{1\dots m\}$.  If such an
-explanation exists, Lemma~\ref{lemma:eqv} guarantees the existence of a model
+The set $E_{\mathcal{I}}$ contains $m$ equations, since it is the congruence translation of a total assignment.
+
+For each clause $i$ ($i= 1\dots n + m$), there is a literal that is satisfied by the model $\mathcal{I}$.
+The set $E$ contains the two equations of $Clause_i$ that correspond to this literal, e.g. $c_i = t_i(\hat{x}_j), t_i(\top_j) = c'_i$ in case $\mathcal{I}$ maps $x_j$ to $\top$ and $x_j$ occurs positively in clause $C_i$. Similarly to the proof of Lemma \ref{lemma:eqv}, we can see that $E \cup E_{\mathcal{I}} \models c_i = c'_i$ using the deduced congruence edge corresponding to the true literal, e.g. $t_i(\hat{x}_j) = t_i(\top_j)$.
+
+Thus far, we have $2$ equations in $E$ for every clause and there are $(n~+~m)$ clauses, resulting in $2(n+m)$ equations.
+Additionally, we add $n + m - 1$ equations from $\Connect$.
+In total, we have that $|E \cup E_{\mathcal{I}}| = m + 2(n+m) + n + m - 1 = 3n + 4m - 1$.
+
+Since $E \cup E_{\mathcal{I}} \models c_i = c'_i$ for every $i= 1\dots n + m$, by transitivity of equality we can deduce $E \cup E_{\mathcal{I}} \models c_1 = c'_{n+m}$.
+
+($\Leftarrow$) 
+Suppose we have a set of equations $E' \subseteq \Assignment \cup E_{\mathcal{C}'}$ such that $E'\models c_1 = c'_{n+m}$ and $|E'| \leq 3n+4m-1$.
+$E'$ has to contain $2(n~+~m)$ equations from $\Clause_i$ 
+($i= 1\dots n + m$), that is one pair of equations $c_i = t_i(.)$ and $t_i(.) = c'_i$ for every clause, and $n + m - 1$ equations from $\Connect$, since by construction there is no other possibility to deduce $c_i = c'_i$.
+Furthermore, thanks to the tautological
+clauses, $E'$ also has to contain at least $\hat{x}_j = \top_j$ or
+$\hat{x}_j = \bot_j$ for each $j\in\{1\dots m\}$.  
+Therefore, the cardinality
+condition $|E'| \leq 3n+4m-1$ and the fact that $E'$ contains $3(n~+~m) - 1$ equations from $Clause_i$ and $\Connect$, requires that the $E'$ contains at most one $\hat{x}_j =
+\top_j$ or $\hat{x}_j = \bot_j$ for each $j\in\{1\dots m\}$.
+Therefore, we have that $E_{\mathcal{I}} = E' \cap \Assignment$ is the congruence translation of an assignment and Lemma~\ref{lemma:eqv} guarantees the existence of a model
 for $\mathcal{C'}$, or equivalently for the original set of clauses
 $\mathcal{C}$.
 \qed
 \end{proof}
+
+\begin{example}
+
+In Lemma \ref{lemma:satreduction}, we add tautological clauses to the input formula.
+We demonstrate the necessity of these extra clauses on the unsatisfiable formula $\varphi = (x_1 \vee x_2) \wedge (\neg x_1 \vee x_2) \wedge (x_1 \vee \neg x_2) \wedge (\neg x_1 \vee \neg x_2)$.
+Figure \ref{fig:spurious} shows the congruence translation of $\varphi$ together with a subset of $\Assignment$ that yields a short explanation for $c_1 = c_4'$.
+This short explanation corresponds to mapping $x_1$ to $\bot$ and $\top$ at the same time, which clearly is not the translation of an assignment.
+By short, we mean an explanation that, on top of necessary equations from the clause part, picks $m$ equations from the $\Assignment$ part.
+
+Figure \ref{fig:withtautol} shows the congruence translation of $\varphi$ conjoined with the tautological clauses $(x_1 \vee \neg x_1)$ and $(x_2 \vee \neg x_2)$, together with the same subset of $\Assignment$ that was an short explanation before.
+It is not an explanation of $c_1 = c_6'$, since the chain stops at $t_6(\hat{x}_2)$.
+In this congruence graph, there is no spurious short explanation of $c_1 = c_6'$ that does not correspond to an assignment.
+This is the desired result, because $\varphi$ is unsatisfiable.
+
+\begin{figure}[htb]
+\input{figures/spurious}
+\caption{The congruence translation of $\varphi$ and a spurious short explanation.}
+\label{fig:spurious}
+\end{figure}
+
+\begin{figure}[htb]
+\input{figures/withtautol}
+\caption{The congruence translation of $\varphi$ with tautological clauses.}
+\label{fig:withtautol}
+\end{figure}
+
+\end{example}
 
 \begin{corollary}[NP-hardness]
 \label{lemma:nphardness}
