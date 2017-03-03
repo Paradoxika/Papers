@@ -1,0 +1,77 @@
+
+\centering
+\begin{tikzpicture}[scale=0.9, every node/.style={transform shape}]
+\small
+\node(c1){$c_1\phantom{'}$};
+
+\node[below =.2cm of c1,xshift=.15cm] (t1x2) {$t_1(\hat{x}_2)$};
+\node[above =.2cm of c1,xshift=.15cm] (t1x1) {$t_1(\hat{x}_1)$};
+\draw [-] (c1) to (t1x2);
+\draw [-] (c1) to (t1x1);
+
+\node[right = 1cm of c1](c1p){$c_1'$};
+
+\node[below =.2cm of c1p,xshift=-.15cm] (t12) {$t_1(\top_2)$};
+\node[above =.2cm of c1p,xshift=-.15cm] (t11) {$t_1(\top_1)$};
+\draw [-] (c1p) to (t11);
+\draw [-] (c1p) to (t12);
+
+\node[right = .1cm of c1p](c2){$c_2\phantom{'}$};
+\draw [-] (c1p) to (c2);
+
+\node[below =.2cm of c2,xshift=.15cm] (t2x2) {$t_2(\hat{x}_2)$};
+\node[above =.2cm of c2,xshift=.15cm] (t2x1) {$t_2(\hat{x}_1)$};
+\draw [-] (c2) to (t2x2);
+\draw [-] (c2) to (t2x1);
+
+\node[right = 1cm of c2](c2p){$c_2'$};
+
+\node[below =.2cm of c2p,xshift=-.15cm] (t22) {$t_2(\top_2)$};
+\node[above =.2cm of c2p,xshift=-.15cm] (t21) {$t_2(\bot_1)$};
+\draw [-] (c2p) to (t21);
+\draw [-] (c2p) to (t22);
+
+\node[right = .1cm of c2p](c3){$c_3\phantom{'}$};
+\draw [-] (c2p) to (c3);
+
+\node[below =.2cm of c3,xshift=.15cm] (t3x2) {$t_3(\hat{x}_2)$};
+\node[above =.2cm of c3,xshift=.15cm] (t3x1) {$t_3(\hat{x}_1)$};
+\draw [-] (c3) to (t3x2);
+\draw [-] (c3) to (t3x1);
+
+\node[right = 1cm of c3](c3p){$c_3'$};
+
+\node[below =.2cm of c3p,xshift=-.15cm] (t32) {$t_3(\bot_2)$};
+\node[above =.2cm of c3p,xshift=-.15cm] (t31) {$t_3(\top_1)$};
+\draw [-] (c3p) to (t31);
+\draw [-] (c3p) to (t32);
+
+\node[right = .1cm of c3p](c4){$c_4\phantom{'}$};
+\draw [-] (c3p) to (c4);
+
+\node[below =.2cm of c4,xshift=.15cm] (t4x2) {$t_4(\hat{x}_2)$};
+\node[above =.2cm of c4,xshift=.15cm] (t4x1) {$t_4(\hat{x}_1)$};
+\draw [-] (c4) to (t4x2);
+\draw [-] (c4) to (t4x1);
+
+\node[right = 1cm of c4](c4p){$c_4'$};
+
+\node[below =.2cm of c4p,xshift=-.15cm] (t42) {$t_4(\bot_2)$};
+\node[above =.2cm of c4p,xshift=-.15cm] (t41) {$t_4(\bot_1)$};
+\draw [-] (c4p) to (t41);
+\draw [-] (c4p) to (t42);
+
+\node [below =1.3cm of c2, xshift=1.5cm] (x1) {$\hat{x}_1$};
+\node [right = of x1] (t1) {$\top_1$};
+\draw [-] (x1) to (t1);
+
+\node [left = of x1] (f1) {$\bot_1$};
+\draw [-] (x1) to (f1);
+
+\draw [dotted] (t1x1) to (t11);
+\draw [dotted] (t2x1) to (t21);
+\draw [dotted] (t3x1) to (t31);
+\draw [dotted] (t4x1) to (t41);
+
+\end{tikzpicture}
+
