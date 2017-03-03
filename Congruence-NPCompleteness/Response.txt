@@ -43,10 +43,7 @@ Our implementation in veriT might be linear, but to state it, a proof would be n
 >        since it is very similar to the asterisk in the congruence
 >        definition. I would use another symbol.
 
- Indeed the overload is possibly confusing and unnecessary.
- We changed Assignment* to AssignmentEqs.
-
-Pascal: What about "Valuations"
+Indeed the overload is possibly confusing and unnecessary.  We changed Assignment* to AssignmentEqs.
 
 > Page 9, line 19: cardinality constraint on the explanation -->
 >                 cardinality constraint on the explanation size
@@ -160,7 +157,7 @@ Fixed.
 
 > Please use \qed at the end of proofs. 
 
-PF: Fixed
+Fixed
 
 ==========================
 
@@ -180,7 +177,7 @@ Fixed to "nullary".
 > p4, 13: the empty set is not a congruence relation, the authors
 > probably mean the diagonal set { (x, x) | x in T }
 
-PF Fixed
+Fixed
 
 > p5, 20: for functions of arity > 1, congruence edges have to be
 > labeled with a vector of equalities
