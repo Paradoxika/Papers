@@ -34,8 +34,9 @@ This was indeed lacking.  Fixed.
 > Page 5, line 46: as far as I know, explanation production can only be
 >        done in time O(k \alpha(k,k)) for a proof with k literals.
 
-The previous sentence "the explanation production is linear with respect to the
-explanation size" was indeed a bit bold.  We are now more precise, explicitely refering to the work of Nieuwenhuis and Oliveras for details.
+The sentence "the explanation production is linear with respect to the
+explanation size" was indeed a bit bold.  We are now more precise, explicitly
+referring to the work of Nieuwenhuis and Oliveras for details.
 
 Our implementation in veriT might be linear, but to state it, a proof would be needed, with a precise description of the algorithm, and this is outside the scope of the paper.
 
@@ -118,7 +119,7 @@ Fixed.
 Yes and no.
 We used an adaptation of a shortest path algorithm, but since the weights of the graph dynamically changed, 
 we were not guaranteed to construct shortest paths in the final graph.
-It is beyond the scope of this paper to describe in all detail of this method.
+It is beyond the scope of this paper to describe this method in detail.
 However, we re-wrote the paragraph to make the method more explicit.
 
 TODO: @Bruno look at Andreas' changes to this
@@ -128,17 +129,17 @@ TODO: @Bruno look at Andreas' changes to this
 TODO, Bruno: Write sentence saying that the two terms are used synonymously
 Remark: What does Pascal say? Which term is more frequently used among people doing congruence closure?
 
-
 > "(identity of two terms can be checked in
 > constant time), and identity of two function symbols can be checked in constant
 > time." since functions are terms then isn't this repetitive ? 
 
-We use the usual terminology of firtst-order logic. A term is either 
+We use the usual terminology of first-order logic. A term is either 
 a constant/variable symbol or an n-ary function symbol applied to n terms. 
 Therefore, a function symbol is generally not a term, except in the 
 case of nullary function symbols (i.e. constants). 
 
 TODO: Maybe we should add this to the preliminary section?
+Pascal: YES
 @Bruno: maybe shorten the answer a bit and then put it there.
 
 > p 6: the sentence 'One could hope...' indeed raises the hopes that with 
@@ -195,4 +196,3 @@ If we would know, a shortest path algorithm could find shortest explanations, if
 > p5, 21: "logic" -> "logical"
 
 Fixed.
-
