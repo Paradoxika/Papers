@@ -40,6 +40,19 @@ referring to the work of Nieuwenhuis and Oliveras for details.
 
 Our implementation in veriT might be linear, but to state it, a proof would be needed, with a precise description of the algorithm, and this is outside the scope of the paper.
 
+TODO: Bruno's comments: 
+1) The sentences "the complexity of the explanation production
+is quasi-linear with respect to the explanation size, which is at most equal to
+the size of the input" and "It is possible to compute minimal
+explanations in polynomial time" seem mutually contradictory, at least at first glance. How can we find minimal explanations in polynomial time if we cannot even find explanations in polynomial time? 
+
+2) The sentences "It is possible to compute minimal
+explanations in polynomial time [...] it suffices for instance to compute again the
+congruence closure successively removing every equation in the explanation, to
+see if it is redundant or not." seems to presuppose that this redundancy check (i.e. the recomputation of the congruence closure) can be done in time constant on the length of the explanation. Is this the case? It might be worth remarking something about this in that paragraph. 
+
+
+
 > Page 7, Definition 7: the star in Assignment might confuse the reader
 >        since it is very similar to the asterisk in the congruence
 >        definition. I would use another symbol.
@@ -123,6 +136,8 @@ It is beyond the scope of this paper to describe this method in detail.
 However, we re-wrote the paragraph to make the method more explicit.
 
 TODO: @Bruno look at Andreas' changes to this
+Bruno's comment: you seem to conclude that the NP-completeness is a negative answer to whether the dynamically weighted shortest path algorithm can find the shortest path. But this conclusion is only possible if you additionally argue/mention that the dynamically weighted shortest path algorithm is polynomial-time. Is it?
+
 
 > p 4: Def 2: is 'compatible' a standard term ? I always saw 'congruent'. 
 
