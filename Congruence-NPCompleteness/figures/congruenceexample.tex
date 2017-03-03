@@ -1,0 +1,89 @@
+
+\centering
+\begin{tikzpicture}[node distance=.3cm]
+
+\node(a){$a$};
+\node[below =1cm of a, xshift = -0.2cm] (f1a) {$f(a)$};
+\node[below =0.6cm of f1a, xshift = 1.5cm] (f2a) {$f(f(a))$};
+\node[right =2cm of f1a, xshift = -0.3cm] (f3a) {$f(f(f(a)))$};
+\node[right =2cm of a, xshift = -0.3cm] (f4a) {$f(f(f(f(a))))$};
+\node[above =3cm of f2a] (f5a) {$f(f(f(f(f(a)))))$};
+
+%% \draw [-] (a) to (f1a);
+%% \draw [-] (f1a) to (f2a);
+%% \draw [-] (f2a) to (f3a);
+%% \draw [-] (f3a) to (f4a);
+%% \draw [-] (f4a) to (f5a);
+%% \draw [-] (f5a) to (a);
+
+\draw [-] (a) to (f3a);
+\draw [-] (a) to (f5a);
+\draw [dashed] (f1a) to (f4a);
+\draw [dashed] (f2a) to (f5a);
+\draw [dashed] (f1a) to (f3a);
+
+%% \draw [-] (c1) to (f1x3);
+
+
+%% \node[right =.4cm of t1x1, yshift = 0.25cm] (f11) {$f_1(\bot_1)$};
+%% \node[above =.4cm of f11] (t11) {$t_1(\top_1)$};
+%% \node[below =.4cm of f11] (t12) {$t_1(\top_2)$};
+%% \node[below =.4cm of t12] (f12) {$f_1(\bot_2)$};
+%% \node[below =.4cm of f12] (t13) {$t_1(\top_3)$};
+%% \node[below =.4cm of t13] (f13) {$f_1(\bot_3)$};
+
+%% \node[right = 4cm of c1](c2){$\hat{c}_2$};
+
+%% \draw [-] (c2) to (t11);
+%% \draw [-] (c2) to (t12);
+%% \draw [-] (c2) to (t13);
+%% \draw [-] (c2) to (f11);
+%% \draw [-] (c2) to (f12);
+%% \draw [-] (c2) to (f13);
+
+%% \node[right =.25cm of c2, yshift=1cm]  (f2x2) {$f_2(\hat{x}_2)$};
+%% \node[below =1.5cm of f2x2] (t2x3) {$t_2(\hat{x}_3)$};
+
+%% \draw [-] (c2) to (f2x2);
+%% \draw [-] (c2) to (t2x3);
+
+%% \node[right =3cm of f11] (f21) {$f_2(\bot_1)$};
+%% \node[right =3cm of t11] (t21) {$t_2(\top_1)$};
+%% \node[right =3cm of t12] (t22) {$t_2(\top_2)$};
+%% \node[right =3cm of f12] (f22) {$f_2(\bot_2)$};
+%% \node[right =3cm of t13] (t23) {$t_2(\top_3)$};
+%% \node[right =3cm of f13] (f23) {$f_2(\bot_3)$};
+
+%% \node[right = 4cm of c2](c3){$\hat{c}_3$};
+
+%% \draw [-] (c3) to (t21);
+%% \draw [-] (c3) to (t22);
+%% \draw [-] (c3) to (t23);
+%% \draw [-] (c3) to (f21);
+%% \draw [-] (c3) to (f22);
+%% \draw [-] (c3) to (f23);
+
+%% \node[right =.25cm of c3, yshift=1cm] (f3x1) {$f_3(\hat{x}_1)$};
+%% \node[below =1.5cm of f3x1] (f3x2) {$f_3(\hat{x}_2)$};
+
+%% \draw [-] (c3) to (f3x1);
+%% \draw [-] (c3) to (f3x2);
+
+%% \node[right =3.4cm of f21] (f31) {$f_3(\bot_1)$};
+%% \node[right =3.4cm of t21] (t31) {$t_3(\top_1)$};
+%% \node[right =3.4cm of t22] (t32) {$t_3(\top_2)$};
+%% \node[right =3.4cm of f22] (f32) {$f_3(\bot_2)$};
+%% \node[right =3.4cm of t23] (t33) {$t_3(\top_3)$};
+%% \node[right =3.4cm of f23] (f33) {$f_3(\bot_3)$};
+
+%% \node[right = 4.5cm of c3](c4){$\hat{c}_4$};
+
+%% \draw [-] (c4) to (t31);
+%% \draw [-] (c4) to (t32);
+%% \draw [-] (c4) to (t33);
+%% \draw [-] (c4) to (f31);
+%% \draw [-] (c4) to (f32);
+%% \draw [-] (c4) to (f33);
+
+\end{tikzpicture}
+
