@@ -291,8 +291,7 @@ the number of distinct (sub)terms.  The input is also typically not a set, but
 successive calls to an assertion function with a literal as argument: every
 repetition of the same literal then matters for complexity.  Let us assume,
 however, that the input is a set $E$, terms are DAGs with maximal
-sharing (identity of two terms can be checked in constant time), and
-identity of two function symbols can be checked in constant time.  Therefore, we
+sharing (i.e. identity of atomic symbols and complex terms can be checked in constant time). Therefore, we
 characterize complexity results in terms of number of literals, terms and
 subterms of the input set, i.e. $|E|$ and $|\mathcal{T}(E)|$.
 
