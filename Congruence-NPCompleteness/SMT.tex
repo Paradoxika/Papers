@@ -124,10 +124,10 @@ Our interest in this problem arose from our work on Skeptik \cite{Boudou1}, a to
 Congruence closure conflict clauses are typically generated from paths in the \emph{congruence graph} maintained by the congruence closure algorithm \cite{Fontaine2004,Nieuwenhuis6,Nieuwenhuis9}. 
 In order to obtain small conflict clauses, and thereby small congruence closure proofs, we (dynamically) assigned weights to the congruence graph and searched for shortest paths in that graph.
 The weights of input equations would be $1$, whereas the weight of a congruence edge would be the size of an explanation of its equation.
-This raised the question whether we could construct shortest conflict clauses as shortest paths in such weighted congruence graphs. 
+This raised the question whether we could construct shortest conflict clauses as shortest paths in such weighted congruence graphs, using a polynomial time shortest path algorithm.
 We answered this question negatively by proving that the problem of deciding whether a shorter conflict clause exists is NP-hard. 
 The goal of this article is to present this proof.
-The reason why the shortest path method is not able to find shortest conflict clauses is that the weights for congruence edges can not be accurately determined in advance, without solving the whole problem.
+The reason why the shortest path method is not able to find shortest conflict clauses is that the weights for congruence edges can not be accurately determined in a priori.
 A preliminary version was presented at the SMT Workshop 2015~\cite{Fellner1}.
 
 \section{Preliminaries}
@@ -607,36 +607,42 @@ belong to the explanation.
 A set of non-tautological clauses $\mathcal{C}= \{C_1, \dots C_n\}$ using
 variables $x_1,\dots, x_m$ is satisfiable if and only if there is a set $E'$ such that $E'
 \subseteq \Assignment \cup E_{\mathcal{C}'}$, $E'\models
-c_1 = c'_{n+m}$ and $|E'| \leq 3n+4m-1$, where $\mathcal{C}'$ is
-$\mathcal{C}$ augmented with the tautological clauses $C_{n+i} = x_i \vee \neg
+c_1~=~c'_{n+m}$ and $|E'| \leq 3n+4m-1$, where $\mathcal{C}'$ is
+$\mathcal{C}$ augmented with the tautological clauses $C_{n+i}~=~x_i \vee \neg
 x_i$ for $i=1,\dots m$.
 \end{lemma}
 \begin{proof}
 ($\Rightarrow$)  Consider a total model $\mathcal{I}$ for $\mathcal{C}$.
-We show that there is a set $E \subset E_{\mathcal{C}'}$, such that together with the congruence translation $E_{\mathcal{I}}$ of $\mathcal{I}$ we have $E' = E \cup E_{\mathcal{I}} \models c_1 = c'_{n+m}$ and $|E'| \leq 3n+4m-1$.
+We show that there is a set $E \subset E_{\mathcal{C}'}$, such that together with the congruence translation $E_{\mathcal{I}}$ of $\mathcal{I}$ it follows $E'~=~E \cup E_{\mathcal{I}} \models c_1~=~c'_{n+m}$ and $|E'| \leq 3n+4m-1$.
 
 The set $E_{\mathcal{I}}$ contains $m$ equations, since it is the congruence translation of a total assignment.
 
-For each clause $i$ ($i= 1\dots n + m$), there is a literal that is satisfied by the model $\mathcal{I}$.
-The set $E$ contains the two equations of $Clause_i$ that correspond to this literal, e.g. $c_i = t_i(\hat{x}_j), t_i(\top_j) = c'_i$ in case $\mathcal{I}$ maps $x_j$ to $\top$ and $x_j$ occurs positively in clause $C_i$. Similarly to the proof of Lemma \ref{lemma:eqv}, we can see that $E \cup E_{\mathcal{I}} \models c_i = c'_i$ using the deduced congruence edge corresponding to the true literal, e.g. $t_i(\hat{x}_j) = t_i(\top_j)$.
+For each clause $C_i$ ($i= 1\dots n + m$), there is a literal in $C_i$ that is satisfied by the model $\mathcal{I}$.
+Let $x_j$ be the variable of that literal.
 
-Thus far, we have $2$ equations in $E$ for every clause and there are $(n~+~m)$ clauses, resulting in $2(n+m)$ equations.
-Additionally, we add $n + m - 1$ equations from $\Connect$.
-In total, we have that $|E \cup E_{\mathcal{I}}| = m + 2(n+m) + n + m - 1 = 3n + 4m - 1$.
+Suppose $\mathcal{I} \models x_j$, then the set $E$ contains equations $c_i~=~t_i(\hat{x}_j), t_i(\top_j)~=~c'_i$ of $Clause_i$.
+These equations are in $Clause_i$, because $x_j$ is the satisfying literal of $C_i$, thus surely $x_j \in C_i$.
+From compatability and the fact that $\hat{x}_j~=~\top_j~\in~E_{\mathcal{I}}$ it follows that $E \cup E_{\mathcal{I}} \models t_i(\hat{x}_j)~=~t_i(\top_j)$.
+Finally, from transitivity and the three equations $c_i~=~t_i(\hat{x}_j)$, $t_i(\hat{x}_j)~=~t_i(\top_j)$, $t_i(\top_j)~=~c'_i$ it follows that $E \cup E_{\mathcal{I}} \models c_i~=~c'_i$.
 
-Since $E \cup E_{\mathcal{I}} \models c_i = c'_i$ for every $i= 1\dots n + m$, by transitivity of equality we can deduce $E \cup E_{\mathcal{I}} \models c_1 = c'_{n+m}$.
+The case $\mathcal{I} \not\models x_j$ is symmetric, such that via equations $c_i~=~t_i(\hat{x}_j)$,  $t_i(\hat{x}_j)~=~t_i(\bot_j)$, $t_i(\bot_j)~=~c'_i$, it follows $E \cup E_{\mathcal{I}} \models c_i~=~c'_i$.
+
+In addition to $2$ equations for each of the $(n~+~m)$ clauses, the set $E$ contains all $n + m - 1$ equations of $\Connect$, that is $c'_i~=~c_{i+1}$ for $i~=~1\dots n + m - 1$.
+From transitivity it follows that $E \cup E_{\mathcal{I}} \models c_1~=~c'_{n+m}$.
+
+In total, $E$ contains $2(n~+~m)$ of the sets $Clause_i$, $n+m-1$ equations from $\Connect$ and $m$ equations from $E_{\mathcal{I}$, i.e. $|E|~=~3n + 4m - 1$.
 
 ($\Leftarrow$) 
-Suppose we have a set of equations $E' \subseteq \Assignment \cup E_{\mathcal{C}'}$ such that $E'\models c_1 = c'_{n+m}$ and $|E'| \leq 3n+4m-1$.
+Suppose there is a set of equations $E' \subseteq \Assignment \cup E_{\mathcal{C}'}$ such that $E'\models c_1~=~c'_{n+m}$ and $|E'| \leq 3n+4m-1$.
 $E'$ has to contain $2(n~+~m)$ equations from $\Clause_i$ 
-($i= 1\dots n + m$), that is one pair of equations $c_i = t_i(.)$ and $t_i(.) = c'_i$ for every clause, and $n + m - 1$ equations from $\Connect$, since by construction there is no other possibility to deduce $c_i = c'_i$.
+($i= 1\dots n + m$), that is one pair of equations $c_i~=~t_i(.)$ and $t_i(.)~=~c'_i$ for every clause, and $n + m - 1$ equations from $\Connect$, since by construction there is no other possibility to deduce $c_i~=~c'_i$.
 Furthermore, thanks to the tautological
-clauses, $E'$ also has to contain at least $\hat{x}_j = \top_j$ or
-$\hat{x}_j = \bot_j$ for each $j\in\{1\dots m\}$.  
+clauses, $E'$ also has to contain at least $\hat{x}_j~=~\top_j$ or
+$\hat{x}_j~=~\bot_j$ for each $j\in\{1\dots m\}$.  
 Therefore, the cardinality
 condition $|E'| \leq 3n+4m-1$ and the fact that $E'$ contains $3(n~+~m) - 1$ equations from $Clause_i$ and $\Connect$, requires that the $E'$ contains at most one $\hat{x}_j =
-\top_j$ or $\hat{x}_j = \bot_j$ for each $j\in\{1\dots m\}$.
-Therefore, we have that $E_{\mathcal{I}} = E' \cap \Assignment$ is the congruence translation of an assignment and Lemma~\ref{lemma:eqv} guarantees the existence of a model
+\top_j$ or $\hat{x}_j~=~\bot_j$ for each $j\in\{1\dots m\}$.
+Therefore, we have that $E_{\mathcal{I}}~=~E' \cap \Assignment$ is the congruence translation of an assignment and Lemma~\ref{lemma:eqv} guarantees the existence of a model
 for $\mathcal{C'}$, or equivalently for the original set of clauses
 $\mathcal{C}$.
 \qed
@@ -648,10 +654,10 @@ In Lemma \ref{lemma:satreduction}, we add tautological clauses to the input form
 We demonstrate the necessity of these extra clauses on the unsatisfiable formula $\varphi = (x_1 \vee x_2) \wedge (\neg x_1 \vee x_2) \wedge (x_1 \vee \neg x_2) \wedge (\neg x_1 \vee \neg x_2)$.
 Figure \ref{fig:spurious} shows the congruence translation of $\varphi$ together with a subset of $\Assignment$ that yields a short explanation for $c_1 = c_4'$.
 This short explanation corresponds to mapping $x_1$ to $\bot$ and $\top$ at the same time, which clearly is not the translation of an assignment.
-By short, we mean an explanation that, on top of necessary equations from the clause part, picks $m$ equations from the $\Assignment$ part.
+By short, we mean an explanation that, on top of necessary equations from the clause and connect parts, picks $m$ equations from the $\Assignment$ part.
 
 Figure \ref{fig:withtautol} shows the congruence translation of $\varphi$ conjoined with the tautological clauses $(x_1 \vee \neg x_1)$ and $(x_2 \vee \neg x_2)$, together with the same subset of $\Assignment$ that was an short explanation before.
-It is not an explanation of $c_1 = c_6'$, since the chain stops at $t_6(\hat{x}_2)$.
+It is not an explanation of $c_1 = c_6'$, since the transitivity chain stops at $t_6(\hat{x}_2)$.
 In this congruence graph, there is no spurious short explanation of $c_1 = c_6'$ that does not correspond to an assignment.
 This is the desired result, because $\varphi$ is unsatisfiable.
 

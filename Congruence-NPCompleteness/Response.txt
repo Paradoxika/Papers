@@ -65,7 +65,14 @@ We also rewrote the proof to improve clarity.
 
 TODO: proof read the proof
 ++++++++++++++++++++++++++++++++
-Bruno's comment: I think the proof indeed became clearer. Thanks for that! Please double check any new equations. I didn't have time to do it as thoroughly as I would have liked. Regarding style, I would prefer not to use "we have", "we can see that", and so on in a mathematical proof. I see no problem in using "we" in a paper to report subjective things like "we conjecture that...", "we have chosen to do that in this way because...", but a mathematical proof is objective. Subjective relativizations of objective truths are unnecessary and often uselessly verbose.
+Bruno's comment: I think the proof indeed became clearer. 
+Thanks for that! Please double check any new equations. 
+I didn't have time to do it as thoroughly as I would have liked. 
+Regarding style, I would prefer not to use "we have", "we can see that", and so on in a mathematical proof. 
+
+I see no problem in using "we" in a paper to report subjective things like "we conjecture that...", 
+"we have chosen to do that in this way because...", but a mathematical proof is objective. 
+Subjective relativizations of objective truths are unnecessary and often uselessly verbose.
 
 The paragraph starting with "Thus far, we have..." is confusing. It is not clear whether you are adding n+m-1 equations to E or if those n+m-1 equations are in E_I. 
 
@@ -139,7 +146,8 @@ It is beyond the scope of this paper to describe this method in detail.
 However, we re-wrote the paragraph to make the method more explicit.
 
 TODO: @Bruno look at Andreas' changes to this
-Bruno's comment: you seem to conclude that the NP-completeness is a negative answer to whether the dynamically weighted shortest path algorithm can find the shortest path. But this conclusion is only possible if you additionally argue/mention that the dynamically weighted shortest path algorithm is polynomial-time. Is it? If so, this has to be mentioned in your paragraph.
+Bruno's comment: you seem to conclude that the NP-completeness is a negative answer to whether the dynamically weighted shortest path algorithm can find the shortest path. 
+But this conclusion is only possible if you additionally argue/mention that the dynamically weighted shortest path algorithm is polynomial-time. Is it? If so, this has to be mentioned in your paragraph.
 
 
 > p 4: Def 2: is 'compatible' a standard term ? I always saw 'congruent'. 
