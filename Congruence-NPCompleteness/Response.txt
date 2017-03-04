@@ -134,8 +134,17 @@ Bruno's comment: you seem to conclude that the NP-completeness is a negative ans
 
 > p 4: Def 2: is 'compatible' a standard term ? I always saw 'congruent'. 
 
-TODO, Bruno: Write sentence saying that the two terms are used synonymously
-Remark: What does Pascal say? Which term is more frequently used among people doing congruence closure?
+Yes, it is a standard term. See, for instance:
+https://en.wikipedia.org/wiki/Quotient_algebra#Compatible_relation
+https://en.wikipedia.org/wiki/Congruence_relation
+(and the algebra books referrenced there.)
+
+We suspect that "compatible" is the original term from Mathematics, where a congruence relation is defined as: an equivalence relation that is also compatible. 
+
+Also, replacing "compatible" by 'congruent' would lead to an apparently circular definition: a congruence relation is an equivalence relation that is also 'congruent'.
+
+For these two reasons, we consider it more appropriate to use the term "compatible" than the term "congruent" to refer to that particular axiom, even if "congruent" might be more common in some communities.
+
 
 > "(identity of two terms can be checked in
 > constant time), and identity of two function symbols can be checked in constant
