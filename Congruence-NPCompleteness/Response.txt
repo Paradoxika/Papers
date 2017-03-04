@@ -40,6 +40,8 @@ referring to the work of Nieuwenhuis and Oliveras for details.
 
 Our implementation in veriT might be linear, but to state it, a proof would be needed, with a precise description of the algorithm, and this is outside the scope of the paper.
 
+TODO: Maybe "Our implementation in VeriT might be linear (under assumptions that are slightly different from the work of Nieuwenhhuis and Oliveras), but..." . Otherwise, as it is, it gives the impression that we don't believe that their complexity result is correct. Also, I am assuming that the reviewer actually meant Omega(k alpha(k, k))... What is the actual result in the paper? If the paper's result is indeed O(k alpha(k,k)), then I suggest changing our sentence to "Our implementation in VeriT might be linear (and hence also in O(k \alpha(k,k)), but..."
+
 
 > Page 7, Definition 7: the star in Assignment might confuse the reader
 >        since it is very similar to the asterisk in the congruence
@@ -60,7 +62,9 @@ Done.
 Good suggestion.
 We added such an example and two figures.
 We also rewrote the proof to improve clarity.
+
 TODO: proof read the proof
+++++++++++++++++++++++++++++++++
 Bruno's comment: I think the proof indeed became clearer. Thanks for that! Please double check any new equations. I didn't have time to do it as thoroughly as I would have liked. Regarding style, I would prefer not to use "we have", "we can see that", and so on in a mathematical proof. I see no problem in using "we" in a paper to report subjective things like "we conjecture that...", "we have chosen to do that in this way because...", but a mathematical proof is objective. Subjective relativizations of objective truths are unnecessary and often uselessly verbose.
 
 The paragraph starting with "Thus far, we have..." is confusing. It is not clear whether you are adding n+m-1 equations to E or if those n+m-1 equations are in E_I. 
@@ -71,7 +75,7 @@ A proof is like a program. In the same way that we should avoid an imperative mu
 
 Anyway, these are just minor improvement suggestions, depending a lot on personal taste. I'm satisfied with the
 current proof and leave it up to you to decide whether you would like to do any further changes.
-
+++++++++++++++++++++++++++++++++++++++++++++++++
 
 > Page 10, line 36: Roberto Nieuwenhuis --> Robert Nieuwenhuis
 
@@ -147,9 +151,9 @@ https://en.wikipedia.org/wiki/Congruence_relation
 
 We suspect that "compatible" is the original term from Mathematics, where a congruence relation is defined as: an equivalence relation that is also compatible. 
 
-Also, replacing "compatible" by 'congruent' would lead to an apparently circular definition: a congruence relation is an equivalence relation that is also 'congruent'.
+Also, replacing "compatible" by 'congruent' would lead to an apparently circular definition, since we would have to say: a congruence relation is an equivalence relation that is also 'congruent'.
 
-For these two reasons, we consider it more appropriate to use the term "compatible" than the term "congruent" to refer to that particular axiom, even if "congruent" might be more common in some communities.
+For these two reasons, we consider it more appropriate to use the term "compatible" than the term "congruent" to refer to that axiom, even if "congruent" might be more common in some communities.
 
 
 > "(identity of two terms can be checked in
@@ -173,7 +177,7 @@ sharing (i.e. identity of atomic symbols and complex terms can be checked in con
 > such redundance it can be achieved. Perhaps you can show an example that 
 > demonstrates why this intuition is wrong ? 
 
-This would require us to define more precisely the naive ideas that might lead one to hope that, in order to show some examples why those naive ideas do not always result in the shortest explanation. But the benefit of doing that would not be worth the distraction that it would cause.
+This would require us to define more precisely the ideas that might lead one to hope that, in order to show some examples why those naive ideas do not always result in the shortest explanation. But the benefit of doing that would not be worth the distraction that it would cause.
 
 Nevertheless, we have slightly reformulated that paragraph to better convey the message that the hope is naive. The new paragraph is reproduced below:
 
