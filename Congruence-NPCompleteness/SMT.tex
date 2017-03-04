@@ -622,7 +622,7 @@ Let $x_j$ be the variable of that literal.
 
 Suppose $\mathcal{I} \models x_j$, then the set $E$ contains equations $c_i~=~t_i(\hat{x}_j), t_i(\top_j)~=~c'_i$ of $Clause_i$.
 These equations are in $Clause_i$, because $x_j$ is the satisfying literal of $C_i$, thus surely $x_j \in C_i$.
-From compatability and the fact that $\hat{x}_j~=~\top_j~\in~E_{\mathcal{I}}$ it follows that $E \cup E_{\mathcal{I}} \models t_i(\hat{x}_j)~=~t_i(\top_j)$.
+From compatibility and the fact that $\hat{x}_j~=~\top_j~\in~E_{\mathcal{I}}$ it follows that $E \cup E_{\mathcal{I}} \models t_i(\hat{x}_j)~=~t_i(\top_j)$.
 Finally, from transitivity and the three equations $c_i~=~t_i(\hat{x}_j)$, $t_i(\hat{x}_j)~=~t_i(\top_j)$, $t_i(\top_j)~=~c'_i$ it follows that $E \cup E_{\mathcal{I}} \models c_i~=~c'_i$.
 
 The case $\mathcal{I} \not\models x_j$ is symmetric, such that via equations $c_i~=~t_i(\hat{x}_j)$,  $t_i(\hat{x}_j)~=~t_i(\bot_j)$, $t_i(\bot_j)~=~c'_i$, it follows $E \cup E_{\mathcal{I}} \models c_i~=~c'_i$.
