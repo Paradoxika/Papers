@@ -40,11 +40,6 @@ referring to the work of Nieuwenhuis and Oliveras for details.
 
 Our implementation in veriT might be linear, but to state it, a proof would be needed, with a precise description of the algorithm, and this is outside the scope of the paper.
 
-TODO: Bruno's comments: 
-AHHH, SORRY! I conflated "linear" and "polynomial"... I obviously read it too quickly and not attentively enough. It was too early in the morning here. Please ignore these comments, which I am deleting now.
-
-
-
 
 > Page 7, Definition 7: the star in Assignment might confuse the reader
 >        since it is very similar to the asterisk in the congruence
