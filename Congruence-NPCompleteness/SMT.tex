@@ -368,15 +368,13 @@ would be recorded in the congruence graph, and thus be part of the explanation, 
 In practice, the congruence closure procedures implemented in SMT solvers
 produce explanations efficiently: the complexity of the explanation production
 is quasi-linear with respect to the explanation size, which is at most equal to
-the size of the input~\cite{Nieuwenhuis6}.  But the explanations are not optimal, i.e.\ they are not
-always the smallest or even minimal.  It is possible to compute minimal
+the size of the input~\cite{Nieuwenhuis6}.  But the explanations are not optimal, i.e.\ they are not always the smallest. In fact, they are not even minimal. It is possible to compute minimal
 explanations in polynomial time; it suffices for instance to compute again the
-congruence closure successively removing every equation in the explanation, to
-see if it is redundant or not.  One could hope to conceive a different
+congruence closure iteratively removing every equation in the explanation, to
+see if it is redundant or not. One could hope to conceive a different
 congruence closure algorithm generating the smallest explanation in polynomial
-time, for instance on the basis of shortest path algorithms applied to
-congruence graphs containing even redundant equations as labels.  However, the
-next section proves that the corresponding decision problem is NP-hard.
+time. For example, one might attempt to modify the iterative removal algorithm; or attempt to modify shortest path algorithms and apply them to congruence graphs enriched with redundant equations as labels. However, such attempts would be futile. As proven in the next section, the corresponding decision problem is NP-hard. 
+
 
 \section{NP-Completeness of the Small Conflict Set Problem}
 \label{sec:npcomplete}
