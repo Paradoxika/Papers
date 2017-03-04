@@ -150,14 +150,18 @@ For these two reasons, we consider it more appropriate to use the term "compatib
 > constant time), and identity of two function symbols can be checked in constant
 > time." since functions are terms then isn't this repetitive ? 
 
-We use the usual terminology of first-order logic. A term is either 
-a constant/variable symbol or an n-ary function symbol applied to n terms. 
+As entailed by our definition 1, 
+we use the usual terminology of first-order logic. 
+A term is either a constant/variable symbol or an 
+n-ary function symbol applied to n terms. 
 Therefore, a function symbol is generally not a term, except in the 
 case of nullary function symbols (i.e. constants). 
 
-TODO: Maybe we should add this to the preliminary section?
-Pascal: YES
-@Bruno: maybe shorten the answer a bit and then put it there.
+Nevertheless, we agree that the sentence was not optimal. We improved it to:
+
+"terms are DAGs with maximal
+sharing (i.e. identity of atomic symbols and complex terms can be checked in constant time)"
+
 
 > p 6: the sentence 'One could hope...' indeed raises the hopes that with 
 > such redundance it can be achieved. Perhaps you can show an example that 
