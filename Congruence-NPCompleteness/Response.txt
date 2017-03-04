@@ -167,13 +167,15 @@ sharing (i.e. identity of atomic symbols and complex terms can be checked in con
 > such redundance it can be achieved. Perhaps you can show an example that 
 > demonstrates why this intuition is wrong ? 
 
-TODO
-Andreas:
-We could either add an example showing why the removing algorithm does not produce shortest explanations,
-or the shortest path in a weighted congruence graph idea does not.
-However, the statement we make clearly is stronger than "this does not work and that does not work either".
-Nothing works, so the question is whether such an example really makes sense.
-@Bruno: improve/reformulate answer somehow rewrite paragraph making transition between minimality and NP completeness smoother
+This would require us to define more precisely the naive ideas that might lead one to hope that, in order to show some examples why those naive ideas do not always result in the shortest explanation. But the benefit of doing that would not be worth the distraction that it would cause.
+
+Nevertheless, we have slightly reformulated that paragraph to better convey the message that the hope is naive. The new paragraph is reproduced below:
+
+"One could (naively) hope to conceive a different
+congruence closure algorithm generating the smallest explanation in polynomial
+time. For example, one might attempt to modify the iterative removal algorithm; or attempt to modify shortest path algorithms and apply them to congruence graphs enriched with redundant equations as labels. However, such attempts would be futile. As proven in the next section, the corresponding decision problem is NP-hard. "
+
+
 
 > p 8: The bottom dotted edge on the left is wrong? (t1(x3) --- t1(\bot_3))
 
