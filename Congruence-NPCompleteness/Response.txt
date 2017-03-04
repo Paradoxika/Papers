@@ -61,6 +61,17 @@ Good suggestion.
 We added such an example and two figures.
 We also rewrote the proof to improve clarity.
 TODO: proof read the proof
+Bruno's comment: I think the proof indeed became clearer. Thanks for that! Please double check any new equations. I didn't have time to do it as thoroughly as I would have liked. Regarding style, I would prefer not to use "we have", "we can see that", and so on in a mathematical proof. I see no problem in using "we" in a paper to report subjective things like "we conjecture that...", "we have chosen to do that in this way because...", but a mathematical proof is objective. Subjective relativizations of objective truths are unnecessary and often uselessly verbose.
+
+The paragraph starting with "Thus far, we have..." is confusing. It is not clear whether you are adding n+m-1 equations to E or if those n+m-1 equations are in E_I. 
+
+A proof is like a program. In the same way that we should avoid an imperative mutable coding style with state and side effects and prefer an immutable stateless functional declarative coding style, we should avoid changing named entities (e.g. E in this case), or even giving the impression that we are changing them, in our proofs. Sentences containing temporal expressions (e.g. "Thus far", "we add") give this impression.
+
+"Additionaly, we add" sounds pleonastic.
+
+Anyway, these are just minor improvement suggestions, depending a lot on personal taste. I'm satisfied with the
+current proof and leave it up to you to decide whether you would like to do any further changes.
+
 
 > Page 10, line 36: Roberto Nieuwenhuis --> Robert Nieuwenhuis
 
