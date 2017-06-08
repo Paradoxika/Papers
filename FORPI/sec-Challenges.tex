@@ -103,8 +103,8 @@ The set of \emph{safe literals} for a node $\eta$ in a proof $\psi$ with root cl
 \xrightarrow[\sigma]{\ell'} \n_2$ with $\ell' \sigma = \ell$.
 \end{definition}
 
-As in the propositional case, safe literals can be computed in a bottom-up traversal of the proof. Initially, at the root, the safe literals are exactly the literals that occur in the root clause. As we go up, the safe literals $\mathcal{S}(\eta')$ of a parent node $\eta'$ of $\eta$ where $\n'
-\xrightarrow[\sigma]{\ell} \n$ is set to $\mathcal{S}(\eta) \cup \{ \ell \sigma \}$. Note that we apply the substitution to the resolved literal before adding it to the set of safe literals (cf. algorithm 3, lines 8 and 10). In other words, in the first-order case, the set of safe literals has to be a set of \emph{instantiated} resolved literals.
+As in the propositional case, safe literals can be computed in a bottom-up traversal of the proof. Initially, at the root, the safe literals are exactly the literals that occur in the root clause. As we go up, the safe literals $\mathcal{S}(\eta')$ of a parent node $\eta'$ of $\eta$ where $\eta'
+\xrightarrow[\sigma]{\ell} \eta$ is set to $\mathcal{S}(\eta) \cup \{ \ell \sigma \}$. Note that we apply the substitution to the resolved literal before adding it to the set of safe literals (cf. algorithm 3, lines 8 and 10). In other words, in the first-order case, the set of safe literals has to be a set of \emph{instantiated} resolved literals.
 
  In the case of Example \ref{ex:pairwise}, computing safe literals as defined above would result in $\mathcal{S}(\eta_3)=\{q(c),~p(a,b)\}$, where clearly the pivot $p(a,c)$ in $\eta_1$ is not safe. A generalization of this requirement is formalized below.
 
@@ -134,7 +134,7 @@ The node $\eta$ is said to be \emph{pre-regularizable} in the proof $\psi$ if $\
 
 \noindent
 %This property states that a node is pre-regularizable if, for a resolved literal $\ell'$ unifiable with a safe literal, which is resolved against literals $\ell_1$, \ldots, $\ell_n$ in a proof $\psi$, $\ell_1$,\ldots,$\ell_n$, and $\dual{\ell'}$ are unifiable.
-This property states that a node is pre-regularizable if an instantiated resolved literal $\ell'$ unifiable with a safe literal.
+This property states that a node is pre-regularizable if an instantiated resolved literal $\ell'$ is unifiable with a safe literal.
 
 
 
@@ -194,12 +194,15 @@ This condition ensures that the remainder of the proof does not expect a variabl
 %%In this example, $\eta_1$ does not satisfy this property: in order to unify with $\eta_3$'s safe literals, it would be necessary to send $V\rightarrow Z$ due to $\eta_1$'s second literal, but leave $V$ unchanged due $\eta_1$'s first literal, which is not possible. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
 %In this example, $\eta_1$ does not satisfy this property. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
 
-The notion of \emph{pre-regulariziability} can be thought of as a \emph{necessary} condition for recycling the node $\eta$, while the notion of \emph{strongly regularizable} can be thought of as a \emph{sufficient} condition. In order to show that this, the notion of subsumption is necessary. We will use $X \sqsubseteq Y$ to denote the following for clauses $X$ and $Y$: there exists a substitution $\sigma$ such that $X\sigma \subseteq Y$. We say that $X$ \emph{subsumes} $Y$.
+The notion of \emph{pre-regulariziability} can be thought of as a \emph{necessary} condition for recycling the node $\eta$, while the notion of \emph{strongly regularizable} can be thought of as a \emph{sufficient} condition. In order to show that this, the usual notion of subsumption is necessary. We will use $X \sqsubseteq Y$ to denote that $X$ \emph{subsumes} $Y$, when there exists a substitution $\sigma$ such that $X\sigma \subseteq Y$.
 
 
 \begin{thm}\label{thm:correct}
-Let $\psi$ be a proof with root clause $\Gamma$, and $\eta\in \psi$ a node. Let $\psi' = \psi\setminus \{\eta\}$ and $\Gamma'$ be the root of $\psi'$. If $\eta$ is strongly regularizable, then $\Gamma' \sqsubseteq \Gamma$.
+Let $\psi$ be a proof with root clause $\Gamma$ and $\eta$ be a node in $\psi$. Let $\psi^{\dagger} = \psi\setminus \{\eta\}$ and $\Gamma^{\dagger}$ be the root of $\psi^{\dagger}$. If $\eta$ is strongly regularizable, then $\Gamma^{\dagger} \sqsubseteq \Gamma$.
 \end{thm}
+
+
+
 
 \begin{lem}\label{lem:cor}
 Let $\eta_1$ be a node and $\rho(\eta_1)$ be a path from $\eta_1$ to the root of the proof. Suppose that $\eta \in \rho(\eta_1)$ is a node such that $\eta_1 \sqsubseteq \mathcal{S}(\eta)$. If $\eta$ is replaced by $\eta_1$ in some proof $\psi$ to obtain $\psi'$, every literal $\ell_s \in \eta_1$ is either used as a pivot below $\eta_1$ in $\psi'$ or is contained in the root clause $\Gamma(\psi')$. \\
@@ -275,7 +278,7 @@ Let $\psi$ be a proof with root clause $\Gamma$, and let $\eta_S \in \psi$ be a 
 
 
 
-As the name suggests, strong regularizability is stronger than necessary. In some cases, nodes may be regularizable even if they are not strongly regularizable. A weaker condition is presented below. This alternative relies on knowledge of how literals are changed after the deletion of a node in a proof (and it is inspired by the \emph{post-deletion unifiability condition} described for {\FOLowerUnits} in \cite{GFOLU}). However, since weak regularizability is more complciated to check, it is not as suitable for implementation as strong regularizability.
+As the name suggests, strong regularizability is stronger than necessary. In some cases, nodes may be regularizable even if they are not strongly regularizable. A weaker condition (conjectured to be sufficient) is presented below. This alternative relies on knowledge of how literals are changed after the deletion of a node in a proof (and it is inspired by the \emph{post-deletion unifiability condition} described for {\FOLowerUnits} in \cite{GFOLU}). However, since weak regularizability is more complicated to check, it is not as suitable for implementation as strong regularizability.
 \begin{definition}\label{def:postdelprop}
 Let $\eta$ be a pre-regularizable node with parents $\eta_1$ and $\eta_2$, assuming without loss of generality that $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta$ 
 %and $\eta_2 \xrightarrow[\sigma_2]{\{\ell_2\} } \eta$ 
