@@ -208,7 +208,7 @@ $\eta' \xrightarrow[\sigma']{\{\ell'\} } \eta$ with $\ell'\sigma'$
 unifiable with a safe literal $\ell^*\in \mathcal{S}(\eta)$ and
 $\Gamma' \sigma' \subseteq \mathcal{S}(\eta)$.
 
-In $\psi^{\dagger}$, $\eta$ has been replaced by $\eta'$. Since
+Firstly, in $\psi^{\dagger}$, $\eta$ has been replaced by $\eta'$. Since
 $\Gamma' \sigma' \subseteq \mathcal{S}(\eta)$, by definition of
 $\mathcal{S}(\eta)$, every literal $\ell$ in $\Gamma'$ is either more
 general than a single literal that occurs as a pivot on every path
@@ -228,13 +228,17 @@ $k$ goes through $\eta$, the literal is changed to
 $\ell\sigma^{\dagger}_k$, where $\sigma^{\dagger}_k$ is such that 
 $\sigma_k = \sigma' \sigma^{\dagger}_k$.
 
-Furthermore, when $\eta$ is replaced by $\eta'$, the edge from
+Secondly, when $\eta$ is replaced by $\eta'$, the edge from
 $\eta$'s other parent $\eta''$ to $\eta$ ceases to exist in
-$\psi^{\dagger}$. Therefore, any literal $\ell$ in $\Gamma$ that is a
+$\psi^{\dagger}$. Consequently, any literal $\ell$ in $\Gamma$ that is a
 descendant of a literal $\ell''$ in the clause of $\eta''$ through a
 path via $\eta$ will not belong to $\Gamma^{\dagger}$.
 
-Therefore, $\Gamma^{\dagger} \sigma' \subseteq \Gamma$.
+% In summary, $\Gamma^{\dagger}$ will contain more general versions ($\ell\sigma^{\dagger}_i$) of some of the literals ($\ell\sigma_i$) and unchanged versions of other literals that occurred in $\Gamma$ and other literals that occurred in $\Gamma$ will not occur in $\Gamma^{\dagger}$. 
+
+Thirdly, a literal from $\Gamma$ that descends neither from $\eta'$ nor from $\eta''$ either remains unchanged in $\Gamma^{\dagger}$ or, if the path to the node from which it descends ceases to exist in the construction of $\psi^{\dagger}$, does not belong to $\Gamma^{\dagger}$ at all.
+
+Therefore, by the three facts above, $\Gamma^{\dagger} \sigma' \subseteq \Gamma$, and hence $\Gamma^{\dagger} \sqsubseteq \Gamma$.
 \end{proof}
 
 
