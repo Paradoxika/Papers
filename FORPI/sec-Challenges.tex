@@ -129,7 +129,7 @@ As in the propositional case, safe literals can be computed in a bottom-up trave
 \begin{definition}
 \label{prop:pair}
 Let $\eta$ be a node with safe literals $\mathcal{S}(\eta)$ and parents $\eta_1$ and $\eta_2$, assuming without loss of generality, $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta$.
-The node $\eta$ is said to be \emph{pre-regularizable} in the proof $\psi$ if $\ell_1\sigma_1$ is unifiable with a safe literal $\ell^* \in \mathcal{S}(\eta)$.
+The node $\eta$ is said to be \emph{pre-regularizable} in the proof $\psi$ if $\ell_1\sigma_1$ matches a safe literal $\ell^* \in \mathcal{S}(\eta)$.
 \end{definition}
 
 \noindent
@@ -144,7 +144,7 @@ This property states that a node is pre-regularizable if an instantiated resolve
 
 Satisfying the pre-regularizability is not sufficient. Consider the proof $\psi$ in Figure \ref{fig:ex-unifcheck}. After collecting the safe literals, $\mathcal{S}(\eta_3) = \{\lnot q(R,S),\lnot p(c,d), q(f(a,e),c)\}$.
 %\noindent
-$\eta_3$'s pivot $q(f(a,V),U)$ is unifiable to (and even more general than) the safe literal $q(f(a,e),c)$. Attempting to regularize $\eta_3$ would lead to the removal of $\eta_2$, the replacement of $\eta_3$ by $\eta_1$ and the removal of $\eta_4$ (because $\eta_1$ does not contain the pivot required by $\eta_5$), with $\eta_5$ also being replaced by $\eta_1$. Then resolution between $\eta_1$ and $\eta_6$ results in $\eta_7'$, which cannot be resolved with $\eta_8$, as shown below.
+$\eta_3$'s pivot $q(f(a,V),U)$ matches (and even more general than) the safe literal $q(f(a,e),c)$. Attempting to regularize $\eta_3$ would lead to the removal of $\eta_2$, the replacement of $\eta_3$ by $\eta_1$ and the removal of $\eta_4$ (because $\eta_1$ does not contain the pivot required by $\eta_5$), with $\eta_5$ also being replaced by $\eta_1$. Then resolution between $\eta_1$ and $\eta_6$ results in $\eta_7'$, which cannot be resolved with $\eta_8$, as shown below.
 
 
 \begin{scriptsize}
@@ -182,7 +182,7 @@ Thus we additionally require that the following condition be satisfied.
 \begin{definition} %This is the new definition
 \label{prop:extracheck}
 Let $\eta$ be pre-regularizable, with safe literals $\mathcal{S}(\eta)$ and parents $\eta_1$ and $\eta_2$, with clauses $\Gamma_1$ and $\Gamma_2$ respectively, assuming without loss of generality that $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta$
-such that $\ell_1\sigma_1$ is unifiable with a safe literal $\ell^*\in \mathcal{S}(\eta)$. 
+such that $\ell_1\sigma_1$ matches a safe literal $\ell^*\in \mathcal{S}(\eta)$. 
 The node $\eta$ is said to be \emph{strongly regularizable} in $\psi$ if $\Gamma_1 \sigma_{1} \subseteq \mathcal{S}(\eta)$.
 \end{definition}
 
@@ -243,13 +243,14 @@ Therefore, by the three facts above, $\Gamma^{\dagger} \sigma' \subseteq \Gamma$
 
 
 \begin{lem}\label{lem:cor}
-Let $\eta_1$ be a node and $\rho(\eta_1)$ be a path from $\eta_1$ to the root of the proof. Suppose that $\eta \in \rho(\eta_1)$ is a node such that $\eta_1 \sqsubseteq \mathcal{S}(\eta)$. If $\eta$ is replaced by $\eta_1$ in some proof $\psi$ to obtain $\psi'$, every literal $\ell_s \in \eta_1$ is either used as a pivot below $\eta_1$ in $\psi'$ or is contained in the root clause $\Gamma(\psi')$. \\
+Let $\eta_1$ be a node and $\rho(\eta_1)$ be a path from $\eta_1$ to the root of the proof. Suppose that $\eta \in \rho(\eta_1)$ is the direct descendant of $\eta_1$ on $\rho(\eta_1)$ such that $\eta_1 \sqsubseteq \mathcal{S}(\eta)$. If $\eta$ is replaced by $\eta_1$ in some proof $\psi$ to obtain $\psi'$, every literal $\ell_s \in \eta_1$ is either used as a pivot below $\eta_1$ in $\psi'$ or is contained in the root clause $\Gamma(\psi')$. \\
 \end{lem}
 
 \begin{proof}
 For a pair of nodes $\eta_1$, $\eta$ that satisfy the conditions of the lemma, let $\sigma_1$ be the substitution such that $\eta_1\sigma_1 \subseteq \mathcal{S}(\eta)$. Assume that $\eta_1 \xrightarrow[\sigma]{\{\ell_1\} } \eta$ in $\psi$.
 
-We proceed by induction $h(\eta)$, the height of $\eta$ in $\psi$, which is the length of a longest path from the root to $\eta$. For the base case $h(\eta)=0$, when deleting $\eta$, $\eta$ is replaced by $\eta_1$ and by assumption there exists a $\sigma_1$ such that $\Gamma(\eta_1)\sigma_1 \subseteq \mathcal{S}(\eta) = \Gamma(\eta) \implies \Gamma(\eta_1) \sqsubseteq \Gamma(\eta)$. This concludes the base case; assume the result holds for any node $\eta_I$ with height $h(\eta_I) > 0$ and consider a node $\eta$ at height $h(\eta)=h(\eta_I)+1$.
+We proceed by induction $h(\eta)$, the height of $\eta$ in $\psi$, which is the length of a longest path from the root to $\eta$. For the base case $h(\eta)=0$, when deleting $\eta$, $\eta$ is replaced by $\eta_1$ and by assumption there exists a $\sigma_1$ such that $\Gamma(\eta_1)\sigma_1 \subseteq \mathcal{S}(\eta) = \Gamma(\eta) \implies \Gamma(\eta_1) \sqsubseteq \Gamma(\eta)$. %This concludes the base case; assume the result holds for any node $\eta_I$ with height $h(\eta_I) > 0$ and consider a node $\eta$ at height $h(\eta)=h(\eta_I)+1$.
+This concludes the base case; assume the result holds for any node $\eta_I$ with height $h(\eta_I) \le m$ for an arbitrary $m$ and consider a node $\eta$ at height $h(\eta)=m+1$.
 
 For the inductive step, 
 consider any path $\rho(\eta')$ from $\eta'$ to the root of the proof, and let $\eta''$ be the node which is resolved against $\eta$ in $\psi$. The deletion of $\eta$ from $\psi$ attempts to replace the resolution $\eta'=\eta \odot \eta''$ with $\eta' = \eta_1 \odot \eta''$.
@@ -265,13 +266,13 @@ It remains to be shown that $\ell_1$ is still used as a resolved literal. To see
 
 \noindent
 \emph{Case 2:} $\sigma_1$ cannot be used as a unifier for literals of $\eta_1$ and $\eta''$; i.e. resolution between $\eta_1$ and $\eta''$ is not possible for any $\ell_1''\in \eta_1$ 
-with the instantiated resolved literal $\ell_1''\sigma_1$. In this case, replace $\eta'$ by $\eta_1$; since $\ell_1''\sigma_1'' \notin \Gamma(\eta_1)\sigma_1$, every $\ell_s\sigma_1 \in \Gamma(\eta_1)\sigma_1$ must still be used as a resolved literal below $\eta'$, i.e. $\eta_1\sigma_1 \subseteq \mathcal{S}(\eta') \implies \eta_1 \sqsubseteq \mathcal{S}(\eta')$. Since $h(\eta') < h(\eta)=h(\eta_I)+1$, we are done by the induction hypothesis. 
+with the instantiated resolved literal $\ell_1''\sigma_1$. In this case, replace $\eta'$ by $\eta_1$; since $\ell_1''\sigma_1'' \notin \Gamma(\eta_1)\sigma_1$, every $\ell_s\sigma_1 \in \Gamma(\eta_1)\sigma_1$ must still be used as a resolved literal below $\eta'$, i.e. $\eta_1\sigma_1 \subseteq \mathcal{S}(\eta') \implies \eta_1 \sqsubseteq \mathcal{S}(\eta')$. Since $h(\eta') < h(\eta)=m+1$, we are done by the induction hypothesis. 
 
 
 \end{proof}
 
 \begin{proof}[Proof of Theorem \ref{thm:correct}]
-Let $\psi$ be a proof with root clause $\Gamma$, and let $\eta_S \in \psi$ be a strongly regularizable node.  Let $\psi' = \psi\setminus \{\eta_S\}$ with root clause $\Gamma'$. To prove the theorem, it suffices to observe that any strongly regularizable node $\eta_S$ satisfies Lemma \ref{lem:cor}'s hypothesis for some $\rho(\eta_1)$.
+Let $\psi$ be a proof with root clause $\Gamma$, and let $\eta_S \in \psi$ be a strongly regularizable node.  Let $\psi' = \psi\setminus \{\eta_S\}$ with root clause $\Gamma'$. To prove the theorem, it suffices to observe that any strongly regularizable node $\eta_S$ satisfies Lemma \ref{lem:cor}'s hypothesis for any $\rho(\eta_1)$.
 
 
 
