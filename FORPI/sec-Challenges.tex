@@ -201,7 +201,41 @@ The notion of \emph{pre-regulariziability} can be thought of as a \emph{necessar
 Let $\psi$ be a proof with root clause $\Gamma$ and $\eta$ be a node in $\psi$. Let $\psi^{\dagger} = \psi\setminus \{\eta\}$ and $\Gamma^{\dagger}$ be the root of $\psi^{\dagger}$. If $\eta$ is strongly regularizable, then $\Gamma^{\dagger} \sqsubseteq \Gamma$.
 \end{thm}
 
+\begin{proof} 
+By definition of strong regularizability, $\eta$ is such
+that there is a node $\eta'$ with clause $\Gamma'$ and such that
+$\eta' \xrightarrow[\sigma']{\{\ell'\} } \eta$ with $\ell'\sigma'$
+unifiable with a safe literal $\ell^*\in \mathcal{S}(\eta)$ and
+$\Gamma' \sigma' \subseteq \mathcal{S}(\eta)$.
 
+In $\psi^{\dagger}$, $\eta$ has been replaced by $\eta'$. Since
+$\Gamma' \sigma' \subseteq \mathcal{S}(\eta)$, by definition of
+$\mathcal{S}(\eta)$, every literal $\ell$ in $\Gamma'$ is either more
+general than a single literal that occurs as a pivot on every path
+from $\eta$ to the root in $\psi$ (and hence on every new path from
+$\eta'$ to the root in $\psi^{\dagger}$) or more general than literals
+$\ell \sigma_1$,\ldots,$\ell\sigma_n$ in $\Gamma$. In the former case,
+$\ell$ is resolved away in the construction of $\psi^{\dagger}$ (by
+contracting the descendants of $\ell$ with the pivots in each path).
+In the latter case, the literal $\ell \sigma_k$ ($1 \leq k \leq n$) in
+$\Gamma$ is a descendant of $\ell$ through a path $k$ and the
+substitution $\sigma_k$ is the composition of all substitutions on
+this path. When $\eta$ is replaced by $\eta'$, two things may happen
+to $\ell \sigma_k$. If the path $k$ does not go through $\eta$, 
+$\ell \sigma_k$ remains unchanged (i.e. $\ell \sigma_k \in \Gamma^{\dagger}$
+unless the path $k$ ceases to exist in $\psi^{\dagger}$). If the path
+$k$ goes through $\eta$, the literal is changed to 
+$\ell\sigma^{\dagger}_k$, where $\sigma^{\dagger}_k$ is such that 
+$\sigma_k = \sigma' \sigma^{\dagger}_k$.
+
+Furthermore, when $\eta$ is replaced by $\eta'$, the edge from
+$\eta$'s other parent $\eta''$ to $\eta$ ceases to exist in
+$\psi^{\dagger}$. Therefore, any literal $\ell$ in $\Gamma$ that is a
+descendant of a literal $\ell''$ in the clause of $\eta''$ through a
+path via $\eta$ will not belong to $\Gamma^{\dagger}$.
+
+Therefore, $\Gamma^{\dagger} \sigma' \subseteq \Gamma$.
+\end{proof}
 
 
 \begin{lem}\label{lem:cor}
