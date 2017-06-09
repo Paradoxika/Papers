@@ -650,27 +650,13 @@ $\mathcal{C}$.
 
 \begin{example}
 
-In Lemma \ref{lemma:satreduction}, we add tautological clauses to the input formula.
-We demonstrate the necessity of these extra clauses on the unsatisfiable formula $\varphi = (x_1 \vee x_2) \wedge (\neg x_1 \vee x_2) \wedge (x_1 \vee \neg x_2) \wedge (\neg x_1 \vee \neg x_2)$.
-%
-% Old version:
-% ============
-% Figure \ref{fig:spurious} shows the congruence translation of $\varphi$ together with a subset of $\Assignment$ that yields a short explanation for $c_1 = c_4'$.
-% This short explanation corresponds to mapping $x_1$ to $\bot$ and $\top$ at the same time, which clearly is not the translation of an assignment.
-% By short, we mean an explanation that, on top of necessary equations from the clause and connect parts, picks $m$ equations from the $\Assignment$ part.
-%
-% Figure \ref{fig:withtautol} shows the congruence translation of $\varphi$ conjoined with the tautological clauses $(x_1 \vee \neg x_1)$ and $(x_2 \vee \neg x_2)$, together with the same subset of $\Assignment$ that was a short explanation before.
-% It is not an explanation of $c_1 = c_6'$, since the transitivity chain stops at $t_6(\hat{x}_2)$.
-% In this congruence graph, there is no spurious short explanation of $c_1 = c_6'$ that does not correspond to an assignment.
-% This is the desired result, because $\varphi$ is unsatisfiable.
-%
-Figure \ref{fig:spurious} shows the congruence translation of $\varphi$ together with a subset of $\Assignment$ that yields an explanation for $c_1 = c_4'$ that picks, besides the necessary equations from the clause and connect parts, $m$ equations from the $\Assignment$ part.
-However, this explanation maps $x_1$ to $\bot$ and $\top$ at the same time, and hence cannot correspond to a (consistent) assignment. With the addition of tautological clauses, spurious explanations of this kind are blocked. This is shown in Figure \ref{fig:withtautol}, depicting the congruence translation of $\varphi$ conjoined with the tautological clauses $(x_1 \vee \neg x_1)$ and $(x_2 \vee \neg x_2)$, together with the same subset of $\Assignment$ used in Figure \ref{fig:spurious}. As desired, this subset is not an explanation of $c_1 = c_6'$, since the transitivity chain stops at $t_6(\hat{x}_2)$.
-In fact, in this congruence graph, there is no spurious explanation of $c_1 = c_6'$. More generally, as desired, there cannot be any explanation of $c_1 = c_6'$, because $\varphi$ is unsatisfiable.
 
-
-
-
+In Lemma \ref{lemma:satreduction}, the input formula is augmented with tautological clauses.
+We demonstrate here the necessity of these extra clauses on the unsatisfiable formula $\varphi = (x_1 \vee x_2) \wedge (\neg x_1 \vee x_2) \wedge (x_1 \vee \neg x_2) \wedge (\neg x_1 \vee \neg x_2)$.
+ 
+Figure \ref{fig:spurious} shows the congruence translation of $\varphi$ together with a subset of $\Assignment$ that yields an explanation for $c_1 = c_4'$.  This explanation picks, besides the necessary equations from the clause and connect parts, two equations from the $\Assignment$ part.
+However, this explanation maps $x_1$ to $\bot$ and $\top$ at the same time, and hence cannot correspond to a (consistent) assignment. With the addition of tautological clauses and because the number of equations in the explanation is upper bounded, spurious explanations of this kind are ruled out. This is illustrated in Figure \ref{fig:withtautol}, depicting the congruence translation of $\varphi$ conjoined with the tautological clauses $(x_1 \vee \neg x_1)$ and $(x_2 \vee \neg x_2)$, together with the same subset of $\Assignment$ used in Figure \ref{fig:spurious}. As desired, this subset is not an explanation of $c_1 = c_6'$, since the transitivity chain stops at $t_6(\hat{x}_2)$.
+In fact, in this congruence graph, there is no explanation of $c_1 = c_6'$ with less than 19 equations.  This is as expected, since $\varphi$ is unsatisfiable and $3n+4m-1 = 19$ in our example with $n=4$ clauses and $m=2$ variables.
 
 \begin{figure}[htb]
 \input{figures/spurious}
