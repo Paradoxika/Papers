@@ -307,8 +307,8 @@ congruence is consistent with the set of disequalities.  We refer the reader
 to~\cite{Nelson2,Downey1,Nieuwenhuis6} for more details.  The complexity of
 those algorithms depend on the internal data-structures and on the
 representation of terms~\cite{Downey1}.  Algorithms typically implemented in SMT
-solvers have complexity $\mathcal{O}(|E| + |\mathcal{T}(E)|\ \log
-|\mathcal{T}(E)|)$ assuming constant time operations on the hash table being used to detect new equalities induced by compatibility.
+solvers have complexity $\mathcal{O}(|E| + (|\mathcal{T}(E)| \cdot \log
+|\mathcal{T}(E)|))$ assuming constant time operations on the hash table being used to detect new equalities induced by compatibility.
 
 The generation of conflict sets or explanations is based on the congruence
 graph: its nodes are the terms and subterms considered by the algorithm.  An
