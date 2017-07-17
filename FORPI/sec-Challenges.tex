@@ -134,7 +134,7 @@ The node $\eta$ is said to be \emph{pre-regularizable} in the proof $\psi$ if $\
 
 \noindent
 %This property states that a node is pre-regularizable if, for a resolved literal $\ell'$ unifiable with a safe literal, which is resolved against literals $\ell_1$, \ldots, $\ell_n$ in a proof $\psi$, $\ell_1$,\ldots,$\ell_n$, and $\dual{\ell'}$ are unifiable.
-This property states that a node is pre-regularizable if an instantiated resolved literal $\ell'$ is unifiable with a safe literal.
+This property states that a node is pre-regularizable if an instantiated resolved literal $\ell'$ is unifiable with a safe literal. The notion of \emph{pre-regulariziability} can be thought of as a \emph{necessary} condition for recycling the node $\eta$.
 
 
 
@@ -194,7 +194,7 @@ This condition ensures that the remainder of the proof does not expect a variabl
 %%In this example, $\eta_1$ does not satisfy this property: in order to unify with $\eta_3$'s safe literals, it would be necessary to send $V\rightarrow Z$ due to $\eta_1$'s second literal, but leave $V$ unchanged due $\eta_1$'s first literal, which is not possible. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
 %In this example, $\eta_1$ does not satisfy this property. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
 
-The notion of \emph{pre-regulariziability} can be thought of as a \emph{necessary} condition for recycling the node $\eta$, while the notion of \emph{strongly regularizable} can be thought of as a \emph{sufficient} condition. In order to show that this, the usual notion of subsumption is necessary. We will use $X \sqsubseteq Y$ to denote that $X$ \emph{subsumes} $Y$, when there exists a substitution $\sigma$ such that $X\sigma \subseteq Y$.
+The notion of \emph{strongly regularizable} can be thought of as a \emph{sufficient} condition. In order to show that this, the usual notion of subsumption is necessary. We will use $X \sqsubseteq Y$ to denote that $X$ \emph{subsumes} $Y$, when there exists a substitution $\sigma$ such that $X\sigma \subseteq Y$.
 
 
 \begin{thm}\label{thm:correct}
