@@ -13,10 +13,10 @@
 
 %\textbf{Note:} for the reviewers' convenience, this appendix summarizes \cite{LURPI}.
 
-\bigskip
+%\bigskip
 
-\noindent
-This appendix explains {\RecyclePivotsIntersection} ({\RPI}) \cite{LURPI}, which aims to compress irregular proofs. It can be seen as a simple 
+%\noindent
+This section explains {\RecyclePivotsIntersection} ({\RPI}) \cite{LURPI}, which aims to compress irregular proofs. It can be seen as a simple 
 but significant modification of the {\RP} algorithm described in 
 \cite{RP08}, 
 from which it derives its name. 
@@ -75,24 +75,6 @@ propagated down, it gets resolved against the literal $p$ of $\eta$ later on bel
 \label{ex:rpi-example}
 \end{figure*}
 
-
-\begin{example} %This example from the original RPI source
-\label{Example:Proof}
-When applied to the proof $\psi$ shown in Figure \ref{ex:rpi-example-a}, the algorithm {\RPI} assigns $\{a,c\}$ and $\{a, \neg c\}$ as the safe literals of, respectively, $\eta_5$ and $\eta_8$. The safe literals of $\eta_4$ w.r.t. its children $\eta_5$ and $\eta_8$ are respectively $\{a,c,b\}$ and $\{a, \neg c, b\}$, and hence the safe literals of $\eta_4$ are $\{a,b\}$ (the intersection of $\{a,c,b\}$ and $\{a, \neg c, b\}$). Since the right resolved literal of $\eta_4$ ($a$) belongs to $\eta_4$'s safe literals, $\eta_4$ is correctly detected as a redundant node and hence regularized: $\eta_4$ is replaced by its right parent $\eta_3$. The resulting proof is shown in Figure \ref{ex:rpi-example-b}.
-
-
-
-%This proof corresponds to the proof term
-%$$ (\ub{\{\neg a\}}{\eta_1} \tRes (\{a, c, \neg b\} \tRes \ub{\{a, b\}}{\eta_3})) \tRes ((\eta_3 \tRes \{\neg b, \neg c, a\}) \tRes \eta_1) $$
-
-%\noindent%
-%{\RP}, on the other hand, assigns $\emptyset$ as the set of safe literals for $\eta_4$. Therefore, it does not detect that $\eta_4$ is a redundant irregular node, and then $\RP(\varphi) = \varphi$. 
-
-
-%%The original example description.
-%The node $\eta_4$ has pivot $a$, left (right) resolved literal $\neg a$ ($a$). Its conclusion is $\{b\}$ and its premises are the conclusions of its parents: the input nodes $\eta_1$ ($\{ \neg a \}$) and $\eta_3$ ($\{ a, b\} $). It has two children ($\eta_5$ and $\eta_8$). $\psi$ can be compactly represented by the following proof term:
-%$$ (\ub{\{\neg a\}}{\eta_1} \tRes (\{a, c, \neg b\} \tRes \ub{(\eta_1 \tRes \{a, b\})}{\eta_4})) \tRes ((\eta_4 \tRes \{a, \neg b, \neg c\}) \tRes \eta_1). $$
-\end{example}
 
 Although the remarks above suggest that it is safe to replace $\eta' \tRes_p
 \eta''$ by $\eta''$ within the proof-context $\psi'[\ ]$, this is not always the
@@ -255,7 +237,7 @@ executed at most $2n$ times, and the algorithm remains linear.
 In our prototype implementation, the sets of safe literals are instances of Scala's 
 \texttt{mutable.HashSet} class. Being mutable, new elements can be added efficiently.
 And being HashSets, membership checking is done in constant time in the average case, 
-and set intersection (line 12) can be done in $O(k.s)$, where $k$ is the number of sets and $s$ is the size of the smallest set.
+and set intersection (line 12) can be done in $O(k.s)$, where $k$ is the number of sets and $s$ is the size of the smallest set.\\
 
 
 \IncMargin{0.5em}
@@ -311,7 +293,19 @@ and set intersection (line 12) can be done in $O(k.s)$, where $k$ is the number 
 
 %\input{propRPIex}
 
+\begin{example} %This example from the original RPI source
+\label{Example:Proof}
+When applied to the proof $\psi$ shown in Figure \ref{ex:rpi-example-a}, the algorithm {\RPI} assigns $\{a,c\}$ and $\{a, \neg c\}$ as the safe literals of, respectively, $\eta_5$ and $\eta_8$. The safe literals of $\eta_4$ w.r.t. its children $\eta_5$ and $\eta_8$ are respectively $\{a,c,b\}$ and $\{a, \neg c, b\}$, and hence the safe literals of $\eta_4$ are $\{a,b\}$ (the intersection of $\{a,c,b\}$ and $\{a, \neg c, b\}$). Since the right resolved literal of $\eta_4$ ($a$) belongs to $\eta_4$'s safe literals, $\eta_4$ is correctly detected as a redundant node and hence regularized: $\eta_4$ is replaced by its right parent $\eta_3$. The resulting proof is shown in Figure \ref{ex:rpi-example-b}.
+
+%This proof corresponds to the proof term
+%$$ (\ub{\{\neg a\}}{\eta_1} \tRes (\{a, c, \neg b\} \tRes \ub{\{a, b\}}{\eta_3})) \tRes ((\eta_3 \tRes \{\neg b, \neg c, a\}) \tRes \eta_1) $$
+
+%\noindent%
+%{\RP}, on the other hand, assigns $\emptyset$ as the set of safe literals for $\eta_4$. Therefore, it does not detect that $\eta_4$ is a redundant irregular node, and then $\RP(\varphi) = \varphi$. 
 
 
-
+%%The original example description.
+%The node $\eta_4$ has pivot $a$, left (right) resolved literal $\neg a$ ($a$). Its conclusion is $\{b\}$ and its premises are the conclusions of its parents: the input nodes $\eta_1$ ($\{ \neg a \}$) and $\eta_3$ ($\{ a, b\} $). It has two children ($\eta_5$ and $\eta_8$). $\psi$ can be compactly represented by the following proof term:
+%$$ (\ub{\{\neg a\}}{\eta_1} \tRes (\{a, c, \neg b\} \tRes \ub{(\eta_1 \tRes \{a, b\})}{\eta_4})) \tRes ((\eta_4 \tRes \{a, \neg b, \neg c\}) \tRes \eta_1). $$
+\end{example}
 
