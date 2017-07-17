@@ -11,12 +11,12 @@
 \newcommand{\ub}[2]{\underbrace{#1}_{#2}}
 \newcommand{\tResStar}{\circledast}
 
-\textbf{Note:} for the reviewers' convenience, this appendix summarizes \cite{LURPI}.
+%\textbf{Note:} for the reviewers' convenience, this appendix summarizes \cite{LURPI}.
 
 \bigskip
 
 \noindent
-\texttt{RecyclePivotsWithIntersection} ({\RPI}) \cite{LURPI} aims at compressing irregular proofs. It can be seen as a simple 
+This appendix explains {\RecyclePivotsIntersection} ({\RPI}) \cite{LURPI}, which aims to compress irregular proofs. It can be seen as a simple 
 but significant modification of the {\RP} algorithm described in 
 \cite{RP08}, 
 from which it derives its name. 
@@ -24,8 +24,75 @@ Although in the worst case full regularization can increase the proof length exp
 \cite{Tseitin}, these algorithms show that 
 many irregular proofs can have their length decreased if a careful partial regularization is performed. 
 
+We write $\psi[\eta]$ to denote a \emph{proof-context}
+$\psi[\_]$ with a single placeholder replaced by the subproof $\eta$.
 Consider an irregular proof of the form $\psi[ \eta \tRes_p \psi'[\eta' \tRes_p \eta''] ]$ and assume, without loss of generality, that $p \in \eta$ and $p \in \eta'$. Then, if $\eta' \tRes_p \eta''$ is replaced by $\eta''$ within the proof-context $\psi'[\ ]$, the clause $\eta \tRes_p \psi'[\eta'']$ subsumes the clause $\eta \tRes_p \psi'[\eta' \tRes_p \eta'']$, because even though the literal $\neg p$ of $\eta''$ is
 propagated down, it gets resolved against the literal $p$ of $\eta$ later on below in the proof. More precisely, even though it might be the case that $\neg p \in \psi'[\eta'']$ while $\neg p \notin \psi'[\eta' \tRes_p \eta'']$, it is necessarily the case that $\neg p \notin \eta \tRes_p \psi'[\eta' \tRes_p \eta'']$ and $\neg p \notin \eta \tRes_p \psi'[\eta'']$.
+
+\begin{figure*}%
+\centering
+\subfloat[A propositional proof before compression by {\RPI}.]{%
+\begin{footnotesize}
+%\begin{prooftree}
+\AXC{$ \eta_1 $}
+		\AXC{$ \eta_2: a, c, \neg b $}
+				\AXC{$ \eta_1: \neg a$}
+						\AXC{$ \eta_3:  a, b $} \RName{$a$}
+					\BIC{$ \eta_4: b$} \RName{$b$}
+			\BIC{$ \eta_5: a, c$}	\RName{$a$}
+	\BIC{$\eta_6: c$}
+		\AXC{$ \eta_4 $}
+				\AXC{$ \eta_7: a, \neg b, \neg c $} \RName{$b$}
+			\BIC{$ \eta_8: a, \neg c$}	\RName{$c$}
+					\AXC{$ \eta_1 $}  \RName{$a$}
+				\BIC{$ \eta_9: \neg c$}	\RName{$c$}
+		\BIC{$\psi: \bot$}	
+		 \DisplayProof 
+%\end{prooftree}
+\label{ex:rpi-example-a}
+\end{footnotesize}}\\%
+\subfloat[A propositional proof after compression by {\RPI}.]{%
+\begin{small}
+%\begin{prooftree}
+\AXC{$ \eta_1: \neg a $}
+		\AXC{$ \eta_2: a, c, \neg b $}
+						\AXC{$ \eta_3:  a, b $}\RName{$ $}
+			\BIC{$ \eta_5: a, c$}	\RName{$ $}
+	\BIC{$\eta_6: c$}
+		\AXC{$ \eta_3 $}
+				\AXC{$ \eta_7: a, \neg c, \neg b $} \RName{$ $}
+			\BIC{$ \eta_8: a, \neg c$}	\RName{$ $}
+					\AXC{$ \eta_1 $}  \RName{$ $}
+				\BIC{$ \eta_9: \neg c$}	\RName{$ $}
+		\BIC{$\psi: \bot$}	
+		 \DisplayProof 
+%\end{prooftree}
+\label{ex:rpi-example-b}
+\end{small}
+}%
+
+\caption{A {\RPI} example.}
+\label{ex:rpi-example}
+\end{figure*}
+
+
+\begin{example} %This example from the original RPI source
+\label{Example:Proof}
+When applied to the proof $\psi$ shown in Figure \ref{ex:rpi-example-a}, the algorithm {\RPI} assigns $\{a,c\}$ and $\{a, \neg c\}$ as the safe literals of, respectively, $\eta_5$ and $\eta_8$. The safe literals of $\eta_4$ w.r.t. its children $\eta_5$ and $\eta_8$ are respectively $\{a,c,b\}$ and $\{a, \neg c, b\}$, and hence the safe literals of $\eta_4$ are $\{a,b\}$ (the intersection of $\{a,c,b\}$ and $\{a, \neg c, b\}$). Since the right resolved literal of $\eta_4$ ($a$) belongs to $\eta_4$'s safe literals, $\eta_4$ is correctly detected as a redundant node and hence regularized: $\eta_4$ is replaced by its right parent $\eta_3$. The resulting proof is shown in Figure \ref{ex:rpi-example-b}.
+
+
+
+%This proof corresponds to the proof term
+%$$ (\ub{\{\neg a\}}{\eta_1} \tRes (\{a, c, \neg b\} \tRes \ub{\{a, b\}}{\eta_3})) \tRes ((\eta_3 \tRes \{\neg b, \neg c, a\}) \tRes \eta_1) $$
+
+%\noindent%
+%{\RP}, on the other hand, assigns $\emptyset$ as the set of safe literals for $\eta_4$. Therefore, it does not detect that $\eta_4$ is a redundant irregular node, and then $\RP(\varphi) = \varphi$. 
+
+
+%%The original example description.
+%The node $\eta_4$ has pivot $a$, left (right) resolved literal $\neg a$ ($a$). Its conclusion is $\{b\}$ and its premises are the conclusions of its parents: the input nodes $\eta_1$ ($\{ \neg a \}$) and $\eta_3$ ($\{ a, b\} $). It has two children ($\eta_5$ and $\eta_8$). $\psi$ can be compactly represented by the following proof term:
+%$$ (\ub{\{\neg a\}}{\eta_1} \tRes (\{a, c, \neg b\} \tRes \ub{(\eta_1 \tRes \{a, b\})}{\eta_4})) \tRes ((\eta_4 \tRes \{a, \neg b, \neg c\}) \tRes \eta_1). $$
+\end{example}
 
 Although the remarks above suggest that it is safe to replace $\eta' \tRes_p
 \eta''$ by $\eta''$ within the proof-context $\psi'[\ ]$, this is not always the
