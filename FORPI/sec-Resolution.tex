@@ -1,13 +1,13 @@
 \section{The Resolution Calculus}
 \label{sec:res}
 
-As usual, our language has infinitely many variable symbols (e.g. $X$, $Y$, $Z$, $X_1$, $X_2$, \ldots), constant symbols (e.g. $a$, $b$, $c$, $a_1$, $a_2$, \ldots), function symbols of every arity (e.g $f$, $g$, $f_1$, $f_2$, \ldots) and predicate symbols of every arity (e.g. $p$, $q$, $p_1$, $p_2$,\ldots). A \emph{term} is any variable, constant or the application of an $n$-ary function symbol to $n$ terms.
+As usual, our language has infinitely many variable symbols (e.g. $x$, $y$, $z$, $x_1$, $x_2$, \ldots), constant symbols (e.g. $a$, $b$, $c$, $a_1$, $a_2$, \ldots), function symbols of every arity (e.g $f$, $g$, $f_1$, $f_2$, \ldots) and predicate symbols of every arity (e.g. $P$, $Q$, $P_1$, $P_2$,\ldots). A \emph{term} is any variable, constant or the application of an $n$-ary function symbol to $n$ terms.
 An \emph{atomic formula} (\emph{atom}) is the application of an $n$-ary predicate symbol to $n$ terms. A \emph{literal} is an atom or the negation of an atom. The
-\emph{complement} of a literal $\ell$ is denoted $\dual{\ell}$ (i.e. for any atom $p$,
-$\dual{p} = \neg p$ and $\dual{\neg p} = p$). The \emph{underlying atom} of a literal $\ell$ is denoted $\abs{\ell}$ (i.e. for any atom $p$, $\abs{p} = p$ and $\abs{\neg p} = p$). A
-\emph{clause} is a multiset of literals. $\bot$ denotes the \emph{empty clause}. A \emph{unit clause} is a clause with a single literal. Sequent notation is used for clauses (i.e. $p_1,\ldots,p_n \seq q_1,\ldots, q_m$ denotes the clause $\{ \neg p_1,\ldots, \neg p_n, q_1, \ldots, q_m \}$).
+\emph{complement} of a literal $\ell$ is denoted $\dual{\ell}$ (i.e. for any atom $P$,
+$\dual{P} = \neg P$ and $\dual{\neg P} = P$). The \emph{underlying atom} of a literal $\ell$ is denoted $\abs{\ell}$ (i.e. for any atom $p$, $\abs{P} = P$ and $\abs{\neg P} = P$). A
+\emph{clause} is a multiset of literals. $\bot$ denotes the \emph{empty clause}. A \emph{unit clause} is a clause with a single literal. Sequent notation is used for clauses (i.e. $P_1,\ldots,P_n \seq Q_1,\ldots, Q_m$ denotes the clause $\{ \neg P_1,\ldots, \neg P_n, Q_1, \ldots, Q_m \}$).
 $\freevar{t}$ (resp. $\freevar{\ell}$, $\freevar{\clause}$) denotes the set of variables in the term $t$ (resp. in the literal $\ell$ and in the clause $\clause$).
-A \emph{substitution} $\{ X_1\backslash t_1, X_2 \backslash t_2, \ldots \}$ is a mapping from variables $\{ X_1, X_2, \ldots \}$ to, respectively, terms $\{t_1, t_2, \ldots \}$. The application of a substitution $\sigma$ to a term $t$, a literal $\ell$ or a clause $\clause$ results in, respectively, the term $t \sigma$, the literal $\ell \sigma$ or the clause $\clause \sigma$, obtained from $t$, $\ell$ and $\clause$ by replacing all occurrences of the variables in $\sigma$ by the corresponding terms in $\sigma$. A \emph{unifier} of a set of literals is a substitution that makes all literals in the set equal.
+A \emph{substitution} $\{ x_1\backslash t_1, x_2 \backslash t_2, \ldots \}$ is a mapping from variables $\{ x_1, x_2, \ldots \}$ to, respectively, terms $\{t_1, t_2, \ldots \}$. The application of a substitution $\sigma$ to a term $t$, a literal $\ell$ or a clause $\clause$ results in, respectively, the term $t \sigma$, the literal $\ell \sigma$ or the clause $\clause \sigma$, obtained from $t$, $\ell$ and $\clause$ by replacing all occurrences of the variables in $\sigma$ by the corresponding terms in $\sigma$. A \emph{unifier} of a set of literals is a substitution that makes all literals in the set equal.
 A \emph{resolution proof} is a directed acyclic graph of clauses where the edges correspond to the inference rules of resolution and contraction (as explained in detail in Definition \ref{def:proof}). A \emph{resolution refutation} is a resolution proof with root $\bot$.
 
 
@@ -60,19 +60,19 @@ An example first-order resolution proof is shown below.
 \begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_1$: $q(X),q(a)\e p(b)$ } %a
-\AxiomC{$\eta_2$: $p(b)\e$ } %common
-\BinaryInfC{$\eta_3$: $q(X),q(a) \e$}
-\UnaryInfC{$\eta_3'$: $q(a) \e$ \hspace{-1cm}}
+\AxiomC{$\eta_1$: $Q(x),Q(a)\e P(b)$ } %a
+\AxiomC{$\eta_2$: $P(b)\e$ } %common
+\BinaryInfC{$\eta_3$: $Q(x),Q(a) \e$}
+\UnaryInfC{$\eta_3'$: $Q(a) \e$ \hspace{-1cm}}
 \AxiomC{$\eta_2$} %common
-\AxiomC{\hspace{-0.5cm}$\eta_4$: $\e p(b), q(Y)$ } %b
-\BinaryInfC{\hspace{-2cm} $\eta_5$: $\e q(Y)$}
+\AxiomC{\hspace{-0.5cm}$\eta_4$: $\e P(b), Q(y)$ } %b
+\BinaryInfC{\hspace{-2cm} $\eta_5$: $\e Q(y)$}
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{scriptsize}
 
 \noindent
-The nodes $\eta_1$, $\eta_2$, and $\eta_4$ are axioms. Node $\eta_3$ is obtained by resolution on $\eta_1$ and $\eta_2$ where $\ell_L = p(b)$, $\ell_R = \neg p(b)$, and $\sigma_L = \sigma_R = \emptyset$. The node $\eta_3'$ is obtained by a contraction on $\eta_3$ with $\sigma=\{X\setminus a\}$. The node $\eta_5$ is the result of resolution on $\eta_2$ and $\eta_4$ with $\ell_L = \neg p(b)$, $\ell_R = p(b)$, $\sigma_L=\sigma_R = \emptyset$. Lastly, the conclusion node $\psi$ is the result of a resolution of $\eta_3'$ and $\eta_5$, where $\ell_L = \neg q(a)$, $\ell_R = q(Y)$, $\sigma_L = \emptyset$, and $\sigma_R = \{ Y \setminus a\}$. The directed acyclic graph representation of the proof (with edge labels omitted) is shown in Figure \ref{fig:dagex}.\\
+The nodes $\eta_1$, $\eta_2$, and $\eta_4$ are axioms. Node $\eta_3$ is obtained by resolution on $\eta_1$ and $\eta_2$ where $\ell_L = P(b)$, $\ell_R = \neg P(b)$, and $\sigma_L = \sigma_R = \emptyset$. The node $\eta_3'$ is obtained by a contraction on $\eta_3$ with $\sigma=\{x\setminus a\}$. The node $\eta_5$ is the result of resolution on $\eta_2$ and $\eta_4$ with $\ell_L = \neg P(b)$, $\ell_R = P(b)$, $\sigma_L=\sigma_R = \emptyset$. Lastly, the conclusion node $\psi$ is the result of a resolution of $\eta_3'$ and $\eta_5$, where $\ell_L = \neg Q(a)$, $\ell_R = Q(y)$, $\sigma_L = \emptyset$, and $\sigma_R = \{ y \setminus a\}$. The directed acyclic graph representation of the proof (with edge labels omitted) is shown in Figure \ref{fig:dagex}.\\
 
 \begin{figure}[bt]
 \begin{centering}

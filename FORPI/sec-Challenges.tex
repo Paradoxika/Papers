@@ -6,7 +6,7 @@ In this section, we describe challenges that have to be overcome in order to suc
 
 %straightforward example
 \begin{example}\label{ex:unif} 
-Consider the following proof $\psi$. When computed as in the propositional case, the safe literals for $\eta_3$ are $\{ q(c), ~ p(a,X)\}$.
+Consider the following proof $\psi$. When computed as in the propositional case, the safe literals for $\eta_3$ are $\{ Q(c), ~ P(a,x)\}$.
 %$\eta_1$'s literal is unifiable with $p(a,X)$, which is inherited from $\eta_3$'s safe literals. 
 %Thus the proof can be regularized by recycling $\eta_1$.
 %$\eta_1$ and $\eta_5$ and these two literals are unifiable. Further, the safe literals for $\eta_1$ includes $\eta_5$. Thus the proof can be regularized by recycling $\eta_1$.
@@ -14,24 +14,24 @@ Consider the following proof $\psi$. When computed as in the propositional case,
 \begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_6$: $p(Y,b)$ \e \hspace{-2cm}}
-\AxiomC{$\eta_1$: \e $p(W,X)$}
-\AxiomC{$\eta_2$: $p(W,X)$ \e $q(c)$}
-\BinaryInfC{$\eta_3$: \e $q(c)$  \hspace{-1.5cm}}
-\AxiomC{$\eta_4$: $q(c)$ \e $p(a,X)$}
-\BinaryInfC{$\eta_5$: \e $p(a,X)$}
+\AxiomC{$\eta_6$: $P(y,b)$ \e \hspace{-2cm}}
+\AxiomC{$\eta_1$: \e $P(w,x)$}
+\AxiomC{$\eta_2$: $P(w,x)$ \e $Q(c)$}
+\BinaryInfC{$\eta_3$: \e $Q(c)$  \hspace{-1.5cm}}
+\AxiomC{$\eta_4$: $Q(c)$ \e $P(a,x)$}
+\BinaryInfC{$\eta_5$: \e $P(a,x)$}
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{scriptsize}
 
 \noindent
-As neither of $\eta_3$'s resolved literals is syntactically equal to a safe literal, the propositional {\RPI} algorithm would not change $\psi$. However, $\eta_3$'s left resolved literal $p(W,X)\in \eta_1$ is unifiable with the safe literal $p(a,X)$. Regularizing $\eta_3$, by deleting the edge between $\eta_2$ and $\eta_3$ and replacing $\eta_3$ by $\eta_1$, leads to further deletion of $\eta_4$ (because it is not resolvable with $\eta_1$) and finally to the much shorter proof below.
+As neither of $\eta_3$'s resolved literals is syntactically equal to a safe literal, the propositional {\RPI} algorithm would not change $\psi$. However, $\eta_3$'s left resolved literal $P(w,x)\in \eta_1$ is unifiable with the safe literal $P(a,x)$. Regularizing $\eta_3$, by deleting the edge between $\eta_2$ and $\eta_3$ and replacing $\eta_3$ by $\eta_1$, leads to further deletion of $\eta_4$ (because it is not resolvable with $\eta_1$) and finally to the much shorter proof below.
 
 \begin{footnotesize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_1$: \e$p(W,X)$}
-\AxiomC{$\eta_6$: $p(Y,b)$\e}
+\AxiomC{$\eta_1$: \e$P(w,x)$}
+\AxiomC{$\eta_6$: $P(y,b)$\e}
 \BinaryInfC{$\psi'$: $\bot$}
 \end{prooftree}
 \end{footnotesize}
@@ -44,17 +44,17 @@ Unlike in the propositional case, where a resolved literal must be syntactically
 %unification necessary example
 \begin{example}\label{ex:pairwise}
 
-Again, the safe literals for $\eta_3$, when computed as in the propositional case, are $\{q(c), ~ p(a,X)\}$, and as the resolved literal $p(a,c)$ is unifiable with the safe literal $p(a,X)$, $\eta_3$ appears to be a candidate for regularization. 
+Again, the safe literals for $\eta_3$, when computed as in the propositional case, are $\{Q(c), ~ P(a,x)\}$, and as the resolved literal $P(a,c)$ is unifiable with the safe literal $P(a,x)$, $\eta_3$ appears to be a candidate for regularization. 
 
 \begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_6$: $p(Y,b)$ \e \hspace{-2cm}}
-\AxiomC{$\eta_1$: \e $p(a,c)$}
-\AxiomC{$\eta_2$: $p(a,c)$ \e $q(c)$}
-\BinaryInfC{$\eta_3$: \e $q(c)$}
-\AxiomC{$\eta_4$: $q(c)$ \e $p(a,X)$}
-\BinaryInfC{$\eta_5$: \e $p(a,X)$}
+\AxiomC{$\eta_6$: $P(y,b)$ \e \hspace{-2cm}}
+\AxiomC{$\eta_1$: \e $P(a,c)$}
+\AxiomC{$\eta_2$: $P(a,c)$ \e $Q(c)$}
+\BinaryInfC{$\eta_3$: \e $Q(c)$}
+\AxiomC{$\eta_4$: $Q(c)$ \e $P(a,x)$}
+\BinaryInfC{$\eta_5$: \e $P(a,x)$}
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{scriptsize}
@@ -63,14 +63,14 @@ Again, the safe literals for $\eta_3$, when computed as in the propositional cas
 \begin{small}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_8$: $q(f(a,e),c)\e$}
-\AxiomC{$\eta_6$: $\e p(c,d)$ \hspace{-2cm}}
-\AxiomC{$\eta_1$: $p(U,V)\e q(f(a,V),U)$}
-\AxiomC{$\eta_2$: $q(f(a,X),Y),q(T,X)\e q(f(a,Z),Y)$}
-\BinaryInfC{$\eta_3$: $p(U,V),q(T,V)\e q(f(a,Z),U)$}
-\AxiomC{\hspace{-1cm} $\eta_4$: $\e q(R,S)$}
-\BinaryInfC{$\eta_5$: $p(U,V)\e q(f(a,Z),U)$}
-\BinaryInfC{$\eta_7$: $\e q(f(a,Z),c)$}
+\AxiomC{$\eta_8$: $Q(f(a,e),c)\e$}
+\AxiomC{$\eta_6$: $\e P(c,d)$ \hspace{-2cm}}
+\AxiomC{$\eta_1$: $P(u,v)\e Q(f(a,v),u)$}
+\AxiomC{$\eta_2$: $Q(f(a,x),y),Q(t,x)\e Q(f(a,z),y)$}
+\BinaryInfC{$\eta_3$: $P(u,v),Q(t,v)\e Q(f(a,z),u)$}
+\AxiomC{\hspace{-1cm} $\eta_4$: $\e Q(r,s)$}
+\BinaryInfC{$\eta_5$: $P(u,v)\e Q(f(a,z),u)$}
+\BinaryInfC{$\eta_7$: $\e Q(f(a,z),c)$}
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{small}
@@ -106,7 +106,7 @@ The set of \emph{safe literals} for a node $\eta$ in a proof $\psi$ with root cl
 As in the propositional case, safe literals can be computed in a bottom-up traversal of the proof. Initially, at the root, the safe literals are exactly the literals that occur in the root clause. As we go up, the safe literals $\mathcal{S}(\eta')$ of a parent node $\eta'$ of $\eta$ where $\eta'
 \xrightarrow[\sigma]{\ell} \eta$ is set to $\mathcal{S}(\eta) \cup \{ \ell \sigma \}$. Note that we apply the substitution to the resolved literal before adding it to the set of safe literals (cf. algorithm 3, lines 8 and 10). In other words, in the first-order case, the set of safe literals has to be a set of \emph{instantiated} resolved literals.
 
- In the case of Example \ref{ex:pairwise}, computing safe literals as defined above would result in $\mathcal{S}(\eta_3)=\{q(c),~p(a,b)\}$, where clearly the pivot $p(a,c)$ in $\eta_1$ is not safe. A generalization of this requirement is formalized below.
+In the case of Example \ref{ex:pairwise}, computing safe literals as defined above would result in $\mathcal{S}(\eta_3)=\{Q(c),~P(a,b)\}$, where clearly the pivot $P(a,c)$ in $\eta_1$ is not safe. A generalization of this requirement is formalized below.
 
 %\noindent
 %Another way to prevent the problem depicted above would be to require the pivot to be not only unifiable but in fact more general than a safe literal. A weaker (and better) requirement is possible, however, as defined below.
@@ -142,24 +142,24 @@ This property states that a node is pre-regularizable if an instantiated resolve
 \begin{example}\label{ex:unifcheck}
 
 
-Satisfying the pre-regularizability is not sufficient. Consider the proof $\psi$ in Figure \ref{fig:ex-unifcheck}. After collecting the safe literals, $\mathcal{S}(\eta_3) = \{\lnot q(R,S),\lnot p(c,d), q(f(a,e),c)\}$.
+Satisfying the pre-regularizability is not sufficient. Consider the proof $\psi$ in Figure \ref{fig:ex-unifcheck}. After collecting the safe literals, $\mathcal{S}(\eta_3) = \{\lnot Q(r,s),\lnot P(c,d), Q(f(a,e),c)\}$.
 %\noindent
-$\eta_3$'s pivot $q(f(a,V),U)$ matches the safe literal $q(f(a,e),c)$. Attempting to regularize $\eta_3$ would lead to the removal of $\eta_2$, the replacement of $\eta_3$ by $\eta_1$ and the removal of $\eta_4$ (because $\eta_1$ does not contain the pivot required by $\eta_5$), with $\eta_5$ also being replaced by $\eta_1$. Then resolution between $\eta_1$ and $\eta_6$ results in $\eta_7'$, which cannot be resolved with $\eta_8$, as shown below.
+$\eta_3$'s pivot $Q(f(a,v),u)$ matches the safe literal $Q(f(a,e),c)$. Attempting to regularize $\eta_3$ would lead to the removal of $\eta_2$, the replacement of $\eta_3$ by $\eta_1$ and the removal of $\eta_4$ (because $\eta_1$ does not contain the pivot required by $\eta_5$), with $\eta_5$ also being replaced by $\eta_1$. Then resolution between $\eta_1$ and $\eta_6$ results in $\eta_7'$, which cannot be resolved with $\eta_8$, as shown below.
 
 
 \begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_8$: $q(f(a,e),c)\e$ \hspace{-0.5cm}}
-\AxiomC{$\eta_6$: $\e p(c,d)$}
-\AxiomC{$\eta_1$: $p(U,V)\e q(f(a,V),U)$}
-\BinaryInfC{$\eta_7'$: $\e q(f(a,d),c)$}
+\AxiomC{$\eta_8$: $Q(f(a,e),c)\e$ \hspace{-0.5cm}}
+\AxiomC{$\eta_6$: $\e P(c,d)$}
+\AxiomC{$\eta_1$: $P(u,v)\e Q(f(a,v),u)$}
+\BinaryInfC{$\eta_7'$: $\e Q(f(a,d),c)$}
 \BinaryInfC{$\psi'$: ??}
 \end{prooftree}
 \end{scriptsize}
 
 \noindent
-$\eta_1$'s literal $q(f(a, V), U)$, which would be resolved with $\eta_8$'s literal, was changed to $q(f(a,d),c)$ due to the resolution between $\eta_1$ and $\eta_6$.
+$\eta_1$'s literal $Q(f(a, v), u)$, which would be resolved with $\eta_8$'s literal, was changed to $Q(f(a,d),c)$ due to the resolution between $\eta_1$ and $\eta_6$.
 \end{example}
 
 
@@ -347,44 +347,44 @@ Informally, a node $\eta$ is weakly regularizable in a proof if it can be replac
 
 \begin{example}
 This example illustrates a case where a node is weakly regularizable but not strongly regularizable. 
-In the proof below, note that $\eta_6$ is not strongly regularizable: there is no unifier $\sigma$ such that $\{\lnot p(X),\lnot q(X),\lnot r(X)\} \sigma \subseteq \mathcal{S}(\eta_6)$ (where $\mathcal{S}(\eta_6) =\{ \lnot p(W), \lnot r(W), \lnot q(Z)\}$).
+In the proof below, note that $\eta_6$ is not strongly regularizable: there is no unifier $\sigma$ such that $\{\lnot P(x),\lnot Q(x),\lnot R(x)\} \sigma \subseteq \mathcal{S}(\eta_6)$ (where $\mathcal{S}(\eta_6) =\{ \lnot P(w), \lnot R(w), \lnot Q(z)\}$).
 \begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_1$: $\e p(U)$ \hspace{-2cm}}
-\AxiomC{$\eta_5$: $p(Z) \e q(Z)$ \hspace{-0.5cm}}
-\AxiomC{$\eta_8$: $p(X),q(X),r(X)\e$}
-\AxiomC{$\eta_7$: $\e p(Y)$  \hspace{-1cm}}
-\BinaryInfC{$\eta_6$: $q(Y),r(Y)\e$ }
-\BinaryInfC{$\eta_4$: $p(Z),r(Z)\e$ \hspace{-2cm} }
-\AxiomC{ \hspace{-1cm} $\eta_3$: $\e r(W)$}
-\BinaryInfC{ $\eta_2$: $p(W)\e$}
+\AxiomC{$\eta_1$: $\e P(u)$ \hspace{-2cm}}
+\AxiomC{$\eta_5$: $P(z) \e Q(z)$ \hspace{-0.5cm}}
+\AxiomC{$\eta_8$: $P(x),Q(x),R(x)\e$}
+\AxiomC{$\eta_7$: $\e P(y)$  \hspace{-1cm}}
+\BinaryInfC{$\eta_6$: $Q(y),R(y)\e$ }
+\BinaryInfC{$\eta_4$: $P(z),R(z)\e$ \hspace{-2cm} }
+\AxiomC{ \hspace{-1cm} $\eta_3$: $\e R(w)$}
+\BinaryInfC{ $\eta_2$: $P(w)\e$}
 
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 
 \end{scriptsize}
 \noindent
-We show that $\eta_6$ is weakly regularizable, and that $\eta_7$ can be removed. To do this, first observe that $\eta_6$ is pre-regularizable, since $\lnot p(X)$ is unifiable with $\lnot p(W)\in \mathcal{S}(\eta_6)$ and $\mathcal{R}(\eta_6) \cup \{\dual{\lnot p(W)}\}$ is unifiable (where $\mathcal{R}(\eta_6)=\{p(U), p(Y)\}$).
+We show that $\eta_6$ is weakly regularizable, and that $\eta_7$ can be removed. To do this, first observe that $\eta_6$ is pre-regularizable, since $\lnot P(x)$ is unifiable with $\lnot P(w)\in \mathcal{S}(\eta_6)$ and $\mathcal{R}(\eta_6) \cup \{\dual{\lnot P(w)}\}$ is unifiable (where $\mathcal{R}(\eta_6)=\{P(u), P(y)\}$).
 Consider the following proof of $\psi \setminus \{\eta_7\}$:
 \begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
-\AxiomC{$\eta_1$: $\e p(U)$ \hspace{-1.75cm}}
-\AxiomC{$\eta_8$: $p(X),q(X),r(X)\e$}
-\AxiomC{$\eta_5$: $p(Z) \e q(Z)$}
-\BinaryInfC{$\eta_4'$: $p(Z), p(Z),r(Z)\e$}
-\UnaryInfC{$\eta_4$: $p(Z),r(Z)\e$}
-\AxiomC{$\eta_3$: $\e r(W)$}
-\BinaryInfC{$\eta_2$: $p(W)\e$}
+\AxiomC{$\eta_1$: $\e P(u)$ \hspace{-1.75cm}}
+\AxiomC{$\eta_8$: $P(x),Q(x),R(x)\e$}
+\AxiomC{$\eta_5$: $P(z) \e Q(z)$}
+\BinaryInfC{$\eta_4'$: $P(z), P(z),R(z)\e$}
+\UnaryInfC{$\eta_4$: $P(z),R(z)\e$}
+\AxiomC{$\eta_3$: $\e R(w)$}
+\BinaryInfC{$\eta_2$: $P(w)\e$}
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{scriptsize}
-Now observe that for each $\ell \in \mathcal{S}(\eta_8)=\{\lnot  q(Z), \lnot r(W), \lnot p(W)\}$ we have the following, so that $\eta_6$ is weakly regularizable:
+Now observe that for each $\ell \in \mathcal{S}(\eta_8)=\{\lnot  Q(z), \lnot R(w), \lnot P(w)\}$ we have the following, so that $\eta_6$ is weakly regularizable:
 \begin{itemize}
-\item $\ell=\lnot  q(Y)$: $\ell^\dagger = \lnot q(X)$ which is unifiable with $\dual{\ell}^\dagger=q(Z)$
-\item $\ell=\lnot r(Z)$: $\ell^\dagger = \lnot r(Z)$ which is unifiable with $\dual{\ell}^\dagger=r(W)$
-\item $\ell=\lnot p(W)$: $\ell^\dagger = \lnot p(W)$ which is unifiable with $\dual{\ell}^\dagger=p(U)$
+\item $\ell=\lnot  Q(y)$: $\ell^\dagger = \lnot Q(x)$ which is unifiable with $\dual{\ell}^\dagger=Q(z)$
+\item $\ell=\lnot R(z)$: $\ell^\dagger = \lnot R(z)$ which is unifiable with $\dual{\ell}^\dagger=R(w)$
+\item $\ell=\lnot P(w)$: $\ell^\dagger = \lnot P(W)$ which is unifiable with $\dual{\ell}^\dagger=P(u)$
 \end{itemize}
 \end{example}
 
