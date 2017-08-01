@@ -24,10 +24,10 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
   \item \textbf{Resolution\footnote{This is referred to as ``binary resolution'' elsewhere, with the understanding that ``binary'' refers to the number of resolved literals, rather than the number of premises of the inference rule.}:} If $\psi_L$ is a proof $\langle V_L, E_L, \clause_L \rangle$ with $\ell_L \in \clause_L$ and
     $\psi_R$ is a proof $\langle V_R, E_R, \clause_R \rangle$ with $\ell_R \in \clause_R$, and 
     $\sigma_L$ and $\sigma_R$ are substitutions such that
-    $\ell_L \sigma_L = \dual{\ell_R} \sigma_R$ and
-    $\freevar{\left( \clause_L \setminus \left\{ \ell_L \right\} \right) \sigma_L} \cap 
-     \freevar{\left( \clause_R
-                    \setminus \left\{ \ell_R \right\} \right) \sigma_R} = \emptyset$, 
+    $\ell_L \sigma_L = \dual{\ell_R} \sigma_R$ %and
+    %$\freevar{\left( \clause_L \setminus \left\{ \ell_L \right\} \right) \sigma_L} \cap 
+     %\freevar{\left( \clause_R
+     %               \setminus \left\{ \ell_R \right\} \right) \sigma_R} = \emptyset$, 
     then
     $\psi_L \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
     \begin{align*}
