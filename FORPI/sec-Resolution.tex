@@ -21,7 +21,7 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
 \begin{itemize}
   \item \textbf{Axiom:} If $\Gamma$ is a clause, $\axiom{\Gamma}$ denotes some proof $\langle \{ \n \}, \varnothing,
     \Gamma \rangle$, where $\n$ is a new (axiom) node.
-  \item \textbf{Resolution:} If $\psi_L$ is a proof $\langle V_L, E_L, \clause_L \rangle$ with $\ell_L \in \clause_L$ and
+  \item \textbf{Resolution\footnote{This is referred to as ``binary resolution'' elsewhere, with the understanding that ``binary'' refers to the number of resolved literals, rather than the number of premises of the inference rule.}:} If $\psi_L$ is a proof $\langle V_L, E_L, \clause_L \rangle$ with $\ell_L \in \clause_L$ and
     $\psi_R$ is a proof $\langle V_R, E_R, \clause_R \rangle$ with $\ell_R \in \clause_R$, and 
     $\sigma_L$ and $\sigma_R$ are substitutions such that
     $\ell_L \sigma_L = \dual{\ell_R} \sigma_R$ and
@@ -39,7 +39,7 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
                     \setminus \left\{ \ell_R \right\} \right) \sigma_R
     \end{align*}
     where $\n$ is a new (resolution) node and $\raiz{\varphi}$ denotes the root node of $\varphi$. $\ell_L$ and $\ell_R$ are $\n$'s \emph{resolved literals}, whereas $\ell_L \sigma_L$ and $\ell_R \sigma_R$ are its \emph{instantiated resolved literals}. The \emph{pivot} of $\n$ is the underlying atom of its instantiated resolved literals (i.e. $\abs{\ell_L \sigma_L}$ or, equivalently, $\abs{\ell_R \sigma_R}$).
-  \item \textbf{Contraction:} If $\psi'$ is a proof $\langle V', E', \clause' \rangle$ and $\sigma$ is a unifier of $\{\ell_1, \ldots \ell_n\}$ with $\{\ell_1, \ldots \ell_n\} \subseteq \clause'$, then $\con{\psi}{\{\ell_1, \ldots \ell_n\}}{\sigma}$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
+  \item \textbf{Contraction\footnote{This is sometimes called ``Factoring.''}:} If $\psi'$ is a proof $\langle V', E', \clause' \rangle$ and $\sigma$ is a unifier of $\{\ell_1, \ldots \ell_n\}$ with $\{\ell_1, \ldots \ell_n\} \subseteq \clause'$, then $\con{\psi}{\{\ell_1, \ldots \ell_n\}}{\sigma}$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
     \begin{align*}
          \hspace{-0.6cm} V &= V' \cup \{\n \} \\
          \hspace{-0.6cm} E &= E' \cup \{ \raiz{\psi'} \xrightarrow[\sigma]{\{\ell_1, \ldots \ell_n\}} \n \} \\
