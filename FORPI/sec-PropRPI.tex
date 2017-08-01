@@ -26,8 +26,49 @@ many irregular proofs can have their length decreased if a careful partial regul
 
 We write $\psi[\eta]$ to denote a \emph{proof-context}
 $\psi[\_]$ with a single placeholder replaced by the subproof $\eta$.
-Consider an irregular proof of the form $\psi[ \eta \tRes_p \psi'[\eta' \tRes_p \eta''] ]$ and assume, without loss of generality, that $p \in \eta$ and $p \in \eta'$. Then, if $\eta' \tRes_p \eta''$ is replaced by $\eta''$ within the proof-context $\psi'[\ ]$, the clause $\eta \tRes_p \psi'[\eta'']$ subsumes the clause $\eta \tRes_p \psi'[\eta' \tRes_p \eta'']$, because even though the literal $\neg p$ of $\eta''$ is
-propagated down, it gets resolved against the literal $p$ of $\eta$ later on below in the proof. More precisely, even though it might be the case that $\neg p \in \psi'[\eta'']$ while $\neg p \notin \psi'[\eta' \tRes_p \eta'']$, it is necessarily the case that $\neg p \notin \eta \tRes_p \psi'[\eta' \tRes_p \eta'']$ and $\neg p \notin \eta \tRes_p \psi'[\eta'']$.
+We say that a proof of the form $\psi[\eta \tRes_p (\eta_1 \tRes \psi'[\eta'\tRes_p\eta_2])]$ is \emph{irregular}.
+
+\begin{example}
+%Consider an irregular proof of the form $\psi[ \eta \tRes_p \psi'[\eta' \tRes_p \eta''] ]$, 
+Consider an irregular proof and assume, without loss of generality, that $p \in \eta$ and $p \in \eta'$, as in the proof of $\psi$ below. The following proof of $\psi$ can be written as $(\eta \tRes_p ( \eta_1 \tRes (\eta' \tRes_p \eta'')))$, where $\psi'[(\eta' \tRes_p \eta'')] = (\eta_1 \tRes (\eta' \tRes_p \eta''))$ is the sub-proof of $\lnot p$.
+\begin{footnotesize}
+\begin{prooftree}
+
+		\AXC{$\eta$: $p$} \RName{$p$}
+			\AXC{$\eta_1$: $\lnot r, \lnot p$}
+		\AXC{$\eta'$: $p$}
+				\AXC{$ \eta''$: $\lnot p, r$} \RName{$p$}
+	\BIC{$r$}
+
+	\BIC{$\lnot p$} \RName{$p$}
+
+		\BIC{$\psi$: $\bot$}	
+%		 \DisplayProof 
+\end{prooftree}
+\label{ex:rpi-example-a}
+\end{footnotesize}
+\noindent
+Then, if $\eta' \tRes_p \eta''$ is replaced by $\eta''$ within the proof-context $\psi'[\ ]$, the clause $\eta \tRes_p \psi'[\eta'']$ subsumes the clause $\eta \tRes_p \psi'[\eta' \tRes_p \eta'']$, because even though the literal $\neg p$ of $\eta''$ is
+propagated down, it gets resolved against the literal $p$ of $\eta$ later on below in the proof. More precisely, even though it might be the case that $\neg p \in \psi'[\eta'']$ while $\neg p \notin \psi'[\eta' \tRes_p \eta'']$, it is necessarily the case that $\neg p \notin \eta \tRes_p \psi'[\eta' \tRes_p \eta'']$ and $\neg p \notin \eta \tRes_p \psi'[\eta'']$. In this case, the proof can be regularized as follows.
+
+
+\begin{footnotesize}
+\begin{prooftree}
+
+		\AXC{$\eta$: $p$}
+			\AXC{$\eta_1$: $\lnot r, \lnot p$}
+
+				\AXC{$ \eta''$: $\lnot p, r$}
+
+
+	\BIC{$\lnot p$} \RName{$p$}
+
+		\BIC{$\psi$: $\bot$}	
+
+\end{prooftree}
+\end{footnotesize}
+\end{example}
+
 
 \begin{figure*}%
 \centering
