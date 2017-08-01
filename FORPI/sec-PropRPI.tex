@@ -26,11 +26,11 @@ many irregular proofs can have their length decreased if a careful partial regul
 
 We write $\psi[\eta]$ to denote a \emph{proof-context}
 $\psi[\_]$ with a single placeholder replaced by the subproof $\eta$.
-We say that a proof of the form $\psi[\eta \tRes_p (\eta_1 \tRes \psi'[\eta'\tRes_p\eta_2])]$ is \emph{irregular}.
+We say that a proof of the form $\psi[\eta \tRes_p \psi'[\eta'\tRes_p\eta_2]]$ is \emph{irregular}.
 
 \begin{example}
 %Consider an irregular proof of the form $\psi[ \eta \tRes_p \psi'[\eta' \tRes_p \eta''] ]$, 
-Consider an irregular proof and assume, without loss of generality, that $p \in \eta$ and $p \in \eta'$, as in the proof of $\psi$ below. The following proof of $\psi$ can be written as $(\eta \tRes_p ( \eta_1 \tRes (\eta' \tRes_p \eta'')))$, where $\psi'[(\eta' \tRes_p \eta'')] = (\eta_1 \tRes (\eta' \tRes_p \eta''))$ is the sub-proof of $\lnot p$.
+Consider an irregular proof and assume, without loss of generality, that $p \in \eta$ and $p \in \eta'$, as in the proof of $\psi$ below. The proof of $\psi$ can be written as $(\eta \tRes_p ( \eta_1 \tRes (\eta' \tRes_p \eta'')))$, or $(\eta \tRes_p \psi'[(\eta' \tRes_p \eta'')])$ where $\psi'[(\eta' \tRes_p \eta'')] = (\eta_1 \tRes (\eta' \tRes_p \eta''))$ is the sub-proof of $\lnot p$.
 \begin{footnotesize}
 \begin{prooftree}
 
