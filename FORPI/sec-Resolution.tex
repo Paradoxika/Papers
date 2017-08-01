@@ -39,7 +39,7 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
                     \setminus \left\{ \ell_R \right\} \right) \sigma_R
     \end{align*}
     where $\n$ is a new (resolution) node and $\raiz{\varphi}$ denotes the root node of $\varphi$. $\ell_L$ and $\ell_R$ are $\n$'s \emph{resolved literals}, whereas $\ell_L \sigma_L$ and $\ell_R \sigma_R$ are its \emph{instantiated resolved literals}. The \emph{pivot} of $\n$ is the underlying atom of its instantiated resolved literals (i.e. $\abs{\ell_L \sigma_L}$ or, equivalently, $\abs{\ell_R \sigma_R}$).
-  \item \textbf{Contraction\footnote{This is sometimes called ``Factoring.''}:} If $\psi'$ is a proof $\langle V', E', \clause' \rangle$ and $\sigma$ is a unifier of $\{\ell_1, \ldots \ell_n\}$ with $\{\ell_1, \ldots \ell_n\} \subseteq \clause'$, then $\con{\psi}{\{\ell_1, \ldots \ell_n\}}{\sigma}$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
+  \item \textbf{Contraction\footnote{This is sometimes called ``Factoring'' or ``Condensing''.}:} If $\psi'$ is a proof $\langle V', E', \clause' \rangle$ and $\sigma$ is a unifier of $\{\ell_1, \ldots \ell_n\}$ with $\{\ell_1, \ldots \ell_n\} \subseteq \clause'$, then $\con{\psi}{\{\ell_1, \ldots \ell_n\}}{\sigma}$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
     \begin{align*}
          \hspace{-0.6cm} V &= V' \cup \{\n \} \\
          \hspace{-0.6cm} E &= E' \cup \{ \raiz{\psi'} \xrightarrow[\sigma]{\{\ell_1, \ldots \ell_n\}} \n \} \\
