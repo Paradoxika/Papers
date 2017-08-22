@@ -253,12 +253,12 @@ if(includeTPTP){
     } else {
         lurpiCompressedCount <- tptpLURPIcompressedCount
     }
-    tptpLURPILengthsFinal <- as.vector(unlist(tptpLURPIList[3]))
+    tptpLURPILengthsFinal <- as.vector(unlist(tptpLURPIList[3])) #
     if(includeRandom){    
-        lengthLURPI <- c(lengthRPI, tptpLURPILengthsFinal)
+        lengthLURPI <- c(lengthLURPI, tptpLURPILengthsFinal) #
     } else {
-        lengthLURPI <- tptpRPILengthsFinal
-    }
+        lengthLURPI <- tptpLURPILengthsFinal #
+    } 
     tptpLURPIcompressedLengthsFinal <- pmin(as.vector(unlist(tptpLURPIList[3])),tptpRPIcompressedLengthsFinal)
     if(includeRandom){        
         compressedLengthFinalLURPI <- c(compressedLengthFinalLURPI, tptpLURPIcompressedLengthsFinal)
@@ -469,6 +469,8 @@ averageProofCompressionRaitioLURPI <- calculateAverageCompressionRatio(lengthLUR
 averageProofCompressionRaitioRPILU <- calculateAverageCompressionRatio(lengthRPILU, compressedLengthFinalRPILU, FALSE)
 averageProofCompressionRaitioBest <- calculateAverageCompressionRatio(lengthRPILU, bestData, FALSE)
 
+
+#Use these for first column table 2
 averageProofCompressionRaitioRPI
 averageProofCompressionRaitioLU 
 averageProofCompressionRaitioLURPI 
@@ -481,7 +483,7 @@ averageProofCompressionRaitioLURPIcOnly <- calculateAverageCompressionRatio(leng
 averageProofCompressionRaitioRPILUcOnly <- calculateAverageCompressionRatio(lengthRPILU, compressedLengthFinalRPILU, TRUE)
 averageProofCompressionRaitioBestcOnly <- calculateAverageCompressionRatio(lengthRPILU, bestData, TRUE)
 
-
+#Use these for second column table 2
 averageProofCompressionRaitioRPIcOnly
 averageProofCompressionRaitioLUcOnly 
 averageProofCompressionRaitioLURPIcOnly 
