@@ -47,11 +47,11 @@ For consistency, the same system and metrics were used. Proof compression and pr
 \hline
  Algorithm& \multicolumn{3}{c ||}{\# of Proofs Compressed} & \multicolumn{3}{c |}{\# of Removed Nodes}  \\
 & \multicolumn{1}{c }{TPTP} & \multicolumn{1}{c}{Random}  & \multicolumn{1}{c ||}{Both}  & \multicolumn{1}{c }{TPTP} & \multicolumn{1}{c }{Random} & \multicolumn{1}{c |}{Both}  \\ \hline \hline
-{\GFOLU}(p) & 55 (17.9\%) & 815 (35.7\%) & 870 (33.6\%)  & 107 (4.8\%) & 17,730 (4.5\%) & 17,837 (4.5\%)    \\ \hline
-{\FORPI}(p)  & 11 (3.6\%) &  252 (11.1\%) & 263 (10.2\%)  &  13 (0.6\%) &  15,913 (4.0\%) & 15,926 (4.0\%)   \\ \hline
-{\GFOLU}({\FORPI}(p))   & 55 (17.9\%) & 993 (43.6\%) & 1048 (40.5\%) & 108 (4.8\%)  & 33,956 (9.1\%) & 34,064 (9.1\%) \\ \hline
-{\FORPI}({\GFOLU}(p)) & 11 (3.6\%) & 993  (43.6\%)&  1004 (38.8\%) & 108 (4.8\%) & 36,070 (9.1\%) & 36,178 (9.1\%)  \\ \hline
-Best                            & 56 (18.2\%) & 993 (43.6\%) & 1049 (40.5\%)   & 108 (4.8\%) & 39,742 (10.1\%) & 39,850 (10.1\%)     \\ \hline
+{\GFOLU}(p) & 55 (17.9\%) & 817 (35.9\%) & 872 (33.7\%)  & 107 (4.8\%) & 17,769 (4.5\%) & 17,876 (4.5\%)    \\ \hline
+{\FORPI}(p)  & 23 (7.5\%) &  666 (29.2\%) & 689 (26.2\%)  &  36 (1.6\%) &  28,904 (7.3\%) &  28,940 (7.3\%)   \\ \hline
+{\GFOLU}({\FORPI}(p))   & 55 (17.9\%) & 1303 (57.1\%) & 1358 (52.5\%) & 120 (5.4\%)  & 48,126 (12.2\%) & 48,246 (12.2\%) \\ \hline
+{\FORPI}({\GFOLU}(p)) & 23 (7.5\%) & 1302  (57.1\%)&  1325 (51.2\%) & 120 (5.4\%) & 48,434 (12.3\%) & 48,554 (12.3\%)  \\ \hline
+Best                            & 59 (19.2\%) & 1303 (57.1\%) & 1362 (52.5\%)   & 120 (5.4\%) & 55,530 (14.1\%) & 55,650 (14.0\%)     \\ \hline
 \end{tabular}
 \vspace{5pt}
 \caption{Number of proofs compressed and number of overall nodes removed}
@@ -117,7 +117,7 @@ Figure \ref{fig:ex} (c) is a scatter plot comparing the size of compression obta
 Figure \ref{fig:ex} (d) shows a plot comparing the difference between the cumulative number of resolutions of the first $x$ input proofs and the cumulative number of resolutions in the first $x$ proofs after compression (i.e. the cumulative number of \emph{removed} resolutions). The TPTP data is displayed in the sub-plot; note that the lines for everything except {\FORPI} largely overlap (since the values are almost identical; cf. Table \ref{tab:results}). Observe that it is always better to use both algorithms than to use a single algorithm. The data also shows that using {\FORPI} after {\GFOLU} is normally the preferred order of composition, as it typically results in a greater number of nodes removed than the other combination. An even better approach is to try both combinations and choose the best result (as shown in the `Best' curve).  
 
 
-{\SPASS} required approximately 40 minutes of CPU time (running on a cluster) to generate all the 308 TPTP proofs. The total time to apply both {\FORPI} and {\GFOLU} on all these proofs was just over 8 seconds on a simple laptop computer. The random proofs were generated in 70 minutes, and took approximately 453 seconds (or 7.5 minutes) to compress, both measured on the same computer.
+{\SPASS} required approximately 40 minutes of CPU time (running on a cluster) to generate all the 308 TPTP proofs. The total time to apply both {\FORPI} and {\GFOLU} on all these proofs was just over 8 seconds on a simple laptop computer. The random proofs were generated in 70 minutes, and took approximately 461 seconds (or 7.5 minutes) to compress, both measured on the same computer.
 All times include parsing time. These compression algorithms continue to be very fast in the first-order case, and may simplify the proof considerably for a relatively small cost in time.
 
 %the compression obtained by applying {\FORPI} and {\GFOLU} (as well as their combinations) to the proofs. 
