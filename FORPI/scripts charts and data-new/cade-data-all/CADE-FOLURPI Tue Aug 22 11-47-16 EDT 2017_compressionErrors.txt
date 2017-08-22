@@ -1,0 +1,14 @@
+D:\Documents\Google Summer of Code 2014\Experiments\NoMRR\GoodProofs\GRP\GRP028-4.spass
+D:\Documents\Google Summer of Code 2014\Experiments\NoMRR\GoodProofs\MGT\MGT036-2.spass
+D:\Documents\Google Summer of Code 2014\Experiments\NoMRR\GoodProofs\SWV\SWV308-2.spass
+D:\Documents\Google Summer of Code 2014\Experiments\NoMRR\GoodProofs\SYN\SYN345-1.spass
+D:\Documents\Google Summer of Code 2014\Experiments\NoMRR\GoodProofs\SYN\SYN084-2.spass
+D:\Documents\Google Summer of Code 2014\Experiments\NoMRR\GoodProofs\GRP\GRP031-2.spass
+D:\Documents\Google Summer of Code 2014\Experiments\NoMRR\GoodProofs\RNG\RNG039-2.spass
+D:\Documents\Google Summer of Code 2014\Experiments\NoMRR\GoodProofs\MGT\MGT036-1.spass
+D:\Documents\Google Summer of Code 2014\Experiments\NoMRR\GoodProofs\MGT\MGT006-1.spass
+D:\Documents\Google Summer of Code 2014\Experiments\NoMRR\GoodProofs\GRP\GRP028-3.spass
+D:\Documents\Google Summer of Code 2014\Experiments\NoMRR\GoodProofs\GRP\GRP012+5.spass
+D:\Documents\Google Summer of Code 2014\Experiments\NoMRR\GoodProofs\MGT\MGT004-1.spass
+D:\Documents\Google Summer of Code 2014\Experiments\NoMRR\GoodProofs\COM\COM011-2.spass
+D:\Documents\Google Summer of Code 2014\Experiments\NoMRR\GoodProofs\SYN\SYN354-1.spass
