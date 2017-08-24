@@ -317,7 +317,7 @@ Let $\psi$ be a proof with root clause $\Gamma$, and let $\eta_S \in \psi$ be a 
 
 
 
-As the name suggests, strong regularizability is stronger than necessary. In some cases, nodes may be regularizable even if they are not strongly regularizable. A weaker condition (conjectured to be sufficient) is presented below. This alternative relies on knowledge of how literals are changed after the deletion of a node in a proof (and it is inspired by the \emph{post-deletion unifiability condition} described for {\FOLowerUnits} in \cite{GFOLU}). However, since weak regularizability is more complicated to check, it is not as suitable for implementation as strong regularizability.
+As the name suggests, strong regularizability is stronger than necessary. In some cases, nodes may be regularizable even if they are not strongly regularizable. A weaker condition (conjectured to be sufficient) is presented below. This alternative relies on knowledge of how literals are changed after the deletion of a node in a proof (and it is inspired by the \emph{post-deletion unifiability condition} described for {\FOLowerUnits} in \cite{GFOLU}). However, since weak regularizability is more complicated to check, it is not as suitable for implementation as strong regularizability. 
 \begin{definition}\label{def:postdelprop}
 Let $\eta$ be a pre-regularizable node with parents $\eta_1$ and $\eta_2$, assuming without loss of generality that $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta$ 
 %and $\eta_2 \xrightarrow[\sigma_2]{\{\ell_2\} } \eta$ 
@@ -334,8 +334,9 @@ The node $\eta$ is said to be \emph{weakly regularizable} in $\psi$ if, for all 
 %Let $\eta$ be a node with safe literals $\mathcal{S}(\eta)$. Consider $p\in \mathcal{S}(\eta)$ and let $\eta_1$, \ldots, $\eta_n$ be subproofs that are resolved using $p$ in a proof $\psi$, respectively, with resolved literals $\ell_1$, \ldots, $\ell_m$. 
 %The node $\eta$ is said to satisfy the \emph{post-deletion unifiability property} in $\psi$ if, for all $p\in \mathcal{S}(\eta)$, $\ell_1^{\dagger}$,\ldots,$\ell_m^{\dagger}$, and $\dual{p^{\dagger}}$ are unifiable, where $\ell^{\dagger}$ is the literal in $\dn{\psi}{\eta}$ corresponding to $\ell$ in $\psi$.
 
+This condition requires the ability to determine the underlying (uninstantiated) literal for each safe literal of a weakly regularizable node $\eta$. To achieve this, one could store safe literals as a pair $(\ell_s,\sigma_s)$, rather than as an instantiated literal $\ell_s\sigma_s$, although this is not necessary for the previous conditions.
 
-Note that there is always at least one node $\eta_\ell$ as assumed in the definition for any safe literal which was not contained in the root clause of the proof: the node which resulted in $\ell = \ell_s\sigma_s \in \mathcal{S}(\eta)$ being a safe literal for the path from $\eta$ to the root of the proof. Furthermore, it does not matter which node $\eta_\ell$ is used. To see this, consider some node $\eta_\ell' \neq \eta_\ell$ with the same pivot $\abs{\ell}=\abs{\ell_s\sigma_s}$. Consider arbitrary nodes $\eta_1$ and $\eta_2$ such that  $\eta_2 \xrightarrow[\sigma_s]{\{\ell_s\} } \eta_\ell$ and $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta_\ell$ where $\ell_s\sigma_s=\dual{\ell_1}\sigma_1$. Now consider arbitrary nodes $\eta_1'$ and $\eta_2'$ such that  $\eta_2' \xrightarrow[\sigma_s]{\{\ell_s\} } \eta_\ell'$ and $\eta_1' \xrightarrow[\sigma_1']{\{\ell_1'\} } \eta_\ell'$ where $\ell_s\sigma_s=\dual{\ell_1'}\sigma_1'$. Since the pivots for $\eta_\ell$ and $\eta_\ell'$ are equal, we must have that %$\abs{\ell\sigma_2}=\abs{\ell\sigma_2'}$ and furthermore that 
+Note further that there is always at least one node $\eta_\ell$ as assumed in the definition for any safe literal which was not contained in the root clause of the proof: the node which resulted in $\ell = \ell_s\sigma_s \in \mathcal{S}(\eta)$ being a safe literal for the path from $\eta$ to the root of the proof. Furthermore, it does not matter which node $\eta_\ell$ is used. To see this, consider some node $\eta_\ell' \neq \eta_\ell$ with the same pivot $\abs{\ell}=\abs{\ell_s\sigma_s}$. Consider arbitrary nodes $\eta_1$ and $\eta_2$ such that  $\eta_2 \xrightarrow[\sigma_s]{\{\ell_s\} } \eta_\ell$ and $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta_\ell$ where $\ell_s\sigma_s=\dual{\ell_1}\sigma_1$. Now consider arbitrary nodes $\eta_1'$ and $\eta_2'$ such that  $\eta_2' \xrightarrow[\sigma_s]{\{\ell_s\} } \eta_\ell'$ and $\eta_1' \xrightarrow[\sigma_1']{\{\ell_1'\} } \eta_\ell'$ where $\ell_s\sigma_s=\dual{\ell_1'}\sigma_1'$. Since the pivots for $\eta_\ell$ and $\eta_\ell'$ are equal, we must have that %$\abs{\ell\sigma_2}=\abs{\ell\sigma_2'}$ and furthermore that 
 $\abs{\ell_s\sigma_s}=\abs{\ell_1\sigma_1}$ and $\abs{\ell_s\sigma_s}=\abs{\ell_1'\sigma_1'}$, and thus $\abs{\ell_1\sigma_1}=\abs{\ell_1'\sigma_1'}$. This shows that it does not matter which $\eta_\ell$ we use; the instantiated resolved literals will always be equal implying that both of the resolved literals $\ell_1$ and $\ell_1'$ will be contained in both $\mathcal{R}(\eta_\ell)$ and $\mathcal{R}(\eta_\ell')$.
 
 
@@ -352,12 +353,12 @@ Informally, a node $\eta$ is weakly regularizable in a proof if it can be replac
 $\eta$ & $\mathcal{S}(\eta)$ & $\mathcal{R}(\eta)$ & $\mathcal{R}^\dagger(\eta)$ \\ \hline \hline
 $\eta_1$ &  $\{P(w)\}$ & $\emptyset$  & $\emptyset$\\ \hline 
 $\eta_2$ &  $\{\lnot P(w)\}$ & $\emptyset$  & $\emptyset$\\ \hline 
-$\eta_3$ &  $\{R(w),\lnot P(w)\}$ & $\emptyset$  & $\emptyset$\\ \hline 
-$\eta_4$ &  $\{\lnot R(w),\lnot P(w)\}$& $\emptyset$& $\emptyset$ \\ \hline 
-$\eta_5$ &  $\{Q(z),\lnot R(w), \lnot P(w)\}$ & $\emptyset$ & $\emptyset$\\ \hline 
-$\eta_6$ &  $\{\lnot P(w), \lnot Q(z), \lnot R(w) \}$ & $\{P(u),P(y)\}$& $\{P(u)\}$\\ \hline 
-$\eta_7$ &  $\{P(y), \lnot P(w), \lnot Q(z), \lnot R(w) \}$ & $\emptyset$ & $\emptyset$ \\ \hline 
-$\eta_8$ &   $\{\lnot P(y), \lnot P(w), \lnot Q(z), \lnot R(w) \}$ & $\emptyset$ & $\emptyset$\\ \hline 
+$\eta_3$ &  $\{R(a),\lnot P(w)\}$ & $\emptyset$  & $\emptyset$\\ \hline 
+$\eta_4$ &  $\{\lnot R(a),\lnot P(w)\}$& $\emptyset$& $\emptyset$ \\ \hline 
+$\eta_5$ &  $\{Q(z),\lnot R(a), \lnot P(w)\}$ & $\emptyset$ & $\emptyset$\\ \hline 
+$\eta_6$ &  $\{\lnot P(w), \lnot Q(z), \lnot R(a) \}$ & $\{P(u),P(y)\}$& $\{P(u)\}$\\ \hline 
+$\eta_7$ &  $\{P(y), \lnot P(w), \lnot Q(z), \lnot R(a) \}$ & $\emptyset$ & $\emptyset$ \\ \hline 
+$\eta_8$ &   $\{\lnot P(y), \lnot P(w), \lnot Q(z), \lnot R(a) \}$ & $\emptyset$ & $\emptyset$\\ \hline 
 \end{tabular}
 \hfill
 \caption{The sets $\mathcal{S}(\eta)$ and $\mathcal{R}(\eta)$ for each node $\eta$ in the first proof of Example \ref{ex:weak}.}
@@ -373,12 +374,12 @@ In the proof below, note that $\eta_6$ is not strongly regularizable: there is n
 \def\e{\mbox{\ $\vdash$\ }}
 \AxiomC{$\eta_1$: $\e P(u)$ \hspace{-2cm}}
 \AxiomC{$\eta_5$: $P(z) \e Q(z)$ \hspace{-0.5cm}}
-\AxiomC{$\eta_8$: $P(x),Q(x),R(x)\e$}
+\AxiomC{$\eta_8$: $P(x),Q(x),R(a)\e$}
 \AxiomC{$\eta_7$: $\e P(y)$  \hspace{-1cm}}
-\BinaryInfC{$\eta_6$: $Q(y),R(y)\e$ }
-\BinaryInfC{$\eta_4$: $P(z),R(z)\e$ \hspace{-2cm} }
-\AxiomC{ \hspace{-1cm} $\eta_3$: $\e R(w)$}
-\BinaryInfC{ $\eta_2$: $P(w)\e$}
+\BinaryInfC{$\eta_6$: $Q(y),R(a)\e$ }
+\BinaryInfC{$\eta_4$: $P(z),R(a)\e$ \hspace{-2cm} }
+\AxiomC{ \hspace{-1cm} $\eta_3$: $\e R(a)$}
+\BinaryInfC{ $\eta_2$: $P(z)\e$}
 
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
@@ -391,21 +392,21 @@ Consider the following proof of $\psi \setminus \{\eta_7\}$:
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
 \AxiomC{$\eta_1$: $\e P(u)$ \hspace{-1.75cm}}
-\AxiomC{$\eta_8$: $P(x),Q(x),R(x)\e$}
+\AxiomC{$\eta_8$: $P(x),Q(x),R(a)\e$}
 \AxiomC{$\eta_5$: $P(z) \e Q(z)$}
-\BinaryInfC{$\eta_4'$: $P(z), P(z),R(z)\e$}
-\UnaryInfC{$\eta_4$: $P(z),R(z)\e$}
-\AxiomC{$\eta_3$: $\e R(w)$}
-\BinaryInfC{$\eta_2$: $P(w)\e$}
+\BinaryInfC{$\eta_4'$: $P(z), P(z),R(a)\e$}
+\UnaryInfC{$\eta_4$: $P(z),R(a)\e$}
+\AxiomC{$\eta_3$: $\e R(a)$}
+\BinaryInfC{$\eta_2$: $P(z)\e$}
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{scriptsize}
 Now observe that for each $\ell \in \mathcal{S}(\eta_8)$ we have the following, showing that $\eta_6$ is weakly regularizable:
 \begin{itemize}
 \item $\ell=\lnot  Q(y)$: $\ell^\dagger = \lnot Q(x)$ which is unifiable with $\dual{\ell}^\dagger=Q(z)$
-\item $\ell=\lnot R(z)$: $\ell^\dagger = \lnot R(z)$ which is unifiable with $\dual{\ell}^\dagger=R(w)$
-\item $\ell=\lnot P(w)$: $\ell^\dagger = \lnot P(w)$ which is unifiable with $\dual{\ell}^\dagger=P(u)$
-\item $\ell=\lnot P(y)$: $\ell^\dagger = \lnot P(w)$ which is unifiable with $\dual{\ell}^\dagger=P(u)$
+\item $\ell=\lnot R(a)$: $\ell^\dagger = \lnot R(a)$ which is (trivially) unifiable with $\dual{\ell}^\dagger=R(a)$
+\item $\ell=\lnot P(w)$: $\ell^\dagger = \lnot P(z)$ which is unifiable with $\dual{\ell}^\dagger=P(u)$
+\item $\ell=\lnot P(y)$: $\ell^\dagger = \lnot P(z)$ which is unifiable with $\dual{\ell}^\dagger=P(u)$
 \end{itemize}
 \end{example}
 
