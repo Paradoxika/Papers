@@ -345,9 +345,29 @@ Informally, a node $\eta$ is weakly regularizable in a proof if it can be replac
 %wrong:
 %since $\eta$ is assumed to be pre-regularizable, we have that one literal $\ell' \in \mathcal{R}(\eta)$ of $\eta_\ell$ (recall that the resolved literals of $\eta$ and $\eta_\ell$ are the same) is unifiable with $\dual{\ell}$.
 
-\begin{example}
-This example illustrates a case where a node is weakly regularizable but not strongly regularizable. 
-In the proof below, note that $\eta_6$ is not strongly regularizable: there is no unifier $\sigma$ such that $\{\lnot P(x),\lnot Q(x),\lnot R(x)\} \sigma \subseteq \mathcal{S}(\eta_6)$ (where $\mathcal{S}(\eta_6) =\{ \lnot P(w), \lnot R(w), \lnot Q(z)\}$).
+\begin{table}
+\centering
+\begin{tabular}{| c | c | c | c | }
+\hline
+$\eta$ & $\mathcal{S}(\eta)$ & $\mathcal{R}(\eta)$ & $\mathcal{R}^\dagger(\eta)$ \\ \hline \hline
+$\eta_1$ &  $\{P(w)\}$ & $\emptyset$  & $\emptyset$\\ \hline 
+$\eta_2$ &  $\{\lnot P(w)\}$ & $\emptyset$  & $\emptyset$\\ \hline 
+$\eta_3$ &  $\{R(w),\lnot P(w)\}$ & $\emptyset$  & $\emptyset$\\ \hline 
+$\eta_4$ &  $\{\lnot R(w),\lnot P(w)\}$& $\emptyset$& $\emptyset$ \\ \hline 
+$\eta_5$ &  $\{Q(z),\lnot R(w), \lnot P(w)\}$ & $\emptyset$ & $\emptyset$\\ \hline 
+$\eta_6$ &  $\{\lnot P(w), \lnot Q(z), \lnot R(w) \}$ & $\{P(u),P(y)\}$& $\{P(u)\}$\\ \hline 
+$\eta_7$ &  $\{P(y), \lnot P(w), \lnot Q(z), \lnot R(w) \}$ & $\emptyset$ & $\emptyset$ \\ \hline 
+$\eta_8$ &   $\{\lnot P(y), \lnot P(w), \lnot Q(z), \lnot R(w) \}$ & $\emptyset$ & $\emptyset$\\ \hline 
+\end{tabular}
+\hfill
+\caption{The sets $\mathcal{S}(\eta)$ and $\mathcal{R}(\eta)$ for each node $\eta$ in the first proof of Example \ref{ex:weak}.}
+\label{tab:exweakreg}
+\end{table}
+
+
+\begin{example}\label{ex:weak}
+This example illustrates a case where a node is weakly regularizable but not strongly regularizable. Table \ref{tab:exweakreg} shows the sets $\mathcal{S}(\eta)$, $\mathcal{R}(\eta)$ and $\mathcal{R}^\dagger(\eta)$ for the nodes $\eta$ in the proof below. Observe that $\eta_6$ is pre-regularizable, since $\lnot P(x)$ is unifiable with $\lnot P(w)\in \mathcal{S}(\eta_6)$. In fact, $\eta_6$ is the only pre-regularizable node in the proof, and thus the sets $\mathcal{R}(\eta) = \emptyset$ for all $\eta \neq \eta_6$.
+In the proof below, note that $\eta_6$ is not strongly regularizable: there is no unifier $\sigma$ such that $\{\lnot P(x),\lnot Q(x),\lnot R(x)\} \sigma \subseteq \mathcal{S}(\eta_6)$.
 \begin{scriptsize}
 \begin{prooftree}
 \def\e{\mbox{\ $\vdash$\ }}
@@ -365,7 +385,7 @@ In the proof below, note that $\eta_6$ is not strongly regularizable: there is n
 
 \end{scriptsize}
 \noindent
-We show that $\eta_6$ is weakly regularizable, and that $\eta_7$ can be removed. To do this, first observe that $\eta_6$ is pre-regularizable, since $\lnot P(x)$ is unifiable with $\lnot P(w)\in \mathcal{S}(\eta_6)$ and $\mathcal{R}(\eta_6) \cup \{\dual{\lnot P(w)}\}$ is unifiable (where $\mathcal{R}(\eta_6)=\{P(u), P(y)\}$).
+We show that $\eta_6$ is weakly regularizable, and that $\eta_7$ can be removed. Recalling that $\eta_6$ is pre-regularizable, observe that $\mathcal{R}^\dagger(\eta_6) \cup \{\dual{\lnot P(w)}\}$ is unifiable.
 Consider the following proof of $\psi \setminus \{\eta_7\}$:
 \begin{scriptsize}
 \begin{prooftree}
@@ -380,11 +400,12 @@ Consider the following proof of $\psi \setminus \{\eta_7\}$:
 \BinaryInfC{$\psi$: $\bot$}
 \end{prooftree}
 \end{scriptsize}
-Now observe that for each $\ell \in \mathcal{S}(\eta_8)=\{\lnot  Q(z), \lnot R(w), \lnot P(w)\}$ we have the following, so that $\eta_6$ is weakly regularizable:
+Now observe that for each $\ell \in \mathcal{S}(\eta_8)$ we have the following, showing that $\eta_6$ is weakly regularizable:
 \begin{itemize}
 \item $\ell=\lnot  Q(y)$: $\ell^\dagger = \lnot Q(x)$ which is unifiable with $\dual{\ell}^\dagger=Q(z)$
 \item $\ell=\lnot R(z)$: $\ell^\dagger = \lnot R(z)$ which is unifiable with $\dual{\ell}^\dagger=R(w)$
-\item $\ell=\lnot P(w)$: $\ell^\dagger = \lnot P(W)$ which is unifiable with $\dual{\ell}^\dagger=P(u)$
+\item $\ell=\lnot P(w)$: $\ell^\dagger = \lnot P(w)$ which is unifiable with $\dual{\ell}^\dagger=P(u)$
+\item $\ell=\lnot P(y)$: $\ell^\dagger = \lnot P(w)$ which is unifiable with $\dual{\ell}^\dagger=P(u)$
 \end{itemize}
 \end{example}
 
