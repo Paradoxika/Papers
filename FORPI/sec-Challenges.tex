@@ -1,5 +1,5 @@
 
-\section{First-Order Conditions}\label{sec:Challenges}
+\section{Lifting to First-Order}\label{sec:Challenges}
 
 
 In this section, we describe challenges that have to be overcome in order to successfully adapt {\RPI} to the first-order case. The first example illustrates the need to take unification into account. The other two examples discuss complex issues that can arise when unification is taken into account in a naive way.
@@ -325,7 +325,7 @@ such that $\ell_1$ is unifiable with some $\ell^* \in \mathcal{S}(\eta)$.
 For each safe literal $\ell = \ell_s\sigma_s \in \mathcal{S}(\eta_1)$, let $\eta_\ell$ be a node on the path from $\eta$ to the root of the proof such that $\abs{\ell}$ is the pivot of $\eta_\ell$.
 Let $\mathcal{R}(\eta_\ell)$ be the set of all resolved literals $\ell_s'$ such that $\eta_2' \xrightarrow[\sigma_s]{\{\ell_s\} } \eta_\ell$, $\eta_1' \xrightarrow[\sigma_s']{\{\ell_s'\} } \eta_\ell$, and $\ell_s\sigma_s=\dual{\ell_s'}\sigma_s'$, for some nodes $\eta_2'$ and $\eta_1'$ and unifier $\sigma_s'$; if no such node $\eta_\ell$ exists, define $\mathcal{R}(\eta_\ell)=\emptyset$.
 % and $\sigma_2'$.
-The node $\eta$ is said to be \emph{weakly regularizable} in $\psi$ if, for all $\ell \in \mathcal{S}(\eta_1)$, all elements in $\mathcal{R}^{\dagger}(\eta_\ell) \cup \{ \dual{\ell}^\dagger \}$ are unifiable, where $\dual{\ell}^{\dagger}$ is the literal in $\dn{\psi}{\eta_2}$ corresponding to $\dual{\ell}$ in $\psi$ and $\mathcal{R}^{\dagger}(\eta_\ell)$ is the set of literals in $\dn{\psi}{\eta_2}$ corresponding to literals of $\mathcal{R}(\eta_\ell)$ in $\psi$.
+The node $\eta$ is said to be \emph{weakly regularizable} in $\psi$ if, for all $\ell \in \mathcal{S}(\eta_1)$, all elements in $\mathcal{R}^{\dagger}(\eta_\ell) \cup \{ \dual{\ell}^\dagger \}$ are unifiable, where $\dual{\ell}^{\dagger}$ is the literal in $\dn{\psi}{\eta_2}$ that used to be\footnote{Because of the removal of $\eta_2$, $\dual{\ell}^{\dagger}$ may differ from $\dual{\ell}$.} $\dual{\ell}$ in $\psi$ and $\mathcal{R}^{\dagger}(\eta_\ell)$ is the set of literals in $\dn{\psi}{\eta_2}$ that used to be the literals of $\mathcal{R}(\eta_\ell)$ in $\psi$.
 \end{definition}
 
 
