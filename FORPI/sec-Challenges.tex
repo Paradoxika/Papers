@@ -92,7 +92,7 @@ require resolution between $\eta_1$ and $\eta_6$, which is not possible.
 %\end{footnotesize}
 
 \end{example}
-One way to prevent the problem depicted above would be to require the resolved literal to be not only unifiable but in fact more general than a safe literal. A weaker (and better) requirement is possible, and requires a slight modification of the concept of safe literals, taking into account the unifications that occur on the paths from a node to the root. 
+One way to prevent the problem depicted above would be to require the resolved literal to be not only unifiable but subsume a safe literal. A weaker (and better) requirement is possible, and requires a slight modification of the concept of safe literals, taking into account the unifications that occur on the paths from a node to the root. 
 
 %\begin{definition}
 %\emph{First-order safe literals} for a node $\eta$, denoted $\mathcal{S}(\eta)$, are a set of instantiated resolved literals used as pivots in all paths below $\eta$ in the proof, or that occur in the root clause of the proof.
@@ -194,7 +194,9 @@ This condition ensures that the remainder of the proof does not expect a variabl
 %%In this example, $\eta_1$ does not satisfy this property: in order to unify with $\eta_3$'s safe literals, it would be necessary to send $V\rightarrow Z$ due to $\eta_1$'s second literal, but leave $V$ unchanged due $\eta_1$'s first literal, which is not possible. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
 %In this example, $\eta_1$ does not satisfy this property. This check is not necessary in the propositional case, as the replacement node would be contained exactly in the set of safe literals, and would not change lower in the proof.
 
-The notion of \emph{strongly regularizable} can be thought of as a \emph{sufficient} condition. In order to show that this, the usual notion of subsumption is necessary. We will use $X \sqsubseteq Y$ to denote that $X$ \emph{subsumes} $Y$, when there exists a substitution $\sigma$ such that $X\sigma \subseteq Y$.
+The notion of \emph{strongly regularizable} can be thought of as a \emph{sufficient} condition. 
+
+%In order to show that this, the usual notion of subsumption is necessary. We will use $X \sqsubseteq Y$ to denote that $X$ \emph{subsumes} $Y$, when there exists a substitution $\sigma$ such that $X\sigma \subseteq Y$.
 
 
 \begin{thm}\label{thm:correct}
@@ -210,10 +212,10 @@ $\Gamma' \sigma' \subseteq \mathcal{S}(\eta)$.
 
 Firstly, in $\psi^{\dagger}$, $\eta$ has been replaced by $\eta'$. Since
 $\Gamma' \sigma' \subseteq \mathcal{S}(\eta)$, by definition of
-$\mathcal{S}(\eta)$, every literal $\ell$ in $\Gamma'$ is either more
-general than a single literal that occurs as a pivot on every path
+$\mathcal{S}(\eta)$, every literal $\ell$ in $\Gamma'$ either subsumes %more general than
+a single literal that occurs as a pivot on every path
 from $\eta$ to the root in $\psi$ (and hence on every new path from
-$\eta'$ to the root in $\psi^{\dagger}$) or more general than literals
+$\eta'$ to the root in $\psi^{\dagger}$) or subsume literals %more general than
 $\ell \sigma_1$,\ldots,$\ell\sigma_n$ in $\Gamma$. In the former case,
 $\ell$ is resolved away in the construction of $\psi^{\dagger}$ (by
 contracting the descendants of $\ell$ with the pivots in each path).
