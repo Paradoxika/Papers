@@ -8,7 +8,7 @@ $\dual{P} = \neg P$ and $\dual{\neg P} = P$). The \emph{underlying atom} of a li
 \emph{clause} is a multiset of literals. $\bot$ denotes the \emph{empty clause}. A \emph{unit clause} is a clause with a single literal. Sequent notation is used for clauses (i.e. $P_1,\ldots,P_n \seq Q_1,\ldots, Q_m$ denotes the clause $\{ \neg P_1,\ldots, \neg P_n, Q_1, \ldots, Q_m \}$).
 $\freevar{t}$ (resp. $\freevar{\ell}$, $\freevar{\clause}$) denotes the set of variables in the term $t$ (resp. in the literal $\ell$ and in the clause $\clause$).
 A \emph{substitution} $\{ x_1\backslash t_1, x_2 \backslash t_2, \ldots \}$ is a mapping from variables $\{ x_1, x_2, \ldots \}$ to, respectively, terms $\{t_1, t_2, \ldots \}$. The application of a substitution $\sigma$ to a term $t$, a literal $\ell$ or a clause $\clause$ results in, respectively, the term $t \sigma$, the literal $\ell \sigma$ or the clause $\clause \sigma$, obtained from $t$, $\ell$ and $\clause$ by replacing all occurrences of the variables in $\sigma$ by the corresponding terms in $\sigma$. A \emph{unifier} of a set of literals is a substitution that makes all literals in the set equal.
-A \emph{resolution proof} is a directed acyclic graph of clauses where the edges correspond to the inference rules of resolution and contraction (as explained in detail in Definition \ref{def:proof}). A \emph{resolution refutation} is a resolution proof with root $\bot$.
+A \emph{resolution proof} is a directed acyclic graph of clauses where the edges correspond to the inference rules of resolution and factoring (as explained in detail in Definition \ref{def:proof}). A \emph{resolution refutation} is a resolution proof with root $\bot$.
 
 
 \begin{definition}[First-Order Resolution Proof] 
@@ -39,13 +39,15 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
                     \setminus \left\{ \ell_R \right\} \right) \sigma_R
     \end{align*}
     where $\n$ is a new (resolution) node and $\raiz{\varphi}$ denotes the root node of $\varphi$. $\ell_L$ and $\ell_R$ are $\n$'s \emph{resolved literals}, whereas $\ell_L \sigma_L$ and $\ell_R \sigma_R$ are its \emph{instantiated resolved literals}. The \emph{pivot} of $\n$ is the underlying atom of its instantiated resolved literals (i.e. $\abs{\ell_L \sigma_L}$ or, equivalently, $\abs{\ell_R \sigma_R}$).
-  \item \textbf{Contraction\footnote{This is often called ``Factoring'', but we prefer ``contraction'', because it is essentially the contraction rule of sequent calculus generalized with unification.}:} If $\psi'$ is a proof $\langle V', E', \clause' \rangle$ and $\sigma$ is a unifier of $\{\ell_1, \ldots \ell_n\}$ with $\{\ell_1, \ldots \ell_n\} \subseteq \clause'$, then $\con{\psi}{\{\ell_1, \ldots \ell_n\}}{\sigma}$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
+  \item \textbf{Factoring:}
+  %\footnote{This is often called ``Factoring'', but we prefer ``contraction'', because it is essentially the contraction rule of sequent calculus generalized with unification.} 
+  If $\psi'$ is a proof $\langle V', E', \clause' \rangle$ and $\sigma$ is a unifier of $\{\ell_1, \ldots \ell_n\}$ with $\{\ell_1, \ldots \ell_n\} \subseteq \clause'$, then $\con{\psi}{\{\ell_1, \ldots \ell_n\}}{\sigma}$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
     \begin{align*}
          \hspace{-0.6cm} V &= V' \cup \{\n \} \\
          \hspace{-0.6cm} E &= E' \cup \{ \raiz{\psi'} \xrightarrow[\sigma]{\{\ell_1, \ldots \ell_n\}} \n \} \\
        \hspace{-0.6cm} \Gamma &= (\clause' \setminus \{ \ell_1, \ldots \ell_n \} ) \sigma \cup \{ \ell \}
     \end{align*}
-    where $\n$ is a new (contraction) node, $\ell = \ell_k \sigma$ (for any $k \in \{1,\ldots, n\}$) and $\raiz{\varphi}$ denotes the root node of $\varphi$.
+    where $\n$ is a new (factoring) node, $\ell = \ell_k \sigma$ (for any $k \in \{1,\ldots, n\}$) and $\raiz{\varphi}$ denotes the root node of $\varphi$.
   \qed
 \end{itemize}
 \end{definition}
@@ -72,7 +74,7 @@ An example first-order resolution proof is shown below.
 \end{scriptsize}
 
 \noindent
-The nodes $\eta_1$, $\eta_2$, and $\eta_4$ are axioms. Node $\eta_3$ is obtained by resolution on $\eta_1$ and $\eta_2$ where $\ell_L = P(b)$, $\ell_R = \neg P(b)$, and $\sigma_L = \sigma_R = \emptyset$. The node $\eta_3'$ is obtained by a contraction on $\eta_3$ with $\sigma=\{x\setminus a\}$. The node $\eta_5$ is the result of resolution on $\eta_2$ and $\eta_4$ with $\ell_L = \neg P(b)$, $\ell_R = P(b)$, $\sigma_L=\sigma_R = \emptyset$. Lastly, the conclusion node $\psi$ is the result of a resolution of $\eta_3'$ and $\eta_5$, where $\ell_L = \neg Q(a)$, $\ell_R = Q(y)$, $\sigma_L = \emptyset$, and $\sigma_R = \{ y \setminus a\}$. The directed acyclic graph representation of the proof (with edge labels omitted) is shown in Figure \ref{fig:dagex}.\\
+The nodes $\eta_1$, $\eta_2$, and $\eta_4$ are axioms. Node $\eta_3$ is obtained by resolution on $\eta_1$ and $\eta_2$ where $\ell_L = P(b)$, $\ell_R = \neg P(b)$, and $\sigma_L = \sigma_R = \emptyset$. The node $\eta_3'$ is obtained by a factoring on $\eta_3$ with $\sigma=\{x\setminus a\}$. The node $\eta_5$ is the result of resolution on $\eta_2$ and $\eta_4$ with $\ell_L = \neg P(b)$, $\ell_R = P(b)$, $\sigma_L=\sigma_R = \emptyset$. Lastly, the conclusion node $\psi$ is the result of a resolution of $\eta_3'$ and $\eta_5$, where $\ell_L = \neg Q(a)$, $\ell_R = Q(y)$, $\sigma_L = \emptyset$, and $\sigma_R = \{ y \setminus a\}$. The directed acyclic graph representation of the proof (with edge labels omitted) is shown in Figure \ref{fig:dagex}.\\
 
 \begin{figure}[bt]
 \begin{centering}
