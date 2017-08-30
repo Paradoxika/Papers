@@ -9,12 +9,39 @@ $\dual{P} = \neg P$ and $\dual{\neg P} = P$). The \emph{underlying atom} of a li
 $\freevar{t}$ (resp. $\freevar{\ell}$, $\freevar{\clause}$) denotes the set of variables in the term $t$ (resp. in the literal $\ell$ and in the clause $\clause$).
 A \emph{substitution} $\{ x_1\backslash t_1, x_2 \backslash t_2, \ldots \}$ is a mapping from variables $\{ x_1, x_2, \ldots \}$ to, respectively, terms $\{t_1, t_2, \ldots \}$. The application of a substitution $\sigma$ to a term $t$, a literal $\ell$ or a clause $\clause$ results in, respectively, the term $t \sigma$, the literal $\ell \sigma$ or the clause $\clause \sigma$, obtained from $t$, $\ell$ and $\clause$ by replacing all occurrences of the variables in $\sigma$ by the corresponding terms in $\sigma$. A literal $\ell$ \emph{matches} another term $\ell'$ if there is a substitution $\sigma$ such that $\ell\sigma=\sigma'$. A \emph{unifier} of a set of literals is a substitution that makes all literals in the set equal. We will use $X \sqsubseteq Y$ to denote that $X$ \emph{subsumes} $Y$, when there exists a substitution $\sigma$ such that $X\sigma \subseteq Y$.
 
+The following inference rules are considered in this paper.
 
-A \emph{resolution proof} is a directed acyclic graph of clauses where the edges correspond to the inference rules of resolution and factoring (as explained in detail in Definition \ref{def:proof}). A \emph{resolution refutation} is a resolution proof with root $\bot$.
+\begin{definition}[First-Order Axiom] A first-order axiom has no premises and concludes some clause $\Gamma$, as below.
+\begin{prooftree}
+\AxiomC{$~$ }
+\UnaryInfC{$\psi$: $\Gamma$}
+\end{prooftree}
+%where $\Gamma$ is a clause.
+\end{definition}
 
+\begin{definition}[First-Order Resolution Inference Rule] \label{def:fores}
+An instance of first-order resolution requires two premises, as below.
+\begin{prooftree}
+\AxiomC{$\eta_1$: $\Gamma_L' \cup \{\ell_L\}$ }
+\AxiomC{$\eta_2$: $\Gamma_R'\cup \{\ell_R\}$ }
+\BinaryInfC{$\psi$: $\Gamma_L'\sigma_L \cup \Gamma_R'\sigma_R$}
+\end{prooftree}
+where $\sigma_L$ and $\sigma_R$ are substitutions such that $\ell_L\sigma_L=\dual{\ell_R}\sigma_R$. The literals $\ell_L$ and $\ell_R$ are \emph{resolved literals}, whereas $\ell_L \sigma_L$ and $\ell_R \sigma_R$ are its \emph{instantiated resolved literals}. The \emph{pivot} is the underlying atom of its instantiated resolved literals (i.e. $\abs{\ell_L \sigma_L}$ or, equivalently, $\abs{\ell_R \sigma_R}$).
+\end{definition}
+
+\begin{definition}[First-Order Factoring Inference Rule] \label{def:fofact}
+An instance of first-order factoring applies a unifier to the literals in a single premise's conclusion, as below.
+\begin{prooftree}
+\AxiomC{$\eta_1$: $\Gamma' \cup \{\ell_1,\ldots,\ell_n\}$ }
+\UnaryInfC{$\psi$: $\Gamma'\sigma \cup \{\ell\}$}
+\end{prooftree}
+where $\sigma$ is a unifier of $\{\ell_1,\ldots,\ell_n\}$ and $\ell=\ell_i\sigma$ for any $i\in \{1,\ldots,n\}$.
+\end{definition}
+
+A \emph{resolution proof} is a directed acyclic graph of clauses where the edges correspond to the inference rules of resolution and factoring, as explained in detail in Definition \ref{def:proof}. A \emph{resolution refutation} is a resolution proof with root $\bot$.
 
 \begin{definition}[First-Order Resolution Proof] 
-\label{def:proof} \hfill \\
+\label{def:proof}% \hfill \\
 A directed acyclic graph $\langle V, E, \clause \rangle$, where $V$ is a set of nodes and $E$ is a
 set of edges labeled by literals and substitutions (i.e. $E \subset V \times 2^{\mathcal{L}} \times \mathcal{S} \times V$, where $\mathcal{L}$ is the set of all literals and $\mathcal{S}$ is the set of all substitutions, and $\n_1
 \xrightarrow[\sigma]{\ell} \n_2$ denotes an edge from node $\n_1$ to node $\n_2$ labeled by the literal $\ell$ and the substitution $\sigma$), is a
@@ -23,10 +50,10 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
 \begin{itemize}
   \item \textbf{Axiom:} If $\Gamma$ is a clause, $\axiom{\Gamma}$ denotes some proof $\langle \{ \n \}, \varnothing,
     \Gamma \rangle$, where $\n$ is a new (axiom) node.
-  \item \textbf{Resolution\footnote{This is referred to as ``binary resolution'' elsewhere, with the understanding that ``binary'' refers to the number of resolved literals, rather than the number of premises of the inference rule.}:} If $\psi_L$ is a proof $\langle V_L, E_L, \clause_L \rangle$ with $\ell_L \in \clause_L$ and
-    $\psi_R$ is a proof $\langle V_R, E_R, \clause_R \rangle$ with $\ell_R \in \clause_R$, and 
-    $\sigma_L$ and $\sigma_R$ are substitutions such that
-    $\ell_L \sigma_L = \dual{\ell_R} \sigma_R$ %and
+  \item \textbf{Resolution\footnote{This is referred to as ``binary resolution'' elsewhere, with the understanding that ``binary'' refers to the number of resolved literals, rather than the number of premises of the inference rule.}:} If $\psi_L$ is a proof $\langle V_L, E_L, \clause_L \rangle$ and
+    $\psi_R$ is a proof $\langle V_R, E_R, \clause_R \rangle$, where $\Gamma_L$ and $\Gamma_R$ satisfy the requirements of Definition \ref{def:fores},
+    %and $\sigma_L$ and $\sigma_R$ are substitutions such that
+    %$\ell_L \sigma_L = \dual{\ell_R} \sigma_R$ %and
     %$\freevar{\left( \clause_L \setminus \left\{ \ell_L \right\} \right) \sigma_L} \cap 
      %\freevar{\left( \clause_R
      %               \setminus \left\{ \ell_R \right\} \right) \sigma_R} = \emptyset$, 
@@ -37,19 +64,18 @@ proof of a clause $\clause$ iff it is inductively constructible according to the
       \hspace{-0.6cm} E &= E_L \cup E_R \cup 
                     \left\{ \raiz{\psi_L} \xrightarrow[\sigma_L]{\{\ell_L\} } \n, 
                             \raiz{\psi_R} \xrightarrow[\sigma_R]{\{\ell_R\} } \n \right\}    \\
-    \hspace{-0.6cm}  \Gamma &= \left( \clause_L \setminus \left\{ \ell_L \right\} \right) \sigma_L \cup \left( \clause_R
-                    \setminus \left\{ \ell_R \right\} \right) \sigma_R
+    \hspace{-0.6cm}  \Gamma &= \clause_L' \sigma_L \cup  \clause_R' \sigma_R
     \end{align*}
-    where $\n$ is a new (resolution) node and $\raiz{\varphi}$ denotes the root node of $\varphi$. $\ell_L$ and $\ell_R$ are $\n$'s \emph{resolved literals}, whereas $\ell_L \sigma_L$ and $\ell_R \sigma_R$ are its \emph{instantiated resolved literals}. The \emph{pivot} of $\n$ is the underlying atom of its instantiated resolved literals (i.e. $\abs{\ell_L \sigma_L}$ or, equivalently, $\abs{\ell_R \sigma_R}$).
+    where $\n$ is a new (resolution) node and $\raiz{\varphi}$ denotes the root node of $\varphi$. 
   \item \textbf{Factoring:}
   %\footnote{This is often called ``Factoring'', but we prefer ``contraction'', because it is essentially the contraction rule of sequent calculus generalized with unification.} 
-  If $\psi'$ is a proof $\langle V', E', \clause' \rangle$ and $\sigma$ is a unifier of $\{\ell_1, \ldots \ell_n\}$ with $\{\ell_1, \ldots \ell_n\} \subseteq \clause'$, then $\con{\psi}{\{\ell_1, \ldots \ell_n\}}{\sigma}$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
+  If $\psi'$ is a proof $\langle V', E', \clause' \rangle$ such that $\Gamma$ satisfies the requirements of Definition \ref{def:fofact}, then $\con{\psi}{\{\ell_1, \ldots \ell_n\}}{\sigma}$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
     \begin{align*}
          \hspace{-0.6cm} V &= V' \cup \{\n \} \\
          \hspace{-0.6cm} E &= E' \cup \{ \raiz{\psi'} \xrightarrow[\sigma]{\{\ell_1, \ldots \ell_n\}} \n \} \\
-       \hspace{-0.6cm} \Gamma &= (\clause' \setminus \{ \ell_1, \ldots \ell_n \} ) \sigma \cup \{ \ell \}
+       \hspace{-0.6cm} \Gamma &= \clause' \sigma \cup \{ \ell \}
     \end{align*}
-    where $\n$ is a new (factoring) node, $\ell = \ell_k \sigma$ (for any $k \in \{1,\ldots, n\}$) and $\raiz{\varphi}$ denotes the root node of $\varphi$.
+    where $\n$ is a new (factoring) node, and $\raiz{\varphi}$ denotes the root node of $\varphi$.
   \qed
 \end{itemize}
 \end{definition}
