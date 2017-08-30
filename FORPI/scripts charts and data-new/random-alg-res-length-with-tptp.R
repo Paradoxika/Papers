@@ -75,3 +75,14 @@ legend("topleft",c("TPTP Data", "Random Data"), pch=c(3,1), col=c("red","black")
 dev.off()
 
 
+ntptpBelow <- sum(compressedLengthRPILUFinaltptp < compressedLengthLURPIFinaltptp)
+ntptpAbove <- sum(compressedLengthRPILUFinaltptp > compressedLengthLURPIFinaltptp)
+
+nrandomBelow <- sum(compressedLengthFinalRPILU < compressedLengthFinalLURPI )
+nrandomAbove <- sum(compressedLengthFinalRPILU > compressedLengthFinalLURPI )
+
+nAbove <- ntptpAbove + nrandomAbove
+nBelow <- ntptpBelow + nrandomBelow
+
+nAbove
+nBelow
