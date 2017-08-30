@@ -183,7 +183,7 @@ Thus we additionally require that the following condition be satisfied.
 \label{prop:extracheck}
 Let $\eta$ be pre-regularizable, with safe literals $\mathcal{S}(\eta)$ and parents $\eta_1$ and $\eta_2$, with clauses $\Gamma_1$ and $\Gamma_2$ respectively, assuming without loss of generality that $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta$
 such that $\ell_1\sigma_1$ matches a safe literal $\ell^*\in \mathcal{S}(\eta)$. 
-The node $\eta$ is said to be \emph{strongly regularizable} in $\psi$ if $\Gamma_1 \sigma_{1} \subseteq \mathcal{S}(\eta)$.
+The node $\eta$ is said to be \emph{strongly regularizable} in $\psi$ if $\Gamma_1 \sigma_{1} \sqsubseteq \mathcal{S}(\eta)$.
 \end{definition}
 
 %we ensure that the replacement parent is (possibly after unification) contained entirely in the safe literals. 
@@ -206,16 +206,16 @@ Let $\psi$ be a proof with root clause $\Gamma$ and $\eta$ be a node in $\psi$. 
 \begin{proof} 
 By definition of strong regularizability, $\eta$ is such
 that there is a node $\eta'$ with clause $\Gamma'$ and such that
-$\eta' \xrightarrow[\sigma']{\{\ell'\} } \eta$ with $\ell'\sigma'$
-unifiable with a safe literal $\ell^*\in \mathcal{S}(\eta)$ and
-$\Gamma' \sigma' \subseteq \mathcal{S}(\eta)$.
+$\eta' \xrightarrow[\sigma']{\{\ell'\} } \eta$ and $\ell'\sigma'$
+matches a safe literal $\ell^*\in \mathcal{S}(\eta)$ and
+$\Gamma' \sigma' \sqsubseteq \mathcal{S}(\eta)$.
 
 Firstly, in $\psi^{\dagger}$, $\eta$ has been replaced by $\eta'$. Since
-$\Gamma' \sigma' \subseteq \mathcal{S}(\eta)$, by definition of
+$\Gamma' \sigma' \sqsubseteq \mathcal{S}(\eta)$, by definition of
 $\mathcal{S}(\eta)$, every literal $\ell$ in $\Gamma'$ either subsumes %more general than
 a single literal that occurs as a pivot on every path
 from $\eta$ to the root in $\psi$ (and hence on every new path from
-$\eta'$ to the root in $\psi^{\dagger}$) or subsume literals %more general than
+$\eta'$ to the root in $\psi^{\dagger}$) or subsumes literals %more general than
 $\ell \sigma_1$,\ldots,$\ell\sigma_n$ in $\Gamma$. In the former case,
 $\ell$ is resolved away in the construction of $\psi^{\dagger}$ (by
 contracting the descendants of $\ell$ with the pivots in each path).
@@ -240,7 +240,7 @@ path via $\eta$ will not belong to $\Gamma^{\dagger}$.
 
 Thirdly, a literal from $\Gamma$ that descends neither from $\eta'$ nor from $\eta''$ either remains unchanged in $\Gamma^{\dagger}$ or, if the path to the node from which it descends ceases to exist in the construction of $\psi^{\dagger}$, does not belong to $\Gamma^{\dagger}$ at all.
 
-Therefore, by the three facts above, $\Gamma^{\dagger} \sigma' \subseteq \Gamma$, and hence $\Gamma^{\dagger} \sqsubseteq \Gamma$.
+Therefore, by the three facts above, $\Gamma^{\dagger} \sigma' \sqsubseteq \Gamma$, and hence $\Gamma^{\dagger} \sqsubseteq \Gamma$.
 \end{proof}
 
 
