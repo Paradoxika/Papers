@@ -5,7 +5,7 @@
 {\FirstOrderRPI} ({\FORPI}) (cf. Algorithm \ref{algo:FORPI}) is a first-order generalization of the propositional {\RPI}.
 %\footnote{A generalization of {\RP} could be obtained by setting the safe literals to the empty set in lines 11 and 2 of Algorithm~\ref{algo:foSetSafeLiterals}.}. 
 {\FORPI} traverses the proof in a bottom-up manner, storing for every node a set of safe literals. The set of safe literals for a node $\psi$ is computed from the set of safe literals of its children (cf.\ Algorithm~\ref{algo:foSetSafeLiterals}), similarly to the propositional case, but additionally applying unifiers to the resolved literals (cf. Example \ref{ex:pairwise}).
-If one of the node's resolved literals matches to a literal in the set of safe literals, then it may be possible to regularize the node by replacing it by one of its parents.  
+If one of the node's resolved literals matches a literal in the set of safe literals, then it may be possible to regularize the node by replacing it by one of its parents.  
 
 
 
