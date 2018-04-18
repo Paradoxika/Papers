@@ -1,0 +1,52 @@
+\begin{example}\label{ex:resolutionproof}
+An example first-order resolution proof is shown below.
+
+
+\begin{scriptsize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_1$: $Q(x),Q(a)\e P(b)$ } %a
+\AxiomC{$\eta_2$: $P(b)\e$ } %common
+\BinaryInfC{$\eta_3$: $Q(x),Q(a) \e$}
+\UnaryInfC{$\eta_3'$: $Q(a) \e$ \hspace{-1cm}}
+\AxiomC{$\eta_2$} %common
+\AxiomC{\hspace{-0.5cm}$\eta_4$: $\e P(b), Q(y)$ } %b
+\BinaryInfC{\hspace{-2cm} $\eta_5$: $\e Q(y)$}
+\BinaryInfC{$\psi$: $\bot$}
+\end{prooftree}
+\end{scriptsize}
+
+\noindent
+The nodes $\eta_1$, $\eta_2$, and $\eta_4$ are axioms. Node $\eta_3$ is obtained by resolution on $\eta_1$ and $\eta_2$ where $\ell_L = P(b)$, $\ell_R = \neg P(b)$, and $\sigma_L = \sigma_R = \emptyset$. The node $\eta_3'$ is obtained by a factoring on $\eta_3$ with $\sigma=\{x\setminus a\}$. The node $\eta_5$ is the result of resolution on $\eta_2$ and $\eta_4$ with $\ell_L = \neg P(b)$, $\ell_R = P(b)$, $\sigma_L=\sigma_R = \emptyset$. Lastly, the conclusion node $\psi$ is the result of a resolution of $\eta_3'$ and $\eta_5$, where $\ell_L = \neg Q(a)$, $\ell_R = Q(y)$, $\sigma_L = \emptyset$, and $\sigma_R = \{ y \setminus a\}$. The directed acyclic graph representation of the proof (with edge labels omitted) is shown in Figure \ref{fig:dagex}.\\
+
+\begin{figure}[bt]
+\begin{centering}
+\begin{tikzpicture}
+  \tikzstyle{vertex}=[circle,minimum size=10pt,inner sep=0pt]
+\tikzset{edge/.style = {->,> = latex'}}
+
+    \node[vertex] (n1) at (-2,1.75) {$\eta_1$};
+    \node[vertex] (n2) at (0,1.75) {$\eta_2$};
+    \node[vertex] (n4) at (2,1.75) {$\eta_4$};
+    \node[vertex] (n5) at (1,0.5) {$\eta_5$};
+    \node[vertex] (n3) at (-1,1.25) {$\eta_3$};
+    \node[vertex] (n3p) at (-1,0.5) {$\eta_3'$};
+    \node[vertex] (r) at (0,0) {$\psi$};
+
+\draw[edge] (r) -- (n5);
+\draw[edge] (r) -- (n3p);
+
+\draw[edge] (n3p) -- (n3);
+
+\draw[edge] (n3) -- (n1);
+\draw[edge] (n3) -- (n2);
+
+\draw[edge] (n5) -- (n2);
+\draw[edge] (n5) -- (n4);
+\end{tikzpicture}
+
+\end{centering}
+\caption{The proof in Example \ref{ex:resolutionproof}.}
+\label{fig:dagex}
+\end{figure}
+\end{example}

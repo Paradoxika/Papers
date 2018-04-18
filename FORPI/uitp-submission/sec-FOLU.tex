@@ -1,0 +1,148 @@
+
+
+\section{First-Order LowerUnits} \label{sec:FOLU}
+
+The examples shown in the previous section indicate that there are two main challenges that need to be overcome in order to generalize \LowerUnits to the first-order case:
+\begin{enumerate}
+\item The deletion of a node changes literals. Since substitutions associated with the deleted node are not applied anymore, some literals become more general. Therefore, the reconstruction of the proof during deletion needs to take such changes into account.
+\item Whether a unit should be collected for lowering must depend on whether the literals that were resolved with the unit's single literal are unifiable after they are propagated down to the bottom of the proof by the process of unit deletion. Only if this is the case, they can be contracted and the unit can be reintroduced in the bottom of the proof.
+\end{enumerate}
+
+\newcommand{\none}{\texttt{none}}
+
+\noindent
+Algorithm \ref{algo:fodel} overcomes the first challenge by keeping an additional map from old literals in the input proof to the corresponding more general changed literals in the output proof unders construction. This is done in lines 6 to 7. The correspondence can be computed by proper bookkeeping during deletion (e.g. by having data structures that preserve the positions of literals or by annotating literals with ids). In cases where, due to previous deletions above in the proof, no corresponding literal is available anymore, the special constant $\none$ is used. 
+
+Not only the literals, but also the substitutions must change during deletion. While it would be in principle possible to keep track of such changes as well, it is simpler to search for new substitutions that result in a most general resolved atom. This is why substitutions are omitted in line 12. As a beneficial side-effect, we may obtain more general literals in the root clause of the output proof.
+
+
+\SetKwFunction{Rec}{delete}
+\SetKw{Let}{let}
+
+\newcommand{\dl}[1]{#1^{\dagger}}
+
+\begin{algorithm}[bt]
+  \SetAlgoVlined
+  \SetAlgoShortEnd
+  \KwIn{a proof $\varphi$}
+  \KwIn{$D$ a set of subproofs}
+  \KwOut{a proof $\varphi'$ obtained by deleting the subproofs in $D$ from $\varphi$}
+  \KwData{a map $.'$, initially empty, eventually mapping any $\xi$ to \Del{$\xi$, $D$}}
+  \KwData{a map $\dl{.}$, initially empty, eventually mapping literals to changed literals}
+  \BlankLine
+
+  \newcommand{\fixL}{\ensuremath{\varphi'_L}}
+  \newcommand{\fixR}{\ensuremath{\varphi'_R}}
+
+  \lIf{$\varphi \in D$ or $\raiz{\varphi}$ has no premises}{\Return{$\varphi$}}
+  \BlankLine
+
+  \ElseIf{$\varphi = \varphi_L \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \varphi_R$}{
+    $\varphi'_L \leftarrow $ \Rec{$\varphi_L$,$D$} \;
+    $\varphi'_R \leftarrow $ \Rec{$\varphi_R$,$D$} \;
+    \BlankLine
+
+    \For{every $\ell$ in $\Conclusion{\varphi_L}$ or $\Conclusion{\varphi_R}$}{
+      $\dl{\ell} \leftarrow$ the literal in $\Conclusion{\varphi'_L}$ or $\Conclusion{\varphi'_R}$ corresponding to $\ell$, otherwise $\none$ \;
+    }
+
+    \lIf{$\varphi'_L \in D$}{ 
+      \Return{\fixR} 
+    }
+    \lElseIf{$\varphi'_R \in D$}{ 
+      \Return{\fixL}  
+    }
+    \BlankLine
+
+    \lElseIf{$\dl{\ell_L} = \none$}{ 
+      \Return{\fixL} 
+    }
+    \lElseIf{$\dl{\ell_R} = \none$}{ 
+      \Return{\fixR}  
+    }
+    \BlankLine
+
+    \lElse{ 
+      \Return{ \fixL~$\res{\dl{\ell_L}}{}{\dl{\ell_R}}{}$~\fixR}
+    }
+  }
+  \ElseIf{$\varphi = \con{\varphi_c}{ \{\ell_1,\ldots,\ell_n \} }{\sigma}$}{
+    $\varphi'_c \leftarrow $ \Rec{$\varphi_c$,$D$} \;
+    \BlankLine
+
+    \For{every $\ell$ in $\Conclusion{\varphi_c}$}{
+      $\dl{\ell} \leftarrow$ the literal in $\Conclusion{\varphi'_c}$ corresponding to $\ell$, otherwise $\none$ \;
+    }
+
+    \Return{$\con{\varphi_c}{ \{\dl{\ell_1},\ldots,\dl{\ell_n} \} \backslash \{ \none \}  }{}$};
+  }
+
+  \caption[.]{\FuncSty{fo-delete}}
+  \label{algo:fodel}
+\end{algorithm}
+
+The second challenge is harder to overcome. In the propositional case, collecting units and deleting units can be done in two distinct and independent phases (as in Algorithm \ref{algo:LU}). In the first-order case, on the other hand, these two phases seem to be so interlaced, that they appear to be in a deadlock: the decision to collect a unit to be lowered depends on what will happen with the proof after deletion, while deletion depends on knowing which units will be lowered.
+
+A simple way of unlocking this apparent deadlock is depicted in Algorithm \ref{algo:FOLU}. It optimistically assumes that all units with more than one child are lowerable (lines 2-3). Then it deletes the units (line 6) and tries to reintroduce them in the bottom (lines 8-19). If the reintroduction of a unit $\varphi$ fails because the descendants of the literals that had been resolved with $\varphi$'s literal are not unifiable, then $\varphi$ is removed from the queue of collected units (lines 14-16) and the whole process is repeated, inside the \emph{while} loop (lines 5-19), now without $\varphi$ among the collected units. Since in the worst case the deletion algorithm may have to be executed once for every collected unit, and the number of collected units is in the worst case linear in the length of the proof, the overall runtime complexity is in the worst case quadratic with respect to the length of the proof. This is the price paid to disentangle the dependency between unit collection and deletion.
+
+Alternatively, we could try to lower units incrementally, one at a time, always eagerly deleting the unit and reconstructing the proof immediately after it is collected. The optimistic approach of Algorithm \ref{algo:FOLU}, however, has the potential to save some deletion cycles.
+
+
+
+
+\begin{algorithm}[bt]
+  \SetAlgoVlined
+  \SetAlgoShortEnd
+  \KwIn {a proof $\psi$}
+  \KwOut{a compressed proof $\psi^{\star}$}
+  \KwData{a map $.'$: after line 4, it maps any $\varphi$ to \Del{$\varphi$, $D$}}
+  \KwData{a map $\dl{.}$,mapping literals to changed literals,updated after every deletion}
+  \BlankLine
+
+  \SetKwData{Units}{Units}
+
+  \SetKw{Remove} {remove}
+  \SetKw{Break} {break}
+
+  \algolines{\Units $\leftarrow \varnothing$}{queue to store collected units}
+  \BlankLine
+
+  \For{every subproof $\varphi$, in a bottom-up traversal of $\psi$}{
+    \lIf{$\varphi$ is a unit with more than one child}{enqueue $\varphi$ in \Units}
+  }
+  \BlankLine
+
+  \algolines{$s \leftarrow \texttt{false}$}{indicator of successful reintroduction of all units}
+
+  \While{$\neg s$}{
+    $\psi' \leftarrow $ \Del{$\psi$,$\Units$} \;
+    \BlankLine
+
+    \tcp{Reintroduce units}
+    
+    $s \leftarrow \texttt{true}$ \;
+
+    $\psi^{\star} \leftarrow \psi'$ \;
+    \For{every unit $\varphi$ in \Units}{
+      \Let{$\{\ell\} = \Conclusion{\varphi}$} \;
+      \Let{$\{ \ell_1, \ldots, \ell_n \}$ be the literals resolved against $\ell$ in $\psi$ } \;
+      \Let{$c = \{ \dl{\ell_1},\ldots,\dl{\ell_n} \} \backslash \{ \none \}$} \;
+      \Let{$c^{\downarrow}$ be the descendants of $c$'s literals in $\Conclusion{\psi'}$} \;
+      \If{$c^{\downarrow}$'s literals are not unifiable}{
+        $s \leftarrow \texttt{false}$ \;
+        \Remove{$\varphi$ from \Units} \;
+        \tcp{interrupt the for-loop}
+        \Break \;
+      }
+      \ElseIf{$c^{\downarrow} \neq \emptyset$}{
+        \Let{$\sigma$ be the unifier of $c^{\downarrow}$'s literals and $\ell^c$ the unified literal} \;
+        $\psi^{\star} \leftarrow \con{\psi^{\star}}{c^{\downarrow}}{\sigma} \res{\ell^c}{}{\dl{\ell}}{} \varphi'$ \;
+      }
+    }
+  }
+    
+
+  \caption{\FOLowerUnits}
+  \label{algo:FOLU}
+\end{algorithm}
+
