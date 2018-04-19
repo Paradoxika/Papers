@@ -1,0 +1,34 @@
+%unification necessary example
+\begin{example}\label{ex:pairwise}
+
+The node $\eta_3$ appears to be a candidate for regularization when the safe literals are computed as in the propositional case and unification is considered na\"{i}vely. Note that $\mathcal{S}(\eta_3)=\{Q(c), ~ P(a,x)\}$, and the resolved literal $P(a,c)$ is unifiable with the safe literal $P(a,x)$,
+
+\begin{scriptsize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_6$: $P(y,b)$ \e \hspace{-2cm}}
+\AxiomC{$\eta_1$: \e $P(a,c)$}
+\AxiomC{$\eta_2$: $P(a,c)$ \e $Q(c)$}
+\BinaryInfC{$\eta_3$: \e $Q(c)$}
+\AxiomC{$\eta_4$: $Q(c)$ \e $P(a,x)$}
+\BinaryInfC{$\eta_5$: \e $P(a,x)$}
+\BinaryInfC{$\psi$: $\bot$}
+\end{prooftree}
+\end{scriptsize}
+
+
+
+\noindent
+However, if we attempt to regularize the proof, the same series of actions as in Example \ref{ex:unif} would 
+require resolution between $\eta_1$ and $\eta_6$, which is not possible.
+%result in the following resolution, which cannot be completed.
+%\begin{footnotesize}
+%\begin{prooftree}
+%\def\e{\mbox{\ $\vdash$\ }}
+%\AxiomC{$\eta_1$: \e$p(a,c)$}
+%\AxiomC{$\eta_6$: $p(Y,b)$\e}
+%\BinaryInfC{$\psi'$: ??}
+%\end{prooftree}
+%\end{footnotesize}
+
+\end{example}

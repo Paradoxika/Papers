@@ -2,7 +2,7 @@
 %\documentclass{iosart2x}
 %\documentclass{article}
 \documentclass[submission,copyright,creativecommons]{eptcs}
-\providecommand{\event}{UITP 2007}
+\providecommand{\event}{UITP 2018}
 
 \usepackage{etex}
 \usepackage[margin=1.5in]{geometry}
@@ -38,6 +38,10 @@
 %\usepackage{caption}
 %\usepackage{subcaption}
 
+
+\newenvironment{bprooftree}
+  {\leavevmode\hbox\bgroup}
+  {\DisplayProof\egroup}
 
 \renewcommand{\topfraction}{0.85}
 \renewcommand{\textfraction}{0.1}
@@ -84,18 +88,19 @@
 %\usepackage{authblk}
 \usepackage{underscore}  
 \title{Partial Regularization of First-Order Resolution Proofs}
-\author{Jan Gorzny
-\institute{School of Computer Science\\University of Waterloo\\Waterloo, ON, Canada}
+\author{Jan Gorzny\thanks{Supported by the Google Summer of Code 2014 and Google Summer of Code 2016 programs}
+\institute{%School of Computer Science\\
+University of Waterloo\\Waterloo, ON, Canada}
 %\institute{School of Computer Science and Engineering\\
 %University of New South Wales\thanks{A fine university.}\\
 %Sydney, Australia}
 \email{jgorzny@uwaterloo.ca}
 \and
-Ezequiel Postan
+Ezequiel Postan$^{*}$
 \institute{Universidad Nacional de Rosario\\Rosario, Santa Fe, Argentina}
 \email{ezequiel@fceia.unr.edu.ar}
 \and
-Bruno Woltzenlogel Paleo
+Bruno Woltzenlogel Paleo\thanks{Bruno ist Stipendiat der \"Osterreichischen Akademie der Wissenschaft (APART) an der TU-Wien}
 \institute{Vienna University of Technology\\Vienna, Austria}
 \email{bruno@logic.at}
 }
@@ -150,7 +155,8 @@ Bruno Woltzenlogel Paleo
 %\authorrunning{J.\~Gorzny \and B.\~Woltzenlogel Paleo}
 
 \begin{abstract}
-\input{abstract}
+%\input{abstract}
+\input{abstract-short} %UITP
 %This paper describes the generalization of the 
 %proof compression algorithm
 %\RecyclePivotsIntersection %\texttt{RecyclePivots\-WithIntersection}

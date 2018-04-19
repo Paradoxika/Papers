@@ -1,17 +1,10 @@
 \section{Implementation}
 \label{sec:FORPI}
-%\vspace{-0.5cm}
-%TODO: this section
-{\FirstOrderRPI} ({\FORPI}) (cf. Algorithm \ref{algo:FORPI}) is a first-order generalization of the propositional {\RPI}.
-%\footnote{A generalization of {\RP} could be obtained by setting the safe literals to the empty set in lines 11 and 2 of Algorithm~\ref{algo:foSetSafeLiterals}.}. 
-{\FORPI} traverses the proof in a bottom-up manner, storing for every node a set of safe literals. The set of safe literals for a node $\psi$ is computed from the set of safe literals of its children (cf.\ Algorithm~\ref{algo:foSetSafeLiterals}), similarly to the propositional case, but additionally applying unifiers to the resolved literals (cf. Example \ref{ex:pairwise}).
-If one of the node's resolved literals matches a literal in the set of safe literals, then it may be possible to regularize the node by replacing it by one of its parents.  
-
 
 
 \IncMargin{0.5em}
 \begin{algorithm}[bt]
-\begin{footnotesize}
+\begin{scriptsize}
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 \SetKwData{units}{unitsQueue}
 \SetKwData{fixedUnits}{fixedUnitsQueue}
@@ -31,9 +24,56 @@ traverse $\psi'$ bottom-up and \ForEach{node $\eta$ in $\psi'$}{
 $\psi'$ $\la$ fix($\psi'$) \;
 \Return {$\psi'$}\;
 \caption{\label{algo:FORPI} \texttt{\FORPI}}
-\end{footnotesize}
+\end{scriptsize}
 \end{algorithm}
-\DecMargin{0.5em}    
+\DecMargin{0.5em} 
+
+
+\IncMargin{0.5em}
+\begin{algorithm}[bt]
+\begin{scriptsize}
+
+
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\SetKwData{units}{unitsQueue}
+\SetKwData{fixedUnits}{fixedUnitsQueue}
+
+\Input{A first-order resolution node $\psi$}
+\Output{nothing (but the node $\psi$ gets a set of safe literals)}
+
+\BlankLine
+
+    \lIf{$\psi$ is a root node with no children}{ $\mathcal{S}(\psi) \la$ $\psi$.clause    }
+    \Else{
+      \ForEach{$\psi'$ $\in$ $\psi${\upshape.children}}{
+        \lIf{$\psi'$ is marked as regularized}{ 
+          safeLiteralsFrom($\psi'$) $\la$ $\mathcal{S}(\psi')$ }
+%        \uElseIf{$\eta$ is left parent of $\eta'$}{ 
+          \lElseIf{$\psi' = \psi  \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$ for some $\psi_R$}{ 
+        	safeLiteralsFrom($\psi'$) $\la$ $\mathcal{S}(\psi')~ \cup $ $\{\ell_R\sigma_R \}$ %\;
+        }
+        \lElseIf{$\psi' = \psi_L  \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi$ for some $\psi_L$}{ 
+	safeLiteralsFrom($\psi'$) $\la$ $\mathcal{S}(\psi') ~\cup $ $\{ \ell_L\sigma_L \}$%\;
+        }
+      }
+      $\mathcal{S}(\psi)$ $\la$ $\bigcap_{\psi' \in \psi\textrm{.children}}$ safeLiteralsFrom($\psi'$)
+    }
+
+\caption{\label{algo:foSetSafeLiterals} \texttt{setSafeLiterals} for \texttt{FORPI}}
+\end{scriptsize}
+\end{algorithm}
+\DecMargin{0.5em}   
+
+%\vspace{-0.5cm}
+%TODO: this section
+{\FirstOrderRPI} ({\FORPI}) (cf. Algorithm \ref{algo:FORPI}) is a first-order generalization of the propositional {\RPI}.
+%\footnote{A generalization of {\RP} could be obtained by setting the safe literals to the empty set in lines 11 and 2 of Algorithm~\ref{algo:foSetSafeLiterals}.}. 
+{\FORPI} traverses the proof in a bottom-up manner, storing for every node a set of safe literals. The set of safe literals for a node $\psi$ is computed from the set of safe literals of its children (cf.\ Algorithm~\ref{algo:foSetSafeLiterals}), similarly to the propositional case, but additionally applying unifiers to the resolved literals.% (cf. Example \ref{ex:pairwise}).
+If one of the node's resolved literals matches a literal in the set of safe literals, then it may be possible to regularize the node by replacing it by one of its parents.  
+
+
+
+
 
 %NOTE: FORPPI desciption has been moved to challenges file to optimize whitespace use
 
@@ -46,13 +86,13 @@ As in the propositional case, fixing of the proof is postponed to another (singl
 During fixing, the irregular node is actually replaced by the parent that is not marked as \texttt{deletedNode}. During proof fixing, factoring inferences can be applied, in order to compress the proof further.
 %Further, if a resolution is rebuilt where either either resolvent contains multiple literals that are unifiable with the pivot, then that resolvent is first contracted, to reduce the number of resolutions required and increase the compression achieved.
 
-Note that, in order to reduce notation clutter in the pseudocodes, we slightly abuse notation and do not explicitly distinguish proofs, their root nodes and the clauses stored in their root nodes. It is clear from the context whether $\psi$ refers to a proof, to its root node or to its root clause.
+%Note that, in order to reduce notation clutter in the pseudocodes, we slightly abuse notation and do not explicitly distinguish proofs, their root nodes and the clauses stored in their root nodes. It is clear from the context whether $\psi$ refers to a proof, to its root node or to its root clause.
 
 
 %Unchanged from propositional case? %TODO: or should the $\in$ relation be unification?
 \IncMargin{0.5em}
 \begin{algorithm}[bt]
-\begin{footnotesize}
+\begin{scriptsize}
 
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 \SetKwData{units}{unitsQueue}
@@ -77,46 +117,11 @@ Note that, in order to reduce notation clutter in the pseudocodes, we slightly a
 }
     }
 \caption{\label{algo:foRegularize} \texttt{regularizeIfPossible} for \texttt{FORPI}}
-\end{footnotesize}
+\end{scriptsize}
 \end{algorithm}
 \DecMargin{0.5em}    
 
-\IncMargin{0.5em}
-\begin{algorithm}[bt]
-\begin{footnotesize}
-
-
-\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-\SetKwData{units}{unitsQueue}
-\SetKwData{fixedUnits}{fixedUnitsQueue}
-
-\Input{A first-order resolution node $\psi$}
-\Output{nothing (but the node $\psi$ gets a set of safe literals)}
-
-\BlankLine
-
-    \uIf{$\psi$ is a root node with no children}{
-      $\mathcal{S}(\psi) \la$ $\psi$.clause  
-    }
-    \Else{
-      \ForEach{$\psi'$ $\in$ $\psi${\upshape.children}}{
-        \uIf{$\psi'$ is marked as regularized}{ 
-          safeLiteralsFrom($\psi'$) $\la$ $\mathcal{S}(\psi')$ \;}
-%        \uElseIf{$\eta$ is left parent of $\eta'$}{ 
-          \uElseIf{$\psi' = \psi  \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$ for some $\psi_R$}{ 
-        	safeLiteralsFrom($\psi'$) $\la$ $\mathcal{S}(\psi')~ \cup $ $\{\ell_R\sigma_R  \}$ %\;
-        }
-        \ElseIf{$\psi' = \psi_L  \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi$ for some $\psi_L$}{ 
-	safeLiteralsFrom($\psi'$) $\la$ $\mathcal{S}(\psi') ~\cup $ $\{ \ell_L\sigma_L \}$%\;
-        }
-      }
-      $\mathcal{S}(\psi)$ $\la$ $\bigcap_{\psi' \in \psi\textrm{.children}}$ safeLiteralsFrom($\psi'$)
-    }
-
-\caption{\label{algo:foSetSafeLiterals} \texttt{setSafeLiterals} for \texttt{FORPI}}
-\end{footnotesize}
-\end{algorithm}
-\DecMargin{0.5em}    
+    
 
 %original
 %\begin{algorithm}[bt]
