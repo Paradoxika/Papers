@@ -10,11 +10,13 @@ Proof production is a key feature that has been gaining importance for modern th
 
 
 Lengthy proofs complicate this interface: they take longer to check, consume more memory during proof-checking, occupy more storage space and are harder to exchange, may have a larger unsat core (if more input clauses are used in the proof), and have a larger Herbrand sequent if more variables are instantiated \cite{B10,B16,ResolutionHerbrand,Reis}. For these technical reasons, it is worth pursuing efficient algorithms that compress proofs after they have been found. Furthermore, the problem of proof compression is closely related to Hilbert's 24th Problem \cite{Hilbert24Problem}, which asks for criteria to judge the simplicity of proofs; proof length is one possible criterion. 
-Efficient proof compression techniques can be integrated into theorem provers or external tools with minimal overhead.
+Efficient proof compression techniques can be integrated into theorem provers or external tools with minimal overhead. Moreover, compression techniques like those described in this paper may result in a stronger proof which uses a strict subset of the original axioms required, which could also be considered simpler.
 %UITP: removed B12 citation
 
-Efficient proof compression techniques result in greater usability. Recent applications of SAT solvers to mathematical problems have resulted in very large proofs; e.g., the proof of a long-standing problem in combinatorics was initially 200GB \cite{heule2016solving}. Such proofs are hard to store, let alone validate. Moreover, a restriction of 100GB of disk space per problem per solver prevented validation of proofs in the SAT 2014 competition \cite{clausal}. Although the first example is extreme, the second is not. %, especially when users may wish to instantiate parallel solvers. 
-The inability to write their results to disk renders these solvers useless in some cases. Moreover, even if the only direct improvement of shorter proofs is in the communication between systems, there are indirect benefits to the end-user of a tool in terms of its responsiveness, speed, and memory consumption.
+Efficient proof compression techniques result in greater usability. 
+Recent applications of SAT solvers to mathematical problems have resulted in very large proofs; e.g., the proof of a long-standing problem in combinatorics was initially 200GB \cite{heule2016solving}. Such proofs are hard to store, let alone validate. More practically, a restriction of 100GB of disk space per benchmark per solver prevented validation of proofs in the SAT 2014 competition \cite{clausal}. 
+%Although the first example is extreme, the second is not. %, especially when users may wish to instantiate parallel solvers. 
+The inability to write their results to disk renders these solvers useless in some cases. Moreover, even if the only direct improvement of shorter proofs is in the communication between systems, there are indirect benefits to the end-user of a tool e.g., in terms of its responsiveness. %, speed, and memory consumption. 
 
 %Proof compression techniques must be available at the time that solvers are developed in order to enable their integration and bolster the use of the system to more advanced problems without requiring significantly greater storage resources.
 
@@ -33,9 +35,10 @@ For tree-like sequent calculus proofs, algorithms based on cut-introduction \cit
 For arbitrary proofs in the Thousands of Problems for Theorem Provers (TPTP) \cite{TPTP} format (including DAG-like first-order resolution proofs), there is an algorithm \cite{LPARCzech} that looks for terms that occur often in any Thousands of Solutions from Theorem Provers (TSTP) \cite{TPTP} proof and abbreviates them. 
 
 
-The work reported in this paper is part of a new trend that aims at lifting successful propositional proof compression algorithms to first-order logic. Our first target was the propositional {\LowerUnits} ({\LU}) algorithm \cite{LURPI}, which delays resolution steps with unit clauses, and we lifted it to a new algorithm that we called
+The work reported in this paper is part of a new trend that aims at lifting successful propositional proof compression algorithms to first-order logic. %Our first target was the propositional
+We first lifted the {\LowerUnits} ({\LU}) algorithm \cite{LURPI}, which delays resolution steps with unit clauses, resulting in a new algorithm that we called
 {\SFOLowerUnits} 
-({\GFOLU}) algorithm \cite{GFOLU}. Here we continue this line of research by lifting the 
+({\GFOLU}) \cite{GFOLU}. Here we continue this line of research by lifting the 
 %\RecyclePivotsIntersection 
 \texttt{Recycle\-PivotsWithIntersection}
 ({\RPI}) algorithm \cite{LURPI}, which improves the \texttt{RecyclePivots} ({\RP}) algorithm \cite{RP08} by detecting nodes that can be regularized even when they have multiple children. 
