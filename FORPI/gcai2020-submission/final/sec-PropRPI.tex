@@ -1,0 +1,352 @@
+\section{Algorithm {\RecyclePivotsIntersection}}
+\label{Section:RPI}
+
+\newcommand{\tRes}{\odot}
+\newcommand{\tResFact}{\otimes}
+\newcommand{\tResChain}{\ominus}
+\newcommand{\AXC}{\AxiomC}
+\newcommand{\BIC}{\BinaryInfC}
+\newcommand{\RName}[1]{\RightLabel{#1}}
+\newcommand{\p}[1]{\hat{#1}}
+\newcommand{\ub}[2]{\underbrace{#1}_{#2}}
+\newcommand{\tResStar}{\circledast}
+
+%\textbf{Note:} for the reviewers' convenience, this appendix summarizes \cite{LURPI}.
+
+%\bigskip
+
+%\noindent
+This section explains {\RecyclePivotsIntersection} ({\RPI}) \cite{LURPI}, which aims to compress irregular propositional proofs. It can be seen as a simple 
+but significant modification of the {\RP} algorithm described in 
+\cite{RP08}, 
+from which it derives its name. 
+Although in the worst case full regularization can increase the proof length exponentially 
+\cite{Tseitin}, these algorithms show that 
+many irregular proofs can have their length decreased if a careful partial regularization is performed. 
+
+We write $\psi[\eta]$ to denote a \emph{proof-context}
+$\psi[\_]$ with a single placeholder replaced by the subproof $\eta$.
+We say that a proof of the form $\psi[\eta \tRes_p \psi'[\eta'\tRes_p\eta_2]]$ is \emph{irregular}.
+
+\begin{example}
+%Consider an irregular proof of the form $\psi[ \eta \tRes_p \psi'[\eta' \tRes_p \eta''] ]$, 
+Consider an irregular proof and assume, without loss of generality, that $p \in \eta$ and $p \in \eta'$, as in the proof of $\psi$ below. The proof of $\psi$ can be written as $(\eta \tRes_p ( \eta_1 \tRes (\eta' \tRes_p \eta'')))$, or $(\eta \tRes_p \psi'[(\eta' \tRes_p \eta'')])$ where $\psi'[(\eta' \tRes_p \eta'')] = (\eta_1 \tRes (\eta' \tRes_p \eta''))$ is the sub-proof of $\lnot p$.
+\begin{footnotesize}
+\begin{prooftree}
+
+		\AXC{$\eta$: $p$} \RName{$p$}
+			\AXC{$\eta_1$: $\lnot r, \lnot p$}
+		\AXC{$\eta'$: $p$}
+				\AXC{$ \eta''$: $\lnot p, r$} \RName{$p$}
+	\BIC{$r$}
+
+	\BIC{$\lnot p$} \RName{$p$}
+
+		\BIC{$\psi$: $\bot$}	
+%		 \DisplayProof 
+\end{prooftree}
+\label{ex:rpi-example-a}
+\end{footnotesize}
+\noindent
+Then, if $\eta' \tRes_p \eta''$ is replaced by $\eta''$ within the proof-context $\psi'[\ ]$, the clause $\eta \tRes_p \psi'[\eta'']$ subsumes the clause $\eta \tRes_p \psi'[\eta' \tRes_p \eta'']$, because even though the literal $\neg p$ of $\eta''$ is
+propagated down, it gets resolved against the literal $p$ of $\eta$ later on below in the proof. More precisely, even though it might be the case that $\neg p \in \psi'[\eta'']$ while $\neg p \notin \psi'[\eta' \tRes_p \eta'']$, it is necessarily the case that $\neg p \notin \eta \tRes_p \psi'[\eta' \tRes_p \eta'']$ and $\neg p \notin \eta \tRes_p \psi'[\eta'']$. In this case, the proof can be regularized as follows.
+
+
+\begin{footnotesize}
+\begin{prooftree}
+
+		\AXC{$\eta$: $p$}
+			\AXC{$\eta_1$: $\lnot r, \lnot p$}
+
+				\AXC{$ \eta''$: $\lnot p, r$}
+
+
+	\BIC{$\lnot p$} \RName{$p$}
+
+		\BIC{$\psi$: $\bot$}	
+
+\end{prooftree}
+\end{footnotesize}
+\end{example}
+
+
+\begin{figure*}%
+\centering
+\subfloat[A propositional proof before compression by {\RPI}.]{%
+\begin{footnotesize}
+%\begin{prooftree}
+\AXC{$ \eta_1 $}
+		\AXC{$ \eta_2: a, c, \neg b $}
+				\AXC{$ \eta_1: \neg a$}
+						\AXC{$ \eta_3:  a, b $} \RName{$a$}
+					\BIC{$ \eta_4: b$} \RName{$b$}
+			\BIC{$ \eta_5: a, c$}	\RName{$a$}
+	\BIC{$\eta_6: c$}
+		\AXC{$ \eta_4 $}
+				\AXC{$ \eta_7: a, \neg b, \neg c $} \RName{$b$}
+			\BIC{$ \eta_8: a, \neg c$}	\RName{$c$}
+					\AXC{$ \eta_1 $}  \RName{$a$}
+				\BIC{$ \eta_9: \neg c$}	\RName{$c$}
+		\BIC{$\psi: \bot$}	
+		 \DisplayProof 
+%\end{prooftree}
+\label{ex:rpi-example-a}
+\end{footnotesize}}\\%
+\subfloat[A propositional proof after compression by {\RPI}.]{%
+\begin{small}
+%\begin{prooftree}
+\AXC{$ \eta_1: \neg a $}
+		\AXC{$ \eta_2: a, c, \neg b $}
+						\AXC{$ \eta_3:  a, b $}\RName{$ $}
+			\BIC{$ \eta_5: a, c$}	\RName{$ $}
+	\BIC{$\eta_6: c$}
+		\AXC{$ \eta_3 $}
+				\AXC{$ \eta_7: a, \neg c, \neg b $} \RName{$ $}
+			\BIC{$ \eta_8: a, \neg c$}	\RName{$ $}
+					\AXC{$ \eta_1 $}  \RName{$ $}
+				\BIC{$ \eta_9: \neg c$}	\RName{$ $}
+		\BIC{$\psi: \bot$}	
+		 \DisplayProof 
+%\end{prooftree}
+\label{ex:rpi-example-b}
+\end{small}
+}%
+
+\caption{A {\RPI} example.}
+\label{ex:rpi-example}
+\end{figure*}
+
+
+Although the remarks above suggest that it is safe to replace $\eta' \tRes_p
+\eta''$ by $\eta''$ within the proof-context $\psi'[\ ]$, this is not always the
+case. If a node in $\psi'[\ ]$ has a child in $\psi[\ ]$, then the literal $\neg
+p$ might be propagated down to the root of the proof, and hence, the clause
+$\psi[ \eta \tRes_p \psi'[ \eta''] ]$ might not subsume the clause $\psi[ \eta
+\tRes_p \psi'[\eta' \tRes_p \eta''] ]$. Therefore, it is only safe to do the
+replacement if the literal $\neg p$ gets resolved in all paths from $\eta''$ to the root or if it already occurs in the root clause of the original proof $\psi[ \eta \tRes_p \psi'[\eta' \tRes_p \eta''] ]$.
+
+\IncMargin{0.5em}
+\begin{algorithm}[b]
+\begin{footnotesize}
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\SetKwData{units}{unitsQueue}
+\SetKwData{fixedUnits}{fixedUnitsQueue}
+
+\Input{A proof $\psi$}
+\Output{A possibly less-irregular proof $\psi'$}
+
+\BlankLine
+
+$\psi'$ $\la$ $\psi$\;
+traverse $\psi'$ bottom-up and \ForEach{node $\eta$ in $\psi'$}{
+   % \uIf{$\eta$ is an input node}{ 
+   % 		do nothing \;
+   %  }
+   %  \ElseIf{$\eta$ is a resolvent node}{
+   %   setSafeLiterals($\eta$) \;
+   %   regularizeIfPossible($\eta$)
+   % }
+%% SM: original version: do we really need the "do nothing" branch?
+   \If{$\eta$ is a resolvent node}{
+     setSafeLiterals($\eta$) \;
+     regularizeIfPossible($\eta$)
+   }
+  }
+$\psi'$ $\la$ fix($\psi'$) \;
+\Return {$\psi'$}\;
+\caption{\label{algo:RPI} \texttt{\RPI}}
+\end{footnotesize}
+\end{algorithm}
+\DecMargin{0.5em}
+%\begin{code}
+%  function recyclePivotsWithIntersection(p: Proof): Proof = {
+%    traverseBottomUp(p)(
+%      n => {
+%        if (n is Input) doNothing
+%        else if (n is Resolvent) {
+%          setSafeLiterals(n)
+%          regularizeIfPossible(n)
+%          for (c in n.children) c.freeMemory
+%        } 
+%      }
+%    )
+%    fix(p)  
+%  }
+%\end{code}
+
+These observations lead to the idea of traversing the proof in a bottom-up
+manner, storing for every node a set of \emph{safe literals} that get resolved
+in all paths below it in the proof (or that already occurred in the root clause
+of the original proof). Moreover, if one of the node's resolved literals belongs
+to the set of safe literals, then it is possible to regularize the node by
+replacing it by one of its parents (cf.\ Algorithm~\ref{algo:RPI}). 
+
+The regularization of a node should replace a node by one of its parents, and more precisely by the parent whose clause contains the resolved literal that is safe. After regularization, all nodes below the regularized node may have to be fixed. However, since the regularization is done with a bottom-up traversal, and only nodes below the regularized node need to be fixed, it is again possible to postpone fixing and do it with only a single traversal afterwards. 
+Therefore, instead of replacing the irregular node by one of its parents immediately, 
+its other parent is marked as \texttt{deletedNode}, as shown in Algorithm~\ref{algo:Regularize}. Only later during fixing, 
+the irregular node is actually replaced by its surviving parent (i.e. the parent that is not marked as \texttt{deletedNode}).
+
+
+\IncMargin{0.5em}
+\begin{algorithm}[p]
+\begin{footnotesize}
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\SetKwData{units}{unitsQueue}
+\SetKwData{fixedUnits}{fixedUnitsQueue}
+
+\Input{A node $\eta$}
+\Output{nothing (but the proof containing $\eta$ may be changed)}
+
+\BlankLine
+    \uIf{$\eta${\upshape.rightResolvedLiteral} $\in$ $\mathcal{S}(\eta)$}{
+      mark left parent of $\eta$ as \texttt{deletedNode} \;
+      mark $\eta$ as regularized
+    }
+    \ElseIf{\textrm{$\eta${\upshape.leftResolvedLiteral} $\in$  $\mathcal{S}(\eta)$}}{
+      mark right parent of $\eta$ as \texttt{deletedNode} \;
+      mark $\eta$ as regularized
+    }
+\caption{\label{algo:Regularize} \texttt{regularizeIfPossible}}
+\end{footnotesize}
+\end{algorithm}
+\DecMargin{0.5em}
+
+\IncMargin{0.5em}
+\begin{algorithm}[p]
+\begin{footnotesize}
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\SetKwData{units}{unitsQueue}
+\SetKwData{fixedUnits}{fixedUnitsQueue}
+
+\Input{A node $\eta$}
+\Output{nothing (but the node $\eta$ gets a set of safe literals)}
+
+\BlankLine
+
+    \uIf{$\eta$ is a root node with no children}{
+      $\mathcal{S}(\eta)$ $\la$ $\eta$.clause  
+    }
+    \Else{
+      \ForEach{$\eta'$ $\in$ $\eta${\upshape.children}}{
+        \uIf{$\eta'$ is marked as regularized}{ 
+          safeLiteralsFrom($\eta'$) $\la$  $\mathcal{S}(\eta')$ \;}
+        \uElseIf{$\eta$ is left parent of $\eta'$}{ 
+        	safeLiteralsFrom($\eta'$) $\la$  $\mathcal{S}(\eta')$ $\cup$ 
+        	\hspace{6cm} $~~~~$ \{ $\eta'$.rightResolvedLiteral \} \;
+        }
+        \ElseIf{$\eta$ is right parent of $\eta'$}{ 
+			safeLiteralsFrom($\eta'$) $\la$ $\mathcal{S}(\eta')$ $\cup$ 
+			\hspace{6cm} $~~~~$ \{ $\eta'$.leftResolvedLiteral \} \;
+        }
+      }
+       $\mathcal{S}(\eta)$ $\la$ $\bigcap_{\eta' \in \eta\textrm{.children}}$ safeLiteralsFrom($\eta'$)
+    }
+\caption{\label{algo:SetSafeLiterals} \texttt{setSafeLiterals}}
+\end{footnotesize}
+\end{algorithm}
+\DecMargin{0.5em}
+%\begin{code}
+%  function setSafeLiterals(n: Resolvent) = {
+%    if (n is a root node with no children) {
+%      n.safeLiterals = n.clause  
+%    }
+%    else {
+%      val safeLiteralsPerChild = for (c in n.children) yield {
+%        if (c is marked as regularized) c.safeLiterals 
+%        else if (c.left == n) c.safeLiterals $+cup$ {c.resolvedLiterals.right}
+%        else if (c.right == n) c.safeLiterals $+cup$ {c.resolvedLiterals.left}
+%      }
+%      n.safeLiterals = intersection(safeLiteralsPerChild)
+%    }
+%  }
+%\end{code}
+
+The set of safe literals of a node $\eta$ can be computed from the set of safe
+literals of its children (cf.\ Algorithm~\ref{algo:SetSafeLiterals}). In the case when $\eta$ has a single child $\varsigma$, the safe literals of $\eta$ are simply the safe literals of $\varsigma$ together with the resolved literal $p$ of $\varsigma$ belonging to $\eta$ ($p$ is safe for $\eta$, because whenever $p$ is propagated down the proof through $\eta$, $p$ gets resolved in $\varsigma$). It is important to note, however, that if $\varsigma$ has been marked as regularized, it will eventually be replaced by $\eta$, and hence $p$ should not be added to the safe literals of $\eta$. In this case, the safe literals of $\eta$ should be exactly the same as the safe literals of $\varsigma$. When $\eta$ has several children, the safe literals of $\eta$ w.r.t. a child $\varsigma_i$ contain literals that are safe on all paths that go from $\eta$ through $\varsigma_i$ to the root. For a literal to be safe for all paths from $\eta$ to the root, it should therefore be in the intersection of the sets of safe literals w.r.t. each child.
+
+
+The {\RP} and the {\RPI} algorithms differ from each other mainly in the
+computation of the safe literals of a node that has many children. While {\RPI}
+returns the intersection as shown in Algorithm~\ref{algo:SetSafeLiterals}, {\RP}
+returns the empty set (cf.\ Algorithm~\ref{algo:SetSafeLiteralsRP}). Additionally, while in {\RPI} the safe literals of the root node contain all the literals of the root clause, in {\RP} the root node is always assigned an empty set of literals. 
+(Of course, this makes a difference only when the proof is not a refutation.)
+Note that during a traversal of the proof, 
+the lines from 5 to 10 in Algorithm~\ref{algo:SetSafeLiterals} are executed as many times as the number of edges in the proof. 
+Since every node has at most two parents, the number of edges is at most twice the number of nodes. 
+Therefore, during a traversal of a proof with $n$ nodes, lines from 5 to 10 are
+executed at most $2n$ times, and the algorithm remains linear.
+In our prototype implementation, the sets of safe literals are instances of Scala's 
+\texttt{mutable.HashSet} class. Being mutable, new elements can be added efficiently.
+And being HashSets, membership checking is done in constant time in the average case, 
+and set intersection (line 12) can be done in $O(k.s)$, where $k$ is the number of sets and $s$ is the size of the smallest set.\\
+
+
+\IncMargin{0.5em}
+\begin{algorithm}[p]
+\begin{footnotesize}
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\SetKwData{units}{unitsQueue}
+\SetKwData{fixedUnits}{fixedUnitsQueue}
+
+\Input{A node $\eta$}
+\Output{nothing (but the node $\eta$ gets a set of safe literals)}
+
+\BlankLine
+
+    \uIf{$\eta$ is a root node with no children}{
+      $\mathcal{S}(\eta)$ $\la$ $\emptyset$ 
+    }
+    \Else{
+      \uIf{$\eta$ has only one child $\eta'$}{
+        \uIf{$\eta'$ is marked as regularized}{ 
+          $\mathcal{S}(\eta)$ $\la$  $\mathcal{S}(\eta')$ \;}
+        \uElseIf{$\eta$ is left parent of $\eta'$}{ 
+        	$\mathcal{S}(\eta)$ $\la$  $\mathcal{S}(\eta')$ $\cup$ 
+        	 \{ $\eta'$.rightResolvedLiteral \} \;
+        }
+        \ElseIf{$\eta$ is right parent of $\eta'$}{ 
+			$\mathcal{S}(\eta)$ $\la$  $\mathcal{S}(\eta')$ $\cup$
+			 \{ $\eta'$.leftResolvedLiteral \} \;
+        }
+      }
+      \Else{
+      	 $\mathcal{S}(\eta)$ $\la$ $\emptyset$
+      }
+    }
+\caption{\label{algo:SetSafeLiteralsRP} \texttt{setSafeLiterals} for \RP}
+\end{footnotesize}
+\end{algorithm}
+\DecMargin{0.5em}
+%
+%\begin{code}
+%  function setSafeLiterals(n: Resolvent) = {
+%     n.safeLiterals = 
+%       if (n has only one child c) {
+%         if (c is marked as regularized) c.safeLiterals 
+%         else if (c.left == n) c.safeLiterals $+cup$ {c.resolvedLiterals.left}
+%         else if (c.right == n) c.safeLiterals $+cup$ {c.resolvedLiterals.right}
+%       }
+%       else $+emptyset$
+%  }
+%\end{code}
+
+
+
+%\input{propRPIex}
+
+\begin{example} %This example from the original RPI source
+\label{Example:Proof}
+When applied to the proof $\psi$ shown in Figure \ref{ex:rpi-example-a}, the algorithm {\RPI} assigns $\{a,c\}$ and $\{a, \neg c\}$ as the safe literals of, respectively, $\eta_5$ and $\eta_8$. The safe literals of $\eta_4$ w.r.t. its children $\eta_5$ and $\eta_8$ are respectively $\{a,c,b\}$ and $\{a, \neg c, b\}$, and hence the safe literals of $\eta_4$ are $\{a,b\}$ (the intersection of $\{a,c,b\}$ and $\{a, \neg c, b\}$). Since the right resolved literal of $\eta_4$ ($a$) belongs to $\eta_4$'s safe literals, $\eta_4$ is correctly detected as a redundant node and hence regularized: $\eta_4$ is replaced by its right parent $\eta_3$. The resulting proof is shown in Figure \ref{ex:rpi-example-b}.
+
+%This proof corresponds to the proof term
+%$$ (\ub{\{\neg a\}}{\eta_1} \tRes (\{a, c, \neg b\} \tRes \ub{\{a, b\}}{\eta_3})) \tRes ((\eta_3 \tRes \{\neg b, \neg c, a\}) \tRes \eta_1) $$
+
+%\noindent%
+%{\RP}, on the other hand, assigns $\emptyset$ as the set of safe literals for $\eta_4$. Therefore, it does not detect that $\eta_4$ is a redundant irregular node, and then $\RP(\varphi) = \varphi$. 
+
+
+%%The original example description.
+%The node $\eta_4$ has pivot $a$, left (right) resolved literal $\neg a$ ($a$). Its conclusion is $\{b\}$ and its premises are the conclusions of its parents: the input nodes $\eta_1$ ($\{ \neg a \}$) and $\eta_3$ ($\{ a, b\} $). It has two children ($\eta_5$ and $\eta_8$). $\psi$ can be compactly represented by the following proof term:
+%$$ (\ub{\{\neg a\}}{\eta_1} \tRes (\{a, c, \neg b\} \tRes \ub{(\eta_1 \tRes \{a, b\})}{\eta_4})) \tRes ((\eta_4 \tRes \{a, \neg b, \neg c\}) \tRes \eta_1). $$
+\end{example}
+

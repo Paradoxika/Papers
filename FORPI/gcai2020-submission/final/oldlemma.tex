@@ -1,0 +1,72 @@
+\begin{lem}\label{lem:cor}
+Let $\eta_1$ be a node and $\rho(\eta_1)$ be a path from $\eta_1$ to the root of the proof. Suppose that $\eta \in \rho(\eta_1)$ is the direct descendant of $\eta_1$ on $\rho(\eta_1)$ such that $\eta_1 \sqsubseteq \mathcal{S}(\eta)$. If $\eta$ is replaced by $\eta_1$ in some proof $\psi$ to obtain $\psi'$, every literal $\ell_s \in \eta_1$ is either used as a pivot below $\eta_1$ in $\psi'$ or is contained in the root clause $\Gamma(\psi')$. \\
+\end{lem}
+
+\begin{proof}
+For a pair of nodes $\eta_1$, $\eta$ that satisfy the conditions of the lemma, let $\sigma_1$ be the substitution such that $\eta_1\sigma_1 \subseteq \mathcal{S}(\eta)$. Assume that $\eta_1 \xrightarrow[\sigma]{\{\ell_1\} } \eta$ in $\psi$.
+
+We proceed by induction $h(\eta)$, the height of $\eta$ in $\psi$, which is the length of a longest path from the root to $\eta$. For the base case $h(\eta)=0$, when deleting $\eta$, $\eta$ is replaced by $\eta_1$ and by assumption there exists a $\sigma_1$ such that $\Gamma(\eta_1)\sigma_1 \subseteq \mathcal{S}(\eta) = \Gamma(\eta) \implies \Gamma(\eta_1) \sqsubseteq \Gamma(\eta)$. %This concludes the base case; assume the result holds for any node $\eta_I$ with height $h(\eta_I) > 0$ and consider a node $\eta$ at height $h(\eta)=h(\eta_I)+1$.
+This concludes the base case; assume the result holds for any node $\eta_I$ with height $h(\eta_I) \le m$ for an arbitrary $m$ and consider a node $\eta$ at height $h(\eta)=m+1$.
+
+For the inductive step, 
+consider any path $\rho(\eta')$ from $\eta'$ to the root of the proof, and let $\eta''$ be the node which is resolved against $\eta$ in $\psi$. The deletion of $\eta$ from $\psi$ attempts to replace the resolution $\eta'=\eta \odot \eta''$ with $\eta' = \eta_1 \odot \eta''$.
+
+For each path $\rho(\eta')$, there are two cases: either there exists an $\ell_1''\in \eta_1$ such that $\ell_1''\sigma_1$ can be used as the instantiated resolved literal between $\eta_1$ and $\eta'''$, or no such $\ell_1''$ exists.\\
+
+\noindent
+\emph{Case 1:}  $\eta_1 \xrightarrow[\sigma_1''=\sigma_1]{\{\ell_1''\} } \eta'$ and $\eta'' \xrightarrow[\sigma_2'']{\{\ell_2''\} } \eta'$ for some $\ell_1''$, $\ell_2''$, and $\sigma_2''$.
+
+Since all instantiated literals of $\eta_1\sigma_1$ are safe, for each of the remaining literals $\ell_s \sigma_1 \in \Gamma(\eta_1)\sigma_1 \cap \Gamma(\eta')$ such that $\ell_s\neq \ell_1''$, there is a node $\eta_{\ell_s}\in \rho(\eta')$ that uses $\ell_s\sigma_1$ as a resolved literal or $\ell_s\sigma_1$ is contained in the root clause $\Gamma$; i.e. every remaining literal $\ell \in \eta_1$ that is not contained in $\Gamma$ will eventually be used as a resolved literal. The nodes using $\ell_{\eta''}\sigma_2'' \in (\Gamma(\eta'')\sigma_2''\cap\Gamma(\eta'))\setminus (\Gamma(\eta_1)\sigma_1)$ are unchanged, so these literals will still be used as a resolved literal for some node below $\eta'$. 
+It remains to be shown that $\ell_1$ is still used as a resolved literal. To see this, recall that clauses are sets and that $\ell_1\sigma_1$ is safe. Therefore the resolution on $\rho(\eta')$ which uses $\ell_1\sigma_1$ as a resolved literal removes all copies\footnote{Note that the desired result can be obtained by inserting a factoring node before performing resolution with $\eta'$ if clauses are defined as multi-sets.} of $\ell_1\sigma_1$. \\
+
+
+\noindent
+\emph{Case 2:} $\sigma_1$ cannot be used as a unifier for literals of $\eta_1$ and $\eta''$; i.e. resolution between $\eta_1$ and $\eta''$ is not possible for any $\ell_1''\in \eta_1$ 
+with the instantiated resolved literal $\ell_1''\sigma_1$. In this case, replace $\eta'$ by $\eta_1$; since $\ell_1''\sigma_1'' \notin \Gamma(\eta_1)\sigma_1$, every $\ell_s\sigma_1 \in \Gamma(\eta_1)\sigma_1$ must still be used as a resolved literal below $\eta'$, i.e. $\eta_1\sigma_1 \subseteq \mathcal{S}(\eta') \implies \eta_1 \sqsubseteq \mathcal{S}(\eta')$. Since $h(\eta') < h(\eta)=m+1$, we are done by the induction hypothesis. 
+
+
+\end{proof}
+
+\begin{proof}[Proof of Theorem \ref{thm:correct}]
+Let $\psi$ be a proof with root clause $\Gamma$, and let $\eta_S \in \psi$ be a strongly regularizable node.  Let $\psi' = \psi\setminus \{\eta_S\}$ with root clause $\Gamma'$. To prove the theorem, it suffices to observe that any strongly regularizable node $\eta_S$ satisfies Lemma \ref{lem:cor}'s hypothesis for any $\rho(\eta_1)$.
+
+
+
+\begin{figure}[bt]
+\begin{centering}
+\scalebox{0.8}{
+\begin{tikzpicture}
+  \tikzstyle{vertex}=[circle,minimum size=10pt,inner sep=0pt]
+\tikzset{edge/.style = {->,> = latex'}}
+
+    \node[vertex] (n1) at (-2,1) {$\eta_1$};
+    \node[vertex] (n2) at (0,1) {$\eta_2$};
+    \node[vertex] (n5) at (1,0.5) {$\eta''$};
+    \node[vertex] (n3) at (-1,0.5) {$\eta$};
+    \node[vertex] (r) at (0,0) {$\eta'$};
+
+\draw[edge] (r) -- (n5);
+\draw[edge] (r) -- (n3);
+\draw[edge] (n3) -- (n1);
+\draw[edge] (n3) -- (n2);
+
+
+    \node[vertex] (m1) at (2,1) {$ $};
+        \node[vertex] (m2) at (3,1) {$ $};
+\draw[edge] (m1)  -- (m2);
+
+    \node[vertex] (ndp) at (6,0.5) {$\eta''$};
+    \node[vertex] (n) at (4,0.5) {$\eta_1$};
+    \node[vertex] (rp) at (5,0) {$\eta'$};
+\draw[edge] (rp) -- (ndp);
+\draw[edge] (rp) -- (n);
+\end{tikzpicture}
+}
+\end{centering}
+\caption{The a layout of $\eta_1$ and $\eta$ in proofs $\psi$ (left) and $\psi\setminus\{\eta\}$ (right), as used in the proof of Lemma \ref{lem:cor}.}
+\label{fig:dagex}
+\end{figure}
+
+
+
+\end{proof}
