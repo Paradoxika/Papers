@@ -74,7 +74,7 @@ As neither of $\eta_3$'s resolved literals is syntactically equal to a safe lite
 \end{example}
 
 \noindent
-Unlike in the propositional case, where a resolved literal must be syntactically equal to a safe literal for regularization to be possible, the example above suggests that, in the first-order case, it might suffice that the resolved literal be unifiable with a safe literal. However, there are cases where mere unifiability is not enough and greater care is needed: e.g., when $\eta_1: \vdash P(a,c)$ and $\eta_2: P(a,c) \vdash Q(c)$ in Example \ref{ex:unif}. One way to prevent these cases is to require the resolved literal to be not only unifiable but subsume a safe literal. %A weaker (and better) requirement is possible, and requires a slight modification of the concept of safe literals, taking into account the unifications that occur on the paths from a node to the root. 
+Unlike in the propositional case, where a resolved literal must be syntactically equal to a safe literal for regularization to be possible, Example \ref{ex:unif} suggests that, in the first-order case, it might suffice that the resolved literal be unifiable with a safe literal. However, there are cases where mere unifiability is not enough and greater care is needed: e.g., when $\eta_1: \vdash P(a,c)$ and $\eta_2: P(a,c) \vdash Q(c)$ in Example \ref{ex:unif}. One way to prevent these cases is to require the resolved literal to be not only unifiable but subsume a safe literal. %A weaker (and better) requirement is possible, and requires a slight modification of the concept of safe literals, taking into account the unifications that occur on the paths from a node to the root. 
 A slight modification to the concept of safe literals, which takes into account the unifications that occur on the paths from a node to the root, results in a weaker (and better) requirement.
 
 %\input{oldexample42}
@@ -84,17 +84,17 @@ A slight modification to the concept of safe literals, which takes into account 
 %\emph{First-order safe literals} for a node $\eta$, denoted $\mathcal{S}(\eta)$, are a set of instantiated resolved literals used as pivots in all paths below $\eta$ in the proof, or that occur in the root clause of the proof.
 %\end{definition}
 
-\begin{definition}
+\begin{definition}\label{def:safefirst}
 The set of \emph{safe literals} for a node $\eta$ in a proof $\psi$ with root clause $\Gamma$, denoted $\mathcal{S}(\eta)$, is such that $\ell \in \mathcal{S}(\eta)$ if and only if $\ell \in \Gamma$ or for all paths from $\eta$ to the root of $\psi$ there is an edge $\n_1
 \xrightarrow[\sigma]{\ell'} \n_2$ with $\ell' \sigma = \ell$.
 \end{definition}
 
 \noindent
 As in the propositional case, safe literals can be computed in a bottom-up traversal of the proof. Initially, at the root, the safe literals are exactly the literals that occur in the root clause. As we go up, the safe literals $\mathcal{S}(\eta')$ of a parent node $\eta'$ of $\eta$ where $\eta'
-\xrightarrow[\sigma]{\ell} \eta$ is set to $\mathcal{S}(\eta) \cup \{ \ell \sigma \}$. Note that we apply the substitution to the resolved literal before adding it to the set of safe literals (cf. algorithm \ref{algo:foSetSafeLiterals}, lines 8 and 10). In other words, in the first-order case, the set of safe literals has to be a set of \emph{instantiated} resolved literals.
+\xrightarrow[\sigma]{\ell} \eta$ is set to $\mathcal{S}(\eta) \cup \{ \ell \sigma \}$. Note that we apply the substitution to the resolved literal before adding it to the set of safe literals (cf. Algorithm \ref{algo:foSetSafeLiterals}, lines 8 and 10). In other words, in the first-order case, the set of safe literals has to be a set of \emph{instantiated} resolved literals.
 
 %In the case of Example \ref{ex:pairwise}, computing safe literals as defined above would result in $\mathcal{S}(\eta_3)=\{Q(c),~P(a,b)\}$, where clearly the pivot $P(a,c)$ in $\eta_1$ is not safe. A generalization of this requirement is formalized below.
-In the modified case of Example \ref{ex:unif}, computing safe literals as defined above would result in $\mathcal{S}(\eta_3)=\{Q(c),~P(a,b)\}$, where clearly the pivot $P(a,c)$ in $\eta_1$ is not safe. A generalization of this requirement, which can be thought of a \emph{necessary} condition, follows.
+In the modified case of Example \ref{ex:unif}, computing safe literals as in Definition \ref{def:safefirst} would result in $\mathcal{S}(\eta_3)=\{Q(c),~P(a,b)\}$, where clearly the pivot $P(a,c)$ in $\eta_1$ is not safe. A generalization of this requirement, which can be thought of a \emph{necessary} condition, is Definition \ref{prop:pair}.
 
 %\noindent
 %Another way to prevent the problem depicted above would be to require the pivot to be not only unifiable but in fact more general than a safe literal. A weaker (and better) requirement is possible, however, as defined below.
