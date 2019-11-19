@@ -31,7 +31,7 @@ For each proof $\psi$, we measured the time needed to compress the proof ($t(\ps
 %\begin{figure}[bt]
 %\centering
 %  \includegraphics[scale=0.5]{images/final-random-forpi-compress_ratio_res_vs_proof_res_length.pdf}  
-%    \caption{Compression Ratio (\FORPI)}
+%    \caption{Compression Ratio (\FORPI).}
 %    \label{fig:forpimean}
 %    \end{figure}
 %Figure \ref{fig:forpimean} shows a box-whisker plot of compression ratio with proofs grouped by number of resolutions and whiskers indicating a minimum and maximum compression ratio achieved within the group. The circles indicate the mean compression ratio when considering only proofs for which some compression was achieve, and these points indicate that when larger proofs can be compressed, they are compressed more than smaller proofs.
@@ -54,7 +54,7 @@ Best                            & 59 (19.2\%) & 1303 (57.1\%) & 1362 (52.5\%)   
 \end{tabular} $~~~~~~~~~~~~~~~~$
 \end{scriptsize}
 %\vspace{3pt}
-\caption{Number of proofs compressed and number of overall nodes removed}
+\caption{Number of proofs compressed and number of overall nodes removed.}
 \label{tab:results}
 \end{table*}
 
@@ -76,7 +76,7 @@ Best & 12.6\% & 24.4\%&  Best &  22.0\% \\ \hline
 \end{tabular}
 \end{scriptsize}
 %\vspace{3pt}
-\caption{Mean compression results}
+\caption{Mean compression results.}
 \label{tab:result-mean}
 \end{table*}
 
@@ -92,34 +92,32 @@ Table \ref{tab:result-mean} compares the results of {\FORPI} and its combination
   \makebox[0pt]{\subfloat[#1]{#2}}%
 }
 \newcommand{\centerhfill}[1][\quad]{\hspace{\stretch{0.5}}#1\hspace{\stretch{0.5}}}
-
 \begin{figure*}[bt]
-\hspace{-1cm}
-\begin{centering}
-\makebox[\textwidth]{\makebox[1.25\textwidth]{
-\begin{minipage}{0.3\textwidth}\centering
-\subfloat[Compressed length against input length]{{
-    \includegraphics[scale=0.4]{images-new/combined-all-res-length-vs-compressed-res-length.pdf}%
+\centering
+%\hspace{-1cm}
+%\begin{centering}
+%\makebox[\textwidth]{\makebox[1.25\textwidth]{
+%\begin{minipage}{0.3\textwidth}\centering
+\subfloat[Compressed length against input length.]{{
+    \includegraphics[scale=0.45]{images-new/combined-all-res-length-vs-compressed-res-length.pdf}%
     }}
- \end{minipage}\hfill
-\begin{minipage}{0.3\textwidth}\centering
-\subfloat[\FORPI(\GFOLU(p)) vs. \GFOLU(\FORPI(p))]{{
-\includegraphics[scale=0.4]{images-new/combined-alg-res.pdf}%
+% \end{minipage}\hfill
+%\begin{minipage}{0.3\textwidth}\centering
+\subfloat[\FORPI(\GFOLU(p)) vs. \GFOLU(\FORPI(p)).]{{
+\includegraphics[scale=0.45]{images-new/combined-alg-res.pdf}%
+}}\\
+ %\end{minipage}\hfill
+%\begin{minipage}{0.3\textwidth}\centering
+\subfloat[Cumulative proof compression.]{{
+\includegraphics[scale=0.45]{images-new/combined-all-cumulative-res-nodes-diff.pdf}%
 }}
- \end{minipage}\hfill
-\begin{minipage}{0.3\textwidth}\centering
-\subfloat[Cumulative proof compression]{{
-\includegraphics[scale=0.4]{images-new/combined-all-cumulative-res-nodes-diff.pdf}%
-}}
- \end{minipage}
- }}\end{centering}
- \caption{\GFOLU \& \FORPI Combination Results}
+% \end{minipage}
+% }
+ %}
+ %\end{centering}
+ \caption{\GFOLU \& \FORPI Combination Results.}
 \label{fig:ex}
 \end{figure*}
-
-
-
-
 
 %Figure \ref{fig:ex} (a) shows the number of proofs (compressed and uncompressed) per grouping based on number of resolutions in the proof. The red (resp. dark grey) data shows the number of compressed (resp. uncompressed) proofs for the TPTP data set, while the green (resp. light grey) data shows the number of compressed (resp. uncompressed) proofs for the random proofs. The number of proofs in each group is the sum of the heights of each coloured bar in that group. The overall percentage of proofs compressed in a group is indicated on each bar. Dark colors indicate the number of proofs compressed by {\FORPI}, {\GFOLU}, and both compositions of these algorithms; light colors indicate cases were {\FORPI} succeeded, but at least one of {\GFOLU} or a combination of these algorithms achieved zero compression. 
 %Few TPTP proofs are compressed, which is not surprising given their size (small proofs are a prior less likely to contain irregularities), while at least 43\% of the randomly generated proofs in each size group are compressed.

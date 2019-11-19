@@ -1,13 +1,13 @@
 \section{Introduction} 
 
 
-Proof production is a key feature that has been gaining importance for modern theorem provers. Proofs provide justification for statements which are not satisfiable, and can be seen as an explanation for such unsatisfiability. Proofs are crucial for applications that require certification of a prover's answers or that extract additional information from proofs (e.g. unsat cores, interpolants, instances of quantified variables). 
+Proof production is a key feature that has been gaining importance for modern theorem provers. 
+Proofs are explanations for unsatisfiability, and are  crucial for applications that require certification of a prover's answers or that extract additional information from proofs (e.g. unsat cores, interpolants, instances of quantified variables). 
+As systems which rely on automated reasoning tools are used in a wider range of applications with greater consequences, the need to justify and verify the choices made by these systems will grow as well. 
+
 Mature first-order automated theorem provers, commonly based on refinements and extensions of resolution and superposition calculi \cite{Vampire,EProver,Spass,spassT,prover9-mace4}, support proof generation. However, proof production is non-trivial \cite{SchulzAPPA}, and the most efficient provers do not necessarily generate the shortest proofs. 
 
-Proofs provide explanations for the choices made by automated reasoning tools, like theorem-provers. As artificial intelligence systems which rely on automated reasoning tools are used in a wider range of applications with greater consequences, the need to justify and verify the choices made by these systems will grow as well. 
-
-
-Proof compression techniques can ameliorate the difficulties that automated reasoning tools encounter during proof generation. Proof compression techniques can be integrated into theorem provers or external tools with minimal overhead. Moreover, proof compression techniques (like those described in this paper) may result in a stronger proof which uses a strict subset of the original axioms required, which could also be considered simpler. The problem of proof compression is also closely related to Hilbert's 24th Problem \cite{Hilbert24Problem}, which asks for criteria to judge the simplicity of proofs; proof length is one possible criterion. 
+Proof compression techniques can ameliorate the difficulties that automated reasoning tools encounter during proof generation. Such techniques can be integrated into theorem provers or external tools with minimal overhead. Moreover, proof compression techniques (like those described in this paper) may result in a stronger proof which uses a strict subset of the original axioms required, which could also be considered simpler. The problem of proof compression is also closely related to Hilbert's 24th Problem \cite{Hilbert24Problem}, which asks for criteria to judge the simplicity of proofs; proof length is one possible criterion. 
 
 % First-order automated theorem provers, commonly based on refinements and extensions of resolution and superposition calculi \cite{Vampire,EProver,Spass,spassT,prover9-mace4}, have recently achieved a high degree of maturity.
 %One reason for this is that efficient resolution provers use refinements that restrict the application of inference rules. Although fewer clauses are generated and the search space is reduced, refinements may exclude short proofs whose inferences do not satisfy the restriction.
