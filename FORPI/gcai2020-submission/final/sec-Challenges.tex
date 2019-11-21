@@ -10,7 +10,7 @@
  
 %straightforward example
 \begin{example}\label{ex:unif} 
-Consider the proof $\psi$ in Figure \ref{ex1joined}. When computed as in the propositional case, the safe literals for $\eta_3$ are $\{ Q(c), ~ P(a,x)\}$.
+Consider the left proof $\psi$ in Figure \ref{ex1joined}. When computed as in the propositional case, the safe literals for $\eta_3$ are $\{ Q(c), ~ P(a,x)\}$.
 As neither of $\eta_3$'s resolved literals is syntactically equal to a safe literal, the propositional {\RPI} algorithm would not change $\psi$. However, $\eta_3$'s left resolved literal $P(w,x)\in \eta_1$ is unifiable with the safe literal $P(a,x)$. Regularizing $\eta_3$, by deleting the edge between $\eta_2$ and $\eta_3$ and replacing $\eta_3$ by $\eta_1$, leads to further deletion of $\eta_4$ (because it is not resolvable with $\eta_1$) and finally to the much shorter proof $\psi'$ in Figure \ref{ex1joined}.
 
 %$\eta_1$'s literal is unifiable with $p(a,X)$, which is inherited from $\eta_3$'s safe literals. 
@@ -44,7 +44,7 @@ As neither of $\eta_3$'s resolved literals is syntactically equal to a safe lite
 \BinaryInfC{$\eta_5$: \e $P(a,x)$}
 \BinaryInfC{$\psi$: $\bot$}
 \end{bprooftree}
-\qquad
+%\qquad
 \begin{bprooftree}
 \def\e{\mbox{\ $\vdash$\ }}
 \AxiomC{$\eta_1$: \e$P(w,x)$}
@@ -74,7 +74,7 @@ As neither of $\eta_3$'s resolved literals is syntactically equal to a safe lite
 \end{example}
 
 \noindent
-Unlike in the propositional case, where a resolved literal must be syntactically equal to a safe literal for regularization to be possible, Example \ref{ex:unif} suggests that, in the first-order case, it might suffice that the resolved literal be unifiable with a safe literal. However, there are cases where mere unifiability is not enough and greater care is needed: e.g., when $\eta_1: \vdash P(a,c)$ and $\eta_2: P(a,c) \vdash Q(c)$ in Example \ref{ex:unif}. One way to prevent these cases is to require the resolved literal to be not only unifiable but subsume a safe literal. %A weaker (and better) requirement is possible, and requires a slight modification of the concept of safe literals, taking into account the unifications that occur on the paths from a node to the root. 
+Unlike in the propositional case, where a resolved literal must be syntactically equal to a safe literal for regularization to be possible, Example \ref{ex:unif} suggests that, in the first-order case, it might suffice that the resolved literal be unifiable with a safe literal. However, there are cases where mere unifiability is not enough and greater care is needed: e.g., when $\eta_1:~ \vdash P(a,c)$ and $\eta_2: P(a,c) \vdash Q(c)$ in Example \ref{ex:unif}. One way to prevent these cases is to require the resolved literal to be not only unifiable but subsume a safe literal. %A weaker (and better) requirement is possible, and requires a slight modification of the concept of safe literals, taking into account the unifications that occur on the paths from a node to the root. 
 A slight modification to the concept of safe literals, which takes into account the unifications that occur on the paths from a node to the root, results in a weaker (and better) requirement.
 
 %\input{oldexample42}
