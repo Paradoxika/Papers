@@ -71,7 +71,8 @@ $\psi'$ $\la$ fix($\psi'$) \;
 {\FORPI} traverses the proof in a bottom-up manner, storing for every node a set of safe literals. 
 %The set of safe literals for a node $\psi$ is computed from the set of safe literals of its children (cf.\ Algorithm~\ref{algo:foSetSafeLiterals}), similarly to the propositional case, but additionally applying unifiers to the resolved literals.% (cf. Example \ref{ex:pairwise}).
 For a node $\psi$, $\mathcal{S}(\psi)$ is computed from the set of safe literals of its children (cf.\ Algorithm~\ref{algo:foSetSafeLiterals}), similarly to the propositional case, but additionally applying unifiers to the resolved literals.
-If one of the node's resolved literals matches a literal in the set of safe literals, then it may be possible to regularize the node by replacing it by one of its parents.  
+%If one of the node's resolved literals matches a literal in the set of safe literals, then it may be possible to regularize the node by replacing it by one of its parents.  
+If one of $\eta$'s resolved literals matches a literal in $\mathcal{S}(\eta)$, then it may be possible to regularize $\eta$ by replacing it by one of its parents.  
 
 
 
