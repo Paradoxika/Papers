@@ -366,7 +366,7 @@ abline(v=allXaxis)
 abline(h=0)
 abline(v=0)
 abline(h=allYaxis)
-legend("topleft",c("FOLU(p)", "FORPI(p)", "FORPI(FOLU(p))", "FOLU(FORPI(p))", "Best"), lty=c(1,1,1,1), col=c("blue", "red", "green", "orange", "black"), bty="n")
+legend("topleft",c("GFOLU(p)", "FORPI(p)", "FORPI(GFOLU(p))", "GFOLU(FORPI(p))", "Best"), lty=c(1,1,1,1), col=c("blue", "red", "green", "orange", "black"), bty="n")
 
 scaleFactor <- 2 
 heightOffset <- 30000
