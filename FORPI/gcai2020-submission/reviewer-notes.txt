@@ -1,7 +1,7 @@
-PASS has not been introduced; I would add a reference (I think it is [28]) the first time it is mentioned.
+SPASS has not been introduced; I would add a reference (I think it is [28]) the first time it is mentioned. [FIXED]
 
 Def 2.1: an edge is labelled with A LITERAL and a substitution.
-Instead, in the following itemize (items resolution and factoring) the labels on the edges seem to be SETS OF LITERALS.
+Instead, in the following itemize (items resolution and factoring) the labels on the edges seem to be SETS OF LITERALS. [FIXED]
 
 The concept of safe literal is crucial in the paper, and it relies on the idea that a pivot literal occurs in every path from a given node to the root. So, I think it would be much clearer if there was an example in which there are two or more paths from some node to the root. [IGNORED]
 
@@ -16,4 +16,4 @@ Page 9: what do you mean with "including some cluster time"? [IGNORED]
 
 -- Conclusion: "regularites" --> "regularities" [IGNORED; not found]
 
--- [3]: the paper by Bonacina is an ARCADE workshop paper, as far as I am aware; this is not becoming clear here in the reference; please fix
+-- [3]: the paper by Bonacina is an ARCADE workshop paper, as far as I am aware; this is not becoming clear here in the reference; please fix [FIXED]

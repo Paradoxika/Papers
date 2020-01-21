@@ -16,8 +16,8 @@ A \emph{resolution proof} is a directed acyclic graph of clauses where the edges
 \begin{definition}[First-Order Resolution Proof] 
 \label{def:proof}% \hfill \\
 A directed acyclic graph $\langle V, E, \clause \rangle$, where $V$ is a set of nodes and $E$ is a
-set of edges labeled by literals and substitutions (i.e. $E \subset V \times 2^{\mathcal{L}} \times \mathcal{S} \times V$, where $\mathcal{L}$ is the set of all literals and $\mathcal{S}$ is the set of all substitutions, and $\n_1
-\xrightarrow[\sigma]{\ell} \n_2$ denotes an edge from node $\n_1$ to node $\n_2$ labeled by the literal $\ell$ and the substitution $\sigma$), is a
+set of edges labelled by a set of literals and substitutions (i.e. $E \subset V \times 2^{\mathcal{L}} \times \mathcal{S} \times V$, where $\mathcal{L}$ is the set of all literals and $\mathcal{S}$ is the set of all substitutions, and $\n_1
+\xrightarrow[\sigma]{\{\ell\}} \n_2$ denotes an edge from node $\n_1$ to node $\n_2$ labelled by the literal set $\{\ell\}$ and the substitution $\sigma$), is a
 proof of a clause $\clause$ iff it is inductively constructible according to the following cases:
 %
 \begin{itemize}
