@@ -1,0 +1,151 @@
+
+\section{Lifting to First-Order}\label{sec:Challenges}
+
+
+
+
+\def\e{\mbox{\ $\vdash$\ }}
+
+
+ 
+%straightforward example
+\begin{example}\label{ex:unif} 
+Consider the left proof $\psi$ in Figure \ref{ex1joined}. When computed as in the propositional case, the safe literals for $\eta_3$ are $\{ Q(c), ~ P(a,x)\}$.
+As neither of $\eta_3$'s resolved literals is syntactically equal to a safe literal, the propositional {\RPI} algorithm would not change $\psi$. However, $\eta_3$'s left resolved literal $P(w,x)\in \eta_1$ is unifiable with the safe literal $P(a,x)$. Regularizing $\eta_3$, by deleting the edge between $\eta_2$ and $\eta_3$ and replacing $\eta_3$ by $\eta_1$, leads to further deletion of $\eta_4$ (because it is not resolvable with $\eta_1$) and finally to the much shorter proof $\psi'$ in Figure \ref{ex1joined}.
+
+
+
+\begin{figure}[bt]%
+    \centering
+    \begin{scriptsize}
+\begin{bprooftree}
+\AxiomC{$\eta_6$: $P(y,b)$ \e \hspace{-2cm}}
+\AxiomC{$\eta_1$: \e $P(w,x)$}
+\AxiomC{$\eta_2$: $P(w,x)$ \e $Q(c)$}
+\BinaryInfC{$\eta_3$: \e $Q(c)$  \hspace{-1.5cm}}
+\AxiomC{$\eta_4$: $Q(c)$ \e $P(a,x)$}
+\BinaryInfC{$\eta_5$: \e $P(a,x)$}
+\BinaryInfC{$\psi$: $\bot$}
+\end{bprooftree}
+%\qquad
+\begin{bprooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_1$: \e$P(w,x)$}
+\AxiomC{$\eta_6$: $P(y,b)$\e}
+\BinaryInfC{$\psi'$: $\bot$}
+\end{bprooftree}
+\end{scriptsize}
+
+\caption{A proof $\psi$ (left), and a regularized proof $\psi'$ (right).}
+\label{ex1joined}
+    \end{figure}
+
+
+
+
+
+\end{example}
+
+\noindent
+Unlike in the propositional case, where a resolved literal must be syntactically equal to a safe literal for regularization to be possible, Example \ref{ex:unif} suggests that, in the first-order case, it might suffice that the resolved literal be unifiable with a safe literal. However, there are cases where mere unifiability is not enough and greater care is needed: e.g., when $\eta_1:~ \vdash P(a,c)$ and $\eta_2: P(a,c) \vdash Q(c)$ in Example \ref{ex:unif}. One way to prevent these cases is to require the resolved literal to be not only unifiable but subsume a safe literal. 
+A slight modification to the concept of safe literals, which takes into account the unifications that occur on the paths from a node to the root, results in a weaker (and better) requirement.
+
+
+
+\begin{definition}\label{def:safefirst}
+The set of \emph{safe literals} for a node $\eta$ in a proof $\psi$ with root clause $\Gamma$, denoted $\mathcal{S}(\eta)$, is such that $\ell \in \mathcal{S}(\eta)$ if and only if $\ell \in \Gamma$ or for all paths from $\eta$ to the root of $\psi$ there is an edge $\n_1
+\xrightarrow[\sigma]{\ell'} \n_2$ with $\ell' \sigma = \ell$.
+\end{definition}
+
+\noindent
+As in the propositional case, safe literals can be computed in a bottom-up traversal of the proof. Initially, at the root, the safe literals are exactly the literals that occur in the root clause. As we go up, the safe literals $\mathcal{S}(\eta')$ of a parent node $\eta'$ of $\eta$ where $\eta'
+\xrightarrow[\sigma]{\ell} \eta$ is set to $\mathcal{S}(\eta) \cup \{ \ell \sigma \}$. Note that we apply the substitution to the resolved literal before adding it to the set of safe literals (cf. Algorithm \ref{algo:foSetSafeLiterals}, lines 8 and 10). In other words, in the first-order case, the set of safe literals has to be a set of \emph{instantiated} resolved literals.
+
+
+In the modified case of Example \ref{ex:unif}, computing safe literals as in Definition \ref{def:safefirst} would result in $\mathcal{S}(\eta_3)=\{Q(c),~P(a,b)\}$, where clearly the pivot $P(a,c)$ in $\eta_1$ is not safe. A generalization of this requirement, which can be thought of a \emph{necessary} condition, is Definition \ref{prop:pair}.
+
+
+
+\begin{definition}
+\label{prop:pair}
+Let $\eta$ be a node with safe literals $\mathcal{S}(\eta)$ and parents $\eta_1$ and $\eta_2$, assuming without loss of generality, $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta$.
+The node $\eta$ is said to be \emph{pre-regularizable} in the proof $\psi$ if $\ell_1\sigma_1$ matches a safe literal $\ell^* \in \mathcal{S}(\eta)$.
+\end{definition}
+
+\noindent
+
+
+
+\begin{figure*}
+\begin{scriptsize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_8$: $Q(f(a,e),c)\e$}
+\AxiomC{$\eta_6$: $\e P(c,d)$ \hspace{-2cm}}
+\AxiomC{$\eta_1$: $P(u,v)\e Q(f(a,v),u)$}
+\AxiomC{$\eta_2$: $Q(f(a,x),y),Q(t,x)\e Q(f(a,z),y)$}
+\BinaryInfC{$\eta_3$: $P(u,v),Q(t,v)\e Q(f(a,z),u)$}
+\AxiomC{\hspace{-1.25cm} $\eta_4$: $\e Q(r,s)$}
+\BinaryInfC{$\eta_5$: $P(u,v)\e Q(f(a,z),u)$}
+\BinaryInfC{$\eta_7$: $\e Q(f(a,z),c)$}
+\BinaryInfC{$\psi$: $\bot$}
+\end{prooftree}
+\end{scriptsize}
+\caption{An example where pre-regularizability is not sufficient.}
+\label{fig:ex-unifcheck}
+\end{figure*}
+%extra check example
+\begin{example}\label{ex:unifcheck}
+
+
+Satisfying the pre-regularizability is not sufficient. Consider the proof $\psi$ in Figure \ref{fig:ex-unifcheck}. After collecting the safe literals, $\mathcal{S}(\eta_3) = \{\lnot Q(r,v),\lnot P(c,d), Q(f(a,e),c)\}$.
+%\noindent
+$\eta_3$'s pivot $Q(f(a,v),u)$ matches the safe literal $Q(f(a,e),c)$. Attempting to regularize $\eta_3$ would lead to the removal of $\eta_2$, the replacement of $\eta_3$ by $\eta_1$ and the removal of $\eta_4$ (because $\eta_1$ does not contain the pivot required by $\eta_5$), with $\eta_5$ also being replaced by $\eta_1$. Then resolution between $\eta_1$ and $\eta_6$ results in $\eta_7'$, which cannot be resolved with $\eta_8$, as shown below.
+
+
+\begin{scriptsize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_8$: $Q(f(a,e),c)\e$ \hspace{-0.5cm}}
+\AxiomC{$\eta_6$: $\e P(c,d)$}
+\AxiomC{$\eta_1$: $P(u,v)\e Q(f(a,v),u)$}
+\BinaryInfC{$\eta_7'$: $\e Q(f(a,d),c)$}
+\BinaryInfC{$\psi'$: ??}
+\end{prooftree}
+\end{scriptsize}
+
+\noindent
+$\eta_1$'s literal $Q(f(a, v), u)$, which would be resolved with $\eta_8$'s literal, was changed to $Q(f(a,d),c)$ due to the resolution between $\eta_1$ and $\eta_6$.
+\end{example}
+
+
+
+
+
+\noindent
+Thus we additionally require that the following condition be satisfied, which ensures that the remainder of the proof does not expect a variable in $\eta_1$ to be unified to different values simultaneously. This property is not necessary in the propositional case, as the literals of the replacement node do not change lower in the proof. 
+
+
+
+\begin{definition} %This is the new definition
+\label{prop:extracheck}
+Let $\eta$ be pre-regularizable, with safe literals $\mathcal{S}(\eta)$ and parents $\eta_1$ and $\eta_2$, with clauses $\Gamma_1$ and $\Gamma_2$ respectively, assuming without loss of generality that $\eta_1 \xrightarrow[\sigma_1]{\{\ell_1\} } \eta$
+such that $\ell_1\sigma_1$ matches a safe literal $\ell^*\in \mathcal{S}(\eta)$. 
+The node $\eta$ is said to be \emph{strongly regularizable} in $\psi$ if $\Gamma_1 \sigma_{1} \sqsubseteq \mathcal{S}(\eta)$.
+\end{definition}
+
+
+
+\noindent
+The notion of \emph{strongly regularizable} can be thought of as a \emph{sufficient} condition.
+The longer version of this paper (available on the ArXiv \cite{longversion}) discusses a conjectured weaker condition. 
+
+
+
+\begin{thm}\label{thm:correct}
+Let $\psi$ be a proof with root clause $\Gamma$ and $\eta$ be a node in $\psi$. Let $\psi^{\dagger} = \psi\setminus \{\eta\}$ and $\Gamma^{\dagger}$ be the root of $\psi^{\dagger}$. If $\eta$ is strongly regularizable, then $\Gamma^{\dagger} \sqsubseteq \Gamma$.
+\end{thm}
+
+
+\input{proofa} 
+
