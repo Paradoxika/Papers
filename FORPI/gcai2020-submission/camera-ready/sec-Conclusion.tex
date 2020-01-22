@@ -10,7 +10,9 @@ the compression achieved by {\FORPI} in a short amount of time on this data set 
 The obtained results indicate that {\FORPI} is a promising compression technique to be reconsidered when first-order theorem provers become capable of producing larger proofs. Although we carefully selected generation probabilities in accordance with frequencies observed in real proofs, it is important to note that randomly generated proofs may still differ from real proofs in shape and may be more or less likely to contain irregularities exploitable by our algorithm. 
 
 
-In this paper, for the sake of simplicity, we considered a pure resolution calculus without restrictions, refinements or extensions. However, in practice, theorem provers do use restrictions and extensions. It is conceptually easy to adapt the algorithm described here to many variations of resolution. 
+In this paper, for the sake of simplicity, we considered a pure resolution calculus without restrictions, refinements or extensions. 
+%However, in practice, theorem provers do use restrictions and extensions. 
+It is conceptually easy to adapt the algorithm described here to many practical variations of resolution. 
 For instance, a common extension of resolution is the splitting technique \cite{WeidenbachSplitting}. When splitting is used, each split sub-problem is solved by a separate refutation, and {\FORPI} could be applied to each refutation independently. 
 
 It would be interesting to determine if proof compression could be applied during proof search, in order to improve the performance theorem provers. Additionally, it would be interesting to see if similar techniques can be applied to proofs in higher-order logics.
