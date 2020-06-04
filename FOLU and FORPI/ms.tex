@@ -1,0 +1,189 @@
+\documentclass[runningheads]{llncs}
+%\documentclass{iosart2x}
+%\documentclass{article}
+\usepackage{etex}
+\usepackage[margin=1.5in]{geometry}
+\usepackage{mathtools}
+\usepackage{xcolor}
+\usepackage{enumitem,amsmath,amssymb}
+%\usepackage{breakurl}    % used for \url and \burl
+\usepackage{url}
+\usepackage[linesnumbered,boxed,noline,noend]{algorithm2e}
+\usepackage{todonotes}
+
+\def\defaultHypSeparation{\hskip.1in}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+
+\usepackage{subfig}
+\usepackage{array,booktabs,multirow}
+\usepackage{placeins}
+
+\usepackage{logictools}
+\usepackage{prooftheory}
+\usepackage{comment}
+\usepackage{mathenvironments}
+\usepackage{drawproof}
+\usepackage{bussproofs}
+\usepackage{tensor}
+\usepackage{mathtools}
+\usepackage{amsmath}
+%\usepackage{amsthm}
+
+\usepackage{graphicx}
+%\usepackage{caption}
+%\usepackage{subcaption}
+
+
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.75}
+
+
+%\newcommand{\freevar}[1]{\mathrm{FV}(#1)}
+\newcommand{\freevar}[1]{\mathrm{Var}(#1)}
+
+
+\newcommand{\Vertices}[1]{V_{#1}}
+\newcommand{\Edges}[1]{E_{#1}}
+\newcommand{\Conclusion}[1]{\clause_{#1}}
+
+\newcommand{\axiom}[1]{\widehat{#1}}
+\newcommand{\n}{v}
+\newcommand{\raiz}[1]{\rho(#1)}
+
+\newcommand{\pedge}[3]{\ensuremath{\raiz{#1} \xrightarrow{#2} \raiz{#3}}}
+
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+
+\newcommand\inlineeqno{\stepcounter{equation}\ (\theequation)}
+
+
+% Contraction
+\newcommand{\con}[3]{\lfloor #1 \rfloor_{#2}^{#3}}
+
+% Resolution
+%\newcommand{\res}[6]{#1 \tensor[^{#2}_{#3}]{\odot}{^{#4}_{#5}} #6}
+%\newcommand{\res}[6]{#1 \prescript{#2}{#3}{\odot^{#4}_{#5}} #6}
+
+\newcommand{\res}[4]{\mathrel{\operatorname*{\odot}_{#1 #3}^{#2 #4}}}
+
+%\newtheorem{thm}{Theorem}[section]
+%\newtheorem{lem}{Lemma}[section]
+%\newtheorem{example}[thm]{Example}
+%\theoremstyle{definition}
+%\newtheorem{definition}{Definition}[section]
+
+
+\usepackage{authblk}
+
+
+\begin{document}
+%\begin{frontmatter} 
+\title{Lifting Propositional Proof Compression Algorithms to First-Order Logic}
+\titlerunning{Lifting Propositional Proof Compression Algorithms}
+\authorrunning{J. Gorzny, E. Postan, and B. Woltzenlogel Paleo}
+
+
+%\author{Jan Gorzny \and Ezequiel Postan \and Bruno Woltzenlogel Paleo}
+%\affil[1]{School of Computer Science, University of Waterloo, 200 University Ave. W., Waterloo, ON N2L 3G1, Canada}
+%\affil[2]{Universidad Nacional de Rosario, Av. Pellegrini 250, S2000BTP Rosario, Santa Fe, Argentina}
+%\affil[3]{Vienna University of Technology, Karlsplatz 13, 1040, Vienna, Austria}
+
+
+
+\author{
+  Jan Gorzny\inst{1}\thanks{Supported by the Google Summer of Code 2014 program.}
+  \and
+  Ezequiel Postan\inst{2}\thanks{Supported by the Google Summer of Code 2016 program.}
+  \and 
+  Bruno Woltzenlogel Paleo\inst{3,4}\thanks{Bruno ist Stipendiat der \"Osterreichischen Akademie der Wissenschaft (APART) an der TU-Wien.}
+  %\thanks{Supported by the Austrian Science Fund, project P24300.}
+}
+\institute{
+  \email{jgorzny@uwaterloo.ca}, University of Waterloo, Canada
+  \and 
+  \email{ezequiel@fceia.unr.edu.ar},  Universidad Nacional de Rosario, Av. Pellegrini 250, S2000BTP Rosario, Santa Fe, Argentina
+  \and 
+  \email{bruno@logic.at}, Vienna University of Technology, Austria
+  \and 
+  Australian National University
+}
+
+%\author[A]{\inits{J.}\fnms{Jan} \snm{Gorzny}\ead[label=e1]{jgorzny@uwaterloo.ca}%
+%\thanks{Supported by the Google Summer of Code 2014 program. Corresponding author. \printead{e1}.}%
+%\thanks{Corresponding author. \printead{e1}.}%
+%}, 
+%\author[B]{\inits{E.}\fnms{Ezequiel} \snm{Postan}\ead[label=e2]{ezequiel@fceia.unr.edu.ar}}, and 
+%\author[C]{\inits{B.}\fnms{Bruno} \snm{Woltzenlogel Paleo}\ead[label=e3]{bruno@logic.at}}
+
+%\address[A]{School of Computer Science, \institution{University of Waterloo}, 200 University Ave. W., Waterloo, ON N2L 3G1, \cny{Canada}\printead[presep={\\}]{e1}}
+%\address[B]{\institution{Universidad Nacional de Rosario}, Av. Pellegrini 250, S2000BTP Rosario, Santa Fe, \cny{Argentina}\printead[presep={\\}]{e2}}
+%\address[C]{\institution{Vienna University of Technology},
+%Karlsplatz 13, 1040, Vienna, \cny{Austria}
+%\printead[presep={\\}]{e3}}
+%\runningauthor{J. Gorzny \and E. Postan \and B. Woltzenlogel Paleo}
+%\authorrunning{J.\~Gorzny \and B.\~Woltzenlogel Paleo}
+
+\maketitle
+
+\begin{abstract}
+\input{abstract}
+%This paper describes the generalization of the 
+%proof compression algorithm
+%\RecyclePivotsIntersection %\texttt{RecyclePivots\-WithIntersection}
+%from propositional logic to first-order logic. The generalized algorithm performs partial regularization of resolution proofs containing resolution and factoring inferences with \emph{unification}. The resolution calculus is the underlying proof-theoretical foundation for many automated theorem provers. An empirical evaluation of the generalized algorithm and its combinations with \SFOLowerUnits is also presented.
+\end{abstract}
+
+%\begin{keyword}
+%\kwd{proof compression}
+%\kwd{first-order logic}
+%\kwd{resolution}
+%\kwd{unification}
+%\end{keyword}
+
+
+
+%\end{frontmatter}
+
+
+%\begin{document}
+
+%\maketitle
+
+
+\sloppy  %to prevent overfull margins for e.g. \RPI
+
+\setcounter{footnote}{0}
+\newcommand{\la}{\leftarrow}
+
+\input{sec-Introduction}
+\input{sec-Resolution}
+%\input{sec-PropositionalAlgorithm}
+\input{sec-PropositionalLU}
+\input{sec-FOLUChallenges}
+\input{sec-FOLU}
+\input{sec-SimpleFOLU}
+\input{sec-PropRPI}
+\input{sec-Challenges}
+\input{sec-FORPI}
+\input{sec-Exp}
+\input{sec-Conclusion}
+
+%\begin{acks}
+%%GSoC support should be mentioned here instead according to journal guidelines
+%We thank the Google Summer of Code 2014 and Google Summer of Code 2016 programs for financial support of this research. 
+%Bruno ist Stipendiat der \"Osterreichischen Akademie der Wissenschaft (APART) an der TU-Wien.
+%\end{acks}
+
+\begin{footnotesize}
+%\bibliographystyle{splncs}
+\bibliographystyle{plain}
+\bibliography{biblio}
+\end{footnotesize}
+%\appendix
+%\input{sec-PropRPI}
+\end{document}
+
+% vim: tw=100

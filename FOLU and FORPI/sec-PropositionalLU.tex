@@ -1,0 +1,169 @@
+
+\section{Algorithm \LowerUnits}
+\label{sec:PropositionalLU}
+
+We denote by $\dn{\psi}{\varphi_1, \varphi_2}$ the result of deleting the subproofs $\varphi_1$ and $\varphi_2$ from the proof $\psi$ and fixing it according to Algorithm \ref{algo:del}\footnote{
+The deletion algorithm is a variant of the \textsc{Reconstruct-Proof} algorithm presented in \cite{RP11}.
+The basic idea is to traverse the proof in a top-down manner, replacing each subproof having one of its premises marked for deletion (i.e. in $D$) by its other premise (cf. \cite{Boudou}).
+}. 
+We say that a subproof $\varphi$ in a proof $\psi$ can be lowered 
+if there exists a proof
+$\psi'$ such that $\psi' = \dn{\psi}{\varphi} \odot \varphi$ and
+$\Conclusion{\psi'} \subseteq \Conclusion{\psi}$. If $\varphi$ originally participated in many resolution inferences within $\psi$ (i.e. if $\varphi$ had many children in $\psi$) then lowering $\varphi$ compresses the proof (in number of resolution inferences), because $\dn{\psi}{\varphi} \odot \varphi$ contains a single resolution inference involving $\varphi$.
+
+%
+It has been noted in \cite{LURPI} that, in the propositional case, $\varphi$ can always be lowered if it is a \emph{unit} (i.e. its conclusion clause is unit). This led to the invention of {\LowerUnits} (Algorithm \ref{algo:LU}), which aims at transforming a proof $\psi$ into $(\dn{\psi}{\mu_1,\ldots,\mu_n}) \odot \mu_1 \odot \ldots \odot \mu_n$, where $\mu_1$, \ldots, $\mu_n$ are all units with more than one child. Units with only one child are ignored because no compression is gained by lowering them. The order in which the units are reintroduced is important:
+if a unit $\varphi_2$ is a subproof of a unit
+$\varphi_1$ then $\varphi_2$ has to be reintroduced later than (i.e. below) $\varphi_1$.
+
+
+\newlength\algowd
+\def\savewd#1{\setbox0=\hbox{#1\hspace{.7in}}\algowd=\wd0\relax#1}
+\newcommand\algolines[2]{\savewd{#1}%
+  \tcp*{\parbox[t]{\dimexpr\algowidth-\algowd}{#2}}}
+
+
+\SetKwFunction{Del}{delete}
+\SetKw{Let}{let}
+
+\begin{algorithm}[bt]
+  \SetAlgoVlined
+  \SetAlgoShortEnd
+  \KwIn{a proof $\varphi$}
+  \KwIn{$D$ a set of subproofs}
+  \KwOut{a proof $\varphi'$ obtained by deleting the subproofs in $D$ from $\varphi$}
+  \KwData{a map $.'$, initially empty, eventually mapping any $\xi$ to \Del{$\xi$, $D$}}
+  \BlankLine
+
+  \newcommand{\fixL}{\ensuremath{\varphi'_L}}
+  \newcommand{\fixR}{\ensuremath{\varphi'_R}}
+
+  \lIf{$\varphi \in D$ or $\raiz{\varphi}$ has no premises}{\Return{$\varphi$}}
+  \BlankLine
+
+  \Else{
+    \Let{$\varphi_L \res{\ell}{}{}{} \varphi_R = \varphi$} \;
+    $\varphi'_L \leftarrow $ \Del{$\varphi_L$,$D$} \;
+    $\varphi'_R \leftarrow $ \Del{$\varphi_R$,$D$} \;
+    \BlankLine
+
+    \lIf{$\varphi'_L \in D$}{ \Return{\fixR} }
+    \lElseIf{$\varphi'_R \in D$}{ \Return{\fixL} }
+    \BlankLine
+
+    \lElseIf{$\ell \notin \Conclusion{\fixL}$}{ \Return{\fixL} }
+    \lElseIf{$\dual{\ell} \notin \Conclusion{\fixR}$}{ \Return{\fixR} }
+    \BlankLine
+
+    \lElse{ \Return{ \fixL~$\res{\ell}{}{}{}$~\fixR} }
+  }
+
+  \caption[.]{\FuncSty{delete}}
+  \label{algo:del}
+\end{algorithm}
+
+
+
+\begin{algorithm}[bt]
+  \SetAlgoVlined
+  \SetAlgoShortEnd
+  \KwIn {a proof $\psi$}
+  \KwOut{a compressed proof $\psi^{\star}$}
+  \KwData{a map $.'$: after line 4, it maps any $\varphi$ to \Del{$\varphi$, $D$}}
+  \BlankLine
+
+  \SetKwData{Units}{Units}
+  \algolines{\Units $\leftarrow \varnothing$}{queue to store collected units}
+  \BlankLine
+
+  \For{every subproof $\varphi$, in a bottom-up traversal of $\psi$}{
+    \lIf{$\varphi$ is a unit with more than one child}{enqueue $\varphi$ in \Units}
+  }
+  \BlankLine
+
+  $\psi' \leftarrow $ \Del{$\psi$,$\Units$} \;
+  \BlankLine
+
+  \tcp{Reintroduce units}
+  $\psi^{\star} \leftarrow \psi'$ \;
+  \For{every unit $\varphi$ in \Units}{
+    \Let{$\{\ell\} = \Conclusion{\varphi}$} \;
+    \lIf{$\dual{\ell} \in \Conclusion{\psi'}$}{
+    $\psi^{\star} \leftarrow \psi^{\star} \odot_\ell \varphi'$}
+  }
+
+  \caption{\LowerUnits}
+  \label{algo:LU}
+\end{algorithm}
+
+In Algorithm \ref{algo:LU}, units are collected in a queue
+during a bottom-up traversal (lines 2-3), then they are deleted from the proof (line 4) and finally reintroduced in the bottom of the proof (lines 5-7). In \cite{Boudou} it has been observed that the two traversals (one for collection and one for deletion) could be merged into a single traversal, if we collect units during deletion. As deletion is a top-down traversal, it is then necesary to collect the units in a stack. This improvement leads to Algorithm \ref{algo:optLU}. Both algorithms have a linear run-time complexity with respect to the length of the proof, because they perform a contant number of traversals.
+
+
+\begin{algorithm}[pbt]
+  \SetAlgoVlined
+  \SetAlgoShortEnd
+  \SetKwData{Units}{Units}
+
+  \KwIn {a proof $\psi$}
+  \KwOut {a compressed proof $\psi^{\star}$}
+  \KwData{a map $.'$, eventually mapping any $\varphi$ to \Del{$\varphi$, \Units}}
+  \BlankLine
+
+  \SetKw{Push}{push}
+  \SetKw{Pop} {pop}
+  \SetKw{Add} {add}
+  \SetKw{Rep} {replace}
+
+  \algolines{$D \leftarrow \varnothing$}{set for storing subproofs that need to be deleted}
+  \algolines{\Units $\leftarrow \varnothing$}{stack for storing collected units}
+  \BlankLine
+
+  \For{every subproof $\varphi$, in a top-down traversal of $\psi$ }{
+
+    \lIf{$\varphi$ is an axiom}{$\varphi' \leftarrow \varphi$}
+    \Else{
+      \Let{$\varphi_L \odot_{\ell} \varphi_R = \varphi$} \;
+      \lIf{ $\varphi_L \in D$ and $\varphi_R \in D$}{
+        \Add $\varphi$ to $D$
+      }
+      \lElseIf{$\varphi_L \in D$}{
+          $\varphi' \leftarrow \varphi'_R$
+      }
+      \lElseIf{ $\varphi_R \in D$ }{
+          $\varphi' \leftarrow \varphi'_L$
+      }
+
+      \BlankLine
+
+      \lElseIf{$\ell \notin \Conclusion{\varphi'_L}$}{ $\varphi' \leftarrow \varphi'_L$ }
+      \lElseIf{$\dual{\ell} \notin \Conclusion{\varphi'_R}$}{ $\varphi' \leftarrow \varphi'_R$  }
+    
+      \lElse{ $\varphi' \leftarrow \varphi'_L \odot_{\ell} \varphi'_R$ }
+
+        
+    }
+    \BlankLine
+  
+    \If{$\varphi$ is a unit with more than one child}{
+      \Push $\varphi'$ onto \Units  \;
+      \Add $\varphi$ to $D$ \;
+    }
+  }
+  \BlankLine
+
+
+  \tcp{Reintroduce units}
+  $\psi^{\star} \leftarrow \psi'$ \;
+  \While{\Units $\neq \varnothing$}{
+    $\varphi' \leftarrow$ \Pop from \Units \;
+    \Let{$\{\dual{\ell}\} = \Conclusion{\varphi}$ } \;
+    \lIf{$\ell \in \Conclusion{\psi^{\star}}$ \label{line:full:testreintroduce}  }{
+      $\psi^{\star} \leftarrow \psi^{\star} \odot_{\ell} \varphi'$ }
+  }
+
+  \caption{Improved {\LowerUnits} (with a single traversal)}
+  \label{algo:optLU}
+\end{algorithm}
+
+

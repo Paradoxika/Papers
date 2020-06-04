@@ -1,0 +1,17 @@
+\begin{table*}[bt]
+%\centering
+\hspace*{-1.5cm}
+\begin{tabular}{| l || r | r | r || r | r | r  | }
+\hline
+ Algorithm& \multicolumn{3}{c ||}{\# of Proofs Compressed} & \multicolumn{3}{c |}{\# of Removed Nodes}  \\
+& \multicolumn{1}{c }{TPTP} & \multicolumn{1}{c}{Random}  & \multicolumn{1}{c ||}{Both}  & \multicolumn{1}{c }{TPTP} & \multicolumn{1}{c }{Random} & \multicolumn{1}{c |}{Both}  \\ \hline \hline
+{\GFOLU}(p) & 55 (17.9\%) & 817 (35.9\%) & 872 (33.7\%)  & 107 (4.8\%) & 17,769 (4.5\%) & 17,876 (4.5\%)    \\ \hline
+{\FORPI}(p)  & 23 (7.5\%) &  666 (29.2\%) & 689 (26.2\%)  &  36 (1.6\%) &  28,904 (7.3\%) &  28,940 (7.3\%)   \\ \hline
+{\GFOLU}({\FORPI}(p))   & 55 (17.9\%) & 1303 (57.1\%) & 1358 (52.5\%) & 120 (5.4\%)  & 48,126 (12.2\%) & 48,246 (12.2\%) \\ \hline
+{\FORPI}({\GFOLU}(p)) & 23 (7.5\%) & 1302  (57.1\%)&  1325 (51.2\%) & 120 (5.4\%) & 48,434 (12.3\%) & 48,554 (12.3\%)  \\ \hline
+Best                            & 59 (19.2\%) & 1303 (57.1\%) & 1362 (52.5\%)   & 120 (5.4\%) & 55,530 (14.1\%) & 55,650 (14.0\%)     \\ \hline
+\end{tabular} $~~~~~~~~~~~~~~~~$
+\vspace{5pt}
+\caption{Number of proofs compressed and number of overall nodes removed}
+\label{tab:results}
+\end{table*}
