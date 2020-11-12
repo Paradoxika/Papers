@@ -1,8 +1,7 @@
-\section{First-Order Challenges for Lowering Units}\label{sec:LUChallenges}
+\section{First-Order Challenges for Lowering Units} \label{sec:LUChallenges}
 
-
-In this section, we describe challenges that have to be overcome in order to successfully adapt {\LowerUnits} to the first-order case. The first example illustrates the need to take unification into account. The other two examples discuss complex issues that can arise when unification is naively taken into account.
-
+In this section, we describe challenges that have to be overcome in order to successfully adapt {\LowerUnits} to the first-order case. 
+The first example illustrates the need to take unification into account. The other two examples discuss complex issues that can arise when unification is naively taken into account.
 
 \begin{example}\label{ex:uniflu} 
 Consider the following proof $\psi$, noting that the unit subproof $\eta_2$ is used twice. It is resolved once with $\eta_1$ (against the literal $p(W)$ and producing the child $\eta_3$) and once with $\eta_5$ (against the literal $p(X)$ and producing $\psi$).
@@ -45,10 +44,9 @@ Unlike in the propositional case, where the literals that had been resolved agai
 \BinaryInfC{$\psi^{\star}$: $\bot$}
 \end{prooftree}
 \end{footnotesize}
- \end{example}
+\end{example}
 
-
- \begin{example}\label{ex:pairwise}
+\begin{example}\label{ex:pairwise}
 
 There are cases, as shown below, when the literals that had been resolved away are not unifiable, and then a contraction is not possible.
 

@@ -16,6 +16,7 @@ The obtained results indicate that these algorithms are a promising compression 
 Although we carefully selected generation probabilities in accordance with frequencies observed in real proofs, it is important to note that randomly generated proofs may still differ from real proofs in shape and may be more or less likely to contain irregularities exploitable by our algorithm. Resolution restrictions and refinements (e.g. ordered resolution %\cite{Maslov1964,KowalskiHayes1969,OrderedRes}, 
 \cite{hsiang1991proving,OrderedRes}, hyper-resolution \cite{HyperResolution,robinson1965automatic}, unit-resulting resolution \cite{UnitResultingResolution,prover9-mace4}) may result in longer chains of resolutions and, therefore, in proofs with a possibly larger height to length ratio. 
 As the number of irregularities increases with height, such proofs could have a higher number of irregularities in relation to length.
+It would also be interesting to study these algorithms to determine how much they reduce the required set of axioms on average (as in Example \ref{ex:unif}), and to determine if a node often has a large set of safe literals in a proof.
 
 In this paper, for the sake of simplicity, we considered a pure resolution calculus without restrictions, refinements or extensions. 
 However, in practice, theorem provers do use restrictions and extensions. 
@@ -26,5 +27,3 @@ In the case of extensions for equality reasoning using paramodulation-like infer
 Alternatively, equality inferences could be replaced by resolutions with instances of equality axioms, and the proof compression algorithm could be applied to the proof resulting from this replacement. 
 Another common extension of resolution is the splitting technique \cite{WeidenbachSplitting}. 
 When splitting is used, each split sub-problem is solved by a separate refutation, and the compression algorithm described here could be applied to each refutation independently.
-
-These algorithms are very fast, and together they may simplify the proof considerably for a relatively quick time cost.

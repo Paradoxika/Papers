@@ -6,7 +6,8 @@ This paper describes an approach to compressing first-order logic proofs based o
 
 The first approach lifted from propositional logic delays resolution with \emph{unit clauses}, which are clauses that have a single literal.
 The second approach is \emph{partial regularization}, which removes an inference $\eta$ when it is redundant in the sense that its pivot literal already occurs as the pivot of another inference in every path from $\eta$ to the root of the proof. 
-This paper describes the generalization of the algorithms \LowerUnits and \RecyclePivotsIntersection [P. Fontain, S. Merz, and B. Woltzenlogel Paleo, Compression of Propostional Resolution Proofs via Partial Regularization, \emph{CADE-23}, 2011] from propositional logic to first-order logic. 
+This paper describes the generalization of the algorithms \LowerUnits and \RecyclePivotsIntersection \cite{LURPI} %[P. Fontain, S. Merz, and B. Woltzenlogel Paleo, Compression of Propositional Resolution Proofs via Partial Regularization, \emph{CADE-23}, 2011] 
+from propositional logic to first-order logic. 
 The generalized algorithms compresses resolution proofs containing resolution and factoring inferences with \emph{unification}.
 
 An empirical evaluation of these approaches is included.

@@ -2,6 +2,8 @@
 \section{Algorithm \LowerUnits}
 \label{sec:PropositionalLU}
 
+In this section, we describe the propositional logic algorithm \LowerUnits. The next section will describe some challenges with applying this algorithm to the first-order logic case.
+
 We denote by $\dn{\psi}{\varphi_1, \varphi_2}$ the result of deleting the subproofs $\varphi_1$ and $\varphi_2$ from the proof $\psi$ and fixing it according to Algorithm \ref{algo:del}\footnote{
 The deletion algorithm is a variant of the \textsc{Reconstruct-Proof} algorithm presented in \cite{RP11}.
 The basic idea is to traverse the proof in a top-down manner, replacing each subproof having one of its premises marked for deletion (i.e. in $D$) by its other premise (cf. \cite{Boudou}).
@@ -97,7 +99,7 @@ $\varphi_1$ then $\varphi_2$ has to be reintroduced later than (i.e. below) $\va
 \end{algorithm}
 
 In Algorithm \ref{algo:LU}, units are collected in a queue
-during a bottom-up traversal (lines 2-3), then they are deleted from the proof (line 4) and finally reintroduced in the bottom of the proof (lines 5-7). In \cite{Boudou} it has been observed that the two traversals (one for collection and one for deletion) could be merged into a single traversal, if we collect units during deletion. As deletion is a top-down traversal, it is then necesary to collect the units in a stack. This improvement leads to Algorithm \ref{algo:optLU}. Both algorithms have a linear run-time complexity with respect to the length of the proof, because they perform a contant number of traversals.
+during a bottom-up traversal (lines 2-3), then they are deleted from the proof (line 4) and finally reintroduced in the bottom of the proof (lines 5-7). In \cite{Boudou}, we observed that the two traversals (one for collection and one for deletion) could be merged into a single traversal, if we collect units during deletion. As deletion is a top-down traversal, it is then necessary to collect the units in a stack. This improvement leads to Algorithm \ref{algo:optLU}. Both algorithms have a linear run-time complexity with respect to the length of the proof, because they perform a constant number of traversals.
 
 
 \begin{algorithm}[pbt]

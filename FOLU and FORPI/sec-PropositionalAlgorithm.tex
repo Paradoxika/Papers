@@ -2,11 +2,7 @@
 
 {\RPI} (formally defined in Appendix \ref{Section:RPI} and in \cite{LURPI}) removes \emph{irregularities}, which are resolution inferences deriving a node $\eta$ when the resolved literal occurs as the pivot of another inference located below in the path from $\eta$ to the root of the proof. In the worst case, regular resolution proofs can be exponentially bigger than irregular ones, but {\RPI} takes care of regularizing the proof only partially, removing inferences only when this does not enlarge the proof.
 
-%ToDo: Informal textual description of the propositional algorithm, explaining what safe literals are. 
 {\RPI} traverses the proof twice. On the first traversal (bottom-up), it computes and stores for each node a set of \emph{safe literals}: literals that are resolved in all paths from the node to the root of the proof or that occur in the root clause. If one of the node's resolved literals belongs to the set of safe literals, then it is possible to \emph{regularize} the node by replacing it by the parent containing the safe literal. To do this replacement efficiently, the replacement is postponed by marking the other parent as a \texttt{deletedNode}. Then, on a single second traversal (top-down), regularization is performed: any node that has a parent node marked as a \texttt{deletedNode} is replaced by its other parent.
-%Refer reader to the CADE 2011 paper (where RPI is described) for a formal description of the propositional algorithm. 
-% contains a formal description of {\RPI} (taken from \cite{LURPI}).
-%Consider adding the formal description to an appendix in this paper, for the convenience of the reviewer.
 
 The {\RPI} and the {\RP} algorithms differ from each other mainly in the
 computation of the safe literals of a node that has many children. While the former 
