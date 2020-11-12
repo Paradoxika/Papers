@@ -1,0 +1,127 @@
+\section{First-Order Challenges for Lowering Units} \label{sec:LUChallenges}
+
+In this section, we describe challenges that have to be overcome in order to successfully adapt {\LowerUnits} to the first-order case. 
+The first example illustrates the need to take unification into account. The other two examples discuss complex issues that can arise when unification is naively taken into account.
+
+\begin{example}\label{ex:uniflu} 
+Consider the following proof $\psi$, noting that the unit subproof $\eta_2$ is used twice. It is resolved once with $\eta_1$ (against the literal $p(W)$ and producing the child $\eta_3$) and once with $\eta_5$ (against the literal $p(X)$ and producing $\psi$).
+
+\begin{footnotesize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_1$: $p(W)$\e$q(Z)$}
+\AxiomC{$\eta_2$: \e$p(Y)$}
+\BinaryInfC{$\eta_3$: \e$q(Z)$}
+\AxiomC{$\eta_4$: $p(X),q(Z)$\e}
+\BinaryInfC{$\eta_5$: $p(X)$\e}
+\AxiomC{$\eta_2$}
+\BinaryInfC{$\psi$: $\bot$}
+\end{prooftree}
+\end{footnotesize}
+
+\noindent
+The result of deleting $\eta_2$ from $\psi$ is the proof $\dn{\psi}{\eta_2}$ shown below:
+
+\begin{footnotesize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta'_1$: $p(W)$\e$q(Z)$}
+\AxiomC{$\eta'_4$: $p(X),q(Z)$\e}
+\BinaryInfC{$\eta'_5$ ($\psi'$): $p(W), p(X)$\e}
+\end{prooftree}
+\end{footnotesize}
+
+\noindent
+Unlike in the propositional case, where the literals that had been resolved against the unit are all syntactically equal, in the first-order case, this is not necessarily the case. As illustrated above, $p(W)$ and $p(X)$ are not syntactically equal. Nevertheless, they are unifiable. Therefore, in order to reintroduce $\eta'_2$, we may first perform a contraction, as shown below:
+\begin{footnotesize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_1'$: $p(W)$\e$q(Z)$}
+\AxiomC{$\eta_4'$: $p(X),q(Z)$\e}
+\BinaryInfC{$\eta_5'$: $p(X),p(Y)$\e}
+\UnaryInfC{$\con{\eta_5'}{}{}$: $p(U)$\e}
+\AxiomC{$\eta_2'$: \e$p(Y)$}
+\BinaryInfC{$\psi^{\star}$: $\bot$}
+\end{prooftree}
+\end{footnotesize}
+\end{example}
+
+\begin{example}\label{ex:pairwise}
+
+There are cases, as shown below, when the literals that had been resolved away are not unifiable, and then a contraction is not possible.
+
+\begin{footnotesize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_2$}
+\AxiomC{$\eta_4$: $r(X),p(b)$\e $s(Y)$}
+\AxiomC{$\eta_1$: $p(a)$\e$q(Y),r(Z)$}
+\AxiomC{$\eta_2$: \e $p(X)$}
+\BinaryInfC{$\eta_3$: \e$q(Y),r(Z)$}
+\BinaryInfC{$\eta_5$: $p(b)$\e $s(Y),q(Y)$}
+\AxiomC{$\eta_6$: $s(Y)$\e}
+\insertBetweenHyps{\hskip -0.5in}
+\BinaryInfC{$\eta_7$: $p(b)$\e$q(Y)$}
+\AxiomC{$\eta_8$: $q(Y)$\e}
+\insertBetweenHyps{\hskip -0.5in}
+\BinaryInfC{$\eta_9$: $p(b)$\e}
+\insertBetweenHyps{\hskip -0.8in}
+\BinaryInfC{$\psi$: $\bot$}
+\end{prooftree}
+\end{footnotesize}
+
+\noindent
+If we attempted to postpone the resolution inferences involving the unit $\eta_2$ (i.e. by deleting $\eta_2$ and reintroducing it with a single resolution inference in the bottom of the proof), a contraction of the literals $p(a)$ and $p(b)$ would be needed. 
+Since these literals are not unifiable, the contraction is not possible. 
+Note that, in principle, we could still lower $\eta_2$ if we resolved it not only once but twice when reintroducing it in the bottom of the proof.
+However, this would lead to no compression of the proof's length.
+\end{example}
+
+\noindent
+The observations above lead to the idea of requiring units to satisfy the following property before collecting them to be lowered.
+
+\begin{definition}
+\label{prop:pair}
+Let $\eta$ be a unit with literal $\ell$ and let $\eta_1$, \ldots, $\eta_n$ be subproofs that are resolved with $\eta$ in a proof $\psi$, respectively, with resolved literals $\ell_1$, \ldots, $\ell_n$. 
+$\eta$ is said to satisfy the \emph{pre-deletion unifiability property} in $\psi$ if $\ell_1$,\ldots,$\ell_n$, and $\dual{\ell}$ are unifiable.
+\end{definition}
+
+\begin{example}\label{ex:rootpair}
+Satisfaction of the pre-deletion unifiability property is not enough. Deletion of the units from a proof $\psi$ may actually change the literals that had been resolved away by the units, because fewer substitutions are applied to them. This is exemplified below:
+
+\begin{footnotesize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_1$: $r(Y),p(X, q(Y, b)), p(X, Y)$\e}
+\AxiomC{$\eta_2$: \e $p(U, V)$}
+\BinaryInfC{$\eta_3$: $r(V),p(U, q(V, b))$\e}
+\AxiomC{$\eta_4$: \e $r(W)$}
+\BinaryInfC{$\eta_5$: $p(U, q(W, b))$\e}
+\AxiomC{$\eta_2$}
+\BinaryInfC{$\psi$: $\bot$}
+\end{prooftree}
+\end{footnotesize}
+
+\noindent
+If $\eta_2$ is collected for lowering and deleted from $\psi$, we obtain the proof $\dn{\psi}{\eta_2}$:
+
+\begin{footnotesize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta'_1$: $r(Y),p(X, q(Y, b)), p(X, Y)$\e}
+\AxiomC{$\eta'_4$: \e $r(W)$}
+\BinaryInfC{$\eta'_5 (\psi')$: $p(X, q(W, b)), p(X, W)$\e}
+\end{prooftree}
+\end{footnotesize}
+
+\noindent
+Note that, even though $\eta_2$ satisfies the pre-deletion unifiability property (since $p(X, q(Y, b))$ and $p(U, q(W, b))$ are unifiable), $\eta_2$ still cannot be lowered and reintroduced by a single resolution inference, because the corresponding modified post-deletion literals $p(X, q(W, b))$ and $p(X, W)$ are actually not unifiable.
+\end{example}
+
+The observation above leads to the following stronger property:
+
+\begin{definition}
+\label{prop:rootpair}
+Let $\eta$ be a unit with literal $\ell_{\eta}$ and let $\eta_1$, \ldots, $\eta_n$ be subproofs that are resolved with $\eta$ in a proof $\psi$, respectively, with resolved literals $\ell_1$, \ldots, $\ell_m$. 
+$\eta$ is said to satisfy the \emph{post-deletion unifiability property} in $\psi$ if $\ell_1^{\dagger\downarrow}$,\ldots,$\ell_m^{\dagger\downarrow}$, and $\dual{\ell_{\eta}^{\dagger}}$ are unifiable, where $\ell^{\dagger}$ is the literal in $\dn{\psi}{\eta}$ corresponding to $\ell$ in $\psi$ and $\ell_k^{\dagger\downarrow}$ is the descendant of $\ell_k^{\dagger}$ in the root of $\dn{\psi}{\eta}$.
+\end{definition}

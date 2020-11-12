@@ -1,0 +1,134 @@
+\section{The Resolution Calculus}
+\label{sec:res}
+
+As usual, our language has infinitely many variable symbols (e.g. $x$, $y$, $z$, $x_1$, $x_2$, \ldots), constant symbols (e.g. $a$, $b$, $c$, $a_1$, $a_2$, \ldots), function symbols of every arity (e.g $f$, $g$, $f_1$, $f_2$, \ldots) and predicate symbols of every arity (e.g. $P$, $Q$, $P_1$, $P_2$,\ldots). A \emph{term} is any variable, constant or the application of an $n$-ary function symbol to $n$ terms.
+An \emph{atomic formula} (\emph{atom}) is the application of an $n$-ary predicate symbol to $n$ terms. A \emph{literal} is an atom or the negation of an atom. The
+\emph{complement} of a literal $\ell$ is denoted $\dual{\ell}$ (i.e. for any atom $P$,
+$\dual{P} = \neg P$ and $\dual{\neg P} = P$). The \emph{underlying atom} of a literal $\ell$ is denoted $\abs{\ell}$ (i.e. for any atom $p$, $\abs{P} = P$ and $\abs{\neg P} = P$). A
+\emph{clause} is a multiset of literals. $\bot$ denotes the \emph{empty clause}. A \emph{unit clause} is a clause with a single literal. Sequent notation is used for clauses (i.e. $P_1,\ldots,P_n \seq Q_1,\ldots, Q_m$ denotes the clause $\{ \neg P_1,\ldots, \neg P_n, Q_1, \ldots, Q_m \}$).
+$\freevar{t}$ (resp. $\freevar{\ell}$, $\freevar{\clause}$) denotes the set of variables in the term $t$ (resp. in the literal $\ell$ and in the clause $\clause$).
+A \emph{substitution} $\{ x_1\backslash t_1, x_2 \backslash t_2, \ldots \}$ is a mapping from variables $\{ x_1, x_2, \ldots \}$ to, respectively, terms $\{t_1, t_2, \ldots \}$. The application of a substitution $\sigma$ to a term $t$, a literal $\ell$ or a clause $\clause$ results in, respectively, the term $t \sigma$, the literal $\ell \sigma$ or the clause $\clause \sigma$, obtained from $t$, $\ell$ and $\clause$ by replacing all occurrences of the variables in $\sigma$ by the corresponding terms in $\sigma$. A literal $\ell$ \emph{matches} another literal $\ell'$ if there is a substitution $\sigma$ such that $\ell\sigma=\ell'$. A \emph{unifier} of a set of literals is a substitution that makes all literals in the set equal. We will use $X \sqsubseteq Y$ to denote that $X$ \emph{subsumes} $Y$, when there exists a substitution $\sigma$ such that $X\sigma \subseteq Y$.
+
+The resolution calculus used in this paper has the following inference rules: 
+
+\begin{definition}[Resolution] \label{def:fores} \hfill
+%An instance of first-order resolution requires two premises, as below.
+\begin{prooftree}
+\AxiomC{$\eta_1$: $\Gamma_L' \cup \{\ell_L\}$ }
+\AxiomC{$\eta_2$: $\Gamma_R'\cup \{\ell_R\}$ }
+\BinaryInfC{$\psi$: $\Gamma_L'\sigma_L \cup \Gamma_R'\sigma_R$}
+\end{prooftree}
+where $\sigma_L$ and $\sigma_R$ are substitutions such that $\ell_L\sigma_L=\dual{\ell_R}\sigma_R$. The literals $\ell_L$ and $\ell_R$ are \emph{resolved literals}, whereas $\ell_L \sigma_L$ and $\ell_R \sigma_R$ are \emph{instantiated resolved literals}. The \emph{pivot} is the underlying atom of the instantiated resolved literals (i.e. $\abs{\ell_L \sigma_L}$ or, equivalently, $\abs{\ell_R \sigma_R}$).
+\end{definition}
+
+\begin{definition}[Factoring] \label{def:fofact} \hfill
+
+\begin{prooftree}
+\AxiomC{$\eta_1$: $\Gamma' \cup \{\ell_1,\ldots,\ell_n\}$ }
+\UnaryInfC{$\psi$: $\Gamma'\sigma \cup \{\ell\}$}
+\end{prooftree}
+where $\sigma$ is a unifier of $\{\ell_1,\ldots,\ell_n\}$ and $\ell=\ell_i\sigma$ for any $i\in \{1,\ldots,n\}$.
+\end{definition}
+
+A \emph{resolution proof} is a directed acyclic graph of clauses where the edges correspond to the inference rules of resolution and factoring, as explained in detail in Definition \ref{def:proof}. A \emph{resolution refutation} is a resolution proof with root $\bot$.
+
+\begin{definition}[First-Order Resolution Proof] 
+\label{def:proof}% \hfill \\
+A directed acyclic graph $\langle V, E, \clause \rangle$ with a single root, where $V$ is a set of nodes and $E$ is a
+set of edges labeled by literals and substitutions (i.e. $E \subset V \times 2^{\mathcal{L}} \times \mathcal{S} \times V$, where $\mathcal{L}$ is the set of all literals and $\mathcal{S}$ is the set of all substitutions, and $\n_1
+\xrightarrow[\sigma]{\ell} \n_2$ denotes an edge from node $\n_1$ to node $\n_2$ labeled by the literal $\ell$ and the substitution $\sigma$), is a
+proof of a clause $\clause$ iff it is inductively constructible according to the following cases:
+%
+\begin{itemize}
+  \item \textbf{Axiom:} If $\Gamma$ is a clause, $\axiom{\Gamma}$ denotes some proof $\langle \{ \n \}, \varnothing,
+    \Gamma \rangle$, where $\n$ is a new (axiom) node.
+  \item \textbf{Resolution\footnote{This is referred to as ``binary resolution'' elsewhere, with the understanding that ``binary'' refers to the number of resolved literals, rather than the number of premises of the inference rule.}:} If $\psi_L$ is a proof $\langle V_L, E_L, \clause_L \rangle$ and
+    $\psi_R$ is a proof $\langle V_R, E_R, \clause_R \rangle$, where $\Gamma_L$ and $\Gamma_R$ satisfy the requirements of Definition \ref{def:fores},
+    %and $\sigma_L$ and $\sigma_R$ are substitutions such that
+    %$\ell_L \sigma_L = \dual{\ell_R} \sigma_R$ %and
+    %$\freevar{\left( \clause_L \setminus \left\{ \ell_L \right\} \right) \sigma_L} \cap 
+     %\freevar{\left( \clause_R
+     %               \setminus \left\{ \ell_R \right\} \right) \sigma_R} = \emptyset$, 
+    then
+    $\psi_L \res{\ell_L}{\sigma_L}{\ell_R}{\sigma_R} \psi_R$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
+    \begin{align*}
+     \hspace{-0.6cm} V &= V_L \cup V_R \cup \{\n \}    \\
+      \hspace{-0.6cm} E &= E_L \cup E_R \cup 
+                    \left\{ \raiz{\psi_L} \xrightarrow[\sigma_L]{\{\ell_L\} } \n, 
+                            \raiz{\psi_R} \xrightarrow[\sigma_R]{\{\ell_R\} } \n \right\}    \\
+    \hspace{-0.6cm}  \Gamma &= \clause_L' \sigma_L \cup  \clause_R' \sigma_R
+    \end{align*}
+    where $\n$ is a new (resolution) node and $\raiz{\varphi}$ denotes the root node of $\varphi$. 
+  \item \textbf{Factoring:}
+  %\footnote{This is often called ``Factoring'', but we prefer ``contraction'', because it is essentially the contraction rule of sequent calculus generalized with unification.} 
+  If $\psi'$ is a proof $\langle V', E', \clause' \rangle$ such that $\Gamma$ satisfies the requirements of Definition \ref{def:fofact}, then $\con{\psi}{\{\ell_1, \ldots \ell_n\}}{\sigma}$ denotes a proof $\langle V, E, \Gamma \rangle$ s.t.
+    \begin{align*}
+         \hspace{-0.6cm} V &= V' \cup \{\n \} \\
+         \hspace{-0.6cm} E &= E' \cup \{ \raiz{\psi'} \xrightarrow[\sigma]{\{\ell_1, \ldots \ell_n\}} \n \} \\
+       \hspace{-0.6cm} \Gamma &= \clause' \sigma \cup \{ \ell \}
+    \end{align*}
+    where $\n$ is a new (factoring) node, and $\raiz{\varphi}$ denotes the root node of $\varphi$.
+  \qed
+\end{itemize}
+\end{definition}
+
+
+\begin{example}\label{ex:resolutionproof}
+
+
+An example first-order resolution proof is shown below.
+
+
+\begin{scriptsize}
+\begin{prooftree}
+\def\e{\mbox{\ $\vdash$\ }}
+\AxiomC{$\eta_1$: $Q(x),Q(a)\e P(b)$ } %a
+\AxiomC{$\eta_2$: $P(b)\e$ } %common
+\BinaryInfC{$\eta_3$: $Q(x),Q(a) \e$}
+\UnaryInfC{$\eta_3'$: $Q(a) \e$ \hspace{-1cm}}
+\AxiomC{$\eta_2$} %common
+\AxiomC{\hspace{-0.5cm}$\eta_4$: $\e P(b), Q(y)$ } %b
+\BinaryInfC{\hspace{-2cm} $\eta_5$: $\e Q(y)$}
+\BinaryInfC{$\psi$: $\bot$}
+\end{prooftree}
+\end{scriptsize}
+
+\noindent
+The nodes $\eta_1$, $\eta_2$, and $\eta_4$ are axioms. 
+Node $\eta_3$ is obtained by resolution on $\eta_1$ and $\eta_2$ where $\ell_L = P(b)$, $\ell_R = \neg P(b)$, and $\sigma_L = \sigma_R = \emptyset$.
+The node $\eta_3'$ is obtained by a factoring on $\eta_3$ with $\sigma=\{x\setminus a\}$. 
+The node $\eta_5$ is the result of resolution on $\eta_2$ and $\eta_4$ with $\ell_L = \neg P(b)$, $\ell_R = P(b)$, $\sigma_L=\sigma_R = \emptyset$. 
+Lastly, the conclusion node $\psi$ is the result of a resolution of $\eta_3'$ and $\eta_5$, where $\ell_L = \neg Q(a)$, $\ell_R = Q(y)$, $\sigma_L = \emptyset$, and $\sigma_R = \{ y \setminus a\}$. 
+The directed acyclic graph representation of the proof (with edge labels omitted) is shown in Figure \ref{fig:dagex}.
+
+\begin{figure}[bt]
+\begin{centering}
+\begin{tikzpicture}
+  \tikzstyle{vertex}=[circle,minimum size=10pt,inner sep=0pt]
+\tikzset{edge/.style = {->,> = latex'}}
+
+    \node[vertex] (n1) at (-2,1.75) {$\eta_1$};
+    \node[vertex] (n2) at (0,1.75) {$\eta_2$};
+    \node[vertex] (n4) at (2,1.75) {$\eta_4$};
+    \node[vertex] (n5) at (1,0.5) {$\eta_5$};
+    \node[vertex] (n3) at (-1,1.25) {$\eta_3$};
+    \node[vertex] (n3p) at (-1,0.5) {$\eta_3'$};
+    \node[vertex] (r) at (0,0) {$\psi$};
+
+\draw[edge] (r) -- (n5);
+\draw[edge] (r) -- (n3p);
+
+\draw[edge] (n3p) -- (n3);
+
+\draw[edge] (n3) -- (n1);
+\draw[edge] (n3) -- (n2);
+
+\draw[edge] (n5) -- (n2);
+\draw[edge] (n5) -- (n4);
+\end{tikzpicture}
+
+\end{centering}
+\caption{The proof in Example \ref{ex:resolutionproof}.}
+\label{fig:dagex}
+\end{figure}
+\end{example}
